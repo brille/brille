@@ -351,6 +351,7 @@ private:
     // std::reduce can perform the same operation in parallel, but isn't implemented
     // in the gcc libraries until v9.3. Since the number of dimensions is (probably)
     // small a serial algorithm is not a giant speed hit.
+    if (s.begin() == s.end()) return ind_t(0); // an empty shape has no size
     size_t sz = std::accumulate(s.begin(), s.end(), ind_t(1), std::multiplies<ind_t>());
     return static_cast<ind_t>(sz);
   }

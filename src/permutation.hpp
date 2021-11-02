@@ -352,7 +352,8 @@ brille::ind_t nind = static_cast<brille::ind_t>(neighbour_idx);
 brille::ind_t cind = static_cast<brille::ind_t>(centre_idx);
 for (brille::ind_t i=0; i<Nobj; ++i)
   for (brille::ind_t j=0; j<Nobj; ++j)
-    if (permutations.val(nind, i) == rowsol[j]) permutations.val(cind, i) = static_cast<size_t>(j);
+    if (permutations.val(nind, i) == static_cast<size_t>(rowsol[j]))
+      permutations.val(cind, i) = static_cast<size_t>(j);
 
 delete[] cost;
 delete[] usol;
@@ -541,7 +542,8 @@ brille::ind_t nind = static_cast<brille::ind_t>(neighbour_idx);
 brille::ind_t cind = static_cast<brille::ind_t>(centre_idx);
 for (brille::ind_t i=0; i<Nobj; ++i)
   for (brille::ind_t j=0; j<Nobj; ++j)
-    if (permutations.val(nind, i) == rowsol[j]) permutations.val(cind, i) = static_cast<size_t>(j);
+    if (permutations.val(nind, i) == static_cast<size_t>(rowsol[j]))
+      permutations.val(cind, i) = static_cast<size_t>(j);
 
 delete[] cost;
 delete[] usol;

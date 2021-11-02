@@ -30,6 +30,8 @@ namespace brille {
   template<class T>
   pybind11::array_t<T> a2py(const brille::Array<T>& a){
     // share an Array with Python
+    // but if it has zero size let Python allocate a new empty array
+    if (a.raw_size() == 0u) return pybind11::array_t<T>(a.shape());
     // construct a new Array<T> using the same underlying heap data
     std::unique_ptr<brille::Array<T>> aptr = std::make_unique<brille::Array<T>>(brille::Array<T>(a));
     auto capsule = pybind11::capsule(aptr.get(), [](void *p) { std::unique_ptr<brille::Array<T>>(reinterpret_cast<brille::Array<T>*>(p)); });
@@ -41,7 +43,9 @@ namespace brille {
   template<class T>
   pybind11::array_t<T> a2py(brille::Array<T>&& a){
     // move an Array to Python.
-  	// Ref: https://stackoverflow.com/questions/54876346/pybind11-and-stdvector-how-to-free-data-using-capsules
+    // but if it has zero size let Python allocate a new empty array
+    if (a.raw_size() == 0u) return pybind11::array_t<T>(a.shape());
+    // Ref: https://stackoverflow.com/questions/54876346/pybind11-and-stdvector-how-to-free-data-using-capsules
     auto* aptr = new brille::Array<T>(std::move(a));
     // At this point, transferToHeapGetRawPtr is a raw pointer to an object on the heap.
     // No unique_ptr or shared_ptr, it will have to be freed with delete to avoid a memory leak.
@@ -52,14 +56,17 @@ namespace brille {
   template<class T>
   pybind11::array_t<T> a2py(const brille::Array2<T>& a){
     // share an Array with Python
-    // construct a new Array<T> using the same underlying heap data
-    std::unique_ptr<brille::Array2<T>> aptr = std::make_unique<brille::Array2<T>>(brille::Array2<T>(a));
-    auto capsule = pybind11::capsule(aptr.get(), [](void *p) { std::unique_ptr<brille::Array2<T>>(reinterpret_cast<brille::Array2<T>*>(p)); });
-    aptr.release();
+    // collect shape and stride information as vectors
     std::vector<pybind11::ssize_t> shape, cstride;
     // the shape and cstride of an Array2 are std::array<ind_t,2> but we need std::vectors
     for (auto s: a.shape()) shape.push_back(static_cast<pybind11::ssize_t>(s));
     for (auto s: a.cstride()) cstride.push_back(static_cast<pybind11::ssize_t>(s));
+    // but if it has zero size let Python allocate a new empty array
+    if (a.raw_size() == 0u) return pybind11::array_t<T>(shape);
+    // construct a new Array<T> using the same underlying heap data
+    std::unique_ptr<brille::Array2<T>> aptr = std::make_unique<brille::Array2<T>>(brille::Array2<T>(a));
+    auto capsule = pybind11::capsule(aptr.get(), [](void *p) { std::unique_ptr<brille::Array2<T>>(reinterpret_cast<brille::Array2<T>*>(p)); });
+    aptr.release();
     return pybind11::array_t<T>(shape, cstride, a.data(), capsule);
   }
 
@@ -67,15 +74,17 @@ namespace brille {
   template<class T>
   pybind11::array_t<T> a2py(brille::Array2<T>&& a){
     // move an Array to Python.
-  	// Ref: https://stackoverflow.com/questions/54876346/pybind11-and-stdvector-how-to-free-data-using-capsules
+    // the shape and cstride of an Array2 are std::array<ind_t,2> but we need std::vectors
+    std::vector<pybind11::ssize_t> shape, cstride;
+    for (auto s: a.shape()) shape.push_back(static_cast<pybind11::ssize_t>(s));
+    for (auto s: a.cstride()) cstride.push_back(static_cast<pybind11::ssize_t>(s));
+    // but if it has zero size let Python allocate a new empty array
+    if (a.raw_size() == 0u) return pybind11::array_t<T>(shape);
+    // Ref: https://stackoverflow.com/questions/54876346/pybind11-and-stdvector-how-to-free-data-using-capsules
     auto* aptr = new brille::Array2<T>(std::move(a));
     // At this point, transferToHeapGetRawPtr is a raw pointer to an object on the heap.
     // No unique_ptr or shared_ptr, it will have to be freed with delete to avoid a memory leak.
     auto capsule = pybind11::capsule(aptr, [](void *toFree){ delete static_cast<brille::Array2<T>*>(toFree); });
-    std::vector<pybind11::ssize_t> shape, cstride;
-    // the shape and cstride of an Array2 are std::array<ind_t,2> but we need std::vectors
-    for (auto s: a.shape()) shape.push_back(static_cast<pybind11::ssize_t>(s));
-    for (auto s: a.cstride()) cstride.push_back(static_cast<pybind11::ssize_t>(s));
     return pybind11::array_t<T>(shape, cstride, aptr->data(), capsule);
   }
 

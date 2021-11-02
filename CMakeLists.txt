@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13) # tested working 3.13.0, 3.13.4, 3.14.5
+cmake_minimum_required(VERSION 3.18.2) 
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 
 project(brille)
@@ -78,22 +78,12 @@ endif (BRILLE_PROFILING)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# Use CMake v3.12+ FindPython3 to find the system-compatible interpreter *and* libraries at once
-# This solves a potential issue on convoluted Windows build systems which have multiple
-# python interpreters, some of which do not have build-system compatibility (I'm looking at you, msys2 python)
-# In such a case FindPythonInterp might point to the wrong python interpreter and then further configuration
-# steps will fail to find any (or any compatible) libraries which match the interpreter.
-find_package(Python3 COMPONENTS Interpreter Development)
-# Since FindPython3 and FindPythonInterp set different variables, fake the FindPythonInterp result
-# to prevent it running if called by, e.g., FindPybind11
-if(Python3_FOUND AND NOT PYTHON_EXECUTABLE)
-  set(PYTHONINTERP_FOUND ON)
-  set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
-  set(PYTHON_VERSION_STRING "${Python3_VERSION}")
-  set(PYTHON_VERSION_MAJOR ${Python3_VERSION_MAJOR})
-  set(PYTHON_VERSION_MINOR ${Python3_VERSION_MINOR})
-  set(PYTHON_VERSION_PATCH ${Python3_VERSION_PATCH})
+if (PYTHON_EXECUTABLE)
+  # Ensure the provided Python interpreter is used
+  set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
 endif()
+# With modern CMake, this find_package forces pybind11 to use FindPython instead of its custom tools
+find_package(Python3 COMPONENTS Interpreter Development)
 
 # Attempt to find catch2 to handle C++ testing
 if(BRILLE_BUILD_TESTING)
@@ -149,7 +139,7 @@ if(NOT pybind11_FOUND)
 endif()
 
 # Read the version of brille
-execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from version_info import version_number; version_number()"
+execute_process(COMMAND ${Python3_EXECUTABLE} -c "from version_info import version_number; version_number()"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         OUTPUT_VARIABLE BRILLE_VERSION)
 # So that we can print it to the console along with the specified build type
@@ -159,13 +149,13 @@ message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
 # This file will be updated even if no other source files are modified but it does not
 # cause relinking the module (if it is the *only* file which changes)
 add_custom_target(write_version_info
-  COMMAND ${PYTHON_EXECUTABLE} version_info.py src/version.hpp
+  COMMAND ${Python3_EXECUTABLE} version_info.py src/version.hpp
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 # Create a single header by contatenating all headers in src/
 add_custom_target(single_header
-  COMMAND ${PYTHON_EXECUTABLE} acme.py ${BRILLE_SINGLE_HEADER} -o ${CMAKE_BINARY_DIR}
+  COMMAND ${Python3_EXECUTABLE} acme.py ${BRILLE_SINGLE_HEADER} -o ${CMAKE_BINARY_DIR}
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   DEPENDS write_version_info
 )

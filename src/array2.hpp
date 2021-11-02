@@ -344,7 +344,7 @@ private:
       std::string msg = "The shift { " + std::to_string(_shift) + " ";
       msg += "} and size { ";
       for (auto x: _shape) msg += std::to_string(x) + " ";
-      msg += "} of an Array must not exceed the allocated pointer size ";
+      msg += "} of an Array2 must not exceed the allocated pointer size ";
       msg += std::to_string(_num);
       throw std::runtime_error(msg);
     }
