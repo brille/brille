@@ -62,6 +62,7 @@ If you encounter the need to debug the :py:mod:`~brille._brille` module, you can
 compile and install with debugging symbols via
 
 .. code-block:: bash
+
    git clone https://github.com/brille/brille
    cd brille
    python setup.py debug_install

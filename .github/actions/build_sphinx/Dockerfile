@@ -1,4 +1,4 @@
-FROM brille/docact:2
+FROM docker.io/brille/docact:4
 
 WORKDIR /home
 COPY entrypoint.sh /home

@@ -39,7 +39,7 @@ extensions = [
     'breathe',
     'sphinxcontrib.katex',
     'sphinxcontrib.tikz',
-    # 'exhale',
+    #'exhale',
 ]
 
 # Useful mappings: https://gist.github.com/bskinn/0e164963428d4b51017cebdb6cda5209
@@ -63,7 +63,7 @@ napoleon_use_ivar = True
 napoleon_use_param = False
 napoleon_use_admonition_for_notes = True
 
-tikz_proc_suite = 'GhostScript'
+tikz_proc_suite = 'pdf2svg'  # We are building exclusively in our own container, no ReadTheDocs ghostscript restriction
 
 breathe_projects = {'brille' : '_build/doxygenxml/'}
 breathe_default_project = 'brille'
@@ -144,7 +144,7 @@ def generate_doxygen_xml(app):
 
     call_and_check('doxygen', cwd=app.confdir)
     call_and_check(['breathe-apidoc','--output-dir=_build/breathe','-f',
-                    '-g','class,namespace','_build/doxygenxml/'])
+                    '-g','class,namespace','_build/doxygenxml/'], cwd=app.confdir)
 
 def setup(app):
     """Add hook for building Doxygen xml when needed"""
