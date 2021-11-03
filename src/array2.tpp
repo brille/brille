@@ -62,12 +62,12 @@ template<class T>
 template<class I>
 std::enable_if_t<std::is_integral_v<I>, Array2<T>>
 Array2<T>::extract(const Array2<I>& i) const {
-  if (i.numel() != i.size(0))
-    throw std::runtime_error("Array2 extraction requires (N,{1,...,1}) shape");
+  if (!i.is_vector())
+    throw std::runtime_error("Array2 extraction requires (N, 1) or (1, N) shape");
   for (auto x: i.valItr()) if (!(0 <= x && static_cast<ind_t>(x) < _shape[0]))
     throw std::runtime_error("Array2 extract index must be in range");
   shape_t osize{_shape};
-  osize[0] = i.size(0);
+  osize[0] = i.numel();
   Array2<T> out(osize);
   ind_t j{0};
   for (auto v: i.valItr()) out.set(j++, this->view(static_cast<ind_t>(v)));
@@ -747,12 +747,28 @@ template<class T>
 template<class R>
 std::vector<bool>
 Array2<T>::is(const brille::cmp expr, const std::vector<R>& val) const{
-  assert(val.size() == _shape[1]);
+  auto no = this->numel();
+  // assert(val.size() == _shape[1]);
+  // std::vector<bool> out;
+  // out.reserve(_shape[0]);
+  // brille::Comparer<T,R> op(expr);
+  // for (ind_t i=0; i<_shape[0]; ++i)
+  //   out.push_back(op(_shape[1], this->ptr(i), _stride[1], val.data(), 1u));
+  // return out;
+
+  assert(val.size() == _shape[1] || val.size() == no);
   std::vector<bool> out;
-  out.reserve(_shape[0]);
   brille::Comparer<T,R> op(expr);
-  for (ind_t i=0; i<_shape[0]; ++i)
-    out.push_back(op(_shape[1], this->ptr(i), _stride[1], val.data(), 1u));
+  if (val.size() == _shape[1]){
+    out.reserve(_shape[0]);
+    for (ind_t i=0; i<_shape[0]; ++i)
+      out.push_back(op(_shape[1], this->ptr(i), _stride[1], val.data(), 1u));
+  } else {
+    out.reserve(no);
+    for (ind_t i=0; i<no; ++i)
+      out.push_back(op(this->val(i), val[i]));
+  }
+
   return out;
 }
 

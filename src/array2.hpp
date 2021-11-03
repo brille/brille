@@ -114,6 +114,9 @@ public:
     // if a dimension is 1 (or 0?) then its stride does not impact here
     return (_shape[0]<2||expected[0]==_stride[0]) && (_shape[1]<2||expected[1]==_stride[1]);
   }
+  bool is_vector() const {
+    return (_shape[0] == 1u || _shape[1] == 1u);
+  }
   // empty initializer
   explicit Array2()
   : _data(nullptr), _num(0), _shift(0u), _own(false), _ref(std::make_shared<char>()),

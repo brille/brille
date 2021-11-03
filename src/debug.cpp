@@ -52,3 +52,6 @@ using namespace brille;
     return w.ws_row > 0 ? w.ws_row : std::numeric_limits<int>::max();
   }
 #endif
+
+// Create the global DebugPrinter
+DebugPrinter brille::printer("");
