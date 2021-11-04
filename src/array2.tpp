@@ -746,29 +746,29 @@ Array2<T>::is(const brille::cmp expr, const Array2<R>& that) const {
 template<class T>
 template<class R>
 std::vector<bool>
-Array2<T>::is(const brille::cmp expr, const std::vector<R>& val) const{
-  auto no = this->numel();
-  // assert(val.size() == _shape[1]);
-  // std::vector<bool> out;
-  // out.reserve(_shape[0]);
-  // brille::Comparer<T,R> op(expr);
-  // for (ind_t i=0; i<_shape[0]; ++i)
-  //   out.push_back(op(_shape[1], this->ptr(i), _stride[1], val.data(), 1u));
-  // return out;
-
-  assert(val.size() == _shape[1] || val.size() == no);
+Array2<T>::row_is(const brille::cmp expr, const std::vector<R>& row) const{
+  assert(row.size() == _shape[1]);
   std::vector<bool> out;
   brille::Comparer<T,R> op(expr);
-  if (val.size() == _shape[1]){
-    out.reserve(_shape[0]);
-    for (ind_t i=0; i<_shape[0]; ++i)
-      out.push_back(op(_shape[1], this->ptr(i), _stride[1], val.data(), 1u));
-  } else {
-    out.reserve(no);
-    for (ind_t i=0; i<no; ++i)
-      out.push_back(op(this->val(i), val[i]));
-  }
+  out.reserve(_shape[0]);
+  // loop over rows, comparing each row to the input values (a std::vector has stride of 1)
+  for (ind_t i=0; i<_shape[0]; ++i)
+    out.push_back(op(_shape[1], this->ptr(i), _stride[1], row.data(), 1u));
+  return out;
+}
 
+template<class T>
+template<class R>
+std::vector<bool>
+Array2<T>::each_is(const brille::cmp expr, const std::vector<R>& vals) const{
+  auto no = this->numel();
+  assert(vals.size() == no);
+  std::vector<bool> out;
+  brille::Comparer<T,R> op(expr);
+  out.reserve(no);
+  // loop over whole array in linear-index order
+  for (ind_t i=0; i<no; ++i)
+    out.push_back(op(this->val(i), vals[i]));
   return out;
 }
 

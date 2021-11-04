@@ -416,7 +416,7 @@ private:
       for (double r: layers[low].get_circum_radii()) sumrad.push_back(layers[high].get_circum_radii()[i]+r);
       // if two circumsphere centers are closer than the sum of their radii
       // they are close enough to possibly overlap:
-      auto close_enough = norm(layers[low].get_circum_centres() - cchi).is(brille::cmp::le, sumrad);
+      auto close_enough = norm(layers[low].get_circum_centres() - cchi).each_is(brille::cmp::le, sumrad);
       for (ind_t j=0; j < close_enough.size(); ++j) if (close_enough[j])
       {
         bool add = false;
