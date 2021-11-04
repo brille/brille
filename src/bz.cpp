@@ -521,13 +521,11 @@ brille::intersect_at(
   LQVec<double>& intersect, const int idx
 ){
   double detM = brille::normals_matrix_determinant(n_i,n_j,n_k);
-  if (std::abs(detM) > 1e-10){
-    auto tmp = cross(n_j,n_k)*dot(p_i,n_i) + cross(n_k,n_i)*dot(p_j,n_j) + cross(n_i,n_j)*dot(p_k,n_k);
-    tmp /= detM;
-    intersect.set(idx, tmp);
-    return true;
-  }
-  return false;
+  if (brille::approx::scalar(detM, 0.)) return false;
+  auto tmp = cross(n_j,n_k)*dot(p_i,n_i) + cross(n_k,n_i)*dot(p_j,n_j) + cross(n_i,n_j)*dot(p_k,n_k);
+  tmp /= detM;
+  intersect.set(idx, tmp);
+  return true;
 }
 
 bool
@@ -538,13 +536,11 @@ brille::intersect_at(
   LQVec<double>& intersect, const int idx
 ){
   double detM = brille::normals_matrix_determinant(n_i,n_j,n_k);
-  if (std::abs(detM) > 1e-10){
-    auto tmp = cross(n_j,n_k)*dot(p_i,n_i) + cross(n_k,n_i)*dot(p_j,n_j);
-    tmp /= detM;
-    intersect.set(idx, tmp);
-    return true;
-  }
-  return false;
+  if (brille::approx::scalar(detM, 0.)) return false;
+  auto tmp = cross(n_j,n_k)*dot(p_i,n_i) + cross(n_k,n_i)*dot(p_j,n_j);
+  tmp /= detM;
+  intersect.set(idx, tmp);
+  return true;
 }
 
 bool
@@ -555,13 +551,11 @@ brille::intersect_at(
   LQVec<double>& intersect, const int idx
 ){
   double detM = brille::normals_matrix_determinant(n_i,n_j,n_k);
-  if (std::abs(detM) > 1e-10){
-    auto tmp = cross(n_j,n_k)*dot(p_i,n_i);
-    tmp /= detM;
-    intersect.set(idx, tmp);
-    return true;
-  }
-  return false;
+  if (brille::approx::scalar(detM, 0.)) return false;
+  auto tmp = cross(n_j,n_k)*dot(p_i,n_i);
+  tmp /= detM;
+  intersect.set(idx, tmp);
+  return true;
 }
 
 bool
@@ -571,9 +565,8 @@ brille::intersect_at(
   const LQVec<double>& n_k,
   LQVec<double>& intersect, const int idx
 ){
-  if (std::abs(brille::normals_matrix_determinant(n_i,n_j,n_k)) > 1e-10){
-    intersect.set(idx, 0*intersect.view(idx));
-    return true;
-  }
-  return false;
+  double detM = brille::normals_matrix_determinant(n_i,n_j,n_k);
+  if (brille::approx::scalar(detM, 0.)) return false;
+  intersect.set(idx, 0*intersect.view(idx));
+  return true;
 }
