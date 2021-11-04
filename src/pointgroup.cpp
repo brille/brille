@@ -196,7 +196,7 @@ static void set_transformation_matrix(int *tmat, const int axes[3]);
 Pointgroup brille::ptg_get_transformation_matrix(int *transform_mat, const int *rotations, const int num_rotations)
 {
   int i, pg_num;
-  int axes[3];
+  int axes[3]{0,0,0};
   PointSymmetry pointsym;
   Pointgroup pointgroup;
   for (i=0; i<9; i++) transform_mat[i]=0;
@@ -205,7 +205,8 @@ Pointgroup brille::ptg_get_transformation_matrix(int *transform_mat, const int *
   pointgroup = Pointgroup(pg_num);
   if (pg_num > 0) {
     pointsym = brille::ptg_get_pointsymmetry(rotations, num_rotations);
-    get_axes(axes, pointgroup.laue, pointsym);
+    if (get_axes(axes, pointgroup.laue, pointsym) == 0)
+      throw std::runtime_error("Could not set pointgroup axes!");
     set_transformation_matrix(transform_mat, axes);
   }
   return pointgroup;
@@ -351,7 +352,7 @@ static int get_axes(int axes[3], const Laue laue, const PointSymmetry & pointsym
   case Laue::_6mmm: laue_one_axis(axes, pointsym, 3); break;
   case Laue::_m3  : lauennn(axes, pointsym, 2); break;
   case Laue::_m3m : lauennn(axes, pointsym, 4); break;
-	default: return 0;
+	default: axes[0] = axes[1] = axes[2] = 0; return 0;
   }
   return 1;
 }

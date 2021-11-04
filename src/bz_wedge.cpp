@@ -211,13 +211,9 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
   // Now restrict the symmetry operations to those with order > 1.
   PointSymmetry ps = fullps.higher(1);
-  // if the full pointgroup contains only 𝟙 (and -𝟙) then ps is empty and there
-  // this algorithm can not be used:
-  if (0 == ps.size()){
-    if (fullps.size() > 1) // 𝟙 & -𝟙 → P -1 triclinic spacegroup
-      this->wedge_triclinic();
-    return this->check_ir_polyhedron();
-  }
+  // if the full pointgroup contains only 𝟙 (and -𝟙) then ps is empty and  this algorithm can not be used.
+  // (triclinic systems are handled outside of this method)
+  assert(ps.size() > 0);
 
   // Get and combine the characteristic points of the first Brillouin zone:
   // The face centres, face corners, and mid-face-edge points.
@@ -519,19 +515,30 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
 }
 
 
-void BrillouinZone::wedge_triclinic(void){
+bool BrillouinZone::wedge_triclinic(){
   /* Assuming that this is spacegroup P -1 we have inversion symmetry only.
      We always want to find a set of planes that divides symmetry equivalent
      regions of space. With only -1 symmetry we have to make a choice as to
      *which* space inversion we care about.
-     We could restrict ourselves to {x≥0, y, z}, {x, y≥0, z}, {x, y, z≥0} or
-     their opposites, or any other subspace for which xyz ≥ 0.
-     Equivalently then, we can resstrict ourselves to the subspace where
-     x̂⋅(111) ≥ 0.
+     Any single 'wedge' normal will divide the first Brillouin zone -- why not
+     choose one perpendicular to a first Brillouin zone face? (or, failing that,
+     one of [100], [010], [001], or [111]).
   */
   using namespace brille;
-  bArray<double> vec(1u, 3u, 1.);
-  LQVec<double> nrm(this->outerlattice, vec);
-  this->set_ir_wedge_normals(nrm);
-  this->irreducible_vertex_search();
+  bArray<double> origin(1u,3u,0.);
+  auto normals = this->get_normals(); // the first Brillouin zone normals
+  for (ind_t i=0; i<normals.size(0); ++i){
+    this->set_ir_wedge_normals(normals.view(i));
+    this->ir_polyhedron = Polyhedron::bisect(this->polyhedron, -1*normals.view(i).get_xyz(), origin);
+    if (this->check_ir_polyhedron()) return true;
+  }
+  std::vector<std::array<double,3>> sv{{{1,0,0}},{{0,1,0}},{{0,0,1}},{{1,1,1}}};
+  LQVec<double> nrm(this->outerlattice, bArray<double>::from_std(sv));
+  for (ind_t i=0; i<nrm.size(0); ++i){
+    this->set_ir_wedge_normals(nrm.view(i));
+    // this->irreducible_vertex_search();
+    this->ir_polyhedron = Polyhedron::bisect(this->polyhedron, -1*nrm.view(i).get_xyz(), origin);
+    if (this->check_ir_polyhedron()) return true;
+  }
+  return false;
 }
