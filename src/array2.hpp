@@ -114,6 +114,9 @@ public:
     // if a dimension is 1 (or 0?) then its stride does not impact here
     return (_shape[0]<2||expected[0]==_stride[0]) && (_shape[1]<2||expected[1]==_stride[1]);
   }
+  bool is_vector() const {
+    return (_shape[0] == 1u || _shape[1] == 1u);
+  }
   // empty initializer
   explicit Array2()
   : _data(nullptr), _num(0), _shift(0u), _own(false), _ref(std::make_shared<char>()),
@@ -444,8 +447,38 @@ public:
   ind_t count(cmp expr, T val) const;
   Array2<bool> is(cmp expr, T val) const;
   std::vector<ind_t> find(cmp expr, T val) const;
+  /*!\brief Determine the per-element truth-value of this Array2 compared with provided data
+
+  \param expr The comparison to be performed
+  \param that The values to compare against
+
+  \return The truth value of the provided comparison between the stored and
+          provided data, will be the same shape a this Array2.
+
+  \note The shape of the compared-against Array2 must match or be broadcastable
+        to the shape of this Array2.
+  */
   template<class R> Array2<bool> is(cmp expr, const Array2<R>& that) const;
-  template<class R> std::vector<bool> is(cmp expr, const std::vector<R>& val) const;
+  /*!\brief Determine the per-row truth-value of this Array2 compared with provided data
+
+  \param expr The comparison to be performed
+  \param row The values to compare against, with length equal to the size of the
+             second dimension of this Array2.
+
+  \return The per-row truth value of the provided comparison between the stored
+          and provided data.
+  */
+  template<class R> std::vector<bool> row_is(cmp expr, const std::vector<R>& row) const;
+  /*!\brief Determine the element truth-value of this Array2 compared with provided data
+
+  \param expr The comparison to be performed
+  \param vals The values to compare against, with length equal to the number of
+              elements in this Array2
+
+  \return The per-element truth value of the provided comparison between the
+          stored and provided data.
+  */
+  template<class R> std::vector<bool> each_is(cmp expr, const std::vector<R>& vals) const;
   template<class R> bool is(const Array2<R>& that) const;
   std::vector<bool> is_unique() const;
   std::vector<ind_t> unique_idx() const;

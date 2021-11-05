@@ -381,7 +381,8 @@ private:
 };
 
 //! The single namespace wide `DebugPrinter` used with the logging macros.
-static DebugPrinter printer("");
+// static DebugPrinter printer("");
+extern DebugPrinter printer;
 
 /*! \brief A simple timer for use in debugging and profiling
 

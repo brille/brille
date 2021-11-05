@@ -395,7 +395,7 @@ private:
   TetMap connect(const size_t high, const size_t low) const{
     omp_set_num_threads(omp_get_max_threads());
     Stopwatch<> stopwatch;
-    stopwatch.tic();
+    if (brille::printer.datetime()) stopwatch.tic(); // we only need to start the timer if we are printing timing information
     TetMap map(layers[high].number_of_tetrahedra());
     long long mapsize = brille::utils::u2s<long long, size_t>(map.size());
 #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
@@ -416,7 +416,7 @@ private:
       for (double r: layers[low].get_circum_radii()) sumrad.push_back(layers[high].get_circum_radii()[i]+r);
       // if two circumsphere centers are closer than the sum of their radii
       // they are close enough to possibly overlap:
-      auto close_enough = norm(layers[low].get_circum_centres() - cchi).is(brille::cmp::le, sumrad);
+      auto close_enough = norm(layers[low].get_circum_centres() - cchi).each_is(brille::cmp::le, sumrad);
       for (ind_t j=0; j < close_enough.size(); ++j) if (close_enough[j])
       {
         bool add = false;
@@ -433,8 +433,8 @@ private:
         if (add || layers[low].get_tetrahedron(j).intersects(tethi)) map[i].push_back(j);
       }
     }
-    stopwatch.toc();
-    info_update("Connect ",layers[high].number_of_tetrahedra()," to ",layers[low].number_of_tetrahedra()," completed in ",stopwatch.elapsed()," ms");
+    if (brille::printer.datetime()) stopwatch.toc();
+    info_update_if(brille::printer.datetime(), "Connect ",layers[high].number_of_tetrahedra()," to ",layers[low].number_of_tetrahedra()," completed in ",stopwatch.elapsed()," ms");
     // we now have a TetMap which contains, for every tetrahedral index of the
     // higher level, all tetrahedral indices of the lower level which touch the
     // higher tetrahedron or share some part of its volume.
