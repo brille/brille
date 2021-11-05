@@ -342,6 +342,10 @@ public:
   }
   //! Check whether the pointgroup has the space-inversion operator, ̄1.
   bool has_space_inversion() const { return ptgsym.has_space_inversion(); }
+  //! Check if the spacegroup is triclinic
+  bool is_triclinic() const {
+    return ptgsym.higher(1).size() == 0;
+  }
   Basis get_basis() const {return basis; }
   //template <class R, class II>
   Basis set_basis(const std::vector<std::array<double,3>>& pos, const std::vector<ind_t>& typ) {

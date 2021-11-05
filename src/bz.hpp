@@ -92,15 +92,20 @@ public:
     // set the irreducible wedge now as the search will do nothing.
     this->ir_polyhedron = this->polyhedron;
     if (wedge_search){
-      bool success = this->wedge_brute_force()
-                  || this->wedge_brute_force(false,false) // no special 2-fold or mirror handling
-                  || this->wedge_brute_force(false,true) // no special 2-fold handling (but special mirror handling)
-                  || this->wedge_brute_force(true, false) // no special mirror handling (maybe not useful)
-                  || this->wedge_brute_force(true, true, false) // last ditch effort, handle non order(2) operations in decreasing order
-                  || this->wedge_brute_force(true, false, true, false)
-                  ;
-      // other combinations of special_2_folds, special_mirrors,
-      // and sort_by_length are possible but not necessarily useful.
+      bool success{false};
+      if (this->outerlattice.is_triclinic()){
+        success = !this->has_inversion || this->wedge_triclinic();
+      } else {
+        success = this->wedge_brute_force()
+               || this->wedge_brute_force(false,false) // no special 2-fold or mirror handling
+               || this->wedge_brute_force(false,true) // no special 2-fold handling (but special mirror handling)
+               || this->wedge_brute_force(true, false) // no special mirror handling (maybe not useful)
+               || this->wedge_brute_force(true, true, false) // last ditch effort, handle non order(2) operations in decreasing order
+               || this->wedge_brute_force(true, false, true, false)
+               ;
+               // other combinations of special_2_folds, special_mirrors,
+               // and sort_by_length are possible but not necessarily useful.
+      }
       if (!success)
         throw std::runtime_error("Failed to find an irreducible Brillouin zone.");
     }
@@ -432,7 +437,7 @@ public:
           of an irreducible Brillouin zone polyhedron.
   */
   bool wedge_brute_force(bool special_2_folds = true, bool special_mirrors = true, bool sort_by_length=true, bool sort_one_sym=true);
-  void wedge_triclinic(void);
+  bool wedge_triclinic();
   /*!
   With the first Brillouin zone and *an* irreducible section of reciprocal space
   already identified, this method finds all intersections of combinations of
@@ -495,7 +500,7 @@ public:
       normals = this->get_primitive_normals();
     }
     #pragma omp parallel for default(none) shared(out, normals, p, points) schedule(dynamic)
-    for (long long i=0; i<p.size(0); ++i) // separately changed to ind_t 
+    for (long long i=0; i<p.size(0); ++i) // separately changed to ind_t
       out[i] = dot(normals, p.view(i)-points).all(brille::cmp::le, 0.);
     return out;
   }
