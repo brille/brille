@@ -911,6 +911,27 @@ std::vector<T> Array2<T>::to_std() const {
 }
 
 template<class T>
+bool Array2<T>::to_hdf(const std::string& filename, const std::string& dataset_name) const {
+    using namespace HighFive;
+    File file(filename, File::ReadWrite | File::Create | File::Truncate);
+    std::vector<size_t> dataset_dims;
+    for (const auto & d: _shape) dataset_dims.push_back(static_cast<size_t>(d));
+    // DataSpace(_shape) *might* work but would need to implicitly convert ind_t to size_t
+    DataSet dataset = file.createDataSet<T>(dataset_name, DataSpace(dataset_dims));
+    // Copy the data into a structure that HighFive can handle :/
+    std::vector<std::vector<T>> hf;
+    for (ind_t i=0; i<_shape[0]; ++i){
+        std::vector<T> inner;
+        for (ind_t j=0; j<_shape[1]; ++j){
+            inner.push_back(this->val(i, j));
+        }
+        hf.push_back(inner);
+    }
+    dataset.write(hf);
+    return true;
+}
+
+template<class T>
 T* Array2<T>::ptr(const ind_t i0){
   assert(i0 < _shape[0]);
   return _data + ij2l_d(i0, 0u);

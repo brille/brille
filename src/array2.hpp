@@ -37,6 +37,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "types.hpp"
 #include "array_.hpp"
 // #include "array.hpp"
+#include "hdf_interface.hpp"
 namespace brille {
 /*! \brief A multidimensional shared data array with operator overloads
 
@@ -218,6 +219,21 @@ public:
       d[x++] = static_cast<T>(data[i][j]);
     return Array2<T>(d, num, true, shape, stride);
   }
+  // Read in from a file
+  static Array2<T> from_hdf(const std::string& filename, const std::string& datasetname){
+      using namespace HighFive;
+      File file(filename, File::ReadOnly);
+      DataSet dataset = file.getDataSet(datasetname);
+      std::vector<size_t> data_shape = dataset.getDimensions();
+      if (data_shape.size() != 2u) throw std::runtime_error("Only 2D arrays can be Array2 objects");
+      auto num = dataset.getElementCount();
+      T* data = new T[num]();
+      dataset.read(data);
+      shape_t shape{{static_cast<ind_t>(data_shape[0]), static_cast<ind_t>(data_shape[1])}};
+      shape_t stride{{shape[1], 1}};
+      return Array2<T>(data, num, true, shape, stride);
+  }
+
   // Construct an Array2 from an Array, unravelling higher dimensions
   Array2(const Array<T>& nd)
   : _num(0u), _shift(0u), _shape({0,1}), _stride({1,1})
@@ -305,8 +321,8 @@ public:
         T& operator[](ind_t    lin)       {return _data[this->l2l_d(lin)];}
   const T& operator[](ind_t    lin) const {return _data[this->l2l_d(lin)];}
 
-        T& operator[](shape_t& sub)       {return _data[this->s2l_d(sub)];}
-  const T& operator[](shape_t& sub) const {return _data[this->s2l_d(sub)];}
+        T& operator[](const shape_t& sub)       {return _data[this->s2l_d(sub)];}
+  const T& operator[](const shape_t& sub) const {return _data[this->s2l_d(sub)];}
 protected: // so inherited classes can calculate subscript indexes into their data
   ind_t l2l_d(const ind_t l) const {
     return l + _shift;
@@ -516,6 +532,7 @@ public:
 
   Array2<T> contiguous_copy() const;
   Array2<T> contiguous_row_ordered_copy() const;
+  bool to_hdf(const std::string& filename, const std::string& datasetname) const;
 };
 
 /*!\brief An iterator for the Array2 class
