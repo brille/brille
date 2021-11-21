@@ -278,19 +278,27 @@ protected:
   std::vector<std::vector<int>> faces_per_vertex; //!< A listing for each vertex of the facets it contributes to (extraneous, should be removed)
   std::vector<std::vector<int>> vertices_per_face;//!< A listing of the vertices bounding each facet polygon
 public:
-  bool to_hdf(const std::string& filename, const std::string& dataset) const{
-      vertices.to_hdf(filename, dataset+"/vertices");
-      points.to_hdf(filename, dataset+"/points");
-      normals.to_hdf(filename, dataset+"/normals");
-      lists_to_hdf(faces_per_vertex, filename, dataset+"/faces_per_vertex");
-      lists_to_hdf(vertices_per_face, filename, dataset+"/vertices_per_face");
+  bool to_hdf(const std::string& filename, const std::string& dataset, const unsigned perm=HighFive::File::OpenOrCreate) const{
+    HighFive::File file(filename, perm);
+    if (file.exist(dataset)) file.unlink(dataset);
+    auto group = file.createGroup(dataset);
+    bool ok{true};
+    ok &= vertices.to_hdf(group, "vertices");
+    ok &= points.to_hdf(group, "points");
+    ok &= normals.to_hdf(group, "normals");
+    ok &= lists_to_hdf(faces_per_vertex, group, "faces_per_vertex");
+    ok &= lists_to_hdf(vertices_per_face, group, "vertices_per_face");
+    return ok;
   }
   static Polyhedron from_hdf(const std::string& filename, const std::string& dataset){
-      auto v = bArray<double>::from_hdf(filename, dataset+"/vertices");
-      auto p = bArray<double>::from_hdf(filename, dataset+"/points");
-      auto n = bArray<double>::from_hdf(filename, dataset+"/normals");
-      auto fpv = lists_from_hdf<int>(filename, dataset+"/faces_per_vertex", v.size(0));
-      auto vpf = lists_from_hdf<int>(filename, dataset+"/vertices_per_face", n_face);
+    HighFive::File file(filename, HighFive::File::ReadOnly);
+    auto group = file.getGroup(dataset);
+    auto v = bArray<double>::from_hdf(group, "vertices");
+    auto p = bArray<double>::from_hdf(group, "points");
+    auto n = bArray<double>::from_hdf(group, "normals");
+    auto fpv = lists_from_hdf<int>(group, "faces_per_vertex");
+    auto vpf = lists_from_hdf<int>(group, "vertices_per_face");
+    return {v, p, n, fpv, vpf};
   }
   //! empty initializer
   explicit Polyhedron():

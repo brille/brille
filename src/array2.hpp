@@ -220,18 +220,24 @@ public:
     return Array2<T>(d, num, true, shape, stride);
   }
   // Read in from a file
+  template<class R>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, Array2<T>>
+  from_hdf(R& obj, const std::string& node){
+    using namespace HighFive;
+    auto dataset = obj.getDataSet(node);
+    std::vector<size_t> data_shape = dataset.getDimensions();
+    if (data_shape.size() != 2u) throw std::runtime_error("Only 2D arrays can be Array2 objects");
+    auto num = dataset.getElementCount();
+    T* data = new T[num]();
+    dataset.read(data);
+    shape_t shape{{static_cast<ind_t>(data_shape[0]), static_cast<ind_t>(data_shape[1])}};
+    shape_t stride{{shape[1], 1}};
+    return Array2<T>(data, num, true, shape, stride);
+  }
   static Array2<T> from_hdf(const std::string& filename, const std::string& datasetname){
       using namespace HighFive;
       File file(filename, File::ReadOnly);
-      DataSet dataset = file.getDataSet(datasetname);
-      std::vector<size_t> data_shape = dataset.getDimensions();
-      if (data_shape.size() != 2u) throw std::runtime_error("Only 2D arrays can be Array2 objects");
-      auto num = dataset.getElementCount();
-      T* data = new T[num]();
-      dataset.read(data);
-      shape_t shape{{static_cast<ind_t>(data_shape[0]), static_cast<ind_t>(data_shape[1])}};
-      shape_t stride{{shape[1], 1}};
-      return Array2<T>(data, num, true, shape, stride);
+      return Array2<T>::from_hdf(file, datasetname);
   }
 
   // Construct an Array2 from an Array, unravelling higher dimensions
@@ -532,7 +538,11 @@ public:
 
   Array2<T> contiguous_copy() const;
   Array2<T> contiguous_row_ordered_copy() const;
-  bool to_hdf(const std::string& filename, const std::string& datasetname) const;
+  template<class R>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+  // bool
+  to_hdf(R& obj, const std::string& entry) const;
+  bool to_hdf(const std::string& filename, const std::string& datasetname, const unsigned permissions=HighFive::File::OpenOrCreate) const;
 };
 
 /*!\brief An iterator for the Array2 class

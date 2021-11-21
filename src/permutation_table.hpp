@@ -70,6 +70,44 @@ private:
 	std::map<size_t,size_t> ijmap;
 	std::vector<std::vector<ind_t>> permutations;
 public:
+	template<class R>
+	std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+	to_hdf(R& obj, const std::string& dataset) const {
+		if (obj.exist(dataset)) obj.unlink(dataset);
+    auto group = obj.createGroup(dataset);
+    bool ok{true};
+		group.createAttribute("offset", offset);
+		group.createAttribute("size", IndexSize);
+		ok &= map_to_hdf(ijmap, group, "map");
+		ok &= lists_to_hdf(permutations, group, "permutations");
+		return ok;
+	}
+	bool to_hdf(const std::string& filename, const std::string& dataset, const unsigned perm=HighFive::File::OpenOrCreate) const{
+    HighFive::File file(filename, perm);
+    return this->to_hdf(file, dataset);
+	}
+	template<class R>
+	static
+	std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, PermutationTable>
+	from_hdf(R& obj, const std::string& dataset){
+		auto group = obj.getGroup(dataset);
+		size_t o, isz;
+		group.getAttribute("offset").read(o);
+		group.getAttribute("size").read(isz);
+		auto m = map_from_hdf<size_t, size_t>(group, "map");
+		auto p = lists_from_hdf<ind_t>(group, "permutations");
+		if (o != offset)
+			throw std::runtime_error("Offset mismatch!");
+		return {isz, m, p};
+	}
+	static PermutationTable from_hdf(const std::string& filename, const std::string& dataset){
+		HighFive::File file(filename, HighFive::File::ReadOnly);
+		return PermutationTable::from_hdf(file, dataset);
+	}
+	PermutationTable(size_t ni, std::map<size_t, size_t> map, std::vector<std::vector<ind_t>> perm)
+	: IndexSize(ni), ijmap(std::move(map)), permutations(std::move(perm)) {
+		// perform a sanity check?
+	}
 	PermutationTable(size_t ni, size_t branches): IndexSize(ni) {
 		this->add_zeroth(branches);
 	};

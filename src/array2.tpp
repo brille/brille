@@ -910,25 +910,32 @@ std::vector<T> Array2<T>::to_std() const {
   return out;
 }
 
+template<class T> template<class R>
+std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+// bool
+Array2<T>::to_hdf(R& obj, const std::string& node) const {
+  using namespace HighFive;
+  if (obj.exist(node)) obj.unlink(node);
+  //
+  // Copy the data into a structure that HighFive can handle :/
+  std::vector<std::vector<T>> hf;
+  for (ind_t i=0; i<_shape[0]; ++i){
+      std::vector<T> inner;
+      for (ind_t j=0; j<_shape[1]; ++j){
+          inner.push_back(this->val(i, j));
+      }
+      hf.push_back(inner);
+  }
+  // create and write-to the dataset in one step:
+  obj.createDataSet(node, hf);
+  return true;
+}
+
 template<class T>
-bool Array2<T>::to_hdf(const std::string& filename, const std::string& dataset_name) const {
+bool Array2<T>::to_hdf(const std::string& filename, const std::string& node, const unsigned permissions) const {
     using namespace HighFive;
-    File file(filename, File::ReadWrite | File::Create | File::Truncate);
-    std::vector<size_t> dataset_dims;
-    for (const auto & d: _shape) dataset_dims.push_back(static_cast<size_t>(d));
-    // DataSpace(_shape) *might* work but would need to implicitly convert ind_t to size_t
-    DataSet dataset = file.createDataSet<T>(dataset_name, DataSpace(dataset_dims));
-    // Copy the data into a structure that HighFive can handle :/
-    std::vector<std::vector<T>> hf;
-    for (ind_t i=0; i<_shape[0]; ++i){
-        std::vector<T> inner;
-        for (ind_t j=0; j<_shape[1]; ++j){
-            inner.push_back(this->val(i, j));
-        }
-        hf.push_back(inner);
-    }
-    dataset.write(hf);
-    return true;
+    File file(filename, permissions);
+    return this->to_hdf(file, node);
 }
 
 template<class T>

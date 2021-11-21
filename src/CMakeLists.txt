@@ -24,6 +24,7 @@ set(CXX_SOURCES
   comparisons.cpp
   debug.cpp
   hall_symbol.cpp
+  hdf_interface.cpp
   lattice.cpp
   neighbours.cpp
   pointgroup.cpp

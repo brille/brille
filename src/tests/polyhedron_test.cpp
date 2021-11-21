@@ -1,9 +1,23 @@
 #include <catch2/catch.hpp>
+#include <filesystem>
 
 #include "array_latvec.hpp" // defines bArray<T> as Array2<T> or Array<T>
 #include "polyhedron.hpp"
 
 using namespace brille;
+
+template<class T>
+static bool lists_match(const std::vector<std::vector<T>>& a, const std::vector<std::vector<T>>& b){
+  if (a.size() != b.size()) return false;
+  auto s = a.size();
+  for (size_t i=0; i<s; ++i){
+    const auto& ai{a[i]}, bi{b[i]};
+    if (ai.size() != bi.size()) return false;
+    for (size_t j=0; j<ai.size(); ++j)
+      if (ai[j] != bi[j]) return false;
+  }
+  return true;
+}
 
 TEST_CASE("Polyhedron instantiation","[polyhedron]"){
   std::vector<std::array<double,3>> va_verts{{1,1,0},{2,0,0},{1,1,1},{0,0,0}};
@@ -138,4 +152,54 @@ TEST_CASE("Small face polyhedron convex hull","[!shouldfail][polyhedron][convexh
 
   //REQUIRE(cv_poly.get_vertices_per_face().size() == fct_poly.get_vertices_per_face().size());
   REQUIRE(cv_poly.get_volume() == Approx(fct_poly.get_volume()));
+}
+
+TEST_CASE("Polyhedron IO","[polyhedron][io]"){
+    namespace fs=std::filesystem;
+    auto tdir = fs::temp_directory_path();
+    fs::path filepath = tdir;
+    filepath /= fs::path("brille.h5");
+
+
+    std::vector<std::array<double,3>> va_verts{{1,1,0},{2,0,0},{1,1,1},{0,0,0}};
+    auto verts = bArray<double>::from_std(va_verts);
+    std::vector<std::vector<int>> vpf{{0,1,3},{0,2,1},{0,3,2},{1,2,3}};
+    auto poly = Polyhedron(verts, vpf);
+
+    // write the Polyhedron to the file:
+    auto filename = filepath.string();
+    std::string dataset="/polyhedron";
+    std::cout << "Writing to file " << filename << std::endl;
+    poly.to_hdf(filename, dataset);
+
+    // read-back the file's Polyhedron
+    auto read = Polyhedron::from_hdf(filename, dataset);
+
+    // ensure that the two Polyhedra are identical
+    auto rv = read.get_vertices();
+    auto rp = read.get_points();
+    auto rn = read.get_normals();
+    auto rfpv = read.get_faces_per_vertex();
+    auto rvpf = read.get_vertices_per_face();
+
+    auto p = poly.get_points();
+    auto n = poly.get_normals();
+    auto fpv = poly.get_faces_per_vertex();
+
+    for (unsigned int i=0; i<2; ++i){
+      REQUIRE(verts.size(i) == rv.size(i));
+      REQUIRE(p.size(i) == rp.size(i));
+      REQUIRE(n.size(i) == rn.size(i));
+    }
+    for (const auto & s: verts.subItr()) REQUIRE(verts[s] == rv[s]);
+    for (const auto & s: p.subItr()) REQUIRE(p[s] == rp[s]);
+    for (const auto & s: n.subItr()) REQUIRE(n[s] == rn[s]);
+
+    REQUIRE(lists_match(fpv, rfpv));
+    REQUIRE(lists_match(vpf, rvpf));
+
+    // (over)write to the file again, just to ensure it doesn't raise an error
+    poly.to_hdf(filename, dataset);
+
+    // fs::remove(filepath);
 }
