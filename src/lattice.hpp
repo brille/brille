@@ -21,6 +21,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Classes representing real space and reciprocal space lattices
 */
 #include <assert.h>
+
+#include <utility>
 // #include <vector>
 #include "primitive.hpp"
 #include "basis.hpp"
@@ -57,6 +59,7 @@ can be provided and no inferrence will be used.
 An third angle unit is understood -- multiples of π radian -- 'pi'.
 */
 enum class AngleUnit { not_provided, radian, degree, pi };
+enum class LengthUnit { none, angstrom, inverse_angstrom};
 
 /*! \brief Calculate the basis vector lengths and angles from a matrix of three vectors
 
@@ -111,16 +114,17 @@ and an optional Hall number if a non-Primitive lattice is desired.
 */
 class Lattice{
 protected:
-  std::array<double,3> len; //!< basis vector lengths
-  std::array<double,3> ang; //!< basis vector angles ordered θ₁₂, θ₀₂, θ₀₁, in radian
+  std::array<double,3> len{}; //!< basis vector lengths
+  std::array<double,3> ang{}; //!< basis vector angles ordered θ₁₂, θ₀₂, θ₀₁, in radian
   double volume; //!< volume of the unit cell formed by the basis vectors
   Bravais bravais; //!< Lattice centring type
   Symmetry spgsym; //!< Spacegroup symmetry operators
   PointSymmetry ptgsym; //!< Pointgroup symmetry operators
   Basis basis; //!< The positions of all atoms within the unit cell
+  LengthUnit unit;
 protected:
-  double unitvolume() const;
-  Lattice inner_star() const;
+  [[nodiscard]] double unitvolume() const;
+  [[nodiscard]] Lattice inner_star() const;
   template<class I>
   void set_len_pointer(const double *lvec, const I span){
     for (int i=0;i<3;i++) this->len[i] = lvec[i*span];
@@ -145,19 +149,19 @@ protected:
   }
   // void set_len_scalars(const double, const double, const double);
   // void set_ang_scalars(const double, const double, const double, const AngleUnit);
-  void check_ang(const AngleUnit);
-  void check_hall_number(const int h);
+  void check_ang(AngleUnit);
+  void check_hall_number(int h);
   void check_IT_name(const std::string& itname, const std::string& choice="");
 public:
   //! Construct the Lattice from its components, excluding the volume which is calculated
   Lattice(const std::array<double,3>& l, const std::array<double,3>& a,
-          const Bravais b, const Symmetry sgs, const PointSymmetry pgs,
-          const Basis base):
-    len(l), ang(a), bravais(b), spgsym(sgs), ptgsym(pgs), basis(base) {
+          const Bravais b, Symmetry sgs, PointSymmetry pgs,
+          Basis base, const LengthUnit lu=LengthUnit::none):
+    len(l), ang(a), bravais(b), spgsym(std::move(sgs)), ptgsym(std::move(pgs)), basis(std::move(base)), unit(lu) {
       this->volume = this->calculatevolume();
     }
   //! Construct the Lattice from a matrix of the basis vectors
-  Lattice(const double *, const int h=1);
+  explicit Lattice(const double *, int h=1);
   //! Construct the Lattice from an Array2 3x3 basis vector matrix, plus basis and symmetry information
   Lattice(const brille::Array2<double>& latmat, const std::vector<std::array<double,3>>& pos, const std::vector<ind_t>& typ, const Symmetry& sym){
     double l[3]={0,0,0}, a[3]={0,0,0};
@@ -203,13 +207,13 @@ public:
     this->check_hall_number(h);
   }
   //! Construct the Lattice from a vector of the basis vector lengths and a vector of the basis vector angles
-  Lattice(const double *, const double *, const int h=1, const AngleUnit au=AngleUnit::not_provided);
+  Lattice(const double *, const double *, int h=1, AngleUnit au=AngleUnit::not_provided);
   //! Construct the Lattice from the three scalar lengths and three scalar angles
-  Lattice(const double la=1.0, const double lb=1.0, const double lc=1.0, const double al=brille::halfpi, const double bl=brille::halfpi, const double cl=brille::halfpi, const int h=1);
+  explicit Lattice(double la=1.0, double lb=1.0, double lc=1.0, double al=brille::halfpi, double bl=brille::halfpi, double cl=brille::halfpi, int h=1);
   //! Construct the Lattice from a matrix of the basis vectors, specifying an International Tables symmetry name instead of a Hall number
   Lattice(const double *, const std::string&, const std::string& choice="");
   //! Construct the lattice from vectors, specifying an International Tables symmetry name instead of a Hall number
-  Lattice(const double *, const double *, const std::string&, const std::string& choice="", const AngleUnit au=AngleUnit::not_provided);
+  Lattice(const double *, const double *, const std::string&, const std::string& choice="", AngleUnit au=AngleUnit::not_provided);
   template<class I>//, typename=typename std::enable_if<std::is_integral<I>::value>::type>
   Lattice(const double * latmat, std::vector<I>& strides, const std::string& itname, const std::string& choice=""){
     double l[3]={0,0,0}, a[3]={0,0,0};
@@ -228,22 +232,22 @@ public:
     this->check_IT_name(itname, choice);
   }
   //! Construct the lattice from scalars, specifying an International Tables symmetry name instead of a Hall number
-  Lattice(const double, const double, const double, const double, const double, const double, const std::string&, const std::string& choice="");
+  Lattice(double, double, double, double, double, double, const std::string&, const std::string& choice="");
   virtual ~Lattice() = default;
   //! Return the first basis vector length
-  double get_a     () const {return len[0];}
+  [[nodiscard]] double get_a     () const {return len[0];}
   //! Return the second basis vector length
-  double get_b     () const {return len[1];}
+  [[nodiscard]] double get_b     () const {return len[1];}
   //! Return the third basis vector length
-  double get_c     () const {return len[2];}
+  [[nodiscard]] double get_c     () const {return len[2];}
   //! Return the angle between the second and third basis vectors in radian
-  double get_alpha () const {return ang[0];}
+  [[nodiscard]] double get_alpha () const {return ang[0];}
   //! Return the angle between the first and third basis vectors in radian
-  double get_beta  () const {return ang[1];}
+  [[nodiscard]] double get_beta  () const {return ang[1];}
   //! Return the angle between the first and second basis vectors in radian
-  double get_gamma () const {return ang[2];}
+  [[nodiscard]] double get_gamma () const {return ang[2];}
   //! Return the volume of the parallelpiped unit cell formed by the basis vectors
-  double get_volume() const {return volume;}
+  [[nodiscard]] double get_volume() const {return volume;}
   //! Calculate and return the unit cell volume
   double calculatevolume();
   /*! Calculate the metric tensor of the Lattice
@@ -261,19 +265,19 @@ public:
   /*! Calculate the metric tensor of the Lattice
   @returns A std::vector of the row-ordered matrix
   */
-  std::vector<double> get_metric_tensor() const ;
+  [[nodiscard]] std::vector<double> get_metric_tensor() const ;
   /*! Calculate the covariant metric tensor of the Lattice -- this is typically referred to as **the** metric tensor
   @returns A std::vector of the row-ordered matrix
   */
-  std::vector<double> get_covariant_metric_tensor() const ;
+  [[nodiscard]] std::vector<double> get_covariant_metric_tensor() const ;
   /*! Calculate the contravariant metric tensor of the Lattice -- the inverse of **the** metric tensor
   @returns A std::vector of the row-ordered matrix
   */
-  std::vector<double> get_contravariant_metric_tensor() const ;
+  [[nodiscard]] std::vector<double> get_contravariant_metric_tensor() const ;
   // some functions don't logically make sense for this base class, but
   // do for the derived classes. define them here for funsies
   //! Determine if the passed Lattice represents the same space-spanning lattice
-  bool issame(const Lattice&) const; // this should really have a tolerance
+  [[nodiscard]] bool issame(const Lattice&) const; // this should really have a tolerance
   /*! Determine if the passed Lattice represents an equivalent space-spanning
   lattice within the specified tolerance. Simultaneous permutations of lengths
   and angles are considered as equivalent --
@@ -281,7 +285,7 @@ public:
   as are antipermutations,
   e.g., (a,b,c)(α,β,γ) ≡ (a,c,b)(α,γ,β) ≡ (c,b,a)(γ,β,α) ≡ (b,a,c)(β,α,γ).
   */
-  bool isapprox(const Lattice&) const;
+  [[nodiscard]] bool isapprox(const Lattice&) const;
   /*! Determine if the passed Lattice is a permutation of the space-spanning
   lattice within the specified tolerance. The equivalence is encoded in a
   signed integer:
@@ -296,20 +300,17 @@ public:
   | -3 | (b,a,c)(β,α,γ) |
   | 0 | no equivalent permutation |
   */
-  int ispermutation(const Lattice&) const;
+  [[nodiscard]] int ispermutation(const Lattice&) const;
   //! Print the basis vector lengths and angles to the console
   virtual void print();
   //! Return a string representation of the basis vector lengths and angles
   virtual std::string string_repr();
   //! Return the Bravais centring of the Lattice
-  Bravais get_bravais_type() const { return bravais; }
+  [[nodiscard]] Bravais get_bravais_type() const { return bravais; }
   //! Set the Bravais centring of the Lattice
-  Bravais set_bravais_type(const Bravais b) {
-    this->bravais = b;
-    return this->get_bravais_type();
-  }
+  Bravais set_bravais_type(Bravais b);
   //! Return the Spacegroup symmetry operation object of the Lattice
-  Symmetry get_spacegroup_symmetry(const int time_reversal=0) const {
+  [[nodiscard]] Symmetry get_spacegroup_symmetry(const int time_reversal=0) const {
     if (time_reversal && !spgsym.has_space_inversion()){
       Symmetry gens = spgsym.generators();
       Motion<int,double> space_inversion({{-1,0,0, 0,-1,0, 0,0,-1}},{{0.,0.,0.}});
@@ -326,7 +327,7 @@ public:
     return spgsym;
   }
   //! Return the Pointgroup Symmetry operation object of the Lattice
-  PointSymmetry get_pointgroup_symmetry(const int time_reversal=0) const {
+  [[nodiscard]] PointSymmetry get_pointgroup_symmetry(const int time_reversal=0) const {
     if (time_reversal && !ptgsym.has_space_inversion()){
       // time_reversal == space_inversion. requested but not present
       // get the generators of the pointgroup
@@ -341,12 +342,12 @@ public:
     }
   }
   //! Check whether the pointgroup has the space-inversion operator, ̄1.
-  bool has_space_inversion() const { return ptgsym.has_space_inversion(); }
+  [[nodiscard]] bool has_space_inversion() const { return ptgsym.has_space_inversion(); }
   //! Check if the spacegroup is triclinic
-  bool is_triclinic() const {
+  [[nodiscard]] bool is_triclinic() const {
     return ptgsym.higher(1).size() == 0;
   }
-  Basis get_basis() const {return basis; }
+  [[nodiscard]] Basis get_basis() const {return basis; }
   //template <class R, class II>
   Basis set_basis(const std::vector<std::array<double,3>>& pos, const std::vector<ind_t>& typ) {
     this->basis = Basis(pos, typ);
@@ -356,6 +357,39 @@ public:
     this->basis = b;
     return this->get_basis();
   }
+  [[nodiscard]] LengthUnit length_unit() const {return unit;}
+  [[nodiscard]] LengthUnit length_unit(LengthUnit lu) {unit = lu; return unit;}
+    // Output to HDF5 file/object
+    template<class HF>
+    std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+    to_hdf(HF& obj, const std::string& entry) const{
+        auto group = overwrite_group(obj, entry);
+        group.createAttribute("lengths", len);
+        group.createAttribute("angles", ang);
+        group.createAttribute("volume", volume);
+        group.createAttribute("bravais", bravais);
+        group.createAttribute("length_unit", unit);
+        bool ok{true};
+        ok &= spgsym.to_hdf(group, "spacegroup");
+        ok &= ptgsym.to_hdf(group, "pointgroup");
+        ok &= basis.to_hdf(group, "basis");
+        return ok;
+    }
+    // Input from HDF5 file/object
+    template<class HF>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Lattice>
+    from_hdf(HF& obj, const std::string& entry){
+      auto group = obj.getGroup(entry);
+      std::array<double, 3> lengths{}, angles{};
+      group.getAttribute("lengths").read(lengths);
+      group.getAttribute("angles").read(angles);
+      double volume;
+      group.getAttribute("volume").read(volume);
+      auto spg = Symmetry::from_hdf(group, "spacegroup");
+      auto ptg = PointSymmetry::from_hdf(group, "pointgroup");
+      auto bas = Basis::from_hdf(group, "basis");
+      return {lengths, angles, volume, spg, ptg, bas};
+    }
 };
 
 /*! \brief A space-spanning Lattice that exists in real space
@@ -366,32 +400,44 @@ defines new versions of some methods.
 */
 class Direct: public Lattice{
 public:
-  template<class ...Types> Direct(Types ... args): Lattice(args...){}
-  Direct(const Lattice& lat): Lattice(lat){}
+  template<class ...Types> explicit Direct(Types ... args): Lattice(args...){unit = LengthUnit::angstrom;}
+  explicit Direct(const Lattice& lat): Lattice(lat){unit = LengthUnit::angstrom;}
   //! Return the inverse Reciprocal lattice
-  Reciprocal star() const;
+  [[nodiscard]] Reciprocal star() const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a* along x
   void get_xyz_transform(double*) const;
-  void get_xyz_transform(double*, const size_t, const size_t) const;
+  void get_xyz_transform(double*, size_t, size_t) const;
   template<class I> void get_xyz_transform(double*, std::vector<I>&) const;
-  std::vector<double> get_xyz_transform() const;
+  [[nodiscard]] std::vector<double> get_xyz_transform() const;
   //! Return the inverse of the basis vectors expressed in *an* orthonormal frame where a* is along x
   void get_inverse_xyz_transform(double*) const;
-  void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
+  void get_inverse_xyz_transform(double*, size_t, size_t) const;
   template<class I> void get_inverse_xyz_transform(double*, std::vector<I>&) const;
-  std::vector<double> get_inverse_xyz_transform() const;
+  [[nodiscard]] std::vector<double> get_inverse_xyz_transform() const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a along x
   void get_lattice_matrix(double*) const;
-  void get_lattice_matrix(double*, const size_t, const size_t) const;
+  void get_lattice_matrix(double*, size_t, size_t) const;
   template<class I> void get_lattice_matrix(double*, std::vector<I>&) const;
   //! Always false
-  bool isstar(const Direct&) const;
+  [[nodiscard]] bool isstar(const Direct&) const;
   //! Determine if a Reciprocal lattice is the inverse of this lattice
-  bool isstar(const Reciprocal&) const;
+  [[nodiscard]] bool isstar(const Reciprocal&) const;
   void print() override;
   std::string string_repr() override;
   //! For non-Primitive Direct lattices, return the equivalent Primitive lattice
-  Direct primitive(void) const;
+  [[nodiscard]] Direct primitive() const;
+    // Output to HDF5 file/object handled by Lattice class
+    // Input from HDF5 file/object, checking length unit
+    template<class HF>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Direct>
+    from_hdf(HF& obj, const std::string& entry){
+        auto group = obj.getGroup(entry);
+        LengthUnit unit;
+        group.getAttribute("length_unit").read(unit);
+        if (unit != LengthUnit::angstrom)
+            throw std::runtime_error("Expected angstrom length units for a Reciprocal lattice!");
+        return {Lattice::from_hdf(obj, entry)};
+    }
 };
 /*! \brief A space-spanning Lattice that exists in reciprocal space
 
@@ -401,36 +447,48 @@ class and defines new versions of some methods.
 */
 class Reciprocal: public Lattice{
 public:
-  template<class ...Types> Reciprocal(Types ... args): Lattice(args...){}
-  Reciprocal(const Lattice& lat): Lattice(lat){}
+  template<class ...Types> explicit Reciprocal(Types ... args): Lattice(args...){ unit = LengthUnit::inverse_angstrom; }
+  explicit Reciprocal(const Lattice& lat): Lattice(lat){ unit = LengthUnit::inverse_angstrom; }
   //! Return the inverse Direct lattice
-  Direct star() const;
+  [[nodiscard]] Direct star() const;
   //! Return the Busing-Levey B matrix http://dx.doi.org/10.1107/S0365110X67000970
   void get_B_matrix(double*) const;
-  void get_B_matrix(double*, const size_t, const size_t) const;
+  void get_B_matrix(double*, size_t, size_t) const;
   template<class I> void get_B_matrix(double*, std::vector<I>&) const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a* along x
   void get_xyz_transform(double*) const;
-  void get_xyz_transform(double*, const size_t, const size_t) const;
+  void get_xyz_transform(double*, size_t, size_t) const;
   template<class I> void get_xyz_transform(double*, std::vector<I>&) const;
-  std::vector<double> get_xyz_transform() const;
+  [[nodiscard]] std::vector<double> get_xyz_transform() const;
   //! Return the inverse of the basis vectors expressed in *an* orthonormal frame where a* is along x
   void get_inverse_xyz_transform(double*) const;
-  void get_inverse_xyz_transform(double*, const size_t, const size_t) const;
+  void get_inverse_xyz_transform(double*, size_t, size_t) const;
   template<class I> void get_inverse_xyz_transform(double*, std::vector<I>&) const;
-  std::vector<double> get_inverse_xyz_transform() const;
+  [[nodiscard]] std::vector<double> get_inverse_xyz_transform() const;
   //! Return the basis vectors expressed in *an* orthonormal frame with a along x
   void get_lattice_matrix(double*) const;
-  void get_lattice_matrix(double*, const size_t, const size_t) const;
+  void get_lattice_matrix(double*, size_t, size_t) const;
   template<class I> void get_lattice_matrix(double*, std::vector<I>&) const;
   //! Always false
-  bool isstar(const Reciprocal&) const;
+  [[nodiscard]] bool isstar(const Reciprocal&) const;
   //! Determine if a Direct lattice is the inverse of this lattice
-  bool isstar(const Direct&) const;
+  [[nodiscard]] bool isstar(const Direct&) const;
   void print() override;
   std::string string_repr() override;
   //! For non-Primitive Reciprocal lattices, return the equivalent Primitive Reciprocal lattice
-  Reciprocal primitive(void) const;
+  [[nodiscard]] Reciprocal primitive() const;
+    // Output to HDF5 file/object handled by Lattice class
+    // Input from HDF5 file/object, checking length unit
+    template<class HF>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Reciprocal>
+    from_hdf(HF& obj, const std::string& entry){
+        auto group = obj.getGroup(entry);
+        LengthUnit unit;
+        group.getAttribute("length_unit").read(unit);
+        if (unit != LengthUnit::inverse_angstrom)
+            throw std::runtime_error("Expected inverse angstrom length units for a Reciprocal lattice!");
+        return {Lattice::from_hdf(obj, entry)};
+    }
 };
 
 /*! \brief Type information for Lattice and LatVec objects

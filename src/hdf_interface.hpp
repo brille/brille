@@ -16,6 +16,19 @@ const std::string LENGTH_ENTRY("/length");
 const std::string LENGTH_ATTR_NAME("length");
 
 namespace brille {
+  template<class T, class... V>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, T>, HighFive::Group>
+  overwrite_group(T& obj, const std::string& entry, V... args){
+      if (obj.exist(entry)) obj.unlink(entry);
+      return obj.createGroup(entry, args...);
+  }
+  template<class T, class... V>
+    std::enable_if_t<std::is_base_of_v<HighFive::Object, T>, HighFive::DataSet>
+    overwrite_data(T& obj, const std::string& entry, V... args){
+      if (obj.exist(entry)) obj.unlink(entry);
+      return obj.createDataSet(entry, args...);
+  }
+
   template<class T, class R>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
   lists_to_hdf(const std::vector<std::vector<T>>& lists, R& obj, const std::string& entry){
@@ -92,6 +105,17 @@ namespace brille {
     for (size_t i=0; i<keys.size(); ++i) map.emplace(keys[i], values[i]);
     return map;
   }
+
+    template<class T, class R, size_t N>
+    std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+    lists_to_hdf(const std::array<std::vector<T>, N>& lists, R& obj, const std::string& entry){
+        using namespace HighFive;
+        auto group = overwrite_group(obj, entry);
+        group.createAttribute(LENGTH_ATTR_NAME, lists.size());
+        size_t i=0;
+        for (const auto& list: lists) group.createDataSet(std::to_string(i++), list);
+        return true;
+    }
 
 }
 #endif //BRILLE_HDF_INTERFACE_HPP

@@ -24,7 +24,12 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Classes for a lattice pointgroup symmetry operations
 */
 #include "symmetry_common.hpp" // defines Matrix, Vector, Matrices, Vectors
+#include "hdf_interface.hpp"
 namespace brille {
+    template<class T>
+    struct HF_Matrix {
+        T xx, xy, xz, yx, yy, yz, zx, zy, zz;
+    };
 /*****************************************************************************\
 | PointSymmetry class                                                         |
 |-----------------------------------------------------------------------------|
@@ -41,44 +46,63 @@ namespace brille {
 class PointSymmetry{
   Matrices<int> R;
 public:
-  PointSymmetry(size_t n=0): R(n) { R.resize(n);}
-  PointSymmetry(const Matrices<int>& rots): R(rots){ this->sort(); }
-  const Matrices<int>& getall(void)                  const { return this->R;  }
-  size_t               size(void)                    const { return R.size(); }
-  size_t               resize(const size_t newsize)                            ;
+  explicit PointSymmetry(size_t n=0): R(n) { R.resize(n);}
+  explicit PointSymmetry(const Matrices<int>& rots): R(rots){ this->sort(); }
+  [[nodiscard]] const Matrices<int>& getall()                  const { return this->R;  }
+  [[nodiscard]] size_t               size()                    const { return R.size(); }
+  size_t               resize(size_t newsize)                            ;
   size_t               add(const int *r)                                       ;
   size_t               add(const Matrix<int>&)                                 ;
   size_t               add(const std::string&)                                 ;
-  bool                 get(const size_t i, int *r)                        const;
-  bool                 set(const size_t i, const int *r)                       ;
-  int *                data(const size_t i)                                    ;
-  const int *          data(const size_t i)                               const;
-  Matrix<int>          pop(const size_t i=0)                                   ;
-  size_t               erase(const size_t i)                                   ;
-  bool                 has(const Matrix<int>&)                            const;
-  Matrix<int>          get(const size_t i)                                const;
-  Matrix<int>          get_proper(const size_t i)                         const;
-  Matrix<int>          get_inverse(const size_t i)                        const;
-  size_t               get_inverse_index(const size_t i)                  const;
-  size_t               find_index(const Matrix<int>&)                     const;
+  bool                 get(size_t i, int *r)                        const;
+  bool                 set(size_t i, const int *r)                       ;
+  int *                data(size_t i)                                    ;
+  [[nodiscard]] const int *          data(size_t i)                               const;
+  Matrix<int>          pop(size_t i=0)                                   ;
+  size_t               erase(size_t i)                                   ;
+  [[nodiscard]] bool                 has(const Matrix<int>&)                            const;
+  [[nodiscard]] Matrix<int>          get(size_t i)                                const;
+  [[nodiscard]] Matrix<int>          get_proper(size_t i)                         const;
+  [[nodiscard]] Matrix<int>          get_inverse(size_t i)                        const;
+  [[nodiscard]] size_t               get_inverse_index(size_t i)                  const;
+  [[nodiscard]] size_t               find_index(const Matrix<int>&)                     const;
   // const Matrix<int>&   get(const size_t i)                                const;
-  void                 sort(const int ad=0)                                    ;
+  void                 sort(int ad=0)                                    ;
   void                 permute(const std::vector<size_t>&)                     ;
-  int                  order(const size_t i)                              const;
-  std::vector<int>     orders(void)                                       const;
-  int                  isometry(const size_t i)                           const;
-  std::vector<int>     isometries(void)                                   const;
-  Vector<int>          axis(const size_t i)                               const;
-  Vectors<int>         axes(void)                                         const;
-  bool                 has_space_inversion(void)                          const;
-  void                 print(const size_t i)                              const;
-  void                 print(void)                                        const;
-  PointSymmetry        generate(void)                                     const;
-  PointSymmetry        generators(void)                                   const;
-  PointSymmetry        nfolds(const int min_order=0)                      const;
-  Vector<int>          perpendicular_axis(const size_t i)                 const;
-  Vectors<int>         perpendicular_axes(void)                           const;
-  PointSymmetry        higher(const int min_order=0)                      const;
+  [[nodiscard]] int                  order(size_t i)                              const;
+  [[nodiscard]] std::vector<int>     orders()                                       const;
+  [[nodiscard]] int                  isometry(size_t i)                           const;
+  [[nodiscard]] std::vector<int>     isometries()                                   const;
+  [[nodiscard]] Vector<int>          axis(size_t i)                               const;
+  [[nodiscard]] Vectors<int>         axes()                                         const;
+  [[nodiscard]] bool                 has_space_inversion()                          const;
+  void                 print(size_t i)                              const;
+  void                 print()                                        const;
+  [[nodiscard]] PointSymmetry        generate()                                     const;
+  [[nodiscard]] PointSymmetry        generators()                                   const;
+  [[nodiscard]] PointSymmetry        nfolds(int min_order=0)                      const;
+  [[nodiscard]] Vector<int>          perpendicular_axis(size_t i)                 const;
+  [[nodiscard]] Vectors<int>         perpendicular_axes()                           const;
+  [[nodiscard]] PointSymmetry        higher(int min_order=0)                      const;
+    // Output to HDF5 file/object
+    template<class HF>
+    std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+    to_hdf(HF& obj, const std::string& entry) const{
+        std::vector<HF_Matrix<int>> hfm;
+        for (const auto & x: R) hfm.emplace_back(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8]);
+        auto ds = overwrite_data(obj, entry, hfm);
+        return true;
+    }
+    // Input from HDF5 file/object
+    template<class HF>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, PointSymmetry>
+    from_hdf(HF& obj, const std::string& entry){
+        std::vector<HF_Matrix<int>> hfm;
+        obj.getDataSet(obj, entry).read(hfm);
+        Matrices<int> m;
+        for (const auto& x: hfm) m.emplace_back(x.xx, x.xy, x.xz, x.yx, x.yy, x.yz, x.zx, x.zy, x.zz);
+        return {m};
+    }
 };
 
 } // namespace brille

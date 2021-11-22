@@ -66,6 +66,25 @@ protected:
   TetTri mesh;
   data_t data_;
 public:
+    template<class HF>
+    std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+    to_hdf(HF& obj, const std::string& entry) const{
+        auto group = overwrite_group(obj, entry);
+        bool ok{true};
+        ok &= mesh.to_hdf(group, "triangulation");
+        ok &= data_.to_hdf(group, "data");
+        return ok;
+    }
+    // Input from HDF5 file/object
+    template<class HF>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Mesh3<T,S>>
+    from_hdf(HF& obj, const std::string& entry){
+        auto group = obj.getGroup(entry);
+        auto m = TetTri::from_hdf(group, "triangulation");
+        auto d = data_t::from_hdf(group, "data");
+        return {m, d};
+    }
+
   /* \brief Triangulate a space and build a TetTri within it
 
   \param verts the vertices bounding the space

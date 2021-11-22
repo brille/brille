@@ -262,6 +262,12 @@ std::string lattice2string(const Lattice& l, const std::string& lenunit="", cons
   return repr;
 }
 std::string Lattice::string_repr(){ return lattice2string(*this); }
+
+Bravais Lattice::set_bravais_type(const Bravais b) {
+    this->bravais = b;
+    return this->get_bravais_type();
+}
+
 std::string Direct::string_repr(){return lattice2string(*this,"Å");}
 std::string Reciprocal::string_repr(){return lattice2string(*this,"Å⁻¹");}
 

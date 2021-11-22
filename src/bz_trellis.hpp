@@ -45,25 +45,25 @@ public:
   \param args the construction arguments for `PolyhedronTrellis`
   */
   template<typename... A>
-  BrillouinZoneTrellis3(const BrillouinZone& bz, A... args):
+  explicit BrillouinZoneTrellis3(const BrillouinZone& bz, A... args):
     SuperClass(bz.get_ir_polyhedron(), args...),
     brillouinzone(bz) {}
   //! get the BrillouinZone object
-  BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
+  [[nodiscard]] BrillouinZone get_brillouinzone() const {return this->brillouinzone;}
   //! get the vertices of the trellis in absolute units
-  bArray<double> get_xyz(void) const {return this->vertices();}
+  [[nodiscard]] bArray<double> get_xyz() const {return this->vertices();}
   //! get the vertices of the inner (cubic) nodes in absolute units
-  bArray<double> get_inner_xyz(void) const {return this->cube_vertices(); }
+  [[nodiscard]] bArray<double> get_inner_xyz() const {return this->cube_vertices(); }
   //! get the vertices of the outer (polyhedron) nodes in absolute units
-  bArray<double> get_outer_xyz(void) const {return this->poly_vertices(); }
+  [[nodiscard]] bArray<double> get_outer_xyz() const {return this->poly_vertices(); }
   //! get the vertices of the trellis in relative lattice units
-  bArray<double> get_hkl(void) const { return xyz_to_hkl(brillouinzone.get_lattice(),this->vertices());}
+  [[nodiscard]] bArray<double> get_hkl() const { return xyz_to_hkl(brillouinzone.get_lattice(),this->vertices());}
   //! get the vertices of the inner (cubic) nodes in relative lattice units
-  bArray<double> get_inner_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->cube_vertices()); }
+  [[nodiscard]] bArray<double> get_inner_hkl() const {return xyz_to_hkl(brillouinzone.get_lattice(),this->cube_vertices()); }
   //! get the vertices of the outer (polyhedron) nodes in relative lattice units
-  bArray<double> get_outer_hkl(void) const {return xyz_to_hkl(brillouinzone.get_lattice(),this->poly_vertices()); }
+  [[nodiscard]] bArray<double> get_outer_hkl() const {return xyz_to_hkl(brillouinzone.get_lattice(),this->poly_vertices()); }
   //! get the indices forming the faces of the tetrahedra
-  std::vector<std::array<brille::ind_t,4>> get_vertices_per_tetrahedron(void) const {return this->vertices_per_tetrahedron();}
+  [[nodiscard]] std::vector<std::array<brille::ind_t,4>> get_vertices_per_tetrahedron() const {return this->vertices_per_tetrahedron();}
 
   /*! \brief Interpolate at an equivalent first Brillouin zone reciprocal lattice point
 
@@ -92,7 +92,7 @@ public:
     LQVec<int> tau(x.get_lattice(), x.size(0));
     if (no_move){
       // Special mode for testing where no specified points are moved
-      // IT IS IMPERITIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
+      // IT IS IMPERATIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
       // POLYHEDRON otherwise the interpolation will fail or give garbage back.
       q = x;
     } else if (!brillouinzone.moveinto(x, q, tau, nth)){
@@ -130,14 +130,14 @@ public:
   template<class S>
   std::tuple<brille::Array<T>,brille::Array<R>>
   ir_interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const {
-    verbose_update("BZTrellisQ::ir_interpoalte_at called with ",nth," threads");
+    verbose_update("BZTrellisQ::ir_interpolate_at called with ",nth," threads");
     profile_update("Start BrillouinZoneTrellis3::ir_interpolate_at");
     LQVec<S> ir_q(x.get_lattice(), x.size(0));
     LQVec<int> tau(x.get_lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
     if (no_move){
       // Special mode for testing where no specified points are moved
-      // IT IS IMPERITIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
+      // IT IS IMPERATIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
       // POLYHEDRON otherwise the interpolation will fail or give garbage back.
       ir_q = x;
     } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rot, invrot, nth)){
@@ -166,7 +166,35 @@ public:
     profile_update("  End BrillouinZoneTrellis3::ir_interpolate_at");
     return std::make_tuple(vals, vecs);
   }
+
+    template<class HF>
+    std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+    to_hdf(HF& obj, const std::string& entry) const{
+        auto group = overwrite_group(obj, entry);
+        bool ok{true};
+        ok &= SuperClass::to_hdf(group, "trellis");
+        ok &= brillouinzone.to_hdf(group, "brillouinzone");
+        return ok;
+    }
+    // Input from HDF5 file/object
+    template<class HF>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, BrillouinZoneTrellis3<T,R>>
+    from_hdf(HF& obj, const std::string& entry){
+        auto group = obj.getGroup(entry);
+        auto trellis = SuperClass::from_hdf(group, "trellis");
+        auto bz = BrillouinZone::from_hdf(group, "brillouinzone");
+        return {bz, trellis};
+    }
+
+    bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
+        HighFive::File file(filename, perm);
+        return this->to_hdf(file, entry);
+    }
+    static BrillouinZoneTrellis3<T,R> from_hdf(const std::string& filename, const std::string& entry){
+        HighFive::File file(filename, HighFive::File::ReadOnly);
+        return BrillouinZoneTrellis3<T,R>::from_hdf(file, entry);
+    }
 };
 
 } // end namespace brille
-#endif // _BZ_TRELLIS_
+#endif // BRILLE_BZ_TRELLIS_

@@ -124,6 +124,40 @@ private:
   NodeContainer nodes_;   //!< the nodes of the trellis, indexing the vertices of the PolyhedronTrellis
   std::array<std::vector<double>,3> boundaries_; //!< The coordinates of the trellis intersections, which bound the nodes
 public:
+  template<class HFObject>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, HFObject>, bool>
+  to_hdf(HFObject& obj, const std::string& entry) const {
+      auto group = overwrite_group(obj, entry);
+      bool ok{true};
+      ok &= polyhedron_.to_hdf(group, "polyhedron");
+      ok &= data_.to_hdf(group, "data");
+      ok &= vertices_.to_hdf(group, "vertices");
+      ok &= nodes_.to_hdf(group, "container");
+      ok &= lists_to_hdf(boundaries_, group, "boundaries");
+      return ok;
+  }
+  template<class HF>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, PolyhedronTrellis<T,R>>
+  from_hdf(HF& obj, const std::string& entry) {
+      auto group = obj.getGroup(entry);
+      auto p = Polyhedron::from_hdf(group, "polyhedron");
+      auto d = data_t::from_hdf(group, "data");
+      auto v = vert_t::from_hdf(group, "vertices");
+      auto n = NodeContainer::from_hdf(group, "container");
+      auto bl = lists_from_hdf(group, "boundaries"); // returns a std::vector<std::vector<double>>
+      if (bl.size() != 3) throw std::runtime_error("Error reading boundaries from file");
+      std::array<std::vector<double>, 3> b;
+      for (size_t i=0; i<3u; ++i) b[i] = bl[i];
+      return {p, d, v, n, b};
+  }
+  bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
+      HighFive::File file(filename, perm);
+      return this->to_hdf(file, entry);
+  }
+  static PolyhedronTrellis<T,R> from_hdf(const std::string& filename, const std::string& entry){
+      HighFive::File file(filename, HighFive::File::ReadOnly);
+      return PolyhedronTrellis<T,R>::from_hdf(file, entry);
+  }
   /*! \brief Construct from a bounding Polyhedron
 
   \param polyhedron         the boundary of the PolyhedronTrellis domain

@@ -54,10 +54,10 @@ For further details, see the
 enum class Bravais {_, P, A, B, C, I, F, R};
 
 //! Return a string representation of the Bravais type
-std::string bravais_string(const Bravais b);
+std::string bravais_string(Bravais b);
 //! Return a single character representation of the Bravais type
-char bravais_letter(const Bravais b);
+char bravais_letter(Bravais b);
 //! Check if the provided enumerated value is a Bravais type
-bool bravais_is_known(const Bravais b);
+bool bravais_is_known(Bravais b);
 }
 #endif

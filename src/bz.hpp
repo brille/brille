@@ -25,6 +25,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "transform.hpp"
 #include "polyhedron.hpp"
 #include "phonon.hpp"
+#include "hdf_interface.hpp"
 // #include "approx.hpp"
 namespace brille {
 
@@ -907,6 +908,49 @@ private:
     return !brille::approx::scalar(this->ir_polyhedron.get_volume(), 0.0);
   }
   LQVec<double> get_ir_polyhedron_wedge_normals(void) const;
+
+//    Reciprocal lattice;               //!< The primitive reciprocal lattice
+//    Reciprocal outerlattice;          //!< The lattice passed in at construction
+//    Polyhedron polyhedron; //!< The vertices, facet normals, and relation information defining the first Brillouin zone polyhedron
+//    Polyhedron ir_polyhedron; //!< The vertices, facet normals, facet points, and relation information defining the irreducible first Bz polyhedron
+//    bArray<double> ir_wedge_normals; //!< The normals of the irreducible reciprocal space wedge planes.
+//    bool time_reversal; //!< A flag to indicate if time reversal symmetry should be included with pointgroup operations
+//    bool has_inversion; //!< A computed flag indicating if the pointgroup has space inversion symmetry or if time reversal symmetry has been requested
+//    bool is_primitive; //!< A computed flag indicating if the primitive version of a conventional lattice is in use
+//    bool no_ir_mirroring;
+    template<class HF>
+    std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+    to_hdf(HF& obj, const std::string& entry) const{
+        auto group = overwrite_group(obj, entry);
+        bool ok{true};
+        ok &= lattice.to_hdf(group, "lattice");
+        ok &= outerlattice.to_hdf(group, "outerlattice");
+        ok &= polyhedron.to_hdf(group, "polyhedron");
+        ok &= ir_polyhedron.to_hdf(group, "ir_polyhedron");
+        ok &= ir_wedge_normals.to_hdf(group, "ir_wedge_normals");
+        group.createAttribute("time_reversal", time_reversal);
+        group.createAttribute("has_inversion", has_inversion);
+        group.createAttribute("is_primitive", is_primitive);
+        group.createAttribute("no_ir_mirroring", no_ir_mirroring);
+        return ok;
+    }
+    // Input from HDF5 file/object
+    template<class HF>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, BrillouinZone>
+    from_hdf(HF& obj, const std::string& entry) {
+        auto group = obj.getGroup(entry);
+        auto lat = Reciprocal::from_hdf(group, "lattice");
+        auto olat = Reciprocal::from_hdf(group, "outerlattice");
+        auto poly = Polyhedron::from_hdf(group, "polyhedron");
+        auto ir_p = Polyhedron::from_hdf(group, "ir_polyhedron");
+        auto ir_w = bArray<double>::from_hdf(group, "ir_wedge_normals");
+        bool tr, hi, ip, nim;
+        group.getAttribute("time_reversal").read(tr);
+        group.getAttribute("has_inversion").read(hi);
+        group.getAttribute("is_primitive").read(ip);
+        group.getAttribute("no_ir_mirroring").read(nim);
+        return {lat, olat, poly, ir_p, ir_w, tr, hi, ip, nim};
+    }
 };
 
 /*! \brief Find the intersection point of three planes, if it exists.

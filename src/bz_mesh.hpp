@@ -56,13 +56,13 @@ public:
   \param args the construction arguments for `Mesh3`
   */
   template<typename... A>
-  BrillouinZoneMesh3(const BrillouinZone& bz, A... args):
+  explicit BrillouinZoneMesh3(const BrillouinZone& bz, A... args):
     SuperClass(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), args...),
     brillouinzone(bz) {}
   //! \brief Return the BrillouinZone object
-  BrillouinZone get_brillouinzone(void) const {return this->brillouinzone;}
+  [[nodiscard]] BrillouinZone get_brillouinzone() const {return this->brillouinzone;}
   //! Return the mesh vertices in relative lattice units
-  bArray<double> get_mesh_hkl(void) const {
+  [[nodiscard]] bArray<double> get_mesh_hkl() const {
     auto xyz = this->get_mesh_xyz();
     double toxyz[9], fromxyz[9];
     const BrillouinZone bz = this->get_brillouinzone();
@@ -133,6 +133,34 @@ public:
     // we're done so bundle the output
     return std::make_tuple(vals, vecs);
   }
+
+    template<class HF>
+    std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+    to_hdf(HF& obj, const std::string& entry) const{
+        auto group = overwrite_group(obj, entry);
+        bool ok{true};
+        ok &= SuperClass::to_hdf(group, "mesh");
+        ok &= brillouinzone.to_hdf(group, "brillouinzone");
+        return ok;
+    }
+    // Input from HDF5 file/object
+    template<class HF>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, BrillouinZoneMesh3<T,S>>
+    from_hdf(HF& obj, const std::string& entry){
+        auto group = obj.getGroup(entry);
+        auto mesh = SuperClass::from_hdf(group, "mesh");
+        auto bz = BrillouinZone::from_hdf(group, "brillouinzone");
+        return {bz, mesh};
+    }
+
+    [[nodiscard]] bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
+        HighFive::File file(filename, perm);
+        return this->to_hdf(file, entry);
+    }
+    static BrillouinZoneMesh3<T,S> from_hdf(const std::string& filename, const std::string& entry){
+        HighFive::File file(filename, HighFive::File::ReadOnly);
+        return BrillouinZoneMesh3<T,S>::from_hdf(file, entry);
+    }
 };
 
 } // end namespace brille
