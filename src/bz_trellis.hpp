@@ -38,6 +38,8 @@ class BrillouinZoneTrellis3: public PolyhedronTrellis<T,R>{
   using SuperClass = PolyhedronTrellis<T,R>;
   BrillouinZone brillouinzone;
 public:
+  BrillouinZoneTrellis3(const SuperClass& pt, const BrillouinZone& bz): SuperClass(pt), brillouinzone(bz) {}
+  BrillouinZoneTrellis3(SuperClass&& pt, BrillouinZone&& bz): SuperClass(std::move(pt)), brillouinzone(std::move(bz)) {}
   /*! \brief Construct a `BrillouinZoneTrellis3` from a `BrillouinZone` and variable arguments
 
   All arguments beyond the `BrillouinZone` are passed to the `PolyhedronTrellis` constructor.
@@ -183,16 +185,24 @@ public:
         auto group = obj.getGroup(entry);
         auto trellis = SuperClass::from_hdf(group, "trellis");
         auto bz = BrillouinZone::from_hdf(group, "brillouinzone");
-        return {bz, trellis};
+        return BrillouinZoneTrellis3<T,R>(trellis, bz);
     }
 
-    bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
+    [[nodiscard]] bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
         HighFive::File file(filename, perm);
         return this->to_hdf(file, entry);
     }
     static BrillouinZoneTrellis3<T,R> from_hdf(const std::string& filename, const std::string& entry){
         HighFive::File file(filename, HighFive::File::ReadOnly);
         return BrillouinZoneTrellis3<T,R>::from_hdf(file, entry);
+    }
+
+    bool operator!=(const BrillouinZoneTrellis3<T,R>& other) const {
+      if (brillouinzone != other.brillouinzone) return true;
+      return this->SuperClass::operator!=(other);
+    }
+    bool operator==(const BrillouinZoneTrellis3<T,R>& other) const {
+      return !this->operator!=(other);
     }
 };
 

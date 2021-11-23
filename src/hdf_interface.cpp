@@ -1,83 +1,46 @@
 #include "hdf_interface.hpp"
-#include "rotates.hpp"
-#include "trellis_node.hpp"
-#include "motion.hpp"
 
-using namespace brille;
-
-HighFive::EnumType<RotatesLike> create_enum_rotateslike(){
-  return {
-    {"Real", RotatesLike::Real},
-    {"Reciprocal", RotatesLike::Reciprocal},
-    {"Axial", RotatesLike::Axial},
-    {"Gamma", RotatesLike::Gamma}
-  };
+// explicitly define the HighFive create_datatype specialisations rather than
+// using the provided macro HIGHFIVE_REGISTER_TYPE
+namespace HighFive {
+template<> DataType create_datatype<brille::RotatesLike>(){
+  return EnumType<brille::RotatesLike>({
+      {"Real", brille::RotatesLike::Real},
+      {"Reciprocal", brille::RotatesLike::Reciprocal},
+      {"Axial", brille::RotatesLike::Axial},
+      {"Gamma", brille::RotatesLike::Gamma}
+  });
 }
-
-// this macro defines a new function specialization of create_datatype<brille::RotatesLike> in the HIGHFIVE namespace
-HIGHFIVE_REGISTER_TYPE(RotatesLike, create_enum_rotateslike)
-
-
-HighFive::EnumType<NodeType> create_enum_nodetype(){
-  return {
-    {"null", NodeType::null},
-    {"cube", NodeType::cube},
-    {"poly", NodeType::poly}
-  };
+template<> DataType create_datatype<brille::NodeType>(){
+  return EnumType<brille::NodeType>({
+      {"null", brille::NodeType::null},
+      {"cube", brille::NodeType::cube},
+      {"poly", brille::NodeType::poly}
+  });
 }
-HIGHFIVE_REGISTER_TYPE(NodeType, create_enum_nodetype)
-
-HighFive::EnumType<Bravais> create_enum_bravais(){
-    // enum class Bravais {_, P, A, B, C, I, F, R};
-    return {
-            {"_", Bravais::_}, {"P", Bravais::P},
-            {"A", Bravais::A}, {"B", Bravais::B}, {"C", Bravais::C},
-            {"I", Bravais::I}, {"F", Bravais::F}, {"R", Bravais::R}
-    };
+template<> DataType create_datatype<brille::Bravais>(){
+  return EnumType<brille::Bravais>({
+      {"_", brille::Bravais::_},
+      {"P", brille::Bravais::P},
+      {"A", brille::Bravais::A},
+      {"B", brille::Bravais::B},
+      {"C", brille::Bravais::C},
+      {"I", brille::Bravais::I},
+      {"F", brille::Bravais::F},
+      {"R", brille::Bravais::R}
+  });
 }
-HIGHFIVE_REGISTER_TYPE(Bravais, create_enum_bravais)
-
-HighFive::EnumType<LengthUnit> create_enum_lengthunit(){
-    return {
-        {"none", LengthUnit::none},
-        {"angstrom", LengthUnit::angstrom},
-        {"inverse_angstrom", LengthUnit::inverse_angstrom}
-    };
+template<> DataType create_datatype<brille::LengthUnit>(){
+  return EnumType<brille::LengthUnit>({
+      {"none", brille::LengthUnit::none},
+      {"angstrom", brille::LengthUnit::angstrom},
+      {"inverse_angstrom", brille::LengthUnit::inverse_angstrom}
+  });
 }
-HIGHFIVE_REGISTER_TYPE(LengthUnit, create_enum_lengthunit)
-
-template<class T, class R>
-HighFive::CompoundType create_compound_Motion(){
-    return {
-            {"xx", HighFive::AtomicType<T>{}},
-            {"xy", HighFive::AtomicType<T>{}},
-            {"xz", HighFive::AtomicType<T>{}},
-            {"yx", HighFive::AtomicType<T>{}},
-            {"yy", HighFive::AtomicType<T>{}},
-            {"yz", HighFive::AtomicType<T>{}},
-            {"zx", HighFive::AtomicType<T>{}},
-            {"zy", HighFive::AtomicType<T>{}},
-            {"zz", HighFive::AtomicType<T>{}},
-            {"x", HighFive::AtomicType<R>{}},
-            {"y", HighFive::AtomicType<R>{}},
-            {"z", HighFive::AtomicType<R>{}},
-    };
+template<> DataType create_datatype<brille::HF_Matrix<int>>(){
+  return create_compound_Matrix<int>();
 }
-//HighFive::CompoundType create_compound_Motion(){
-//    return {
-//            {"xx", HighFive::AtomicType<int>{}},
-//            {"xy", HighFive::AtomicType<int>{}},
-//            {"xz", HighFive::AtomicType<int>{}},
-//            {"yx", HighFive::AtomicType<int>{}},
-//            {"yy", HighFive::AtomicType<int>{}},
-//            {"yz", HighFive::AtomicType<int>{}},
-//            {"zx", HighFive::AtomicType<int>{}},
-//            {"zy", HighFive::AtomicType<int>{}},
-//            {"zz", HighFive::AtomicType<int>{}},
-//            {"x", HighFive::AtomicType<double>{}},
-//            {"y", HighFive::AtomicType<double>{}},
-//            {"z", HighFive::AtomicType<double>{}},
-//    };
-//}
-typedef HF_Motion<int,double> HF_Motion_int_double;
-HIGHFIVE_REGISTER_TYPE(HF_Motion_int_double, (create_compound_Motion<int,double>))
+template<> DataType create_datatype<brille::HF_Motion<int,double>>(){
+  return create_compound_Motion<int,double>();
+}
+}

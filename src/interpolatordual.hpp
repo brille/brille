@@ -67,28 +67,43 @@ template<class T, class R>
 class DualInterpolator{
 public:
   template<class Z> using element_t = std::array<Z,3>;
-private:
+protected:
   Interpolator<T> values_;
   Interpolator<R> vectors_;
   PermutationTable permutation_table_;
 public:
-  bool to_hdf(const std::string& filename, const std::string& dataset, const unsigned perm=HighFive::File::OpenOrCreate) const {
-    HighFive::File file(filename, perm);
-    if (file.exist(dataset)) file.unlink(dataset);
-    auto group = file.createGroup(dataset);
+  bool operator!=(const DualInterpolator<T,R>& other) const {
+    if (values_ != other.values_) return true;
+    if (vectors_ != other.vectors_) return true;
+    if (permutation_table_ != other.permutation_table_) return true;
+    return false;
+  }
+  template<class HF>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+  to_hdf(HF& obj, const std::string& entry) const {
+    auto group = overwrite_group(obj, entry);
     bool ok{true};
     ok &= values_.to_hdf(group, "values");
     ok &= vectors_.to_hdf(group, "vectors");
     ok &= permutation_table_.to_hdf(group, "permutation_table");
     return ok;
   }
-  static DualInterpolator from_hdf(const std::string& filename, const std::string& dataset){
-    HighFive::File file(filename, HighFive::File::ReadOnly);
-    auto group = file.getGroup(dataset);
+  [[nodiscard]] bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
+    HighFive::File file(filename, perm);
+    return this->to_hdf(file, entry);
+  }
+  template<class HF>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, DualInterpolator<T,R>>
+  from_hdf(HF& obj, const std::string& entry){
+    auto group = obj.getGroup(entry);
     auto val = Interpolator<T>::from_hdf(group, "values");
     auto vec = Interpolator<R>::from_hdf(group, "vectors");
     auto pt = PermutationTable::from_hdf(group, "permutation_table");
-    return {val, vec, pt};
+    return {std::move(val), std::move(vec), std::move(pt)};
+  }
+  static DualInterpolator<T,R> from_hdf(const std::string& filename, const std::string& entry){
+    HighFive::File file(filename, HighFive::File::ReadOnly);
+    return DualInterpolator<T,R>::from_hdf(file, entry);
   }
   DualInterpolator(): values_(), vectors_(), permutation_table_(0,0) {};
   //! Constructor taking pre-constructed eigenvalue and eigenvector Interpolator objects
@@ -98,6 +113,10 @@ public:
     if (values_.size() != vectors_.size() || values_.branches() != vectors_.branches())
       throw std::runtime_error("Inconsistent values and vectors provided to DualInterpolator");
   }
+//  DualInterpolator(Interpolator<T> val, Interpolator<R> vec, PermutationTable pt)
+//      : values_(std::move(val)), vectors_(std::move(vec)), permutation_table_(std::move(pt)) {}
+  DualInterpolator(Interpolator<T>&& val, Interpolator<R>&& vec, PermutationTable&& pt)
+      : values_(std::move(val)), vectors_(std::move(vec)), permutation_table_(std::move(pt)) {}
   //! Ensure that the stored eigenvalues are consistent with the stored eigenvectors
   void validate_values() {
     if (values_.size()!=vectors_.size() || values_.branches()!=vectors_.branches())

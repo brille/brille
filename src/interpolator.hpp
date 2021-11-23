@@ -91,7 +91,7 @@ public:
   template<class Z> using element_t =std::array<Z,3>;
   using costfun_t = CostFunction<T>;
   using shape_t = std::vector<ind_t>;
-private:
+protected:
   bArray<T> data_;      //!< The stored Array2 of points indexed like the holding-Object's vertices
   shape_t shape_;       //!< The shape of the input Array (or Array2)
   element_t<ind_t> _elements; //!< The number of each element type per point and per mode
@@ -102,10 +102,18 @@ private:
   costfun_t _vectorfun; //!< A function to calculate differences between the vectors at two stored points
   //costfun_t _matrixfun; //!< A function to calculate the differences between matrices at two stored points
 public:
-  bool to_hdf(const std::string& filename, const std::string& dataset, const unsigned perm=HighFive::File::OpenOrCreate) const {
-    HighFive::File file(filename, perm);
-    if (file.exist(dataset)) file.unlink(dataset);
-    auto group = file.createGroup(dataset);
+  bool operator!=(const Interpolator<T>& other) const {
+    if (data_ != other.data_) return true;
+    if (shape_ != other.shape_) return true;
+    if (_elements != other._elements) return true;
+    if (rotlike_ != other.rotlike_) return true;
+    if (_costmult != other._costmult) return true;
+    if (_funtype != other._funtype) return true;
+    return false;
+  }
+  template<class HF> std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+  to_hdf(HF& object, const std::string& entry) const {
+    auto group = overwrite_group(object, entry);
     bool ok{true};
     ok &= data_.to_hdf(group, "data");
     group.createDataSet("shape", shape_);
@@ -115,28 +123,31 @@ public:
     group.createDataSet("funtype", _funtype);
     return ok;
   }
-  static Interpolator<T> from_hdf(const std::string& filename, const std::string& dataset){
-    HighFive::File file(filename, HighFive::File::ReadOnly);
-    auto group = file.getGroup(dataset);
+  [[nodiscard]] bool to_hdf(const std::string& f, const std::string& d, const unsigned p=HighFive::File::OpenOrCreate) const {
+    HighFive::File file(f, p);
+    return this->to_hdf(file, d);
+  }
+  template<class HF> static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Interpolator<T>>
+  from_hdf(HF& object, const std::string& entry){
+    auto group = object.getGroup(entry);
     auto d = bArray<T>::from_hdf(group, "data");
     //
-    HighFive::DataSet ds;
     shape_t s;
     element_t<ind_t> e, f;
     RotatesLike r;
     element_t<double> c;
     //
-    ds = group.getDataSet("shape");
-    ds.read(s);
-    ds = group.getDataSet("elements");
-    ds.read(e);
+    group.getDataSet("shape").read(s);
+    group.getDataSet("elements").read(e);
     group.getDataSet("rotlike").read(r);
-    ds = group.getDataSet("costmult");
-    ds.read(c);
-    ds = group.getDataSet("funtype");
-    ds.read(f);
+    group.getDataSet("costmult").read(c);
+    group.getDataSet("funtype").read(f);
     //
-    return {d, s, e, r, f[0], f[1], c};
+    return {d, s, e, r, static_cast<int>(f[0]), static_cast<int>(f[1]), c};
+  }
+  static Interpolator<T> from_hdf(const std::string& filename, const std::string& dataset){
+    HighFive::File file(filename, HighFive::File::ReadOnly);
+    return Interpolator<T>::from_hdf(file, dataset);
   }
   /*! \brief Constructor without data and with optional cost function types
 
@@ -537,6 +548,8 @@ private:
     // check the input for correctness
     ind_t x = this->branch_span(_elements);
     switch (shape_.size()) {
+      case 0u:
+        break;
       case 1u: // 1 scalar per branch per point
         if (0u == x) x = _elements[0] = 1u;
         if (x > 1u) throw std::runtime_error("1-D data must represent one scalar per point!") ;

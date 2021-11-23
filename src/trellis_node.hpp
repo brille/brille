@@ -14,7 +14,9 @@
 #include <atomic>
 // #include <algorithm>
 #include <functional>
+#include <utility>
 // #include <omp.h>
+#include "enums.hpp"
 // #include "array.hpp"
 // #include "array2.hpp"
 // #include "array_latvec.hpp" // defines bArray
@@ -28,11 +30,7 @@
 #include "hdf_interface.hpp"
 namespace brille {
 
-  /*! \brief An enumeration to differentiate betwee Node types
 
-  \see NullNode, CubeNode, PolyNode
-  */
-  enum class NodeType {null, cube, poly};
 
   /*! \brief A base class for the differentiation of Node types
 
@@ -42,21 +40,21 @@ namespace brille {
   class NullNode{
   public:
     //! Implicit construction of an empty NullNode
-    NullNode() {}
+    NullNode() = default;
     //! Deconstruction of a NullNode
     virtual ~NullNode() = default;
     //! Return the type of this Node
-    virtual NodeType type(void) const {return NodeType::null;}
+    [[nodiscard]] virtual NodeType type() const {return NodeType::null;}
     //! Return the number of vertices this Node indexes
-    virtual ind_t vertex_count() const {return 0u;}
+    [[nodiscard]] virtual ind_t vertex_count() const {return 0u;}
     //! Return the vertex indices of this Node
-    virtual std::vector<ind_t> vertices(void) const {return std::vector<ind_t>();}
+    [[nodiscard]] virtual std::vector<ind_t> vertices() const {return {};}
     //! Return the triangulated tetrahedra indices of this Node
-    virtual std::vector<std::array<ind_t,4>> vertices_per_tetrahedron(void) const {return std::vector<std::array<ind_t,4>>();}
-    //! Return the indices required and their weights for linear interpolation at a point
+    [[nodiscard]] virtual std::vector<std::array<ind_t,4>> vertices_per_tetrahedron() const {return {};}
+    virtual //! Return the indices required and their weights for linear interpolation at a point
     bool indices_weights(const bArray<double>&, const bArray<double>&, std::vector<std::pair<ind_t,double>>&) const {return false;}
     //! Return the volume of this Node
-    double volume(const bArray<double>&) const {return 0.;}
+    [[nodiscard]] virtual double volume(const bArray<double>&) const {return 0.;}
     //! Write to an HDF file
     template<class R>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
@@ -67,6 +65,7 @@ namespace brille {
     template<class R>
     static std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, NullNode>
     from_hdf(R&, const std::string&) {return NullNode();}
+    bool operator!=(const NullNode&) const { return true; }
   };
   /*! \brief A Node fully within the domain of the PolyhedronTrellis
 
@@ -76,6 +75,7 @@ namespace brille {
   all PolyhedronTrellis vertices.
   */
   class CubeNode: public NullNode {
+  protected:
     /*!< \brief The eight vertex indices of the Node
 
     The vertex order is critical for the CubeNode and must be:
@@ -83,19 +83,23 @@ namespace brille {
     */
     std::array<ind_t, 8> vertex_indices;
   public:
+    bool operator!=(const CubeNode& other) const {
+      return vertex_indices != other.vertex_indices;
+    }
+    bool operator==(const CubeNode& o) const {return !this->operator!=(o);}
     //! Implicit construction of a CubeNode with no volume
     CubeNode(): vertex_indices({{0,0,0,0,0,0,0,0}}) {}
     //! Construct from an array
-    CubeNode(const std::array<ind_t,8>& vi): vertex_indices(vi) {}
+    explicit CubeNode(const std::array<ind_t,8>& vi): vertex_indices(vi) {}
     //! Construct from a vector with 8 elements
-    CubeNode(const std::vector<ind_t>& vi): vertex_indices({{0,0,0,0,0,0,0,0}}) {
+    explicit CubeNode(const std::vector<ind_t>& vi): vertex_indices({{0,0,0,0,0,0,0,0}}) {
       if (vi.size() != 8) throw std::logic_error("CubeNode objects take 8 indices.");
       for (ind_t i=0; i<8u; ++i) vertex_indices[i] = vi[i];
     }
     //! Return the number of vertices this Node indexes
-    ind_t vertex_count() const { return 8u;}
+    [[nodiscard]] ind_t vertex_count() const override { return 8u;}
     //! Return the vertex indices of this Node
-    std::vector<ind_t> vertices(void) const {
+    [[nodiscard]] std::vector<ind_t> vertices() const override {
       std::vector<ind_t> out;
       for (auto v: vertex_indices) out.push_back(v);
       return out;
@@ -129,7 +133,7 @@ namespace brille {
       const bArray<double>& vertices,
       const bArray<double>& x,
       std::vector<std::pair<ind_t,double>>& iw
-    ) const {
+    ) const override {
       // The CubeNode object contains the indices into `vertices` necessary to find
       // the 8 corners of the cube. Those indices should be ordered
       // (000) (100) (110) (010) (101) (001) (011) (111)
@@ -143,7 +147,7 @@ namespace brille {
       auto needed = w.is(brille::cmp::gt, 0.);
       for (int i=0; i<8; ++i) if (needed[i]) {
         // the weight corresponds to the vertex opposite the one used to find the partial volume
-        iw.push_back(std::make_pair(vertex_indices[7-i],w[i]));
+        iw.emplace_back(vertex_indices[7-i],w[i]);
       }
       return true;
     }
@@ -155,7 +159,7 @@ namespace brille {
     extracted from two vertices and the Node volume is the product of the body
     diagonal elements.
     */
-    double volume(const bArray<double>& vertices) const {
+    [[nodiscard]] double volume(const bArray<double>& vertices) const override {
       // The CubeNode object contains the indices into `vertices` necessary to find
       // the 8 corners of the cube. Those indices should be ordered
       // (000) (100) (110) (010) (101) (001) (011) (111)
@@ -165,7 +169,7 @@ namespace brille {
     //! Write to an HDF file
     template<class R>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
-    to_hdf(R& obj, const std::string& name){
+    to_hdf(R& obj, const std::string& name) const {
       if (obj.exist(name)) obj.unlink(name);
       auto group = obj.createGroup(name);
       group.createDataSet("vertex_indices", vertex_indices);
@@ -176,9 +180,9 @@ namespace brille {
     static
     std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, CubeNode>
     from_hdf(R& obj, const std::string& name){
-      std::array<ind_t, 8> vi;
+      std::array<ind_t, 8> vi{};
       obj.getGroup(name).getDataSet("vertex_indices").read(vi);
-      return {vi};
+      return CubeNode(vi);
     }
   };
   /*! \brief A Node at least partly within the domain of the PolyhedronTrellis
@@ -195,18 +199,41 @@ namespace brille {
   Polyhedron and typically has lower volume than the Node.
   */
   class PolyNode: public NullNode {
+  protected:
     std::vector<std::array<ind_t,4>> vi_t;  //!< vertex indices per triangulated tetrahedron
     std::vector<std::array<double,4>> ci_t; //!< circumsphere information per triangulated tetrahedra
     std::vector<double> vol_t;              //!< volume per triangulated tetrahedra
   public:
+    bool operator!=(const PolyNode& other) const {
+      if (vi_t != other.vi_t) return true;
+      if (ci_t != other.ci_t) return true;
+      if (vol_t != other.vol_t) return true;
+      return false;
+    }
+    bool operator==(const PolyNode& o) const {return !this->operator!=(o);}
     //! Write to an HDF file
     template<class R>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
-    to_hdf(R& obj, const std::string& name){
+    to_hdf(R& obj, const std::string& name) const {
+      using namespace HighFive;
       if (obj.exist(name)) obj.unlink(name);
       auto group = obj.createGroup(name);
-      group.createDataSet("vi_t", vi_t);
-      group.createDataSet("ci_t", ci_t);
+
+      std::vector<std::vector<ind_t>> dv;
+      std::vector<std::vector<double>> dc;
+      for (const auto& vi: vi_t){
+        std::vector<ind_t> i;
+        for (const auto& v: vi) i.push_back(v);
+        dv.push_back(i);
+      }
+      for (const auto& ci: ci_t){
+        std::vector<double> i;
+        for (const auto& v: ci) i.push_back(v);
+        dc.push_back(i);
+      }
+      group.createDataSet("vi_t", dv);
+      group.createDataSet("ci_t", dc);
+
       group.createDataSet("vol_t", vol_t);
       return true;
     }
@@ -215,38 +242,48 @@ namespace brille {
     static
     std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, PolyNode>
     from_hdf(R& obj, const std::string& name){
+      std::vector<std::vector<ind_t>> dv;
+      std::vector<std::vector<double>> dc;
       std::vector<std::array<ind_t, 4>> vi;
       std::vector<std::array<double, 4>> ci;
       std::vector<double> vol;
       auto group = obj.getGroup(name);
-      group.getDataSet("vi_t").read(vi);
-      group.getDataSet("ci_t").read(ci);
+      group.getDataSet("vi_t").read(dv);
+      group.getDataSet("ci_t").read(dc);
       group.getDataSet("vol_t").read(vol);
+
+      for (const auto& v: dv){
+        vi.push_back(std::array<ind_t,4>({v[0], v[1], v[2], v[3]}));
+      }
+      for (const auto& c: dc){
+        ci.push_back(std::array<double,4>({c[0], c[1], c[2], c[3]}));
+      }
+
       return {vi, ci, vol};
     }
     //! empty implicit constructor
-    PolyNode() {};
+    PolyNode() = default;
     // actually constructing the tetrahedra from, e.g., a Polyhedron object will
     // need to be done elsewhere
     //! Construct with all parameters defined
     PolyNode(
-      const std::vector<std::array<ind_t,4>>& vit,
-      const std::vector<std::array<double,4>>& cit,
-      const std::vector<double>& volt
-    ): vi_t(vit), ci_t(cit), vol_t(volt) {}
+      std::vector<std::array<ind_t,4>>  vit,
+      std::vector<std::array<double,4>>  cit,
+      std::vector<double>  volt
+    ): vi_t(std::move(vit)), ci_t(std::move(cit)), vol_t(std::move(volt)) {}
     //! Return the number of triangulated tetrahedra in the PolyNode
-    ind_t tetrahedra_count() const {return static_cast<ind_t>(vi_t.size());}
+    [[nodiscard]] ind_t tetrahedra_count() const {return static_cast<ind_t>(vi_t.size());}
     //! Return the number of unique vertex indices in the triangulated tetrahedra
-    ind_t vertex_count() const { return static_cast<ind_t>(this->vertices().size());}
+    [[nodiscard]] ind_t vertex_count() const override { return static_cast<ind_t>(this->vertices().size());}
     //! Return the unique vertex indices from all triangulated tetrahedra
-    std::vector<ind_t> vertices(void) const {
+    [[nodiscard]] std::vector<ind_t> vertices() const override {
       std::vector<ind_t> out;
       for (auto tet: vi_t) for (auto idx: tet)
       if (std::find(out.begin(), out.end(), idx)==out.end()) out.push_back(idx);
       return out;
     }
     //! Return the vertex indices for each triangulated tetrahedra
-    std::vector<std::array<ind_t,4>> vertices_per_tetrahedron(void) const {return vi_t;}
+    [[nodiscard]] std::vector<std::array<ind_t,4>> vertices_per_tetrahedron() const override {return vi_t;}
     /*!\brief Return the indices required and their weights for linear
               interpolation at a point
 
@@ -279,19 +316,19 @@ namespace brille {
       const bArray<double>& vertices,
       const bArray<double>& x,
       std::vector<std::pair<ind_t,double>>& iw
-    ) const {
+    ) const override {
       iw.clear();
       std::array<double,4> w{{0,0,0,0}};
       for (ind_t i=0; i<vi_t.size(); ++i)
       if (this->tetrahedra_contains(i, vertices, x, w)){
         for (int j=0; j<4; ++j) if (!brille::approx::scalar(w[j],0.))
-          iw.push_back(std::make_pair(vi_t[i][j],w[j]));
+          iw.emplace_back(vi_t[i][j],w[j]);
         return true;
       }
       return false;
     }
     //! Return the total triangulated volume of the PolyNode
-    double volume(const bArray<double>&) const {
+    [[nodiscard]] double volume(const bArray<double>&) const override {
       return std::accumulate(vol_t.begin(), vol_t.end(), 0.);
     }
   private:
@@ -311,7 +348,7 @@ namespace brille {
         return false;
       return true;
     }
-    bool tetrahedra_might_contain(
+    [[nodiscard]] bool tetrahedra_might_contain(
       const ind_t t,
       const bArray<double>& x
     ) const {
@@ -322,7 +359,7 @@ namespace brille {
       v[2]=ci_t[t][2]-x.val(0,2);
       // compute the squared length of v, and the circumsphere radius squared
       double d2{0}, r2 = ci_t[t][3]*ci_t[t][3];
-      for (int i=0; i<3; ++i) d2 += v[i]*v[i];
+      for (double i : v) d2 += i*i;
       // if the squared distance is no greater than the squared radius, x might be inside the tetrahedra
       return d2 < r2 || brille::approx::scalar(d2, r2);
     }
@@ -340,20 +377,32 @@ namespace brille {
   vector.
   */
   class NodeContainer{
-  private:
-    std::vector<std::pair<NodeType,ind_t>> nodes_;
-    std::vector<CubeNode> cube_nodes_;
-    std::vector<PolyNode> poly_nodes_;
+    using nodes_t = std::vector<std::pair<NodeType, ind_t>>;
+    using cubes_t = std::vector<CubeNode>;
+    using polys_t = std::vector<PolyNode>;
+  protected:
+    nodes_t nodes_;
+    cubes_t cube_nodes_;
+    polys_t poly_nodes_;
   public:
+    explicit NodeContainer() = default;
+    NodeContainer(nodes_t&& n, cubes_t&& c, polys_t&& p)
+        : nodes_(std::move(n)), cube_nodes_(std::move(c)), poly_nodes_(std::move(p)) {}
+    bool operator!=(const NodeContainer& other) const {
+      if (nodes_ != other.nodes_) return true;
+      if (cube_nodes_ != other.cube_nodes_) return true;
+      if (poly_nodes_ != other.poly_nodes_) return true;
+      return false;
+    }
     //! Write to an HDF file
     template<class R>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
-    to_hdf(R& obj, const std::string& name){
+    to_hdf(R& obj, const std::string& name) const {
       if (obj.exist(name)) obj.unlink(name);
       auto group = obj.createGroup(name);
       std::vector<NodeType> nt;
       std::vector<ind_t> idx;
-      for (const auto [type, index]: nodes_){
+      for (const auto & [type, index]: nodes_){
         nt.push_back(type);
         idx.push_back(index);
       }
@@ -371,9 +420,8 @@ namespace brille {
     }
     //! Read from an HDF file
     template<class R>
-    std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, NullNode>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, NodeContainer>
     from_hdf(R& obj, const std::string& name){
-      std::array<ind_t, 8> vi;
       auto group = obj.getGroup(name);
       std::vector<NodeType> nt;
       std::vector<ind_t> idx;
@@ -399,20 +447,20 @@ namespace brille {
       pg.getAttribute("length").read(res);
       if (res != np) throw std::runtime_error("Error with poly node count");
       for (size_t i=0; i<np; ++i) polys[i] = PolyNode::from_hdf(pg, std::to_string(i));
-      return {n, cubes, polys};
+      return {std::move(n), std::move(cubes), std::move(polys)};
     }
     //! Return the total number of index nodes
-    size_t size(void) const {return nodes_.size();}
+    [[nodiscard]] size_t size() const {return nodes_.size();}
     //! Return the number of indexed CubeNode objects
-    size_t cube_count() const {
+    [[nodiscard]] size_t cube_count() const {
       return std::count_if(nodes_.begin(),nodes_.end(),[](std::pair<NodeType,ind_t> n){return NodeType::cube == n.first;});
     }
     //! Return the nuber of indexed PolyNode objects
-    size_t poly_count() const {
+    [[nodiscard]] size_t poly_count() const {
       return std::count_if(nodes_.begin(),nodes_.end(),[](std::pair<NodeType,ind_t> n){return NodeType::poly == n.first;});
     }
     //! Return the nubmer of indexed NullNode objects
-    size_t null_count() const {
+    [[nodiscard]] size_t null_count() const {
       return std::count_if(nodes_.begin(),nodes_.end(),[](std::pair<NodeType,ind_t> n){return NodeType::null == n.first;});
     }
     //! Push a CubeNode onto the back of the container
@@ -432,25 +480,25 @@ namespace brille {
       nodes_.emplace_back(NodeType::null, (std::numeric_limits<ind_t>::max)());
     }
     //! Return the NodeType of the indexed node
-    NodeType type(const ind_t i) const {
+    [[nodiscard]] NodeType type(const ind_t i) const {
       return nodes_[i].first;
     }
     //! Return whether the indexed node is a CubeNode
-    bool is_cube(const ind_t i) const {return NodeType::cube == nodes_[i].first;}
+    [[nodiscard]] bool is_cube(const ind_t i) const {return NodeType::cube == nodes_[i].first;}
     //! Return whether the indexed node is a PolyNode
-    bool is_poly(const ind_t i) const {return NodeType::poly == nodes_[i].first;}
+    [[nodiscard]] bool is_poly(const ind_t i) const {return NodeType::poly == nodes_[i].first;}
     //! Return whether the indexed node is a NullNode
-    bool is_null(const ind_t i) const {return NodeType::null == nodes_[i].first;}
+    [[nodiscard]] bool is_null(const ind_t i) const {return NodeType::null == nodes_[i].first;}
     //! Return the CubeNode at index i
-    const CubeNode& cube_at(const ind_t i) const {
+    [[nodiscard]] const CubeNode& cube_at(const ind_t i) const {
       return cube_nodes_[nodes_[i].second];
     }
     //! Return the PolyNode at index i
-    const PolyNode& poly_at(const ind_t i) const {
+    [[nodiscard]] const PolyNode& poly_at(const ind_t i) const {
       return poly_nodes_[nodes_[i].second];
     }
     //! Return the number of vertices indexed by the node at index i
-    ind_t vertex_count(const ind_t i) const {
+    [[nodiscard]] ind_t vertex_count(const ind_t i) const {
       switch (nodes_[i].first){
         case NodeType::cube:
         return cube_nodes_[nodes_[i].second].vertex_count();
@@ -461,21 +509,21 @@ namespace brille {
       }
     }
     //! Return the unique vertex indices in the node at index i
-    std::vector<ind_t> vertices(const ind_t i) const{
+    [[nodiscard]] std::vector<ind_t> vertices(const ind_t i) const{
       switch (nodes_[i].first){
         case NodeType::cube:
         return cube_nodes_[nodes_[i].second].vertices();
         case NodeType::poly:
         return poly_nodes_[nodes_[i].second].vertices();
         default:
-        return std::vector<ind_t>();
+        return {};
       }
     }
     //! Return the vertex indices for the triangulated tetrahedra held by the node at index i
-    std::vector<std::array<ind_t,4>> vertices_per_tetrahedron(const ind_t i) const{
+    [[nodiscard]] std::vector<std::array<ind_t,4>> vertices_per_tetrahedron(const ind_t i) const{
       if (nodes_[i].first == NodeType::poly)
         return poly_nodes_[nodes_[i].second].vertices_per_tetrahedron();
-      return std::vector<std::array<ind_t,4>>();
+      return {};
     }
     /*! Find the minimum number of vertex indices and their linear interpolation weights
 
@@ -505,7 +553,7 @@ namespace brille {
     \param verts all vertex positions of the PolyhedronTrellis
     \param i     the indexed node to interogate
     */
-    double volume(const bArray<double>& verts, const ind_t i) const {
+    [[nodiscard]] double volume(const bArray<double>& verts, const ind_t i) const {
       switch (nodes_[i].first){
         case NodeType::cube:
         return cube_nodes_[nodes_[i].second].volume(verts);

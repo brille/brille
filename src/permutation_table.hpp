@@ -64,57 +64,70 @@ class PermutationTable
 {
 // public:
 // 	using ind_t = unsigned; // uint_fastN_t or uint_leastN_t?
-private:
+protected:
 	static const size_t offset{1u}; // first valid value in map
 	size_t IndexSize;
 	std::map<size_t,size_t> ijmap;
 	std::vector<std::vector<ind_t>> permutations;
 public:
-	template<class R>
-	std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
-	to_hdf(R& obj, const std::string& dataset) const {
-		if (obj.exist(dataset)) obj.unlink(dataset);
-    auto group = obj.createGroup(dataset);
+  bool operator!=(const PermutationTable& other) const {
+    if (IndexSize != other.IndexSize) return true;
+    if (ijmap != other.ijmap) {
+//      for (const auto& [key, value]: ijmap){
+//        auto o_at = other.ijmap.find(key);
+//        info_update_if(o_at == other.ijmap.end(), "The other map is missing key ", key);
+//        info_update_if((o_at != other.ijmap.end() && value != other.ijmap.at(key)),
+//          "The other value at key ",key,", ",other.ijmap.at(key),", does not match ",value);
+//      }
+//      for (const auto& [key, value]: other.ijmap){
+//        auto o_at = ijmap.find(key);
+//        info_update_if(o_at == ijmap.end(), "This map is missing key ", key);
+//        info_update_if((o_at != ijmap.end() && value != ijmap.at(key)),
+//          "The value at key ",key,", ",ijmap.at(key)," does not match ",value);
+//      }
+      return true;
+    }
+    if (permutations != other.permutations) return true;
+    return false;
+  }
+  template<class R>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+  to_hdf(R& obj, const std::string& dataset) const {
+    auto group = overwrite_group(obj, dataset);
     bool ok{true};
-		group.createAttribute("offset", offset);
-		group.createAttribute("size", IndexSize);
-		ok &= map_to_hdf(ijmap, group, "map");
-		ok &= lists_to_hdf(permutations, group, "permutations");
-		return ok;
-	}
-	bool to_hdf(const std::string& filename, const std::string& dataset, const unsigned perm=HighFive::File::OpenOrCreate) const{
+    group.createAttribute("size", IndexSize);
+    ok &= map_to_hdf(ijmap, group, "map");
+    ok &= lists_to_hdf(permutations, group, "permutations");
+    return ok;
+  }
+  [[nodiscard]] bool
+  to_hdf(const std::string& filename, const std::string& dataset, const unsigned perm=HighFive::File::OpenOrCreate) const{
     HighFive::File file(filename, perm);
     return this->to_hdf(file, dataset);
-	}
-	template<class R>
-	static
-	std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, PermutationTable>
-	from_hdf(R& obj, const std::string& dataset){
-		auto group = obj.getGroup(dataset);
-		size_t o, isz;
-		group.getAttribute("offset").read(o);
-		group.getAttribute("size").read(isz);
-		auto m = map_from_hdf<size_t, size_t>(group, "map");
-		auto p = lists_from_hdf<ind_t>(group, "permutations");
-		if (o != offset)
-			throw std::runtime_error("Offset mismatch!");
-		return {isz, m, p};
-	}
-	static PermutationTable from_hdf(const std::string& filename, const std::string& dataset){
-		HighFive::File file(filename, HighFive::File::ReadOnly);
-		return PermutationTable::from_hdf(file, dataset);
-	}
-	PermutationTable(size_t ni, std::map<size_t, size_t> map, std::vector<std::vector<ind_t>> perm)
-	: IndexSize(ni), ijmap(std::move(map)), permutations(std::move(perm)) {
-		// perform a sanity check?
-	}
-	PermutationTable(size_t ni, size_t branches): IndexSize(ni) {
-		this->add_zeroth(branches);
-	};
-	PermutationTable(size_t ni, size_t branches, const std::set<size_t>& kys): IndexSize(ni) {
-		this->add_zeroth(branches);
-		for (size_t k: kys) ijmap.emplace(k, 0u); // 0u ≡ not-yet-added value
-	};
+  }
+  template<class R>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, PermutationTable>
+  from_hdf(R& obj, const std::string& dataset){
+    auto group = obj.getGroup(dataset);
+    size_t isz;
+    group.getAttribute("size").read(isz);
+    auto m = map_from_hdf<size_t, size_t>(group, "map");
+    auto p = lists_from_hdf<ind_t>(group, "permutations");
+    return {isz, m, p};
+  }
+  static PermutationTable from_hdf(const std::string& filename, const std::string& dataset){
+    HighFive::File file(filename, HighFive::File::ReadOnly);
+    return PermutationTable::from_hdf(file, dataset);
+  }
+  PermutationTable(size_t ni, std::map<size_t, size_t> map, std::vector<std::vector<ind_t>> perm)
+      : IndexSize(ni), ijmap(std::move(map)), permutations(std::move(perm)) {}
+  PermutationTable(size_t ni, size_t branches): IndexSize(ni) {
+    this->add_zeroth(branches);
+  };
+  PermutationTable(size_t ni, size_t branches, const std::set<size_t>& kys): IndexSize(ni) {
+    this->add_zeroth(branches);
+    for (size_t k: kys) ijmap.emplace(k, 0u); // 0u ≡ not-yet-added value
+  };
 public:
 	/*! \brief Reset the total number of index pairs and the length of each permuation vector
 

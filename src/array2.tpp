@@ -912,22 +912,32 @@ std::vector<T> Array2<T>::to_std() const {
 
 template<class T> template<class R>
 std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+Array2<T>::add_hdf_attributes(R& obj) const {
+  obj.createAttribute("size", numel());
+  obj.createAttribute("shape", shape());
+  return true;
+}
+
+template<class T> template<class R>
+std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
 // bool
 Array2<T>::to_hdf(R& obj, const std::string& node) const {
-  using namespace HighFive;
-  if (obj.exist(node)) obj.unlink(node);
-  //
-  // Copy the data into a structure that HighFive can handle :/
-  std::vector<std::vector<T>> hf;
-  for (ind_t i=0; i<_shape[0]; ++i){
+  if (numel()) {
+    // Copy the data into a structure that HighFive can handle :/
+    std::vector<std::vector<T>> hf;
+    for (ind_t i = 0; i < _shape[0]; ++i) {
       std::vector<T> inner;
-      for (ind_t j=0; j<_shape[1]; ++j){
-          inner.push_back(this->val(i, j));
+      for (ind_t j = 0; j < _shape[1]; ++j) {
+        inner.push_back(this->val(i, j));
       }
       hf.push_back(inner);
+    }
+    auto ds = overwrite_data(obj, node, hf);
+    add_hdf_attributes(ds);
+  } else {
+    auto group = overwrite_group(obj, node);
+    add_hdf_attributes(group);
   }
-  // create and write-to the dataset in one step:
-  obj.createDataSet(node, hf);
   return true;
 }
 

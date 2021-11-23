@@ -152,8 +152,18 @@ public:
     std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
     to_hdf(HF& obj, const std::string& entry) const{
         auto group = overwrite_group(obj, entry);
-        group.createDataSet("positions", positions_);
-        group.createDataSet("types", types_);
+        group.createAttribute("size", size());
+        if (size()){
+          // HighFive can't handle std::vector<std::array<T,3>> ?!?
+          std::vector<std::vector<double>> p;
+          for (const auto & pos: positions_){
+            std::vector<double> in;
+            for (const auto& pin: pos) in.push_back(pin);
+            p.push_back(in);
+          }
+          group.createDataSet("positions", p);
+          group.createDataSet("types", types_);
+        }
         return true;
     }
     // Input from HDF5 file/object
@@ -163,8 +173,27 @@ public:
         auto group = obj.getGroup(entry);
         std::vector<std::array<double,3>> p;
         std::vector<ind_t> t;
-        group.getDataSet("positions").read(p);
-        group.getDataSet("types").read(t);
+        size_t num;
+        group.getAttribute("size").read(num);
+        if (num) {
+          auto pos = group.getDataSet("positions");
+          std::vector<size_t> pos_shape = pos.getDimensions();
+          if (pos_shape.size() != 2u || pos_shape[1] != 3u || pos_shape[0] != num) {
+            throw std::runtime_error("Position should be (N,3) in shape!");
+          }
+          // or can we only read a std::vector<std::vector>?
+          auto tot = pos.getElementCount();
+          auto *pos_data = new double[tot]();
+          pos.read(pos_data);
+          for (size_t i = 0; i < tot; i += 3u) {
+            std::array<double, 3> x{
+                {pos_data[i], pos_data[i + 1], pos_data[i + 2]}};
+            p.push_back(x);
+          }
+          delete[] pos_data;
+
+          group.getDataSet("types").read(t);
+        }
         return {p,t};
     }
 };

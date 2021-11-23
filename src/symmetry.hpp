@@ -176,7 +176,7 @@ public:
   std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
   to_hdf(HF& obj, const std::string& entry) const{
     std::vector<HF_Motion<int, double>> hfm;
-    for (const auto & x: M) hfm.push_back(x.to_HF_Motion());
+    for (const auto & x: M) hfm.push_back(HF_Motion(x.getr(), x.gett()));
     auto ds = overwrite_data(obj, entry, hfm);
     return true;
   }
@@ -185,10 +185,14 @@ public:
   static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Symmetry>
   from_hdf(HF& obj, const std::string& entry){
     std::vector<HF_Motion<int, double>> hfm;
-    obj.getDataSet(obj, entry).read(hfm);
+    obj.getDataSet(entry).read(hfm);
     Motions m;
-    for (const auto& x: hfm) m.push_back(Motion<int, double>::from_HF_Motion(x));
-    return {m};
+    for(const auto& x: hfm){
+      auto [W, w] = x.tuple();
+      Motion<int, double> mot(W, w);
+      m.push_back(mot);
+    }
+    return Symmetry(m);
   }
 };
 

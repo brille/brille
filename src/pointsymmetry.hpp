@@ -26,10 +26,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "symmetry_common.hpp" // defines Matrix, Vector, Matrices, Vectors
 #include "hdf_interface.hpp"
 namespace brille {
-    template<class T>
-    struct HF_Matrix {
-        T xx, xy, xz, yx, yy, yz, zx, zy, zz;
-    };
 /*****************************************************************************\
 | PointSymmetry class                                                         |
 |-----------------------------------------------------------------------------|
@@ -89,7 +85,7 @@ public:
     std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
     to_hdf(HF& obj, const std::string& entry) const{
         std::vector<HF_Matrix<int>> hfm;
-        for (const auto & x: R) hfm.emplace_back(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8]);
+        for (const auto & x: R) hfm.emplace_back(x);
         auto ds = overwrite_data(obj, entry, hfm);
         return true;
     }
@@ -98,10 +94,10 @@ public:
     static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, PointSymmetry>
     from_hdf(HF& obj, const std::string& entry){
         std::vector<HF_Matrix<int>> hfm;
-        obj.getDataSet(obj, entry).read(hfm);
+        obj.getDataSet(entry).read(hfm);
         Matrices<int> m;
-        for (const auto& x: hfm) m.emplace_back(x.xx, x.xy, x.xz, x.yx, x.yy, x.yz, x.zx, x.zy, x.zz);
-        return {m};
+        for (const auto& x: hfm) m.push_back(x.array());
+        return PointSymmetry(m);
     }
 };
 

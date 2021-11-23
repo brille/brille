@@ -4,8 +4,6 @@
     \author Greg Tucker
     \brief An enumeration to represent the effect of a lattice symmetry operation
 */
-#include "hdf_interface.hpp"
-
 namespace brille {
 /*! \brief Represents how a lattice symmetry operation effects a vector or tensor
 
@@ -23,9 +21,7 @@ represents an eigenvector of the grand dynamical matrix, which undergoes a
 permutation and has an additional complex phase applied when transformed by a
 spacegroup symmetry operation.
 */
-enum class RotatesLike {
-  Real, Reciprocal, Axial, Gamma
-};
+enum class RotatesLike {Real, Reciprocal, Axial, Gamma};
 
 // HighFive::EnumType<RotatesLike> create_enum_rotateslike();
 

@@ -50,6 +50,21 @@ class BrillouinZone {
   bool is_primitive; //!< A computed flag indicating if the primitive version of a conventional lattice is in use
   bool no_ir_mirroring;
 public:
+    /*! \brief Construct a Brillouin zone object from all properties
+     *
+     * @param lat The primitive reciprocal lattice
+     * @param olat The lattice (normally) passed at construction
+     * @param poly The first Brillouin zone polyhedron
+     * @param irp An irreducible Brillouin zone polyhedron
+     * @param irn The irreducible Brillouin zone wedge normals
+     * @param tr Whether time reversal symmetry has been added
+     * @param hi Whether the point group symmetry has space inversion (or time reversal was added)
+     * @param ip Whether the primitive version of a conventional lattice is used
+     * @param nim Whether the irreducible Brillouin zone requires mirroring to get the correct result
+     */
+  BrillouinZone(Reciprocal lat, Reciprocal outer_lat, const Polyhedron & poly, const Polyhedron & irp, const bArray<double>& irn, bool tr, bool hi, bool ip, bool nim)
+  : lattice(std::move(lat)), outerlattice(std::move(outer_lat)), polyhedron(poly), ir_polyhedron(irp),
+    ir_wedge_normals(irn), time_reversal(tr), has_inversion(hi), is_primitive(ip), no_ir_mirroring(nim) {}
   /*! \brief Construct a Brillouin zone object
 
   \param lat A `Reciprocal` lattice
@@ -918,6 +933,7 @@ private:
 //    bool has_inversion; //!< A computed flag indicating if the pointgroup has space inversion symmetry or if time reversal symmetry has been requested
 //    bool is_primitive; //!< A computed flag indicating if the primitive version of a conventional lattice is in use
 //    bool no_ir_mirroring;
+public:
     template<class HF>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
     to_hdf(HF& obj, const std::string& entry) const{
@@ -951,6 +967,27 @@ private:
         group.getAttribute("no_ir_mirroring").read(nim);
         return {lat, olat, poly, ir_p, ir_w, tr, hi, ip, nim};
     }
+    [[nodiscard]] bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
+        HighFive::File file(filename, perm);
+        return this->to_hdf(file, entry);
+    }
+    static BrillouinZone from_hdf(const std::string& filename, const std::string& entry){
+        HighFive::File file(filename, HighFive::File::ReadOnly);
+        return BrillouinZone::from_hdf(file, entry);
+    }
+    bool operator!=(const BrillouinZone& other) const {
+        if (time_reversal != other.time_reversal) return true;
+        if (has_inversion != other.has_inversion) return true;
+        if (is_primitive != other.is_primitive) return true;
+        if (no_ir_mirroring != other.no_ir_mirroring) return true;
+        if (lattice != other.lattice) return true;
+        if (outerlattice != other.outerlattice) return true;
+        if (polyhedron != other.polyhedron) return true;
+        if (ir_polyhedron != other.ir_polyhedron) return true;
+        if (ir_wedge_normals != other.ir_wedge_normals) return true;
+        return false;
+    }
+    bool operator==(const BrillouinZone& other) const {return !this->operator!=(other);}
 };
 
 /*! \brief Find the intersection point of three planes, if it exists.

@@ -12,10 +12,12 @@
 #include <highfive/H5DataSet.hpp>
 #include <highfive/H5DataSpace.hpp>
 
-const std::string LENGTH_ENTRY("/length");
+#include "enums.hpp"
+
 const std::string LENGTH_ATTR_NAME("length");
 
 namespace brille {
+
   template<class T, class... V>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, T>, HighFive::Group>
   overwrite_group(T& obj, const std::string& entry, V... args){
@@ -53,15 +55,14 @@ namespace brille {
 
   template<class T, class R>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, std::vector<std::vector<T>>>
-  lists_from_hdf(const R& obj, const std::string& entry){
-    using namespace HighFive;
+  lists_from_hdf(R& obj, const std::string& entry){
     auto group = obj.getGroup(entry);
     auto attr = group.getAttribute(LENGTH_ATTR_NAME);
     size_t no;
     attr.read(no);
     std::vector<std::vector<T>> out(no);
     for (size_t i=0; i<no; ++i){
-        DataSet dataset = group.getDataSet(std::to_string(i));
+        auto dataset = group.getDataSet(std::to_string(i));
         dataset.read(out[i]);
     }
     return out;
@@ -80,8 +81,8 @@ namespace brille {
     using namespace HighFive;
     if (obj.exist(entry)) obj.unlink(entry);
     auto group = obj.createGroup(entry);
-    std::vector<Key> keys(map.size());
-    std::vector<Value> values(map.size());
+    std::vector<Key> keys; keys.reserve(map.size());
+    std::vector<Value> values; values.reserve(map.size());
     for (const auto [key, value]: map){
       keys.push_back(key);
       values.push_back(value);
@@ -117,5 +118,80 @@ namespace brille {
         return true;
     }
 
+  // Special simple version of Motion for HighFive HDF5 interface
+  template<class T, class R>
+  struct HF_Motion {
+    T xx, xy, xz, yx, yy, yz, zx, zy, zz;
+    R x, y, z;
+  public:
+    explicit HF_Motion() = default;
+    HF_Motion(const std::array<T, 9>& m, const std::array<R, 3>& v)
+    : xx(m[0]), xy(m[1]), xz(m[2]), yx(m[3]), yy(m[4]), yz(m[5]), zx(m[6]), zy(m[7]), zz(m[8]),
+      x(v[0]), y(v[1]), z(v[2]) {}
+    [[nodiscard]] std::tuple<std::array<T,9>, std::array<R,3>>
+    tuple() const {
+        std::array<T,9> m{{xx, xy, xz, yx, yy, yz, zx, zy, zz}};
+        std::array<R,3> v{{x, y, z}};
+        return std::make_tuple(m, v);
+    }
+  };
+
+  // Special simple version of Matrix for HighFive HDF5 interface
+  template<class T>
+  struct HF_Matrix {
+      T xx, xy, xz, yx, yy, yz, zx, zy, zz;
+  public:
+      explicit HF_Matrix() = default;
+      explicit HF_Matrix(const std::array<T, 9>& m):
+      xx(m[0]), xy(m[1]), xz(m[2]), yx(m[3]), yy(m[4]), yz(m[5]), zx(m[6]), zy(m[7]), zz(m[8]) {}
+      [[nodiscard]] std::array<T,9> array() const {
+          return std::array<T,9>({xx, xy, xz, yx, yy, yz, zx, zy, zz});
+      }
+  };
+} // namespace brille
+
+// predeclare the specialisations of HighFive's create_datatype function
+namespace HighFive {
+template<> DataType create_datatype<brille::RotatesLike>();
+template<> DataType create_datatype<brille::Bravais>();
+template<> DataType create_datatype<brille::LengthUnit>();
+template<> DataType create_datatype<brille::NodeType>();
+template<> DataType create_datatype<brille::HF_Matrix<int>>();
+template<> DataType create_datatype<brille::HF_Motion<int,double>>();
 }
+
+// templated functions for used with create_datatypes above, in case we want
+// more than Matrix<int> and Motion<int,double> exposed to HighFive
+template<class T, class R>
+HighFive::CompoundType create_compound_Motion(){
+  return {
+      {"xx", ::HighFive::AtomicType<T>{}},
+      {"xy", ::HighFive::AtomicType<T>{}},
+      {"xz", ::HighFive::AtomicType<T>{}},
+      {"yx", ::HighFive::AtomicType<T>{}},
+      {"yy", ::HighFive::AtomicType<T>{}},
+      {"yz", ::HighFive::AtomicType<T>{}},
+      {"zx", ::HighFive::AtomicType<T>{}},
+      {"zy", ::HighFive::AtomicType<T>{}},
+      {"zz", ::HighFive::AtomicType<T>{}},
+      {"x",  ::HighFive::AtomicType<R>{}},
+      {"y",  ::HighFive::AtomicType<R>{}},
+      {"z",  ::HighFive::AtomicType<R>{}},
+  };
+}
+template<class T>
+HighFive::CompoundType create_compound_Matrix(){
+  return {
+      {"xx", ::HighFive::AtomicType<T>{}},
+      {"xy", ::HighFive::AtomicType<T>{}},
+      {"xz", ::HighFive::AtomicType<T>{}},
+      {"yx", ::HighFive::AtomicType<T>{}},
+      {"yy", ::HighFive::AtomicType<T>{}},
+      {"yz", ::HighFive::AtomicType<T>{}},
+      {"zx", ::HighFive::AtomicType<T>{}},
+      {"zy", ::HighFive::AtomicType<T>{}},
+      {"zz", ::HighFive::AtomicType<T>{}},
+  };
+}
+
 #endif //BRILLE_HDF_INTERFACE_HPP

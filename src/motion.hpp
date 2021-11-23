@@ -3,12 +3,6 @@
 #include "symmetry_common.hpp"
 #include "hdf_interface.hpp"
 namespace brille {
-    // Special simple version of Motion for HighFive HDF5 interface
-    template<class T, class R>
-    struct HF_Motion {
-        T xx, xy, xz, yx, yy, yz, zx, zy, zz;
-        R x, y, z;
-    };
 /*! \brief Holds the matrix and vector parts of a generalised symmetry operation
 
 All crystallographic symmetry operations can be expressed as a matrix, \f$W\f$,
@@ -121,18 +115,18 @@ operations.
         size_t from_ascii(const std::string& s, bool cob=false);
         [[nodiscard]] std::string to_ascii() const;
         // Output to HDF5 file/object
-        HF_Motion<R,T> to_HF_Motion() const {
-            return {W[0], W[1], W[2], W[3], W[4], W[5], W[6], W[7], W[8], w[0], w[1], w[2]};
-        }
-        static Motion<R,T> from_HF_Motion(const HF_Motion<R,T>& m){
-            std::array<R, 9> W{{m.xx, m.xy, m.xz, m.yx, m.yy, m.yz, m.zx, m.zy, m.zz}};
-            std::array<T, 3> w{{m.x, m.y, m.z}};
-            return {W, w};
-        }
+//        HF_Motion<R,T> to_HF_Motion() const {
+//            return {W[0], W[1], W[2], W[3], W[4], W[5], W[6], W[7], W[8], w[0], w[1], w[2]};
+//        }
+//        static Motion<R,T> from_HF_Motion(const HF_Motion<R,T>& m){
+//            std::array<R, 9> W{{m.xx, m.xy, m.xz, m.yx, m.yy, m.yz, m.zx, m.zy, m.zz}};
+//            std::array<T, 3> w{{m.x, m.y, m.z}};
+//            return {W, w};
+//        }
         template<class HF>
         std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
         to_hdf(HF& obj, const std::string& entry) const{
-            overwrite_data(obj, entry, this->to_HF_Motion());
+            overwrite_data(obj, entry, HF_Motion(W,w));
             return true;
         }
         // Input from HDF5 file/object
@@ -141,7 +135,8 @@ operations.
         from_hdf(HF& obj, const std::string& entry){
             HF_Motion<R,T> m;
             obj.getDataSet(entry).read(m);
-            return Motion<R,T>::from_HF_Motion(m);
+            auto [W, w] = m.tuple();
+            return {W, w};
         }
     };
 

@@ -4,10 +4,28 @@
 #include <complex>
 #include "debug.hpp"
 #include "bz_trellis.hpp"
+#include <filesystem>
 
 using namespace brille;
 
-TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis]"){
+template<class T, class R>
+bool write_read_test(const BrillouinZoneTrellis3<T,R>& source, const std::string& name){
+  namespace fs = std::filesystem;
+  auto temp_dir = fs::temp_directory_path();
+  fs::path filepath = temp_dir;
+  filepath /= fs::path("brille.h5");
+  auto filename = filepath.string();
+
+  // write the BrillouinZoneTrellis3 to disk:
+  if(!source.to_hdf(filename, name))
+    throw std::runtime_error("Problem writing to HDF file?");
+
+  auto sink = BrillouinZoneTrellis3<T,R>::from_hdf(filename, name);
+
+  return (source == sink);
+}
+
+TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis][simple]"){
   // The conventional cell for Nb
   Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
   Reciprocal r = d.star();
@@ -15,6 +33,7 @@ TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis]"){
   double max_volume = 0.01;
   // BrillouinZoneTrellis3<double> bzt0(bz); !! No default maximum volume
   BrillouinZoneTrellis3<double,double> bzt1(bz, max_volume);
+  REQUIRE(write_read_test(bzt1, "first_bzt"));
 }
 TEST_CASE("BrillouinZoneTrellis3 vertex accessors","[trellis][accessors]"){
   Direct d(10.75, 10.75, 10.75, brille::halfpi, brille::halfpi, brille::halfpi, 525);

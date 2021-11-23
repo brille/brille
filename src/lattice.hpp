@@ -24,9 +24,11 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #include <utility>
 // #include <vector>
+#include "enums.hpp"
 #include "primitive.hpp"
 #include "basis.hpp"
 #include "array2.hpp"
+#include "hdf_interface.hpp"
 namespace brille {
 
 // forward declare the two types of lattices so that they can be mutually-referential
@@ -34,32 +36,6 @@ class Lattice;
 class Direct;
 class Reciprocal;
 
-/*! \brief The units of anglular quantities supplied to some Lattice methods
-
-The value of a measured angle can be expressed in a variety of different units
-which prevents unambiguous calculations involving the magnitude of angles if
-their unit is not also specified.
-
-Common units used to measure angles include the radian and the degree which,
-for most crystallographic systems, do not have overlapping magnitude ranges.
-The radian is a measurement of the arclength swept by an angle divided by the
-radius of the arc and a full circle, having circumference 2πr, has an internal
-angle of 2π radian.
-The degree is defined as 1/360ᵗʰ of a circle's arc so that a circle has an
-internal angle of 360°.
-Most lattices have basis vectors with relative angles more than 2π° ≈ 6.283°
-and less than π radian ≈ 3.141 radian. Therefore, if the magnitude of a lattice's
-angles are known but not whether they are expressed in radian or degrees we can
-infer the unit based on which section of the positive numberline the three
-magnitudes fall in: [(0,3.14159): radian, (6.283, 180): degree]
-
-This enum exists in case an ambiguous case is found. In such a case the unit
-can be provided and no inferrence will be used.
-
-An third angle unit is understood -- multiples of π radian -- 'pi'.
-*/
-enum class AngleUnit { not_provided, radian, degree, pi };
-enum class LengthUnit { none, angstrom, inverse_angstrom};
 
 /*! \brief Calculate the basis vector lengths and angles from a matrix of three vectors
 
@@ -153,6 +129,11 @@ protected:
   void check_hall_number(int h);
   void check_IT_name(const std::string& itname, const std::string& choice="");
 public:
+  //! Construct the Lattice from its components
+  Lattice(const std::array<double,3>& l, const std::array<double,3>& a, double v,
+          const Bravais b, Symmetry sgs, PointSymmetry pgs, Basis base, const LengthUnit lu=LengthUnit::none)
+  : len(l), ang(a), volume(v), bravais(b), spgsym(std::move(sgs)), ptgsym(std::move(pgs)), basis(std::move(base)), unit(lu) {
+  }
   //! Construct the Lattice from its components, excluding the volume which is calculated
   Lattice(const std::array<double,3>& l, const std::array<double,3>& a,
           const Bravais b, Symmetry sgs, PointSymmetry pgs,
@@ -379,17 +360,21 @@ public:
     template<class HF>
     static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Lattice>
     from_hdf(HF& obj, const std::string& entry){
-      auto group = obj.getGroup(entry);
+      HighFive::Group group = obj.getGroup(entry);
       std::array<double, 3> lengths{}, angles{};
       group.getAttribute("lengths").read(lengths);
       group.getAttribute("angles").read(angles);
       double volume;
       group.getAttribute("volume").read(volume);
+      Bravais b;
+      group.getAttribute("bravais").read(b);
       auto spg = Symmetry::from_hdf(group, "spacegroup");
       auto ptg = PointSymmetry::from_hdf(group, "pointgroup");
       auto bas = Basis::from_hdf(group, "basis");
-      return {lengths, angles, volume, spg, ptg, bas};
+      return {lengths, angles, volume, b, spg, ptg, bas};
     }
+    bool operator==(const Lattice& other) const { return this->issame(other);}
+    bool operator!=(const Lattice& other) const { return !(this->issame(other));}
 };
 
 /*! \brief A space-spanning Lattice that exists in real space
@@ -436,8 +421,9 @@ public:
         group.getAttribute("length_unit").read(unit);
         if (unit != LengthUnit::angstrom)
             throw std::runtime_error("Expected angstrom length units for a Reciprocal lattice!");
-        return {Lattice::from_hdf(obj, entry)};
+        return Direct(Lattice::from_hdf(obj, entry));
     }
+    bool operator==(const Direct& other) const {return this->Lattice::operator==(static_cast<Lattice>(other));}
 };
 /*! \brief A space-spanning Lattice that exists in reciprocal space
 
@@ -487,8 +473,9 @@ public:
         group.getAttribute("length_unit").read(unit);
         if (unit != LengthUnit::inverse_angstrom)
             throw std::runtime_error("Expected inverse angstrom length units for a Reciprocal lattice!");
-        return {Lattice::from_hdf(obj, entry)};
+        return Reciprocal(Lattice::from_hdf(obj, entry));
     }
+    bool operator==(const Reciprocal& other) const {return this->Lattice::operator==(static_cast<Lattice>(other));}
 };
 
 /*! \brief Type information for Lattice and LatVec objects

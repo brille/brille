@@ -170,7 +170,7 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     auto filename = filepath.string();
     std::string dataset="/polyhedron";
     std::cout << "Writing to file " << filename << std::endl;
-    poly.to_hdf(filename, dataset);
+    REQUIRE(poly.to_hdf(filename, dataset));
 
     // read-back the file's Polyhedron
     auto read = Polyhedron::from_hdf(filename, dataset);
@@ -186,7 +186,7 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     auto n = poly.get_normals();
     auto fpv = poly.get_faces_per_vertex();
 
-    for (unsigned int i=0; i<2; ++i){
+    for (unsigned int i=0; i<2u; ++i){
       REQUIRE(verts.size(i) == rv.size(i));
       REQUIRE(p.size(i) == rp.size(i));
       REQUIRE(n.size(i) == rn.size(i));
@@ -199,7 +199,7 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     REQUIRE(lists_match(vpf, rvpf));
 
     // (over)write to the file again, just to ensure it doesn't raise an error
-    poly.to_hdf(filename, dataset);
+    REQUIRE(poly.to_hdf(filename, dataset));
 
     // fs::remove(filepath);
 }

@@ -278,27 +278,43 @@ protected:
   std::vector<std::vector<int>> faces_per_vertex; //!< A listing for each vertex of the facets it contributes to (extraneous, should be removed)
   std::vector<std::vector<int>> vertices_per_face;//!< A listing of the vertices bounding each facet polygon
 public:
-  bool to_hdf(const std::string& filename, const std::string& dataset, const unsigned perm=HighFive::File::OpenOrCreate) const{
+    bool operator!=(const Polyhedron& other) const {
+        if (vertices != other.vertices) return true;
+        if (points != other.points) return true;
+        if (normals != other.normals) return true;
+        if (faces_per_vertex != other.faces_per_vertex) return true;
+        if (vertices_per_face != other.vertices_per_face) return true;
+        return false;
+    }
+    bool operator==(const Polyhedron& other) const { return !(this->operator!=(other)); }
+    template<class HF> std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+    to_hdf(HF& obj, const std::string& entry) const {
+      auto group = overwrite_group(obj, entry);
+      bool ok{true};
+      ok &= vertices.to_hdf(group, "vertices");
+      ok &= points.to_hdf(group, "points");
+      ok &= normals.to_hdf(group, "normals");
+      ok &= lists_to_hdf(faces_per_vertex, group, "faces_per_vertex");
+      ok &= lists_to_hdf(vertices_per_face, group, "vertices_per_face");
+      return ok;
+    }
+  [[nodiscard]] bool to_hdf(const std::string& filename, const std::string& dataset, const unsigned perm=HighFive::File::OpenOrCreate) const{
     HighFive::File file(filename, perm);
-    if (file.exist(dataset)) file.unlink(dataset);
-    auto group = file.createGroup(dataset);
-    bool ok{true};
-    ok &= vertices.to_hdf(group, "vertices");
-    ok &= points.to_hdf(group, "points");
-    ok &= normals.to_hdf(group, "normals");
-    ok &= lists_to_hdf(faces_per_vertex, group, "faces_per_vertex");
-    ok &= lists_to_hdf(vertices_per_face, group, "vertices_per_face");
-    return ok;
+    return this->to_hdf(file, dataset);
+  }
+  template<class HF> static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Polyhedron>
+  from_hdf(HF& obj, const std::string& entry){
+      auto group = obj.getGroup(entry);
+      auto v = bArray<double>::from_hdf(group, "vertices");
+      auto p = bArray<double>::from_hdf(group, "points");
+      auto n = bArray<double>::from_hdf(group, "normals");
+      auto fpv = lists_from_hdf<int>(group, "faces_per_vertex");
+      auto vpf = lists_from_hdf<int>(group, "vertices_per_face");
+      return {v, p, n, fpv, vpf};
   }
   static Polyhedron from_hdf(const std::string& filename, const std::string& dataset){
     HighFive::File file(filename, HighFive::File::ReadOnly);
-    auto group = file.getGroup(dataset);
-    auto v = bArray<double>::from_hdf(group, "vertices");
-    auto p = bArray<double>::from_hdf(group, "points");
-    auto n = bArray<double>::from_hdf(group, "normals");
-    auto fpv = lists_from_hdf<int>(group, "faces_per_vertex");
-    auto vpf = lists_from_hdf<int>(group, "vertices_per_face");
-    return {v, p, n, fpv, vpf};
+    return Polyhedron::from_hdf(file, dataset);
   }
   //! empty initializer
   explicit Polyhedron():
