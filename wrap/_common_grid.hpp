@@ -555,5 +555,62 @@ void def_grid_debye_waller(py::class_<Grid<T,R>>& cls){
   )pbdoc");
 }
 
+template<template<class, class> class Grid, class T, class R>
+void def_grid_hdf_interface(py::class_<Grid<T,R>>& cls, const std::string& default_entry){
+  using namespace pybind11::literals;
+  using namespace brille;
+  using namespace HighFive;
+  using Class = Grid<T,R>;
+  const std::string default_flag='ac';
+
+  cls.def("to_file",[](Class& cobj, const std::string& filename, const std::string& entry, const std::string& flags){
+    unsigned flag{0u};
+    if (flags.find('r') != std::string::npos) flags &= file::ReadOnly;
+    if (flags.find('x') != std::string::npos) flags &= File::Excl;
+    if (flags.find('a') != std::string::npos) flags &= File::ReadWrite;
+    if (flags.find('c') != std::string::npos) flags &= File::Create;
+    if (flags.find('t') != std::string::npos) flags &= File::Truncate;
+    return cobj.to_hdf(filename, entry, flag);
+  }, "filename"_a, "entry"_a=default_entry, "flags"_a=default_flag,
+  R"pbdoc(
+  Save the object to an HDF5 file
+
+  Parameters
+  ----------
+  filename : str
+    The full path specification for the file to write into
+  entry: str
+    The group path, e.g., "my/cool/grid", where to write inside the file,
+    with a default equal to the object Class name
+  flags: str
+    The HDF5 permissions to use when opening the file. Default 'a' writes to an
+    existing file -- if `entry` exists in the file it is overwritten.
+
+  Note
+  ----
+  Possible `flags` are:
+
+  +---------+-------------------------+----------------+
+  | `flags` | meaning                 | HDF equivalent |
+  +=========+=========================+================+
+  | 'r'     | read                    | H5F_ACC_RDONLY |
+  +---------+-------------------------+----------------+
+  | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
+  +---------+-------------------------+----------------+
+  | 'a'     | write, append to file   | H5F_ACC_RDWR   |
+  +---------+-------------------------+----------------+
+  | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
+  +---------+-------------------------+----------------+
+  | 't'     | write, replace existing | H5F_ACC_TRUNC  |
+  +---------+-------------------------+----------------+
+
+
+  Returns
+  -------
+  bool
+    Indication of writing success.
+
+  )pbdoc");
+}
 
 #endif
