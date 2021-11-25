@@ -31,6 +31,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 // #include "utilities.hpp"
 // #include "permutation.hpp"
 #include <queue>
+#include <utility>
 #include "triangulation_layers.hpp"
 namespace brille {
 
@@ -66,25 +67,6 @@ protected:
   TetTri mesh;
   data_t data_;
 public:
-    template<class HF>
-    std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
-    to_hdf(HF& obj, const std::string& entry) const{
-        auto group = overwrite_group(obj, entry);
-        bool ok{true};
-        ok &= mesh.to_hdf(group, "triangulation");
-        ok &= data_.to_hdf(group, "data");
-        return ok;
-    }
-    // Input from HDF5 file/object
-    template<class HF>
-    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Mesh3<T,S>>
-    from_hdf(HF& obj, const std::string& entry){
-        auto group = obj.getGroup(entry);
-        auto m = TetTri::from_hdf(group, "triangulation");
-        auto d = data_t::from_hdf(group, "data");
-        return {m, d};
-    }
-
   /* \brief Triangulate a space and build a TetTri within it
 
   \param verts the vertices bounding the space
@@ -107,6 +89,10 @@ public:
     this->mesh = other.mesh;
     this->data_ = other.data_;
   }
+  //Mesh3(TetTri  m, const data_t& d): mesh(std::move(m)), data_(d) {}
+  Mesh3(TetTri m, data_t d): mesh(std::move(m)), data_(std::move(d)) {}
+  Mesh3(TetTri&& m, data_t&& d): mesh(m), data_(d) {}
+  //
   Mesh3<T,S>& operator=(const Mesh3<T,S>& other){
     this->mesh = other.mesh;
     this->data_ = other.data_;
@@ -157,6 +143,27 @@ public:
     return str;
   }
   void sort() {data_.sort();}
+
+#ifdef USE_HIGHFIVE
+  template<class HF>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+  to_hdf(HF& obj, const std::string& entry) const{
+    auto group = overwrite_group(obj, entry);
+    bool ok{true};
+    ok &= mesh.to_hdf(group, "triangulation");
+    ok &= data_.to_hdf(group, "data");
+    return ok;
+  }
+  // Input from HDF5 file/object
+  template<class HF>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Mesh3<T,S>>
+  from_hdf(HF& obj, const std::string& entry){
+    auto group = obj.getGroup(entry);
+    auto m = TetTri::from_hdf(group, "triangulation");
+    auto d = data_t::from_hdf(group, "data");
+    return Mesh3(m, d);
+  }
+#endif // USE_HIGHFIVE
 };
 
 #include "mesh.tpp"

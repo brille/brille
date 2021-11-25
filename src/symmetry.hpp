@@ -171,6 +171,8 @@ public:
   Motions is instead returned.
   */
   size_t  find_matrix_index(const Matrix<int>&) const;
+
+#ifdef USE_HIGHFIVE
   // Output to HDF5 file/object
   template<class HF>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -194,6 +196,7 @@ public:
     }
     return Symmetry(m);
   }
+#endif
 };
 
 } // end namespace brille

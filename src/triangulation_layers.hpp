@@ -52,38 +52,6 @@ class TetTriLayer{
   bArray<double> circum_centres; // (nTetrahedra, 3);
   std::vector<double> circum_radii; // (nTetrahedra,)
 public:
-    template<class HF>
-    std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
-    to_hdf(HF& obj, const std::string& entry) const{
-        auto group = overwrite_group(obj, entry);
-        group.createAttribute("vertices", nVertices);
-        group.createAttribute("tetrahedra", nTetrahedra);
-        bool ok{true};
-        ok &= vertex_positions.to_hdf(group, "positions");
-        ok &= vertices_per_tetrahedron.to_hdf(group, "vertices_per_tetrahedron");
-        ok &= lists_to_hdf(tetrahedra_per_vertex, group, "tetrahedra_per_vertex");
-        ok &= lists_to_hdf(neighbours_per_tetrahedron, group, "neighbours_per_tetrahedron");
-        ok &= circum_centres.to_hdf(group, "circumsphere_centers");
-        group.createDataSet("circumsphere_radii", circum_radii);
-        return ok;
-    }
-    // Input from HDF5 file/object
-    template<class HF>
-    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, TetTriLayer>
-    from_hdf(HF& obj, const std::string& entry){
-        auto group = obj.getGroup(entry);
-        ind_t nV, nT;
-        group.getAttribute("vertices", nV);
-        group.getAttribute("tetrahedra", nT);
-        auto vp = bArray<double>::from_hdf(group, "positions");
-        auto vt = bArray<ind_t>::from_hdf(group, "vertices_per_tetrahedron");
-        auto tv = lists_from_hdf(group, "tetrahedra_per_vertex");
-        auto nt = lists_from_hdf(group, "neighbours_per_tetrahedron");
-        auto cc = bArray<double>::from_hdf(group, "circumsphere_centers");
-        std::vector<double> cr;
-        group.getDataSet("circumsphere_radii").read(cr);
-        return {nV, nT, vp, vt, tv, nt, cc, cr};
-    }
   [[nodiscard]] ind_t number_of_vertices() const {return nVertices;}
   [[nodiscard]] ind_t number_of_tetrahedra() const {return nTetrahedra;}
   [[nodiscard]] const bArray<double>& get_vertex_positions() const {return vertex_positions;}
@@ -97,6 +65,19 @@ public:
     std::vector<std::vector<int>> vpf{{0,1,2},{0,2,3},{1,0,3},{1,3,2}};
     return {vertex_positions.extract(tet), vpf};
   }
+
+  TetTriLayer(ind_t nV,
+              ind_t nT,
+              const bArray<double>& vp,
+              const bArray<ind_t>& vt,
+              std::vector<std::vector<ind_t>> tv,
+              std::vector<std::vector<ind_t>> nt,
+              const bArray<double>& cc,
+              std::vector<double> cr)
+      : nVertices(nV), nTetrahedra(nT),
+        vertex_positions(vp), vertices_per_tetrahedron(vt),
+        tetrahedra_per_vertex(std::move(tv)), neighbours_per_tetrahedron(std::move(nt)),
+        circum_centres(cc), circum_radii(std::move(cr)) {}
 
   explicit TetTriLayer()
   : nVertices(0), nTetrahedra(0), vertex_positions(0u,3u),
@@ -325,6 +306,41 @@ protected:
         circum_centres.ptr(i), circum_radii.data()+i);
     }
   }
+#ifdef USE_HIGHFIVE
+public:
+  template<class HF>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+  to_hdf(HF& obj, const std::string& entry) const{
+    auto group = overwrite_group(obj, entry);
+    group.createAttribute("vertices", nVertices);
+    group.createAttribute("tetrahedra", nTetrahedra);
+    bool ok{true};
+    ok &= vertex_positions.to_hdf(group, "positions");
+    ok &= vertices_per_tetrahedron.to_hdf(group, "vertices_per_tetrahedron");
+    ok &= lists_to_hdf(tetrahedra_per_vertex, group, "tetrahedra_per_vertex");
+    ok &= lists_to_hdf(neighbours_per_tetrahedron, group, "neighbours_per_tetrahedron");
+    ok &= circum_centres.to_hdf(group, "circumsphere_centers");
+    group.createDataSet("circumsphere_radii", circum_radii);
+    return ok;
+  }
+  // Input from HDF5 file/object
+  template<class HF>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, TetTriLayer>
+  from_hdf(HF& obj, const std::string& entry){
+    auto group = obj.getGroup(entry);
+    ind_t nV, nT;
+    group.getAttribute("vertices").read(nV);
+    group.getAttribute("tetrahedra").read(nT);
+    auto vp = bArray<double>::from_hdf(group, "positions");
+    auto vt = bArray<ind_t>::from_hdf(group, "vertices_per_tetrahedron");
+    auto tv = lists_from_hdf<ind_t>(group, "tetrahedra_per_vertex");
+    auto nt = lists_from_hdf<ind_t>(group, "neighbours_per_tetrahedron");
+    auto cc = bArray<double>::from_hdf(group, "circumsphere_centers");
+    std::vector<double> cr;
+    group.getDataSet("circumsphere_radii").read(cr);
+    return {nV, nT, vp, vt, tv, nt, cc, cr};
+  }
+#endif // USE_HIGHFIVE
 };
 
 // If we ever get around to making the tetrahedra mesh refinable, then we will
@@ -349,51 +365,13 @@ class TetTri{
   std::vector<TetTriLayer> layers;
   std::vector<TetMap> connections;
 public:
-    template<class HF>
-    std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
-    to_hdf(HF& obj, const std::string& entry) const{
-        auto group = overwrite_group(obj, entry);
-        group.createAttribute("layers", layers.size());
-        auto layers_group = group.createGroup("layers");
-        auto connections_group = group.createGroup("connections");
-        bool ok{true};
-        size_t i=0;
-        for (const auto& layer: layers) layer.to_hdf(layers_group, std::to_string(i++));
-        layers_group.createAttribute("length", i);
-        i = 0;
-        for (const auto& connection: connections) lists_to_hdf(connections_group, connection, std::to_string(i++));
-        connections_group.createAttribute("length", i);
-        return ok;
-    }
-    // Input from HDF5 file/object
-    template<class HF>
-    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, TetTriLayer>
-    from_hdf(HF& obj, const std::string& entry){
-        auto group = obj.getGroup(entry);
-        size_t layer_no;
-        group.getAttribute("layers").read(layer_no);
-        auto l_group = group.getGroup("layers");
-        auto c_group = group.getGroup("connections");
-        size_t length;
-        l_group.getAttribute("length").read(length);
-        if (length != layer_no) throw std::runtime_error("Wrong number of layers!");
-        c_group.getAttribute("length").read(length);
-        if (length != (layer_no - 1u)) throw std::runtime_error("Wrong number of connections!");
-        std::vector<TetTriLayer> layers(layer_no);
-        std::vector<TetMap> connections(layer_no-1);
-        for (size_t i=0; i<layer_no; ++i){
-            layers[i] = TetTriLayer::from_hdf(l_group, std::to_string(i));
-        }
-        for (size_t i=0; i<layer_no-1; ++i){
-            connections[i] = lists_from_hdf(c_group, std::to_string(i));
-        }
-        return {layers, connections};
-    }
   explicit TetTri() = default;
   explicit TetTri(std::vector<TetTriLayer> l): layers(std::move(l))
   {
     this->find_connections();
   }
+  TetTri(std::vector<TetTriLayer> l, std::vector<TetMap> c): layers(std::move(l)), connections(std::move(c)) {}
+  //
   void find_connections(const size_t highest=0){
     if (highest < layers.size()-1)
     for (size_t i=highest; i<layers.size()-1; ++i)
@@ -512,6 +490,49 @@ private:
     // higher tetrahedron or share some part of its volume.
     return map;
   }
+#ifdef USE_HIGHFIVE
+public:
+  template<class HF>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+  to_hdf(HF& obj, const std::string& entry) const{
+    auto group = overwrite_group(obj, entry);
+    group.createAttribute("layers", layers.size());
+    auto layers_group = group.createGroup("layers");
+    auto connections_group = group.createGroup("connections");
+    bool ok{true};
+    size_t i=0;
+    for (const auto& layer: layers) layer.to_hdf(layers_group, std::to_string(i++));
+    layers_group.createAttribute("length", i);
+    i = 0;
+    for (const auto& connection: connections) lists_to_hdf(connection, connections_group, std::to_string(i++));
+    connections_group.createAttribute("length", i);
+    return ok;
+  }
+  // Input from HDF5 file/object
+  template<class HF>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, TetTri>
+  from_hdf(HF& obj, const std::string& entry){
+    auto group = obj.getGroup(entry);
+    size_t layer_no;
+    group.getAttribute("layers").read(layer_no);
+    auto l_group = group.getGroup("layers");
+    auto c_group = group.getGroup("connections");
+    size_t length;
+    l_group.getAttribute("length").read(length);
+    if (length != layer_no) throw std::runtime_error("Wrong number of layers!");
+    c_group.getAttribute("length").read(length);
+    if (length != (layer_no - 1u)) throw std::runtime_error("Wrong number of connections!");
+    std::vector<TetTriLayer> layers(layer_no);
+    std::vector<TetMap> connections(layer_no-1);
+    for (size_t i=0; i<layer_no; ++i){
+      layers[i] = TetTriLayer::from_hdf(l_group, std::to_string(i));
+    }
+    for (size_t i=0; i<layer_no-1; ++i){
+      connections[i] = lists_from_hdf<ind_t>(c_group, std::to_string(i));
+    }
+    return {layers, connections};
+  }
+#endif // USE_HIGHFIVE
 };
 
 //! Triangulate a single layer of the TetTri hierarchy

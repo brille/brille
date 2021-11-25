@@ -90,35 +90,6 @@ public:
     if (permutations != other.permutations) return true;
     return false;
   }
-  template<class R>
-  std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
-  to_hdf(R& obj, const std::string& dataset) const {
-    auto group = overwrite_group(obj, dataset);
-    bool ok{true};
-    group.createAttribute("size", IndexSize);
-    ok &= map_to_hdf(ijmap, group, "map");
-    ok &= lists_to_hdf(permutations, group, "permutations");
-    return ok;
-  }
-  [[nodiscard]] bool
-  to_hdf(const std::string& filename, const std::string& dataset, const unsigned perm=HighFive::File::OpenOrCreate) const{
-    HighFive::File file(filename, perm);
-    return this->to_hdf(file, dataset);
-  }
-  template<class R>
-  static std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, PermutationTable>
-  from_hdf(R& obj, const std::string& dataset){
-    auto group = obj.getGroup(dataset);
-    size_t isz;
-    group.getAttribute("size").read(isz);
-    auto m = map_from_hdf<size_t, size_t>(group, "map");
-    auto p = lists_from_hdf<ind_t>(group, "permutations");
-    return {isz, m, p};
-  }
-  static PermutationTable from_hdf(const std::string& filename, const std::string& dataset){
-    HighFive::File file(filename, HighFive::File::ReadOnly);
-    return PermutationTable::from_hdf(file, dataset);
-  }
   PermutationTable(size_t ni, std::map<size_t, size_t> map, std::vector<std::vector<ind_t>> perm)
       : IndexSize(ni), ijmap(std::move(map)), permutations(std::move(perm)) {}
   PermutationTable(size_t ni, size_t branches): IndexSize(ni) {
@@ -261,6 +232,39 @@ private:
 		permutations[0] = identity;
 		ijmap[0u] = 0u + offset;// offset first valid value
 	}
+
+#ifdef USE_HIGHFIVE
+      public:
+        template<class R>
+        std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+        to_hdf(R& obj, const std::string& dataset) const {
+          auto group = overwrite_group(obj, dataset);
+          bool ok{true};
+          group.createAttribute("size", IndexSize);
+          ok &= map_to_hdf(ijmap, group, "map");
+          ok &= lists_to_hdf(permutations, group, "permutations");
+          return ok;
+        }
+        [[nodiscard]] bool
+        to_hdf(const std::string& filename, const std::string& dataset, const unsigned perm=HighFive::File::OpenOrCreate) const{
+          HighFive::File file(filename, perm);
+          return this->to_hdf(file, dataset);
+        }
+        template<class R>
+        static std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, PermutationTable>
+        from_hdf(R& obj, const std::string& dataset){
+          auto group = obj.getGroup(dataset);
+          size_t isz;
+          group.getAttribute("size").read(isz);
+          auto m = map_from_hdf<size_t, size_t>(group, "map");
+          auto p = lists_from_hdf<ind_t>(group, "permutations");
+          return {isz, m, p};
+        }
+        static PermutationTable from_hdf(const std::string& filename, const std::string& dataset){
+          HighFive::File file(filename, HighFive::File::ReadOnly);
+          return PermutationTable::from_hdf(file, dataset);
+        }
+#endif
 };
 
 /*! \brief Build a list of all possible keys from an iterable container

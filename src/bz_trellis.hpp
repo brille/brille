@@ -169,6 +169,7 @@ public:
     return std::make_tuple(vals, vecs);
   }
 
+#ifdef USE_HIGHFIVE
     template<class HF>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
     to_hdf(HF& obj, const std::string& entry) const{
@@ -196,6 +197,7 @@ public:
         HighFive::File file(filename, HighFive::File::ReadOnly);
         return BrillouinZoneTrellis3<T,R>::from_hdf(file, entry);
     }
+#endif // USE_HIGHFIVE
 
     bool operator!=(const BrillouinZoneTrellis3<T,R>& other) const {
       if (brillouinzone != other.brillouinzone) return true;

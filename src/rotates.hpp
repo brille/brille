@@ -22,27 +22,6 @@ permutation and has an additional complex phase applied when transformed by a
 spacegroup symmetry operation.
 */
 enum class RotatesLike {Real, Reciprocal, Axial, Gamma};
-
-// HighFive::EnumType<RotatesLike> create_enum_rotateslike();
-
-// template<class T>
-// std::enable_if_t<std::is_base_of_v<HighFive::Object, T>, bool>
-// rotate_to_hdf(T& obj, const std::string& node, const RotatesLike& rot){
-//   if (obj.exist(node)) obj.unlink(node);
-//   obj.createDataSet(node, rot);
-//   return true;
-// }
-//
-// template<class T>
-// std::enable_if_t<std::is_base_of_v<HighFive::Object, T>, RotatesLike>
-// rotate_from_hdf(T& obj, const std::string& node){
-//   auto data = obj.getDataSet(node);
-//   RotatesLike rot;
-//   data.read(rot);
-//   return rot;
-// }
-
-
 }
 
 #endif

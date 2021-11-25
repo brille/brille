@@ -910,6 +910,7 @@ std::vector<T> Array2<T>::to_std() const {
   return out;
 }
 
+#ifdef USE_HIGHFIVE
 template<class T> template<class R>
 std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
 Array2<T>::add_hdf_attributes(R& obj) const {
@@ -947,6 +948,7 @@ bool Array2<T>::to_hdf(const std::string& filename, const std::string& node, con
     File file(filename, permissions);
     return this->to_hdf(file, node);
 }
+#endif // USE_HIGHFIVE
 
 template<class T>
 T* Array2<T>::ptr(const ind_t i0){

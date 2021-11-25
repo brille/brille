@@ -934,6 +934,7 @@ private:
 //    bool is_primitive; //!< A computed flag indicating if the primitive version of a conventional lattice is in use
 //    bool no_ir_mirroring;
 public:
+#ifdef USE_HIGHFIVE
     template<class HF>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
     to_hdf(HF& obj, const std::string& entry) const{
@@ -975,6 +976,7 @@ public:
         HighFive::File file(filename, HighFive::File::ReadOnly);
         return BrillouinZone::from_hdf(file, entry);
     }
+#endif //USE_HIGHFIVE
     bool operator!=(const BrillouinZone& other) const {
         if (time_reversal != other.time_reversal) return true;
         if (has_inversion != other.has_inversion) return true;

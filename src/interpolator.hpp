@@ -111,44 +111,6 @@ public:
     if (_funtype != other._funtype) return true;
     return false;
   }
-  template<class HF> std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
-  to_hdf(HF& object, const std::string& entry) const {
-    auto group = overwrite_group(object, entry);
-    bool ok{true};
-    ok &= data_.to_hdf(group, "data");
-    group.createDataSet("shape", shape_);
-    group.createDataSet("elements", _elements);
-    group.createDataSet("rotlike", rotlike_);
-    group.createDataSet("costmult", _costmult);
-    group.createDataSet("funtype", _funtype);
-    return ok;
-  }
-  [[nodiscard]] bool to_hdf(const std::string& f, const std::string& d, const unsigned p=HighFive::File::OpenOrCreate) const {
-    HighFive::File file(f, p);
-    return this->to_hdf(file, d);
-  }
-  template<class HF> static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Interpolator<T>>
-  from_hdf(HF& object, const std::string& entry){
-    auto group = object.getGroup(entry);
-    auto d = bArray<T>::from_hdf(group, "data");
-    //
-    shape_t s;
-    element_t<ind_t> e, f;
-    RotatesLike r;
-    element_t<double> c;
-    //
-    group.getDataSet("shape").read(s);
-    group.getDataSet("elements").read(e);
-    group.getDataSet("rotlike").read(r);
-    group.getDataSet("costmult").read(c);
-    group.getDataSet("funtype").read(f);
-    //
-    return {d, s, e, r, static_cast<int>(f[0]), static_cast<int>(f[1]), c};
-  }
-  static Interpolator<T> from_hdf(const std::string& filename, const std::string& dataset){
-    HighFive::File file(filename, HighFive::File::ReadOnly);
-    return Interpolator<T>::from_hdf(file, dataset);
-  }
   /*! \brief Constructor without data and with optional cost function types
 
   \param scf_type The scalar cost function *type*
@@ -623,6 +585,48 @@ private:
   // interpolate_at_*
   void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, bArray<T>&, const ind_t, const bool) const;
   void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, bArray<T>&, const ind_t, const bool) const;
+
+#ifdef USE_HIGHFIVE
+  public:
+  template<class HF> std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+  to_hdf(HF& object, const std::string& entry) const {
+    auto group = overwrite_group(object, entry);
+    bool ok{true};
+    ok &= data_.to_hdf(group, "data");
+    group.createDataSet("shape", shape_);
+    group.createDataSet("elements", _elements);
+    group.createDataSet("rotlike", rotlike_);
+    group.createDataSet("costmult", _costmult);
+    group.createDataSet("funtype", _funtype);
+    return ok;
+  }
+  [[nodiscard]] bool to_hdf(const std::string& f, const std::string& d, const unsigned p=HighFive::File::OpenOrCreate) const {
+    HighFive::File file(f, p);
+    return this->to_hdf(file, d);
+  }
+  template<class HF> static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Interpolator<T>>
+  from_hdf(HF& object, const std::string& entry){
+    auto group = object.getGroup(entry);
+    auto d = bArray<T>::from_hdf(group, "data");
+    //
+    shape_t s;
+    element_t<ind_t> e, f;
+    RotatesLike r;
+    element_t<double> c;
+    //
+    group.getDataSet("shape").read(s);
+    group.getDataSet("elements").read(e);
+    group.getDataSet("rotlike").read(r);
+    group.getDataSet("costmult").read(c);
+    group.getDataSet("funtype").read(f);
+    //
+    return {d, s, e, r, static_cast<int>(f[0]), static_cast<int>(f[1]), c};
+  }
+  static Interpolator<T> from_hdf(const std::string& filename, const std::string& dataset){
+    HighFive::File file(filename, HighFive::File::ReadOnly);
+    return Interpolator<T>::from_hdf(file, dataset);
+  }
+#endif // USE_HIGHFIVE
 };
 
 #include "interpolator_at.tpp"

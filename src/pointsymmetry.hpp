@@ -80,6 +80,7 @@ public:
   [[nodiscard]] Vector<int>          perpendicular_axis(size_t i)                 const;
   [[nodiscard]] Vectors<int>         perpendicular_axes()                           const;
   [[nodiscard]] PointSymmetry        higher(int min_order=0)                      const;
+#ifdef USE_HIGHFIVE
     // Output to HDF5 file/object
     template<class HF>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -99,6 +100,7 @@ public:
         for (const auto& x: hfm) m.push_back(x.array());
         return PointSymmetry(m);
     }
+#endif
 };
 
 } // namespace brille

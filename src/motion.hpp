@@ -114,15 +114,9 @@ operations.
         }
         size_t from_ascii(const std::string& s, bool cob=false);
         [[nodiscard]] std::string to_ascii() const;
+
+#ifdef USE_HIGHFIVE
         // Output to HDF5 file/object
-//        HF_Motion<R,T> to_HF_Motion() const {
-//            return {W[0], W[1], W[2], W[3], W[4], W[5], W[6], W[7], W[8], w[0], w[1], w[2]};
-//        }
-//        static Motion<R,T> from_HF_Motion(const HF_Motion<R,T>& m){
-//            std::array<R, 9> W{{m.xx, m.xy, m.xz, m.yx, m.yy, m.yz, m.zx, m.zy, m.zz}};
-//            std::array<T, 3> w{{m.x, m.y, m.z}};
-//            return {W, w};
-//        }
         template<class HF>
         std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
         to_hdf(HF& obj, const std::string& entry) const{
@@ -138,6 +132,7 @@ operations.
             auto [W, w] = m.tuple();
             return {W, w};
         }
+#endif //USE_HIGHFIVE
     };
 
 

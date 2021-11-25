@@ -22,6 +22,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #define BRILLE_BZ_MESH_
 #include "bz.hpp"
 #include "mesh.hpp"
+
+#include <utility>
 namespace brille {
 /*! \brief A Mesh3 in a BrillouinZone
 
@@ -37,6 +39,8 @@ class BrillouinZoneMesh3: public Mesh3<T,S>{
 protected:
   BrillouinZone brillouinzone;
 public:
+  BrillouinZoneMesh3(const SuperClass& pt, BrillouinZone bz): SuperClass(pt), brillouinzone(std::move(bz)) {}
+  BrillouinZoneMesh3(SuperClass&& pt, BrillouinZone&& bz): SuperClass(std::move(pt)), brillouinzone(std::move(bz)) {}
   /* Construct using a maximum tetrahedron volume -- makes a tetrahedron mesh
       instead of a orthogonal grid.
       @param bz The BrillouinZone object
@@ -134,6 +138,7 @@ public:
     return std::make_tuple(vals, vecs);
   }
 
+#ifdef USE_HIGHFIVE
     template<class HF>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
     to_hdf(HF& obj, const std::string& entry) const{
@@ -150,7 +155,7 @@ public:
         auto group = obj.getGroup(entry);
         auto mesh = SuperClass::from_hdf(group, "mesh");
         auto bz = BrillouinZone::from_hdf(group, "brillouinzone");
-        return {bz, mesh};
+        return {mesh, bz};
     }
 
     [[nodiscard]] bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
@@ -161,6 +166,7 @@ public:
         HighFive::File file(filename, HighFive::File::ReadOnly);
         return BrillouinZoneMesh3<T,S>::from_hdf(file, entry);
     }
+#endif //USE_HIGHFIVE
 };
 
 } // end namespace brille

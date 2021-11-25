@@ -555,23 +555,25 @@ void def_grid_debye_waller(py::class_<Grid<T,R>>& cls){
   )pbdoc");
 }
 
+#ifdef USE_HIGHFIVE
 template<template<class, class> class Grid, class T, class R>
 void def_grid_hdf_interface(py::class_<Grid<T,R>>& cls, const std::string& default_entry){
   using namespace pybind11::literals;
   using namespace brille;
   using namespace HighFive;
   using Class = Grid<T,R>;
-  const std::string default_flag='ac';
+  const std::string default_flag("ac");
 
   cls.def("to_file",[](Class& cobj, const std::string& filename, const std::string& entry, const std::string& flags){
     unsigned flag{0u};
-    if (flags.find('r') != std::string::npos) flags &= file::ReadOnly;
-    if (flags.find('x') != std::string::npos) flags &= File::Excl;
-    if (flags.find('a') != std::string::npos) flags &= File::ReadWrite;
-    if (flags.find('c') != std::string::npos) flags &= File::Create;
-    if (flags.find('t') != std::string::npos) flags &= File::Truncate;
+    if (flags.find('r') != std::string::npos) flag |= File::ReadOnly;
+    if (flags.find('x') != std::string::npos) flag |= File::Excl;
+    if (flags.find('a') != std::string::npos) flag |= File::ReadWrite;
+    if (flags.find('c') != std::string::npos) flag |= File::Create;
+    if (flags.find('t') != std::string::npos) flag |= File::Truncate;
+    info_update("Provided flags ",flags," is translated to ",flag);
     return cobj.to_hdf(filename, entry, flag);
-  }, "filename"_a, "entry"_a=default_entry, "flags"_a=default_flag,
+  }, "filename"_a, "entry"_a=default_entry, "flags"_a=default_flag.c_str(),
   R"pbdoc(
   Save the object to an HDF5 file
 
@@ -611,6 +613,28 @@ void def_grid_hdf_interface(py::class_<Grid<T,R>>& cls, const std::string& defau
     Indication of writing success.
 
   )pbdoc");
+
+    // how do we define this static?
+  cls.def_static("from_file",[](const std::string& filename, const std::string& entry){
+        return Class::from_hdf(filename, entry);
+      }, "filename"_a, "entry"_a=default_entry,
+      R"pbdoc(
+  Save the object to an HDF5 file
+
+  Parameters
+  ----------
+  filename : str
+    The full path specification for the file to read from
+  entry: str
+    The group path, e.g., "my/cool/grid", where to read from inside the file,
+    with a default equal to the object Class name
+
+  Returns
+  -------
+  clsObj
+
+  )pbdoc");
 }
+#endif // USE_HIGHFIVE
 
 #endif

@@ -2,12 +2,13 @@ name: 'Versioned Sphinx with Autodoc GH-Pages'
 description: 'Build versioned GitHub Pages with Sphinx'
 author: 'Greg Tucker'
 branding:
-  icon: 'open-book'
+  icon: book-open
   color: 'green'
 inputs:
   create_readme:
     description: 'Auto create a README.md file at branch gh-pages with repo/branch/commit links'
-    default: false
+    default: 'false'
+    required: false
   source_dir:
     description: 'Directory relative to $\{{ GITHUB_WORKSPACE }} where the repository is checked out'
     required: false
@@ -16,10 +17,12 @@ inputs:
     required: true
   is_release:
     description: 'Whether this is a release documentation build'
-    default: false
+    default: 'false'
+    required: false
   update_git:
     description: 'Update and push the $\{{ pages_dir }} git repositories. `false` is useful for local testing'
-    default: true
+    default: 'true'
+    required: false
 outputs:
   name:
     description: 'Author name'

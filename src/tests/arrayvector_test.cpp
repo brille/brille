@@ -213,6 +213,7 @@ TEMPLATE_TEST_CASE("Array IO","[array][io]",double,float){
     // fill array with random values
     for (auto& v: rand_array.valItr()) v = distribution(generator);
 
+#ifdef USE_HIGHFIVE
     // write the array to disk:
     auto filename = filepath.string();
     std::string dataset = "/array2";
@@ -228,4 +229,5 @@ TEMPLATE_TEST_CASE("Array IO","[array][io]",double,float){
         REQUIRE(read_array[sub] == rand_array[sub]);
 
     fs::remove(filepath);
+#endif
 }

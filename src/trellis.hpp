@@ -133,41 +133,6 @@ public:
     if (boundaries_ != other.boundaries_) return true;
     return false;
   }
-  template<class HFObject>
-  std::enable_if_t<std::is_base_of_v<HighFive::Object, HFObject>, bool>
-  to_hdf(HFObject& obj, const std::string& entry) const {
-      auto group = overwrite_group(obj, entry);
-      bool ok{true};
-      ok &= polyhedron_.to_hdf(group, "polyhedron");
-      ok &= data_.to_hdf(group, "data");
-      ok &= vertices_.to_hdf(group, "vertices");
-      ok &= nodes_.to_hdf(group, "container");
-      ok &= lists_to_hdf(boundaries_, group, "boundaries");
-      return ok;
-  }
-  template<class HF>
-  static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, PolyhedronTrellis<T,R>>
-  from_hdf(HF& obj, const std::string& entry) {
-      auto group = obj.getGroup(entry);
-      auto p = Polyhedron::from_hdf(group, "polyhedron");
-      auto d = data_t::from_hdf(group, "data");
-      auto v = vert_t::from_hdf(group, "vertices");
-      NodeContainer n = NodeContainer::from_hdf(group, "container");
-      auto bl = lists_from_hdf<double>(group, "boundaries"); // returns a std::vector<std::vector<double>>
-      if (bl.size() != 3) throw std::runtime_error("Error reading boundaries from file");
-      std::array<std::vector<double>, 3> b;
-      for (size_t i=0; i<3u; ++i) b[i] = bl[i];
-//      return {p, d, v, n, b};
-      return PolyhedronTrellis(p, d, v, n, b);
-  }
-  bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
-      HighFive::File file(filename, perm);
-      return this->to_hdf(file, entry);
-  }
-  static PolyhedronTrellis<T,R> from_hdf(const std::string& filename, const std::string& entry){
-      HighFive::File file(filename, HighFive::File::ReadOnly);
-      return PolyhedronTrellis<T,R>::from_hdf(file, entry);
-  }
   /*!\brief Construct a PolyhedronTrellis from all required information
    *
    * */
@@ -595,6 +560,45 @@ private:
     double c = boundaries_[2][1]-boundaries_[2][0];
     return 0.5*std::sqrt(a*a+b*b+c*c);
   }
+
+#ifdef USE_HIGHFIVE
+public:
+  template<class HFObject>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, HFObject>, bool>
+  to_hdf(HFObject& obj, const std::string& entry) const {
+    auto group = overwrite_group(obj, entry);
+    bool ok{true};
+    ok &= polyhedron_.to_hdf(group, "polyhedron");
+    ok &= data_.to_hdf(group, "data");
+    ok &= vertices_.to_hdf(group, "vertices");
+    ok &= nodes_.to_hdf(group, "container");
+    ok &= lists_to_hdf(boundaries_, group, "boundaries");
+    return ok;
+  }
+  template<class HF>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, PolyhedronTrellis<T,R>>
+  from_hdf(HF& obj, const std::string& entry) {
+    auto group = obj.getGroup(entry);
+    auto p = Polyhedron::from_hdf(group, "polyhedron");
+    auto d = data_t::from_hdf(group, "data");
+    auto v = vert_t::from_hdf(group, "vertices");
+    NodeContainer n = NodeContainer::from_hdf(group, "container");
+    auto bl = lists_from_hdf<double>(group, "boundaries"); // returns a std::vector<std::vector<double>>
+    if (bl.size() != 3) throw std::runtime_error("Error reading boundaries from file");
+    std::array<std::vector<double>, 3> b;
+    for (size_t i=0; i<3u; ++i) b[i] = bl[i];
+    //      return {p, d, v, n, b};
+    return PolyhedronTrellis(p, d, v, n, b);
+  }
+  bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
+    HighFive::File file(filename, perm);
+    return this->to_hdf(file, entry);
+  }
+  static PolyhedronTrellis<T,R> from_hdf(const std::string& filename, const std::string& entry){
+    HighFive::File file(filename, HighFive::File::ReadOnly);
+    return PolyhedronTrellis<T,R>::from_hdf(file, entry);
+  }
+#endif // USE_HIGHFIVE
 };
 
 #include "trellis.tpp"

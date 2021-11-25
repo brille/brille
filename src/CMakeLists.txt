@@ -24,7 +24,6 @@ set(CXX_SOURCES
   comparisons.cpp
   debug.cpp
   hall_symbol.cpp
-  hdf_interface.cpp
   lattice.cpp
   neighbours.cpp
   pointgroup.cpp
@@ -32,6 +31,9 @@ set(CXX_SOURCES
   spg_database.cpp
   symmetry.cpp
 )
+if(BRILLE_HDF AND highfive_FOUND)
+    list(CXX_SOURCES APPEND hdf_interface.cpp)
+endif()
 
 foreach(CXX_TARGET IN LISTS CXX_TARGETS)
   target_sources(${CXX_TARGET} PRIVATE ${CXX_SOURCES})

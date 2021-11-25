@@ -55,6 +55,7 @@ namespace brille {
     bool indices_weights(const bArray<double>&, const bArray<double>&, std::vector<std::pair<ind_t,double>>&) const {return false;}
     //! Return the volume of this Node
     [[nodiscard]] virtual double volume(const bArray<double>&) const {return 0.;}
+#ifdef USE_HIGHFIVE
     //! Write to an HDF file
     template<class R>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
@@ -66,6 +67,7 @@ namespace brille {
     static std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, NullNode>
     from_hdf(R&, const std::string&) {return NullNode();}
     bool operator!=(const NullNode&) const { return true; }
+#endif
   };
   /*! \brief A Node fully within the domain of the PolyhedronTrellis
 
@@ -166,6 +168,7 @@ namespace brille {
       // so that vertex_indices[i] and vertex_indices[7-i] are connected by a body diagonal
       return abs(vertices.view(vertex_indices[0])-vertices.view(vertex_indices[7])).prod(1)[0];
     }
+#ifdef USE_HIGHFIVE
     //! Write to an HDF file
     template<class R>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
@@ -184,6 +187,7 @@ namespace brille {
       obj.getGroup(name).getDataSet("vertex_indices").read(vi);
       return CubeNode(vi);
     }
+#endif
   };
   /*! \brief A Node at least partly within the domain of the PolyhedronTrellis
 
@@ -211,58 +215,8 @@ namespace brille {
       return false;
     }
     bool operator==(const PolyNode& o) const {return !this->operator!=(o);}
-    //! Write to an HDF file
-    template<class R>
-    std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
-    to_hdf(R& obj, const std::string& name) const {
-      using namespace HighFive;
-      if (obj.exist(name)) obj.unlink(name);
-      auto group = obj.createGroup(name);
-
-      std::vector<std::vector<ind_t>> dv;
-      std::vector<std::vector<double>> dc;
-      for (const auto& vi: vi_t){
-        std::vector<ind_t> i;
-        for (const auto& v: vi) i.push_back(v);
-        dv.push_back(i);
-      }
-      for (const auto& ci: ci_t){
-        std::vector<double> i;
-        for (const auto& v: ci) i.push_back(v);
-        dc.push_back(i);
-      }
-      group.createDataSet("vi_t", dv);
-      group.createDataSet("ci_t", dc);
-
-      group.createDataSet("vol_t", vol_t);
-      return true;
-    }
-    //! Read from an HDF file
-    template<class R>
-    static
-    std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, PolyNode>
-    from_hdf(R& obj, const std::string& name){
-      std::vector<std::vector<ind_t>> dv;
-      std::vector<std::vector<double>> dc;
-      std::vector<std::array<ind_t, 4>> vi;
-      std::vector<std::array<double, 4>> ci;
-      std::vector<double> vol;
-      auto group = obj.getGroup(name);
-      group.getDataSet("vi_t").read(dv);
-      group.getDataSet("ci_t").read(dc);
-      group.getDataSet("vol_t").read(vol);
-
-      for (const auto& v: dv){
-        vi.push_back(std::array<ind_t,4>({v[0], v[1], v[2], v[3]}));
-      }
-      for (const auto& c: dc){
-        ci.push_back(std::array<double,4>({c[0], c[1], c[2], c[3]}));
-      }
-
-      return {vi, ci, vol};
-    }
-    //! empty implicit constructor
-    PolyNode() = default;
+    //
+    explicit PolyNode() = default;
     // actually constructing the tetrahedra from, e.g., a Polyhedron object will
     // need to be done elsewhere
     //! Construct with all parameters defined
@@ -363,6 +317,60 @@ namespace brille {
       // if the squared distance is no greater than the squared radius, x might be inside the tetrahedra
       return d2 < r2 || brille::approx::scalar(d2, r2);
     }
+
+#ifdef USE_HIGHFIVE
+  public:
+    //! Write to an HDF file
+    template<class R>
+    std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+    to_hdf(R& obj, const std::string& name) const {
+      using namespace HighFive;
+      if (obj.exist(name)) obj.unlink(name);
+      auto group = obj.createGroup(name);
+
+      std::vector<std::vector<ind_t>> dv;
+      std::vector<std::vector<double>> dc;
+      for (const auto& vi: vi_t){
+        std::vector<ind_t> i;
+        for (const auto& v: vi) i.push_back(v);
+        dv.push_back(i);
+      }
+      for (const auto& ci: ci_t){
+        std::vector<double> i;
+        for (const auto& v: ci) i.push_back(v);
+        dc.push_back(i);
+      }
+      group.createDataSet("vi_t", dv);
+      group.createDataSet("ci_t", dc);
+
+      group.createDataSet("vol_t", vol_t);
+      return true;
+    }
+    //! Read from an HDF file
+    template<class R>
+    static
+        std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, PolyNode>
+        from_hdf(R& obj, const std::string& name){
+      std::vector<std::vector<ind_t>> dv;
+      std::vector<std::vector<double>> dc;
+      std::vector<std::array<ind_t, 4>> vi;
+      std::vector<std::array<double, 4>> ci;
+      std::vector<double> vol;
+      auto group = obj.getGroup(name);
+      group.getDataSet("vi_t").read(dv);
+      group.getDataSet("ci_t").read(dc);
+      group.getDataSet("vol_t").read(vol);
+
+      for (const auto& v: dv){
+        vi.push_back(std::array<ind_t,4>({v[0], v[1], v[2], v[3]}));
+      }
+      for (const auto& c: dc){
+        ci.push_back(std::array<double,4>({c[0], c[1], c[2], c[3]}));
+      }
+
+      return {vi, ci, vol};
+    }
+#endif //USE_HIGHFIVE
   };
 
   /*! \brief A utility class to hold and index both CubeNode and PolyNode objects
@@ -394,61 +402,7 @@ namespace brille {
       if (poly_nodes_ != other.poly_nodes_) return true;
       return false;
     }
-    //! Write to an HDF file
-    template<class R>
-    std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
-    to_hdf(R& obj, const std::string& name) const {
-      if (obj.exist(name)) obj.unlink(name);
-      auto group = obj.createGroup(name);
-      std::vector<NodeType> nt;
-      std::vector<ind_t> idx;
-      for (const auto & [type, index]: nodes_){
-        nt.push_back(type);
-        idx.push_back(index);
-      }
-      group.createDataSet("types", nt);
-      group.createDataSet("index", idx);
-      auto cube = group.createGroup("cube_nodes");
-      auto poly = group.createGroup("poly_nodes");
-      cube.createAttribute("length", cube_nodes_.size());
-      poly.createAttribute("length", poly_nodes_.size());
-      size_t i{0};
-      for (const auto & c: cube_nodes_) c.to_hdf(cube, std::to_string(i++));
-      i = 0;
-      for (const auto & p: poly_nodes_) p.to_hdf(poly, std::to_string(i++));
-      return true;
-    }
-    //! Read from an HDF file
-    template<class R>
-    static std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, NodeContainer>
-    from_hdf(R& obj, const std::string& name){
-      auto group = obj.getGroup(name);
-      std::vector<NodeType> nt;
-      std::vector<ind_t> idx;
-      group.getDataSet("types").read(nt);
-      group.getDataSet("index").read(idx);
-      if (nt.size() != idx.size())
-        throw std::runtime_error("Error reading Node type-index pairs");
-      std::vector<std::pair<NodeType, ind_t>> n;
-      size_t nc{0}, np{0};
-      for (size_t i=0; i<nt.size(); ++i){
-        if (nt[i] == NodeType::cube) ++nc;
-        if (nt[i] == NodeType::poly) ++np;
-        n.emplace_back(nt[i], idx[i]);
-      }
-      std::vector<CubeNode> cubes(nc);
-      std::vector<PolyNode> polys(np);
-      auto cg = group.getGroup("cube_nodes");
-      size_t res;
-      cg.getAttribute("length").read(res);
-      if (res != nc) throw std::runtime_error("Error with cube node count");
-      for (size_t i=0; i<nc; ++i) cubes[i] = CubeNode::from_hdf(cg, std::to_string(i));
-      auto pg = group.getGroup("poly_nodes");
-      pg.getAttribute("length").read(res);
-      if (res != np) throw std::runtime_error("Error with poly node count");
-      for (size_t i=0; i<np; ++i) polys[i] = PolyNode::from_hdf(pg, std::to_string(i));
-      return {std::move(n), std::move(cubes), std::move(polys)};
-    }
+    //
     //! Return the total number of index nodes
     [[nodiscard]] size_t size() const {return nodes_.size();}
     //! Return the number of indexed CubeNode objects
@@ -563,6 +517,64 @@ namespace brille {
         return 0.;
       }
     }
+#ifdef USE_HIGHFIVE
+  public:
+    ! Write to an HDF file
+        template<class R>
+        std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+        to_hdf(R& obj, const std::string& name) const {
+      if (obj.exist(name)) obj.unlink(name);
+      auto group = obj.createGroup(name);
+      std::vector<NodeType> nt;
+      std::vector<ind_t> idx;
+      for (const auto & [type, index]: nodes_){
+        nt.push_back(type);
+        idx.push_back(index);
+      }
+      group.createDataSet("types", nt);
+      group.createDataSet("index", idx);
+      auto cube = group.createGroup("cube_nodes");
+      auto poly = group.createGroup("poly_nodes");
+      cube.createAttribute("length", cube_nodes_.size());
+      poly.createAttribute("length", poly_nodes_.size());
+      size_t i{0};
+      for (const auto & c: cube_nodes_) c.to_hdf(cube, std::to_string(i++));
+      i = 0;
+      for (const auto & p: poly_nodes_) p.to_hdf(poly, std::to_string(i++));
+      return true;
+    }
+    //! Read from an HDF file
+    template<class R>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, NodeContainer>
+    from_hdf(R& obj, const std::string& name){
+      auto group = obj.getGroup(name);
+      std::vector<NodeType> nt;
+      std::vector<ind_t> idx;
+      group.getDataSet("types").read(nt);
+      group.getDataSet("index").read(idx);
+      if (nt.size() != idx.size())
+        throw std::runtime_error("Error reading Node type-index pairs");
+      std::vector<std::pair<NodeType, ind_t>> n;
+      size_t nc{0}, np{0};
+      for (size_t i=0; i<nt.size(); ++i){
+        if (nt[i] == NodeType::cube) ++nc;
+        if (nt[i] == NodeType::poly) ++np;
+        n.emplace_back(nt[i], idx[i]);
+      }
+      std::vector<CubeNode> cubes(nc);
+      std::vector<PolyNode> polys(np);
+      auto cg = group.getGroup("cube_nodes");
+      size_t res;
+      cg.getAttribute("length").read(res);
+      if (res != nc) throw std::runtime_error("Error with cube node count");
+      for (size_t i=0; i<nc; ++i) cubes[i] = CubeNode::from_hdf(cg, std::to_string(i));
+      auto pg = group.getGroup("poly_nodes");
+      pg.getAttribute("length").read(res);
+      if (res != np) throw std::runtime_error("Error with poly node count");
+      for (size_t i=0; i<np; ++i) polys[i] = PolyNode::from_hdf(pg, std::to_string(i));
+      return {std::move(n), std::move(cubes), std::move(polys)};
+    }
+#endif // USE_HIGHFIVE
   };
 
 }

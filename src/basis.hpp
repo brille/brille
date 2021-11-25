@@ -148,6 +148,7 @@ public:
             + std::to_string(positions_[i][2])  + " )\n";
     return repr;
   }
+#ifdef USE_HIGHFIVE
     template<class HF>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
     to_hdf(HF& obj, const std::string& entry) const{
@@ -196,6 +197,7 @@ public:
         }
         return {p,t};
     }
+#endif //USE_HIGHFIVE
 };
 
 } // end namespace brille

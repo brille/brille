@@ -166,6 +166,7 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     std::vector<std::vector<int>> vpf{{0,1,3},{0,2,1},{0,3,2},{1,2,3}};
     auto poly = Polyhedron(verts, vpf);
 
+#ifdef USE_HIGHFIVE
     // write the Polyhedron to the file:
     auto filename = filepath.string();
     std::string dataset="/polyhedron";
@@ -201,5 +202,6 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     // (over)write to the file again, just to ensure it doesn't raise an error
     REQUIRE(poly.to_hdf(filename, dataset));
 
-    // fs::remove(filepath);
+    fs::remove(filepath);
+#endif //USE_HIGHFIVE
 }

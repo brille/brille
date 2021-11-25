@@ -12,6 +12,7 @@ bool write_read_test(const BrillouinZone& source, const std::string& name){
     fs::path filepath = temp_dir;
     filepath /= fs::path("brille.h5");
 
+#ifdef USE_HIGHFIVE
     // write the BrillouinZone to disk:
     auto wrote_ok = source.to_hdf(filepath.string(), name);
     if (!wrote_ok) return false;
@@ -19,6 +20,7 @@ bool write_read_test(const BrillouinZone& source, const std::string& name){
     auto sink = BrillouinZone::from_hdf(filepath.string(), name);
 
     return (source == sink);
+#endif
 }
 
 TEST_CASE("Primitive Cubic BrillouinZone instantiation","[brillouinzone]"){

@@ -497,4 +497,80 @@ void wrap_brillouinzone(py::module & m){
       for all :math:`\mathbf{Q}`, and the pointgroup operation fulfilling
       :math:`\mathbf{Q}_\text{ir} = R \mathbf{Q}`.
   )pbdoc");
+
+#ifdef USE_HIGHFIVE
+  const std::string default_entry("BrillouinZone");
+  const std::string default_flags("ac");
+  cls.def("to_file",[](CLS& cobj, const std::string& filename, const std::string& entry, const std::string& flags){
+        using namespace HighFive;
+        unsigned flag{0u};
+        if (flags.find('r') != std::string::npos) flag |= File::ReadOnly;
+        if (flags.find('x') != std::string::npos) flag |= File::Excl;
+        if (flags.find('a') != std::string::npos) flag |= File::ReadWrite;
+        if (flags.find('c') != std::string::npos) flag |= File::Create;
+        if (flags.find('t') != std::string::npos) flag |= File::Truncate;
+        info_update("Provided flags", flags," is translated to ",flag);
+        return cobj.to_hdf(filename, entry, flag);
+      }, "filename"_a, "entry"_a=default_entry, "flags"_a=default_flags,
+      R"pbdoc(
+  Save the object to an HDF5 file
+
+  Parameters
+  ----------
+  filename : str
+    The full path specification for the file to write into
+  entry: str
+    The group path, e.g., "my/cool/bz", where to write inside the file,
+    with a default equal to BrillouinZone name
+  flags: str
+    The HDF5 permissions to use when opening the file. Default 'a' writes to an
+    existing file -- if `entry` exists in the file it is overwritten.
+
+  Note
+  ----
+  Possible `flags` are:
+
+  +---------+-------------------------+----------------+
+  | `flags` | meaning                 | HDF equivalent |
+  +=========+=========================+================+
+  | 'r'     | read                    | H5F_ACC_RDONLY |
+  +---------+-------------------------+----------------+
+  | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
+  +---------+-------------------------+----------------+
+  | 'a'     | write, append to file   | H5F_ACC_RDWR   |
+  +---------+-------------------------+----------------+
+  | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
+  +---------+-------------------------+----------------+
+  | 't'     | write, replace existing | H5F_ACC_TRUNC  |
+  +---------+-------------------------+----------------+
+
+
+  Returns
+  -------
+  bool
+    Indication of writing success.
+
+  )pbdoc");
+
+  // how do we define this static?
+  cls.def_static("from_file",[](const std::string& filename, const std::string& entry){
+        return CLS::from_hdf(filename, entry);
+      }, "filename"_a, "entry"_a=default_entry,
+      R"pbdoc(
+  Save the object to an HDF5 file
+
+  Parameters
+  ----------
+  filename : str
+    The full path specification for the file to read from
+  entry: str
+    The group path, e.g., "my/cool/bz", where to read from inside the file,
+    with a default equal to the object Class name
+
+  Returns
+  -------
+  clsObj
+
+  )pbdoc");
+#endif //USE_HIGHFIVE
 }

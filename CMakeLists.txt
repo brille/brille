@@ -32,6 +32,8 @@ set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
 set(MINIMUM_CATCH2_VERSION 2.11.3)
 set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
 
+# Optional support of HDF5-based IO
+option(BRILLE_HDF5 "Add HDF5 file-based IO" OFF)
 option(REQUIRE_SYSTEM_HIGHFIVE "Never attempt to fetch HighFive" OFF)
 mark_as_advanced(REQUIRE_SYSTEM_HIGHFIVE)
 set(MINIMUM_HIGHFIVE_VERSION 2.3.1)
@@ -77,7 +79,7 @@ else()
 endif()
 if (BRILLE_PROFILING)
   message(STATUS "Profiling output emitted at runtime")
-  add_definitions(-DBRILLE_PROFILING)
+  add_definitions(-DPROFILING)
 endif (BRILLE_PROFILING)
 
 
@@ -105,11 +107,16 @@ git_fetch(pybind11 ${MINIMUM_PYBIND11_VERSION} ${FETCH_PYBIND11_REPO} ${REQUIRE_
 
 # HighFive is used to simplify the interface with HDF5:
 # Override some default settings
-set(HIGHFIVE_USE_BOOST OFF)
-set(HIGHFIVE_UNIT_TESTS OFF)
-set(HIGHFIVE_EXAMPLES OFF)
-set(HIGHFIVE_BUILD_DOCS OFF)
-git_fetch(highfive ${MINIMUM_HIGHFIVE_VERSION} ${FETCH_HIGHFIVE_REPO} ${REQUIRE_SYSTEM_HIGHFIVE})
+if (BRILLE_HDF5)
+  set(HIGHFIVE_USE_BOOST OFF)
+  set(HIGHFIVE_UNIT_TESTS OFF)
+  set(HIGHFIVE_EXAMPLES OFF)
+  set(HIGHFIVE_BUILD_DOCS OFF)
+  git_fetch(highfive ${MINIMUM_HIGHFIVE_VERSION} ${FETCH_HIGHFIVE_REPO} ${REQUIRE_SYSTEM_HIGHFIVE})
+  if (highfive_FOUND)
+    add_definitions(-DUSE_HIGHFIVE)
+  endif()
+endif(BRILLE_HDF5)
 
 # Read the version of brille
 execute_process(COMMAND ${Python3_EXECUTABLE} -c "from version_info import version_number; version_number()"
@@ -179,10 +186,12 @@ if(OpenMP_CXX_FOUND)
   endif()
 endif()
 
-foreach(HF_TARGET IN LISTS CXX_TARGETS)
-  message(STATUS "Adding HighFive library to ${HF_TARGET}")
-  target_link_libraries(${HF_TARGET} PUBLIC HighFive)
-endforeach()
+if(BRILLE_HDF5 AND highfive_FOUND)
+  foreach(HF_TARGET IN LISTS CXX_TARGETS)
+    message(STATUS "Adding HighFive library to ${HF_TARGET}")
+    target_link_libraries(${HF_TARGET} PUBLIC HighFive)
+  endforeach()
+endif()
 
 
 # if(MSVC)

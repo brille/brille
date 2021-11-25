@@ -340,6 +340,8 @@ public:
   }
   [[nodiscard]] LengthUnit length_unit() const {return unit;}
   [[nodiscard]] LengthUnit length_unit(LengthUnit lu) {unit = lu; return unit;}
+
+#ifdef USE_HIGHFIVE
     // Output to HDF5 file/object
     template<class HF>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -373,6 +375,7 @@ public:
       auto bas = Basis::from_hdf(group, "basis");
       return {lengths, angles, volume, b, spg, ptg, bas};
     }
+#endif //USE_HIGHFIVE
     bool operator==(const Lattice& other) const { return this->issame(other);}
     bool operator!=(const Lattice& other) const { return !(this->issame(other));}
 };
@@ -411,6 +414,7 @@ public:
   std::string string_repr() override;
   //! For non-Primitive Direct lattices, return the equivalent Primitive lattice
   [[nodiscard]] Direct primitive() const;
+#ifdef USE_HIGHFIVE
     // Output to HDF5 file/object handled by Lattice class
     // Input from HDF5 file/object, checking length unit
     template<class HF>
@@ -423,6 +427,7 @@ public:
             throw std::runtime_error("Expected angstrom length units for a Reciprocal lattice!");
         return Direct(Lattice::from_hdf(obj, entry));
     }
+#endif //USE_HIGHFIVE
     bool operator==(const Direct& other) const {return this->Lattice::operator==(static_cast<Lattice>(other));}
 };
 /*! \brief A space-spanning Lattice that exists in reciprocal space
@@ -463,6 +468,7 @@ public:
   std::string string_repr() override;
   //! For non-Primitive Reciprocal lattices, return the equivalent Primitive Reciprocal lattice
   [[nodiscard]] Reciprocal primitive() const;
+#ifdef USE_HIGHFIVE
     // Output to HDF5 file/object handled by Lattice class
     // Input from HDF5 file/object, checking length unit
     template<class HF>
@@ -475,6 +481,7 @@ public:
             throw std::runtime_error("Expected inverse angstrom length units for a Reciprocal lattice!");
         return Reciprocal(Lattice::from_hdf(obj, entry));
     }
+#endif //USE_HIGHFIVE
     bool operator==(const Reciprocal& other) const {return this->Lattice::operator==(static_cast<Lattice>(other));}
 };
 

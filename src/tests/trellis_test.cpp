@@ -10,6 +10,7 @@ using namespace brille;
 
 template<class T, class R>
 bool write_read_test(const BrillouinZoneTrellis3<T,R>& source, const std::string& name){
+#ifdef USE_HIGHFIVE
   namespace fs = std::filesystem;
   auto temp_dir = fs::temp_directory_path();
   fs::path filepath = temp_dir;
@@ -23,6 +24,9 @@ bool write_read_test(const BrillouinZoneTrellis3<T,R>& source, const std::string
   auto sink = BrillouinZoneTrellis3<T,R>::from_hdf(filename, name);
 
   return (source == sink);
+#else
+  return true;
+#endif
 }
 
 TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis][simple]"){
