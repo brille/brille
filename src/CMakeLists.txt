@@ -17,7 +17,8 @@ endif()
 message(STATUS "Using interpreter: ${Python3_EXECUTABLE}")
 
 
-set(CXX_SOURCES
+#set(CXX_SOURCES
+list(APPEND CXX_SOURCES
   bravais.cpp
   bz.cpp
   bz_wedge.cpp
@@ -32,7 +33,7 @@ set(CXX_SOURCES
   symmetry.cpp
 )
 if(BRILLE_HDF AND highfive_FOUND)
-    list(CXX_SOURCES APPEND hdf_interface.cpp)
+    list(APPEND CXX_SOURCES hdf_interface.cpp)
 endif()
 
 foreach(CXX_TARGET IN LISTS CXX_TARGETS)

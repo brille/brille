@@ -519,10 +519,10 @@ namespace brille {
     }
 #ifdef USE_HIGHFIVE
   public:
-    ! Write to an HDF file
-        template<class R>
-        std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
-        to_hdf(R& obj, const std::string& name) const {
+    //! Write to an HDF file
+    template<class R>
+		std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+    to_hdf(R& obj, const std::string& name) const {
       if (obj.exist(name)) obj.unlink(name);
       auto group = obj.createGroup(name);
       std::vector<NodeType> nt;

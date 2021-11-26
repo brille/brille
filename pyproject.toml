@@ -3,5 +3,5 @@
 requires =[
 	"setuptools",
 	"wheel",
-	"cmake>=3.13.0"
+	"cmake>=3.18.2"
 ]

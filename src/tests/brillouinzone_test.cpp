@@ -6,13 +6,13 @@
 
 using namespace brille;
 
+#ifdef USE_HIGHFIVE
 bool write_read_test(const BrillouinZone& source, const std::string& name){
     namespace fs = std::filesystem;
     auto temp_dir = fs::temp_directory_path();
     fs::path filepath = temp_dir;
     filepath /= fs::path("brille.h5");
 
-#ifdef USE_HIGHFIVE
     // write the BrillouinZone to disk:
     auto wrote_ok = source.to_hdf(filepath.string(), name);
     if (!wrote_ok) return false;
@@ -20,8 +20,12 @@ bool write_read_test(const BrillouinZone& source, const std::string& name){
     auto sink = BrillouinZone::from_hdf(filepath.string(), name);
 
     return (source == sink);
-#endif
 }
+#else
+bool write_read_test(const BrillouinZone&, const std::string&){
+	return true;
+}
+#endif
 
 TEST_CASE("Primitive Cubic BrillouinZone instantiation","[brillouinzone]"){
   Direct d(2*brille::pi,2*brille::pi,2*brille::pi,90.,90.,90.);
