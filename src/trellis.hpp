@@ -226,9 +226,6 @@ public:
       throw std::runtime_error("Only (n,3) two-dimensional Q vectors supported in interpolating.");
     if (x.stride().back()!=1)
       throw std::runtime_error("Contiguous vectors required for interpolation.");
-    for (ind_t i=0; i<x.size(0); ++i)
-      if (!polyhedron_.contains(x.view(i))[0])
-        throw std::runtime_error("The polyhedron does not contain point "+std::to_string(i)+": "+x.to_string(i));
     return mask;
   }
   /*! \brief Perform linear interpolation at one or more points
