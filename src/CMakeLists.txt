@@ -32,7 +32,8 @@ list(APPEND CXX_SOURCES
   spg_database.cpp
   symmetry.cpp
 )
-if(BRILLE_HDF AND highfive_FOUND)
+if(BRILLE_HDF5 AND highfive_FOUND)
+    message(STATUS "Adding hdf_interface.cpp")
     list(APPEND CXX_SOURCES hdf_interface.cpp)
 endif()
 
