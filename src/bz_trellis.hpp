@@ -147,9 +147,11 @@ public:
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
+    auto ir_q_abs = ir_q.get_xyz();
+    ir_q_abs.make_immutable(); // "ensure" that the underlying values are constant
     auto [vals, vecs] = (nth>1)
-        ? this->SuperClass::interpolate_at(ir_q.get_xyz(), nth)
-        : this->SuperClass::interpolate_at(ir_q.get_xyz());
+        ? this->SuperClass::interpolate_at(ir_q_abs, nth)
+        : this->SuperClass::interpolate_at(ir_q_abs);
     profile_update("Apply rotations/permutations to interpolated results");
     // we always need the pointgroup operations to 'rotate'
     PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();

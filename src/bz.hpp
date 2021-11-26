@@ -618,12 +618,12 @@ public:
     // ensure that qsl and tausl can hold each qi and taui
     qsl.resize(Qsl.size(0));
     tausl.resize(Qsl.size(0));
-    long long snQ = brille::utils::u2s<long long, ind_t>(Qsl.size(0));
+    auto snQ = brille::utils::u2s<long long, ind_t>(Qsl.size(0));
   #pragma omp parallel for default(none)\
   shared(Qsl, tausl, qsl, points, normals, taus, taulen, snQ, max_count)\
   schedule(dynamic)
     for (long long si=0; si<snQ; si++){
-      ind_t i = brille::utils::s2u<ind_t, long long>(si);
+      auto i = brille::utils::s2u<ind_t, long long>(si);
       auto taui = Qsl.view(i).round();
       auto qi = Qsl.view(i) - taui;
       auto last_shift = taui;
@@ -637,9 +637,9 @@ public:
           ind_t maxat{0};
           for (ind_t j=0; j<Nhkl.size(); ++j)
                                                            // protect against oscillating by ±τ
-          if (Nhkl[j]>0 && Nhkl[j]>=maxnm && (0==maxnm || (norm(taus.view(j)+last_shift).all(brille::cmp::gt, 0.) && qidn[j]>qidn[maxat]))){
-            maxnm = Nhkl[maxat=j];
-          }
+            if (Nhkl[j]>0 && Nhkl[j]>=maxnm && (0==maxnm || (norm(taus.view(j)+last_shift).all(brille::cmp::gt, 0.) && qidn[j]>qidn[maxat]))){
+              maxnm = Nhkl[maxat=j];
+            }
           qi -= taus.view(maxat) * static_cast<double>(maxnm); // ensure we subtract LQVec<double>
           taui += taus.view(maxat) * maxnm; // but add LQVec<int>
           last_shift = taus.view(maxat) * maxnm;
@@ -677,18 +677,16 @@ public:
   */
   bool
   ir_moveinto(
-    const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau,
-    std::vector<size_t>& Ridx, std::vector<size_t>& invRidx, const int threads=0)
-  const {
+      const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau,
+      std::vector<size_t>& Ridx, std::vector<size_t>& invRidx, const int threads=0)
+      const {
     profile_update("BrillouinZone::ir_moveinto called with ",threads," threads");
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
-    /* The Pointgroup symmetry information comes from, effectively, spglib which
-    has all rotation matrices defined in the conventional unit cell -- which is
-    our `outerlattice`. Consequently we must work in the outerlattice here.  */
+    /* The Point group symmetry information has all rotation matrices defined
+     * in the conventional unit cell -- which is our `outerlattice`.
+     * Consequently, we must work in the outer lattice here.  */
     if (!this->outerlattice.issame(Q.get_lattice()))
       throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
-    // get the PointSymmetry object, containing all operations
-    PointSymmetry psym = this->get_pointgroup_symmetry();
     // ensure q, tau, and Rm can hold one for each Q.
     ind_t nQ = Q.size(0);
     auto Qshape = Q.shape();
@@ -699,48 +697,52 @@ public:
     // find q₁ₛₜ in the first Brillouin zone and τ ∈ [reciprocal lattice vectors]
     // such that Q = q₁ₛₜ + τ
     this->moveinto(Q, q, tau, threads);
-    // by chance some first Bz points are likely already in the IR-Bz:
-    std::vector<bool> in_ir = this->isinside_wedge(q);
     //LQVec<double> qj(Q.get_lattice(), 1u);
     auto lat = Q.get_lattice();
     // OpenMP 2 (VS) doesn't like unsigned loop counters
     size_t n_outside{0};
-    long long snQ = brille::utils::u2s<long long, ind_t>(nQ);
-    #pragma omp parallel for default(none) shared(psym, Ridx, invRidx, q, in_ir, lat, snQ) reduction(+:n_outside) schedule(dynamic)
-    for (long long si=0; si<snQ; ++si){
-      ind_t i = brille::utils::s2u<ind_t, long long>(si);
-      // any q already in the irreducible zone need no rotation → identity, but we need to find the index of E
-      bool outside=!in_ir[i];
-      if (outside){
-        // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
-        LQVec<double> qj(lat, 1u); // a place to hold the multiplication result
-        for (ind_t j=0; j<psym.size(); ++j) if (outside) {
-          // The point symmetry matrices relate *real space* vectors! We must use
-          // their transposes' to rotate reciprocal space vectors.
-          brille::utils::multiply_matrix_vector(qj.ptr(0), transpose(psym.get(j)).data(), q.ptr(i));
-          if ( this->isinside_wedge(qj)[0] ){ /* store the result */
-            // and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.
-            q.set(i, qj); // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
-            invRidx[i] = j; // Rⱼ *is* the inverse of what we want for ouput
-            Ridx[i] = psym.get_inverse_index(j); // find the index of Rⱼ⁻¹
-            outside = false;
+    auto snQ = brille::utils::u2s<long long, ind_t>(nQ);
+#pragma omp parallel default(none) shared(Ridx, invRidx, q, lat, snQ) reduction(+:n_outside)
+    {
+      // get the PointSymmetry object, containing all operations
+      PointSymmetry psym = this->get_pointgroup_symmetry();
+      auto eidx = psym.find_identity_index();
+      LQVec<double> qj(lat, 1u); // a place to hold the multiplication result
+      std::vector<std::array<int, 9>> r_transpose;
+      for (const auto& r: psym.getall()) r_transpose.push_back(transpose(r));
+#pragma omp for schedule(dynamic)
+      for (long long si = 0; si < snQ; ++si) {
+        auto i = brille::utils::s2u<ind_t, long long>(si);
+        bool inside{_inside_wedge_outer(q.view(i))};
+        if (inside){
+          // any q already in the irreducible zone need no rotation → identity
+          invRidx[i] = Ridx[i] = eidx;
+        } else {
+          // find the jᵗʰ operation which moves qᵢ into the irreducible zone
+          for (ind_t j = 0; j < psym.size(); ++j) if (inside) break; else {
+            // The point symmetry matrices relate *real space* vectors!
+            // We must use their transposes' to rotate reciprocal space vectors.
+            brille::utils::multiply_matrix_vector(qj.ptr(0), r_transpose[j].data(), q.ptr(i));
+            if (_inside_wedge_outer(qj)) {
+              /* store the result */
+              // and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.
+              q.set(i, qj);   // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
+              invRidx[i] = j; // Rⱼ *is* the inverse of what we want for output
+              Ridx[i] = psym.get_inverse_index(j); // find the index of Rⱼ⁻¹
+              inside = true;
+            }
           }
         }
-      } else {
-        invRidx[i] = Ridx[i] = psym.find_index({1,0,0, 0,1,0, 0,0,1});
-      }
-      if (outside) {
-        ++n_outside;
-        in_ir[i] = false;
+        if (!inside) ++n_outside;
       }
     }
-    if (n_outside > 0) for (ind_t i=0; i<nQ; ++i) if (!in_ir[i]){
-      std::string msg = "Q = " + Q.to_string(i);
-      msg += " is outside of the irreducible BrillouinZone ";
-      msg += " : tau = " + tau.to_string(i) + " , q = " + q.to_string(i);
-      throw std::runtime_error(msg);
-      return false;
-    }
+    if (n_outside) for (ind_t i=0; i<nQ; ++i) if (!_inside_wedge_outer(q.view(i))){
+          std::string msg = "Q = " + Q.to_string(i);
+          msg += " is outside of the irreducible BrillouinZone ";
+          msg += " : tau = " + tau.to_string(i) + " , q = " + q.to_string(i);
+          throw std::runtime_error(msg);
+          return false;
+        }
     return true; // otherwise we hit the runtime error above
   }
   /*! \brief Find q and R∈G such that Q = Rᵀq such that q ∈ the irreducible wedge
@@ -752,55 +754,54 @@ public:
   \return the success status
   */
   bool
-  ir_moveinto_wedge(const LQVec<double>& Q, LQVec<double>& q, std::vector<std::array<int,9>>& R, const int threads=0) const {
+  ir_moveinto_wedge(const LQVec<double>& Q, LQVec<double>& q, std::vector<size_t>& R, const int threads=0) const {
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     /* The Pointgroup symmetry information comes from, effectively, spglib which
     has all rotation matrices defined in the conventional unit cell -- which is
     our `outerlattice`. Consequently we must work in the outerlattice here.  */
     if (!this->outerlattice.issame(Q.get_lattice()))
       throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
-    // get the PointSymmetry object, containing all operations
-    PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
     // ensure q and R can hold one for each Q.
     ind_t nQ = Q.size(0);
     auto Qshape = Q.shape();
     q.resize(Qshape);
     R.resize(nQ);
-    // by chance some first Bz points are likely already in the IR-wedge:
-    std::vector<bool> in_ir = this->isinside_wedge(Q);
-    //LQVec<double> qj(Q.get_lattice(), 1u);
     auto lat = Q.get_lattice();
     // OpenMP 2 (VS) doesn't like unsigned loop counters
     size_t n_outside{0};
-    long long snQ = brille::utils::u2s<long long, ind_t>(nQ);
-    #pragma omp parallel for default(none) shared(psym, R, q, Q, in_ir, lat, snQ) reduction(+:n_outside) schedule(dynamic)
-    for (long long si=0; si<snQ; ++si){
-      ind_t i = brille::utils::s2u<ind_t, long long>(si);
-      // any q already in the irreducible zone need no rotation → identity
-      bool outside=!in_ir[i];
-      if (outside){
-        // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
-        LQVec<double> qj(lat, 1u); // a place to hold the multiplication result
-        for (ind_t j=0; j<psym.size(); ++j) if (outside) {
-          // The point symmetry matrices relate *real space* vectors! We must use
-          // their transposes' to rotate reciprocal space vectors.
-          brille::utils::multiply_matrix_vector(qj.ptr(0), transpose(psym.get(j)).data(), Q.ptr(i));
-          if ( this->isinside_wedge(qj)[0] ){ /* store the result */
-            q.set(i, qj); // keep Rⱼᵀ⋅Qᵢ as qᵢᵣ
-            R[i] = transpose(psym.get_inverse(j)); // and (Rⱼᵀ)⁻¹ ∈ G, such that Q = (Rⱼᵀ)⁻¹⋅qᵢᵣ
-            outside = false;
+    auto snQ = brille::utils::u2s<long long, ind_t>(nQ);
+#pragma omp parallel default(none) shared(R, q, Q, lat, snQ) reduction(+:n_outside)
+    {
+      // get the PointSymmetry object, containing all operations
+      PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
+      auto eidx = psym.find_identity_index();
+      LQVec<double> qj(lat, 1u);
+      std::vector<std::array<int, 9>> r_transpose;
+      for (const auto& r: psym.getall()) r_transpose.push_back(transpose(r));
+#pragma omp for schedule(dynamic)
+      for (long long si = 0; si < snQ; ++si) {
+        auto i = brille::utils::s2u<ind_t, long long>(si);
+        // any q already in the irreducible zone need no rotation → identity
+        bool inside{_inside_wedge_outer(Q.view(i))};
+        if (inside){
+          q.set(i, Q.view(i));
+          R[i] = eidx;
+        } else {
+          // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
+          for (ind_t j = 0; j < psym.size(); ++j) if (inside) break; else {
+            // The point symmetry matrices relate *real space* vectors! We must use their transposes' to rotate reciprocal space vectors.
+            brille::utils::multiply_matrix_vector(qj.ptr(0), r_transpose[j].data(), Q.ptr(i));
+            if (_inside_wedge_outer(qj)) { /* store the result */
+              q.set(i, qj); // keep Rⱼᵀ⋅Qᵢ as qᵢᵣ
+              R[i] = psym.get_inverse_index(j); // and (Rⱼᵀ)⁻¹ ∈ G, such that Q = (Rⱼᵀ)⁻¹⋅qᵢᵣ
+              inside = true;
+            }
           }
         }
-      } else {
-        q.set(i, Q.view(i));
-        R[i] = {1,0,0, 0,1,0, 0,0,1};
-      }
-      if (outside) {
-        ++n_outside;
-        in_ir[i] = false;
+        if (!inside) ++n_outside;
       }
     }
-    if (n_outside > 0) for (ind_t i=0; i<nQ; ++i) if (!in_ir[i]){
+    if (n_outside > 0) for (ind_t i=0; i<nQ; ++i) if (!_inside_wedge_outer(q.view(i))){
       std::string msg = "Q = " + Q.to_string(i);
       msg += " is outside of the irreducible reciprocal space wedge ";
       msg += " , irQ = " + q.to_string(i);
@@ -811,14 +812,20 @@ public:
   }
 
   //! \brief Get the PointSymmetry object used by this BrillouinZone object internally
-  PointSymmetry get_pointgroup_symmetry() const{
+  [[nodiscard]] PointSymmetry get_pointgroup_symmetry() const{
     return this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
   }
   //! \brief Accessor for whether the BrillouinZone was constructed with additional time reversal symmetry
-  int add_time_reversal() const {
+  [[nodiscard]] int add_time_reversal() const {
     return this->time_reversal ? 1 : 0;
   }
 private:
+  template<class T>
+  [[nodiscard]] bool _inside_wedge_outer(const LQVec<T>& p, const bool pos=false) const {
+    brille::cmp c = pos||no_ir_mirroring ? brille::cmp::ge : brille::cmp::le_ge;
+    auto normals = get_ir_wedge_normals();
+    return normals.size(0) == 0 || dot(normals, p).all(c, T(0));
+  }
   template<class T, class R>
   bool
   wedge_normal_check(const LQVec<T>& n, LQVec<R>& normals, ind_t& num){
@@ -922,7 +929,7 @@ private:
     this->irreducible_vertex_search(); // assigns this->ir_polyhedron
     return !brille::approx::scalar(this->ir_polyhedron.get_volume(), 0.0);
   }
-  LQVec<double> get_ir_polyhedron_wedge_normals(void) const;
+  [[nodiscard]] LQVec<double> get_ir_polyhedron_wedge_normals() const;
 
 //    Reciprocal lattice;               //!< The primitive reciprocal lattice
 //    Reciprocal outerlattice;          //!< The lattice passed in at construction
@@ -1012,7 +1019,7 @@ bool
 intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
              const LQVec<double>& nj, const LQVec<double>& pj,
              const LQVec<double>& nk, const LQVec<double>& pk,
-             LQVec<double>& intersect, const int idx);
+             LQVec<double>& intersect, int idx);
 /*! \brief Find the intersection point of three planes, if it exists.
 
 A specialization where one plane passes through the origin
@@ -1031,7 +1038,7 @@ bool
 intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
              const LQVec<double>& nj, const LQVec<double>& pj,
              const LQVec<double>& nk,
-             LQVec<double>& intersect, const int idx);
+             LQVec<double>& intersect, int idx);
 /*! \brief Find the intersection point of three planes, if it exists.
 
 A specialization where two planes pass through the origin
@@ -1049,7 +1056,7 @@ bool
 intersect_at(const LQVec<double>& ni, const LQVec<double>& pi,
              const LQVec<double>& nj,
              const LQVec<double>& nk,
-             LQVec<double>& intersect, const int idx);
+             LQVec<double>& intersect, int idx);
 /*! \brief Find the intersection point of three planes, if it exists.
 
 A (trivial) specialization where three planes pass through the origin
@@ -1069,7 +1076,7 @@ bool
 intersect_at(const LQVec<double>& ni,
              const LQVec<double>& nj,
              const LQVec<double>& nk,
-             LQVec<double>& intersect, const int idx);
+             LQVec<double>& intersect, int idx);
 /*! \brief Construct and return the determinant of a 3D normals matrix
 
 Used by the intersect_at overloaded functions to find the determinant of the

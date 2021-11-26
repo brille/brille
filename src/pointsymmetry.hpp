@@ -61,7 +61,8 @@ public:
   [[nodiscard]] Matrix<int>          get_proper(size_t i)                         const;
   [[nodiscard]] Matrix<int>          get_inverse(size_t i)                        const;
   [[nodiscard]] size_t               get_inverse_index(size_t i)                  const;
-  [[nodiscard]] size_t               find_index(const Matrix<int>&)                     const;
+  [[nodiscard]] size_t               find_index(const Matrix<int>&)               const;
+  [[nodiscard]] size_t               find_identity_index()                        const;
   // const Matrix<int>&   get(const size_t i)                                const;
   void                 sort(int ad=0)                                    ;
   void                 permute(const std::vector<size_t>&)                     ;

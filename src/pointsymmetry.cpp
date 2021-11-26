@@ -144,6 +144,10 @@ size_t PointSymmetry::find_index(const Matrix<int>& a) const {
   auto itr = std::find_if(this->R.begin(), this->R.end(), iseq);
   return std::distance(this->R.begin(), itr);
 }
+size_t PointSymmetry::find_identity_index() const {
+  Matrix<int> e({1,0,0, 0,1,0, 0,0,1});
+  return find_index(e);
+}
 // const Matrix<int>& PointSymmetry::get(const size_t i) const {
 //   if (i>=this->size())
 //     throw std::out_of_range("The requested symmetry operation is out of range");
