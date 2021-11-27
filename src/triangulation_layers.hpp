@@ -22,6 +22,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief The tetrahedral hierarchy for Mesh3
 */
 #include <set>
+#include <utility>
 // #include <vector>
 // #include <array>
 #include <omp.h>
@@ -51,25 +52,38 @@ class TetTriLayer{
   bArray<double> circum_centres; // (nTetrahedra, 3);
   std::vector<double> circum_radii; // (nTetrahedra,)
 public:
-  ind_t number_of_vertices(void) const {return nVertices;}
-  ind_t number_of_tetrahedra(void) const {return nTetrahedra;}
-  const bArray<double>& get_vertex_positions(void) const {return vertex_positions;}
-  const bArray<ind_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
-  const bArray<double>& get_circum_centres(void) const {return circum_centres;}
-  const std::vector<double>& get_circum_radii(void) const {return circum_radii;}
-  Polyhedron get_tetrahedron(const ind_t idx) const {
+  [[nodiscard]] ind_t number_of_vertices() const {return nVertices;}
+  [[nodiscard]] ind_t number_of_tetrahedra() const {return nTetrahedra;}
+  [[nodiscard]] const bArray<double>& get_vertex_positions() const {return vertex_positions;}
+  [[nodiscard]] const bArray<ind_t>& get_vertices_per_tetrahedron() const {return vertices_per_tetrahedron;}
+  [[nodiscard]] const bArray<double>& get_circum_centres() const {return circum_centres;}
+  [[nodiscard]] const std::vector<double>& get_circum_radii() const {return circum_radii;}
+  [[nodiscard]] Polyhedron get_tetrahedron(const ind_t idx) const {
     if (nTetrahedra <= idx)
       throw std::out_of_range("The requested tetrahedron does not exist.");
     auto tet = vertices_per_tetrahedron.view(idx);
     std::vector<std::vector<int>> vpf{{0,1,2},{0,2,3},{1,0,3},{1,3,2}};
-    return Polyhedron(vertex_positions.extract(tet), vpf);
+    return {vertex_positions.extract(tet), vpf};
   }
+
+  TetTriLayer(ind_t nV,
+              ind_t nT,
+              const bArray<double>& vp,
+              const bArray<ind_t>& vt,
+              std::vector<std::vector<ind_t>> tv,
+              std::vector<std::vector<ind_t>> nt,
+              const bArray<double>& cc,
+              std::vector<double> cr)
+      : nVertices(nV), nTetrahedra(nT),
+        vertex_positions(vp), vertices_per_tetrahedron(vt),
+        tetrahedra_per_vertex(std::move(tv)), neighbours_per_tetrahedron(std::move(nt)),
+        circum_centres(cc), circum_radii(std::move(cr)) {}
 
   explicit TetTriLayer()
   : nVertices(0), nTetrahedra(0), vertex_positions(0u,3u),
   vertices_per_tetrahedron(0u,4u), circum_centres(0u,3u)
   {}
-  TetTriLayer(const tetgenio& tgio)
+  explicit TetTriLayer(const tetgenio& tgio)
   : vertex_positions(0u,3u), vertices_per_tetrahedron(0u,4u), circum_centres(0u,3u)
   {
     nVertices = static_cast<ind_t>(tgio.numberofpoints);
@@ -90,16 +104,16 @@ public:
     // Construct the neighbours per tetrahedron vector of vectors
     neighbours_per_tetrahedron.resize(nTetrahedra);
     for (ind_t i=0; i<nTetrahedra; ++i)
-    for (ind_t j=0; j<4u; ++j)
-    if (tgio.neighborlist[i*4u+j] >= 0)
-      neighbours_per_tetrahedron[i].push_back(static_cast<ind_t>(tgio.neighborlist[i*4u+j]));
+      for (ind_t j=0; j<4u; ++j)
+        if (tgio.neighborlist[i*4u+j] >= 0)
+          neighbours_per_tetrahedron[i].push_back(static_cast<ind_t>(tgio.neighborlist[i*4u+j]));
     // ensure that all tetrahedra have positive (orient3d) volume
     this->correct_tetrahedra_vertex_ordering();
     // Calculate the circumsphere information:
     this->determine_circumspheres();
   }
   // Create a string full of object information:
-  std::string to_string(void) const {
+  [[nodiscard]] std::string to_string() const {
     std::string str;
     str  = std::to_string(nVertices) + " vertices";
     str += " in " + std::to_string(nTetrahedra) + " tetrahedra";
@@ -159,19 +173,19 @@ public:
     return found;
   }
   ind_t unsafe_locate(const std::vector<ind_t>& tosearch, const bArray<double>& x, std::vector<std::pair<ind_t,double>>& vw) const {
-    std::array<double,4> ws;
+    std::array<double,4> ws{};
     vw.clear();// make sure w is back to zero-elements
     for (ind_t idx: tosearch){
       if (this->unsafe_might_contain(idx, x) && this->unsafe_contains(idx, x, ws)){
         // unsafe_contains sets the weights in ws
         for (ind_t i=0; i<4u; ++i) if (!brille::approx::scalar(ws[i], 0.))
-          vw.push_back(std::make_pair(vertices_per_tetrahedron.val(idx,i), ws[i]));
+          vw.emplace_back(vertices_per_tetrahedron.val(idx,i), ws[i]);
         return idx;
       }
     }
     return nTetrahedra;
   }
-  std::vector<ind_t> neighbours(const ind_t vert) const {
+  [[nodiscard]] std::vector<ind_t> neighbours(const ind_t vert) const {
     if (vert >= this->nVertices){
       std::string msg = "The provided vertex index is out of bounds";
       throw std::out_of_range(msg);
@@ -185,7 +199,7 @@ public:
     }
     return n;
   }
-  double volume(const ind_t tet) const {
+  [[nodiscard]] double volume(const ind_t tet) const {
     const ind_t* i = vertices_per_tetrahedron.ptr(tet,0);
     double v;
     v = orient3d(
@@ -195,7 +209,7 @@ public:
       vertex_positions.ptr(i[3],0) )/6.0;
     return v;
   }
-  std::array<double,3> volume_statistics() const {
+  [[nodiscard]] std::array<double,3> volume_statistics() const {
     // total volume, minimum volume, maximum volume
     std::array<double,3> vs{0.,(std::numeric_limits<double>::max)(),std::numeric_limits<double>::lowest()};
     for (ind_t i=0; i<nTetrahedra; ++i){
@@ -206,25 +220,25 @@ public:
     }
     return vs;
   }
-  bool might_contain(const ind_t tet, const bArray<double>& x) const {
+  [[nodiscard]] bool might_contain(const ind_t tet, const bArray<double>& x) const {
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("x must be a single 3-vector");
     if (tet >= nTetrahedra) return false;
     return this->unsafe_might_contain(tet, x);
   }
-  bool contains(const ind_t tet, const bArray<double>& x) const{
+  [[nodiscard]] bool contains(const ind_t tet, const bArray<double>& x) const{
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("x must be a single 3-vector");
     if (tet >= nTetrahedra) return false;
     return this->unsafe_contains(tet, x);
   }
-  std::set<size_t> collect_keys() const {
-    long long ntets = brille::utils::u2s<long long, ind_t>(this->number_of_tetrahedra());
+  [[nodiscard]] std::set<size_t> collect_keys() const {
+    auto ntets = brille::utils::u2s<long long, ind_t>(this->number_of_tetrahedra());
     ind_t nvert = this->number_of_vertices();
     std::set<size_t> keys;
     #pragma omp parallel for default(none) shared(ntets, keys, nvert)
     for (long long si=0; si<ntets; ++si){
-      ind_t i = brille::utils::s2u<ind_t, long long>(si);
+      auto i = brille::utils::s2u<ind_t, long long>(si);
       auto v = vertices_per_tetrahedron.view(i).to_std();
       std::set<size_t> t = permutation_table_keys_from_indicies(v.begin(), v.end(), nvert);
       #pragma omp critical
@@ -235,10 +249,10 @@ public:
     return keys;
   }
 protected:
-  bool unsafe_might_contain(const ind_t tet, const bArray<double>& x) const {
+  [[nodiscard]] bool unsafe_might_contain(const ind_t tet, const bArray<double>& x) const {
     return norm(x-circum_centres.view(tet)).all(brille::cmp::le, circum_radii[tet]);
   }
-  bool unsafe_contains(const ind_t tet, const bArray<double>& x) const {
+  [[nodiscard]] bool unsafe_contains(const ind_t tet, const bArray<double>& x) const {
     std::array<double,4> w{0.,0.,0.,0.};
     return this->unsafe_contains(tet,x,w);
   }
@@ -270,12 +284,12 @@ protected:
       vertex_positions.ptr(i[2]),
       x.ptr(0)                   )/vol6;
   }
-  void correct_tetrahedra_vertex_ordering(void){
+  void correct_tetrahedra_vertex_ordering(){
     for (ind_t i=0; i<nTetrahedra; ++i)
     if (std::signbit(this->volume(i))) // the volume of tetrahedra i is negative
     vertices_per_tetrahedron.swap(i, 0,1); // swap two vertices to switch sign
   }
-  void determine_circumspheres(void){
+  void determine_circumspheres(){
     // ensure that the properties can hold all data
     circum_centres.resize(nTetrahedra);
     circum_radii.resize(nTetrahedra);
@@ -292,6 +306,41 @@ protected:
         circum_centres.ptr(i), circum_radii.data()+i);
     }
   }
+#ifdef USE_HIGHFIVE
+public:
+  template<class HF>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+  to_hdf(HF& obj, const std::string& entry) const{
+    auto group = overwrite_group(obj, entry);
+    group.createAttribute("vertices", nVertices);
+    group.createAttribute("tetrahedra", nTetrahedra);
+    bool ok{true};
+    ok &= vertex_positions.to_hdf(group, "positions");
+    ok &= vertices_per_tetrahedron.to_hdf(group, "vertices_per_tetrahedron");
+    ok &= lists_to_hdf(tetrahedra_per_vertex, group, "tetrahedra_per_vertex");
+    ok &= lists_to_hdf(neighbours_per_tetrahedron, group, "neighbours_per_tetrahedron");
+    ok &= circum_centres.to_hdf(group, "circumsphere_centers");
+    group.createDataSet("circumsphere_radii", circum_radii);
+    return ok;
+  }
+  // Input from HDF5 file/object
+  template<class HF>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, TetTriLayer>
+  from_hdf(HF& obj, const std::string& entry){
+    auto group = obj.getGroup(entry);
+    ind_t nV, nT;
+    group.getAttribute("vertices").read(nV);
+    group.getAttribute("tetrahedra").read(nT);
+    auto vp = bArray<double>::from_hdf(group, "positions");
+    auto vt = bArray<ind_t>::from_hdf(group, "vertices_per_tetrahedron");
+    auto tv = lists_from_hdf<ind_t>(group, "tetrahedra_per_vertex");
+    auto nt = lists_from_hdf<ind_t>(group, "neighbours_per_tetrahedron");
+    auto cc = bArray<double>::from_hdf(group, "circumsphere_centers");
+    std::vector<double> cr;
+    group.getDataSet("circumsphere_radii").read(cr);
+    return {nV, nT, vp, vt, tv, nt, cc, cr};
+  }
+#endif // USE_HIGHFIVE
 };
 
 // If we ever get around to making the tetrahedra mesh refinable, then we will
@@ -316,12 +365,13 @@ class TetTri{
   std::vector<TetTriLayer> layers;
   std::vector<TetMap> connections;
 public:
-  explicit TetTri() {};
-  TetTri(const std::vector<TetTriLayer>& l)
-  : layers(l)
+  explicit TetTri() = default;
+  explicit TetTri(std::vector<TetTriLayer> l): layers(std::move(l))
   {
     this->find_connections();
   }
+  TetTri(std::vector<TetTriLayer> l, std::vector<TetMap> c): layers(std::move(l)), connections(std::move(c)) {}
+  //
   void find_connections(const size_t highest=0){
     if (highest < layers.size()-1)
     for (size_t i=highest; i<layers.size()-1; ++i)
@@ -346,7 +396,7 @@ public:
   //   std::vector<double> w;
   //   return this->locate(x, v, w);
   // }
-  std::vector<std::pair<ind_t,double>>
+  [[nodiscard]] std::vector<std::pair<ind_t,double>>
   locate(const bArray<double>& x) const {
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("locate requires a single 3-element vector.");
@@ -364,7 +414,7 @@ public:
     return vw;
   }
   // return the neighbouring vertices to a provided mesh-vertex in the lowest layer.
-  std::vector<ind_t> neighbours(const bArray<double>& x) const {
+  [[nodiscard]] std::vector<ind_t> neighbours(const bArray<double>& x) const {
     std::vector<std::pair<ind_t,double>> vw = this->locate(x);
     if (vw.size() != 1u){
       std::string msg = "The provided point is not a mesh vertex.";
@@ -372,10 +422,10 @@ public:
     }
     return layers.back().neighbours(vw[0].first);
   }
-  std::vector<ind_t> neighbours(const ind_t v) const {
+  [[nodiscard]] std::vector<ind_t> neighbours(const ind_t v) const {
     return layers.back().neighbours(v);
   }
-  std::string to_string() const {
+  [[nodiscard]] std::string to_string() const {
     std::string str="";
     if (layers.size()>1){
       str += "Layers|";
@@ -386,18 +436,18 @@ public:
     return str;
   }
   // provide convenience functions which pass-through to the lowest layer
-  ind_t number_of_tetrahedra() const {return layers.back().number_of_tetrahedra(); }
-  ind_t number_of_vertices() const {return layers.back().number_of_vertices(); }
-  const bArray<double>& get_vertex_positions() const {return layers.back().get_vertex_positions(); }
-  const bArray<ind_t>& get_vertices_per_tetrahedron() const { return layers.back().get_vertices_per_tetrahedron(); }
-  std::set<size_t> collect_keys() const {return layers.back().collect_keys();}
+  [[nodiscard]] ind_t number_of_tetrahedra() const {return layers.back().number_of_tetrahedra(); }
+  [[nodiscard]] ind_t number_of_vertices() const {return layers.back().number_of_vertices(); }
+  [[nodiscard]] const bArray<double>& get_vertex_positions() const {return layers.back().get_vertex_positions(); }
+  [[nodiscard]] const bArray<ind_t>& get_vertices_per_tetrahedron() const { return layers.back().get_vertices_per_tetrahedron(); }
+  [[nodiscard]] std::set<size_t> collect_keys() const {return layers.back().collect_keys();}
 private:
-  TetMap connect(const size_t high, const size_t low) const{
+  [[nodiscard]] TetMap connect(const size_t high, const size_t low) const{
     omp_set_num_threads(omp_get_max_threads());
     Stopwatch<> stopwatch;
     if (brille::printer.datetime()) stopwatch.tic(); // we only need to start the timer if we are printing timing information
     TetMap map(layers[high].number_of_tetrahedra());
-    long long mapsize = brille::utils::u2s<long long, size_t>(map.size());
+    auto mapsize = brille::utils::u2s<long long, size_t>(map.size());
 #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
 // this version is necessary with g++ <= 8.3.0
 #pragma omp parallel for default(none) shared(map, mapsize) schedule(dynamic)
@@ -406,7 +456,7 @@ private:
 #pragma omp parallel for default(none) shared(map, mapsize, high, low) schedule(dynamic)
 #endif
     for (long ui=0; ui<mapsize; ++ui){
-      ind_t i = brille::utils::s2u<ind_t, long long>(ui);
+      auto i = brille::utils::s2u<ind_t, long long>(ui);
       // initialize the map
       map[i] = TetSet();
       auto cchi = layers[high].get_circum_centres().view(i);
@@ -440,6 +490,49 @@ private:
     // higher tetrahedron or share some part of its volume.
     return map;
   }
+#ifdef USE_HIGHFIVE
+public:
+  template<class HF>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+  to_hdf(HF& obj, const std::string& entry) const{
+    auto group = overwrite_group(obj, entry);
+    group.createAttribute("layers", layers.size());
+    auto layers_group = group.createGroup("layers");
+    auto connections_group = group.createGroup("connections");
+    bool ok{true};
+    size_t i=0;
+    for (const auto& layer: layers) layer.to_hdf(layers_group, std::to_string(i++));
+    layers_group.createAttribute("length", i);
+    i = 0;
+    for (const auto& connection: connections) lists_to_hdf(connection, connections_group, std::to_string(i++));
+    connections_group.createAttribute("length", i);
+    return ok;
+  }
+  // Input from HDF5 file/object
+  template<class HF>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, TetTri>
+  from_hdf(HF& obj, const std::string& entry){
+    auto group = obj.getGroup(entry);
+    size_t layer_no;
+    group.getAttribute("layers").read(layer_no);
+    auto l_group = group.getGroup("layers");
+    auto c_group = group.getGroup("connections");
+    size_t length;
+    l_group.getAttribute("length").read(length);
+    if (length != layer_no) throw std::runtime_error("Wrong number of layers!");
+    c_group.getAttribute("length").read(length);
+    if (length != (layer_no - 1u)) throw std::runtime_error("Wrong number of connections!");
+    std::vector<TetTriLayer> layers(layer_no);
+    std::vector<TetMap> connections(layer_no-1);
+    for (size_t i=0; i<layer_no; ++i){
+      layers[i] = TetTriLayer::from_hdf(l_group, std::to_string(i));
+    }
+    for (size_t i=0; i<layer_no-1; ++i){
+      connections[i] = lists_from_hdf<ind_t>(c_group, std::to_string(i));
+    }
+    return {layers, connections};
+  }
+#endif // USE_HIGHFIVE
 };
 
 //! Triangulate a single layer of the TetTri hierarchy

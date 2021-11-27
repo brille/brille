@@ -27,10 +27,17 @@ set(BRILLE_LOGLEVEL "INFO" CACHE STRING "Emit log messages to standard out (DEBU
 option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
 
 # Define the minimum version of libraries needed
-set(MINIMUM_PYBIND11_VERSION 2.6.2)
+set(MINIMUM_PYBIND11_VERSION 2.8.1)
 set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
 set(MINIMUM_CATCH2_VERSION 2.11.3)
 set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
+
+# Optional support of HDF5-based IO
+option(BRILLE_HDF5 "Add HDF5 file-based IO" OFF)
+option(REQUIRE_SYSTEM_HIGHFIVE "Never attempt to fetch HighFive" OFF)
+mark_as_advanced(REQUIRE_SYSTEM_HIGHFIVE)
+set(MINIMUM_HIGHFIVE_VERSION 2.3.1)
+SET(FETCH_HIGHFIVE_REPO https://github.com/BlueBrain/HighFive)
 
 # find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
 # if (CMAKE_CXX_CPPCHECK)
@@ -72,7 +79,7 @@ else()
 endif()
 if (BRILLE_PROFILING)
   message(STATUS "Profiling output emitted at runtime")
-  add_definitions(-DBRILLE_PROFILING)
+  add_definitions(-DPROFILING)
 endif (BRILLE_PROFILING)
 
 
@@ -85,58 +92,32 @@ endif()
 # With modern CMake, this find_package forces pybind11 to use FindPython instead of its custom tools
 find_package(Python3 COMPONENTS Interpreter Development)
 
+include(fetcher.cmake)
+
 # Attempt to find catch2 to handle C++ testing
 if(BRILLE_BUILD_TESTING)
-  if(REQUIRE_SYSTEM_CATCH2)
-    find_package(Catch2 ${MINIMUM_CATCH2_VERSION} REQUIRED)
-  else()
-    find_package(Catch2 ${MINIMUM_CATCH2_VERSION} QUIET)
-    if (Catch2_FOUND)
-      message(STATUS "catch2 >= ${MINIMUM_CATCH2_VERSION} found")
-    endif()
-  endif()
+  git_fetch(catch2 ${MINIMUM_CATCH2_VERSION} ${FETCH_CATCH2_REPO} ${REQUIRE_SYSTEM_CATCH2})
+  list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
 else()
   # Since no testing is to be built, fake that we've found Catch2.
   set(Catch2_FOUND ON)
 endif()
 # Attempt to find pybind11 to handle CPython bindings
-if(REQUIRE_SYSTEM_PYBIND11)
-  find_package(pybind11 ${MINIMUM_PYBIND11_VERSION} REQUIRED)
-else()
-  find_package(pybind11 ${MINIMUM_PYBIND11_VERSION} QUIET)
-  if (pybind11_FOUND)
-    message(STATUS "pybind11 >= ${MINIMUM_PYBIND11_VERSION} found")
-  endif()
-endif()
+git_fetch(pybind11 ${MINIMUM_PYBIND11_VERSION} ${FETCH_PYBIND11_REPO} ${REQUIRE_SYSTEM_PYBIND11})
 
-# Load the FetchContent module only if necessary
-if(NOT (Catch2_FOUND AND pybind11_FOUND))
-  include(FetchContent)
-endif()
-
-# Fetch Catch2 if necessary
-if(NOT Catch2_FOUND)
-  message(STATUS "Fetching catch2 v${MINIMUM_CATCH2_VERSION} from ${FETCH_CATCH2_REPO}")
-  FetchContent_Declare(catch2 GIT_REPOSITORY ${FETCH_CATCH2_REPO} GIT_TAG v${MINIMUM_CATCH2_VERSION})
-  FetchContent_GetProperties(catch2)
-  if(NOT catch2_POPULATED)
-    FetchContent_Populate(Catch2)
-    add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
-    list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
+# HighFive is used to simplify the interface with HDF5:
+# Override some default settings
+if (BRILLE_HDF5)
+  set(HIGHFIVE_USE_BOOST OFF)
+  set(HIGHFIVE_UNIT_TESTS OFF)
+  set(HIGHFIVE_EXAMPLES OFF)
+  set(HIGHFIVE_BUILD_DOCS OFF)
+  git_fetch(highfive ${MINIMUM_HIGHFIVE_VERSION} ${FETCH_HIGHFIVE_REPO} ${REQUIRE_SYSTEM_HIGHFIVE})
+  if (highfive_FOUND)
+		message(STATUS "Adding HighFive precompiler macro flag")
+    add_definitions(-DUSE_HIGHFIVE)
   endif()
-  set(Catch2_FOUND ON)
-endif()
-# Fetch pybind11 if necessary
-if(NOT pybind11_FOUND)
-  message(STATUS "Fetching pybind11 v${MINIMUM_PYBIND11_VERSION} from ${FETCH_PYBIND11_REPO}")
-  FetchContent_Declare(pybind11 GIT_REPOSITORY ${FETCH_PYBIND11_REPO} GIT_TAG v${MINIMUM_PYBIND11_VERSION})
-  FetchContent_GetProperties(pybind11)
-  if(NOT pybind11_POPULATED)
-    FetchContent_Populate(pybind11)
-    add_subdirectory(${pybind11_SOURCE_DIR} ${pybind11_BINARY_DIR})
-  endif()
-  set(pybind11_FOUND ON)
-endif()
+endif(BRILLE_HDF5)
 
 # Read the version of brille
 execute_process(COMMAND ${Python3_EXECUTABLE} -c "from version_info import version_number; version_number()"
@@ -182,7 +163,7 @@ endif()
 add_subdirectory(lib)
 
 # target for C++ shared library
-add_library(${BRILLE_LIBRARY_TARGET})
+add_library(${BRILLE_LIBRARY_TARGET} src/hdf_interface.hpp)
 list(APPEND CXX_TARGETS ${BRILLE_LIBRARY_TARGET})
 
 # add the dependencies and include directories for all CXX targets:
@@ -205,6 +186,14 @@ if(OpenMP_CXX_FOUND)
     add_compile_options(/openmp:experimental) # this doesn't work
   endif()
 endif()
+
+if(BRILLE_HDF5 AND highfive_FOUND)
+  foreach(HF_TARGET IN LISTS CXX_TARGETS)
+    message(STATUS "Adding HighFive library to ${HF_TARGET}")
+    target_link_libraries(${HF_TARGET} PUBLIC HighFive)
+  endforeach()
+endif()
+
 
 # if(MSVC)
 # 	if(CMAKE_BUILD_TYPE STREQUAL "Matlab")

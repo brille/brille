@@ -1,5 +1,6 @@
 #include <random>
 #include <chrono>
+#include <filesystem>
 
 #include <catch2/catch.hpp>
 // for now we want to be able to switch between Array and Array2
@@ -196,4 +197,37 @@ TEST_CASE("Append Array(s)","[array]"){
   REQUIRE(z.size(1) == expected[1]);
   for (ind_t i=0; i<12; ++i)
     REQUIRE(z[i] == Approx(static_cast<double>(i)));
+}
+
+TEMPLATE_TEST_CASE("Array IO","[array][io]",double,float){
+    namespace fs=std::filesystem;
+    auto tdir = fs::temp_directory_path();
+    fs::path filepath = tdir;
+    filepath /= fs::path("brille.h5");
+
+    std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
+    std::uniform_real_distribution<TestType> distribution(TestType(1),TestType(100));
+
+    typename bArray<TestType>::shape_t sp({13,30});
+    bArray<TestType> rand_array(sp);
+    // fill array with random values
+    for (auto& v: rand_array.valItr()) v = distribution(generator);
+
+#ifdef USE_HIGHFIVE
+    // write the array to disk:
+    auto filename = filepath.string();
+    std::string dataset = "/array2";
+    rand_array.to_hdf(filename, dataset);
+
+    // read the array from disk, then verify that it is the same
+    auto read_array = bArray<TestType>::from_hdf(filename, dataset);
+
+    REQUIRE(read_array.ndim() == 2);
+    REQUIRE(read_array.size(0) == rand_array.size(0));
+    REQUIRE(read_array.size(1) == rand_array.size(1));
+    for (const auto& sub: rand_array.subItr())
+        REQUIRE(read_array[sub] == rand_array[sub]);
+
+    fs::remove(filepath);
+#endif
 }

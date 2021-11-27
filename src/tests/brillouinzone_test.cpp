@@ -2,19 +2,43 @@
 #include <chrono>
 #include <catch2/catch.hpp>
 #include "bz.hpp"
+#include <filesystem>
 
 using namespace brille;
+
+#ifdef USE_HIGHFIVE
+bool write_read_test(const BrillouinZone& source, const std::string& name){
+    namespace fs = std::filesystem;
+    auto temp_dir = fs::temp_directory_path();
+    fs::path filepath = temp_dir;
+    filepath /= fs::path("brille.h5");
+
+    // write the BrillouinZone to disk:
+    auto wrote_ok = source.to_hdf(filepath.string(), name);
+    if (!wrote_ok) return false;
+
+    auto sink = BrillouinZone::from_hdf(filepath.string(), name);
+
+    return (source == sink);
+}
+#else
+bool write_read_test(const BrillouinZone&, const std::string&){
+	return true;
+}
+#endif
 
 TEST_CASE("Primitive Cubic BrillouinZone instantiation","[brillouinzone]"){
   Direct d(2*brille::pi,2*brille::pi,2*brille::pi,90.,90.,90.);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
+  REQUIRE(write_read_test(bz, "primitive_cubic"));
 }
 
 TEST_CASE("Primitive Hexagonal BrillouinZone instantiation","[brillouinzone]"){
   Direct d(3.,3.,3.,90.,90.,120.);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
+  REQUIRE(write_read_test(bz, "primitive_hexagonal"));
 }
 
 TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
@@ -52,6 +76,7 @@ TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
     REQUIRE(brille::approx::scalar(Qmq[i], static_cast<double>(tau[i])));
     REQUIRE(brille::approx::scalar(std::abs(Qmqmtau[i]), 0.));
   }
+  REQUIRE(write_read_test(bz, spgr));
 }
 
 TEST_CASE("BrillouinZone moveinto hexagonal","[brillouinzone][moveinto]"){
@@ -128,6 +153,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147","[brillouinzone][materialsproj
   Polyhedron fbz = bz.get_polyhedron();
   Polyhedron irp = bz.get_ir_polyhedron();
   REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/6));
+  REQUIRE(write_read_test(bz, "mp-147"));
 }
 
 TEST_CASE("Irreducible Brillouin zone for mp-306","[brillouinzone][materialsproject]"){
@@ -148,6 +174,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-306","[brillouinzone][materialsproj
   Polyhedron fbz = bz.get_polyhedron();
   Polyhedron irp = bz.get_ir_polyhedron();
   REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/6));
+  REQUIRE(write_read_test(bz, "mp-306"));
 }
 
 TEST_CASE("Irreducible Brillouin zone for mp-661","[brillouinzone][materialsproject]"){
@@ -168,6 +195,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-661","[brillouinzone][materialsproj
   Polyhedron fbz = bz.get_polyhedron();
   Polyhedron irp = bz.get_ir_polyhedron();
   REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/12));
+  REQUIRE(write_read_test(bz, "mp-661"));
 }
 
 TEST_CASE("Irreducible Brillouin zone for mp-7041","[brillouinzone][materialsproject]"){
@@ -188,6 +216,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-7041","[brillouinzone][materialspro
   Polyhedron fbz = bz.get_polyhedron();
   Polyhedron irp = bz.get_ir_polyhedron();
   REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/12));
+  REQUIRE(write_read_test(bz, "mp-7041"));
 }
 
 TEST_CASE("Irreducible Brillouin zone for mp-917","[brillouinzone][materialsproject]"){
@@ -208,6 +237,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-917","[brillouinzone][materialsproj
   Polyhedron fbz = bz.get_polyhedron();
   Polyhedron irp = bz.get_ir_polyhedron();
   REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/4));
+  REQUIRE(write_read_test(bz, "mp-917"));
 }
 
 TEST_CASE("No irreducible Brillouin zone for inconsistent parameters and symmetry","[brillouinzone]"){

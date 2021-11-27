@@ -22,6 +22,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief A class representing convex polyhedra in three dimensions
 */
 #include <random>
+#include <utility>
 // #include <chrono>/
 // #include <vector>
 #include "array_latvec.hpp" // defines bArray
@@ -157,8 +158,8 @@ std::vector<bool> intersection(
   using namespace brille;
   ind_t num[6]{n_i.size(0), p_i.size(0), n_j.size(0), p_j.size(0), n_k.size(0), p_k.size(0)};
   ind_t npt=0;
-  for (int i=0; i<6; ++i) if (num[i]>npt) npt=num[i];
-  for (int i=0; i<6; ++i) if (!ok_size(num[i],npt))
+  for (ind_t i : num) if (i>npt) npt=i;
+  for (ind_t i : num) if (!ok_size(i,npt))
     throw std::runtime_error("All normals and points must be singular or equal sized");
   // output storage to indicate if an intersection exists
   std::vector<bool> out(npt, false);
@@ -277,6 +278,15 @@ protected:
   std::vector<std::vector<int>> faces_per_vertex; //!< A listing for each vertex of the facets it contributes to (extraneous, should be removed)
   std::vector<std::vector<int>> vertices_per_face;//!< A listing of the vertices bounding each facet polygon
 public:
+    bool operator!=(const Polyhedron& other) const {
+        if (vertices != other.vertices) return true;
+        if (points != other.points) return true;
+        if (normals != other.normals) return true;
+        if (faces_per_vertex != other.faces_per_vertex) return true;
+        if (vertices_per_face != other.vertices_per_face) return true;
+        return false;
+    }
+    bool operator==(const Polyhedron& other) const { return !(this->operator!=(other)); }
   //! empty initializer
   explicit Polyhedron():
     vertices(bArray<double>()),
@@ -286,7 +296,7 @@ public:
     vertices_per_face(std::vector<std::vector<int>>())
   {}
   //! Create a convex-hull Polyhedron from a set of points
-  Polyhedron(const bArray<double>& v): vertices(v){
+  explicit Polyhedron(const bArray<double>& v): vertices(v){
     this->keep_unique_vertices();
     if (vertices.size(0) > 3){
       this->find_convex_hull();
@@ -311,9 +321,9 @@ public:
   //! initialize from vertices, points, and all relational information
   Polyhedron(const bArray<double>& v,
              const bArray<double>& p,
-             const std::vector<std::vector<int>>& fpv,
-             const std::vector<std::vector<int>>& vpf):
-    vertices(v), points(p), normals(p/norm(p)), faces_per_vertex(fpv), vertices_per_face(vpf){
+             std::vector<std::vector<int>> fpv,
+             std::vector<std::vector<int>> vpf):
+    vertices(v), points(p), normals(p/norm(p)), faces_per_vertex(std::move(fpv)), vertices_per_face(std::move(vpf)){
     this->sort_polygons();
   }
   // initalize from vertices, points, normals, and three-plane intersection information
@@ -336,15 +346,15 @@ public:
   Polyhedron(const bArray<double>& v,
              const bArray<double>& p,
              const bArray<double>& n,
-             const std::vector<std::vector<int>>& fpv,
-             const std::vector<std::vector<int>>& vpf):
-    vertices(v), points(p), normals(n), faces_per_vertex(fpv), vertices_per_face(vpf){
+             std::vector<std::vector<int>> fpv,
+             std::vector<std::vector<int>> vpf):
+    vertices(v), points(p), normals(n), faces_per_vertex(std::move(fpv)), vertices_per_face(std::move(vpf)){
       this->special_keep_unique_vertices(); // for + below, which doesn't check for vertex uniqueness
   }
   //! initialize from vertices, and vertices_per_face
   Polyhedron(const bArray<double>& v,
-             const std::vector<std::vector<int>>& vpf):
-  vertices(v), points(0,3), normals(0,3), vertices_per_face(vpf) {
+             std::vector<std::vector<int>> vpf):
+  vertices(v), points(0,3), normals(0,3), vertices_per_face(std::move(vpf)) {
     this->find_face_points_and_normals();
     this->sort_polygons();
     this->find_all_faces_per_vertex(); // do we really need this?
@@ -354,9 +364,9 @@ public:
           const bArray<double>& v,
           const bArray<double>& p,
           const bArray<double>& n,
-          const std::vector<std::vector<int>>& vpf
+          std::vector<std::vector<int>> vpf
           ):
-          vertices(v), points(p), normals(n), vertices_per_face(vpf){
+          vertices(v), points(p), normals(n), vertices_per_face(std::move(vpf)){
       this->sort_polygons();
       this->find_all_faces_per_vertex();
       verbose_update("Finished constructing Polyhedron with vertices\n",vertices.to_string(),"points\n",points.to_string(),"normals\n",normals.to_string());
@@ -378,8 +388,8 @@ public:
     return *this;
   }
   //! Return a space-inverted Polyhedron
-  Polyhedron mirror(void) const {
-    return Polyhedron(-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, reverse_each(this->vertices_per_face));
+  [[nodiscard]] Polyhedron mirror() const {
+    return {-1*this->vertices, -1*this->points, -1*this->normals, this->faces_per_vertex, reverse_each(this->vertices_per_face)};
 
   }
   //! Apply the generalised rotation matrix to the returned Polyhedron
@@ -393,15 +403,15 @@ public:
       brille::utils::multiply_matrix_vector<double,T,double>(newp.ptr(i), rot.data(), points.ptr(i));
     for (ind_t i=0; i<normals.size(0); ++i)
       brille::utils::multiply_matrix_vector<double,T,double>(newn.ptr(i), rot.data(), normals.ptr(i));
-    return Polyhedron(newv, newp, newn, this->faces_per_vertex, this->vertices_per_face);
+    return {newv, newp, newn, this->faces_per_vertex, this->vertices_per_face};
   }
   //! Move the origin of the returned Polyhedron
-  template<class T> Polyhedron translate(const bArray<T>& vec) const {
+  template<class T> [[nodiscard]] Polyhedron translate(const bArray<T>& vec) const {
     if (vec.numel() != 3)
       throw std::runtime_error("Translating a Polyhedron requires a single three-vector");
     // protect against + with an empty Array:
     if (0==vertices.size(0)||0==points.size(0)) return Polyhedron();
-    return Polyhedron(vertices+vec, points+vec, normals, this->faces_per_vertex, this->vertices_per_face);
+    return {vertices+vec, points+vec, normals, this->faces_per_vertex, this->vertices_per_face};
   }
   //! Combine two Polyhedron objects (not a true union)
   Polyhedron operator+(const Polyhedron& other) const {
@@ -426,24 +436,24 @@ public:
     fpv.resize(tvn+ovn); vpf.resize(tfn+ofn);
     for (ind_t i=0; i<ovn; ++i) for (auto j: other.faces_per_vertex[i])  fpv[tvn+i].push_back(static_cast<int>(tfn+j));
     for (ind_t i=0; i<ofn; ++i) for (auto j: other.vertices_per_face[i]) vpf[tfn+i].push_back(static_cast<int>(tvn+j));
-    return Polyhedron(v,p,n, fpv, vpf);
+    return {v,p,n, fpv, vpf};
   }
   //! Return the number of vertices in the Polyhedron
-  size_t num_vertices() const { return vertices.size(0); }
+  [[nodiscard]] size_t num_vertices() const { return vertices.size(0); }
   //! Return the number of facets in the Polyhedron
-  size_t num_faces() const { return normals.size(0); }
+  [[nodiscard]] size_t num_faces() const { return normals.size(0); }
   //! Return the vertex positions of the Polyhedron
-  bArray<double> get_vertices(void) const { return vertices; }
+  [[nodiscard]] bArray<double> get_vertices() const { return vertices; }
   //! Return the points on each facet of the Polyhedron
-  bArray<double> get_points(void) const { return points; }
+  [[nodiscard]] bArray<double> get_points() const { return points; }
   //! Return the normals of each facet of the Polyhedron
-  bArray<double> get_normals(void) const { return normals; }
+  [[nodiscard]] bArray<double> get_normals() const { return normals; }
   //! Return the facets per vertex
-  std::vector<std::vector<int>> get_faces_per_vertex(void) const { return faces_per_vertex; }
+  [[nodiscard]] std::vector<std::vector<int>> get_faces_per_vertex() const { return faces_per_vertex; }
   //! Return the vertices per facet
-  std::vector<std::vector<int>> get_vertices_per_face(void) const {return vertices_per_face; }
+  [[nodiscard]] std::vector<std::vector<int>> get_vertices_per_face() const {return vertices_per_face; }
   //! Return the facet polygons middle-edge points
-  bArray<double> get_half_edges(void) const{
+  [[nodiscard]] bArray<double> get_half_edges() const{
     // for each face find the point halfway between each set of neighbouring vertices
     // Convex polyhedra always have edges neighbouring two faces, so we will
     // only ever find (∑pᵢ)>>1 half-edge points, where pᵢ are the number of
@@ -475,7 +485,7 @@ public:
     return hep;
   }
   //! Return a string representation of the Polyhedron
-  std::string string_repr(void) const {
+  [[nodiscard]] std::string string_repr() const {
     size_t nv = vertices.size(0), nf=points.size(0);
     std::string repr = "Polyhedron with ";
     repr += std::to_string(nv) + " " + (1==nv?"vertex":"vertices") + " and ";
@@ -484,7 +494,7 @@ public:
     return repr;
   }
   //! Return the volume of the Polyhedron
-  double get_volume(void) const {
+  [[nodiscard]] double get_volume() const {
     /* per, e.g., http://wwwf.imperial.ac.uk/~rn/centroid.pdf
 
     For a polyhedron with N triangular faces, each with ordered vertices
@@ -512,7 +522,7 @@ public:
     return volume/6.0; // not-forgetting the factor of 1/6
   }
   //! Return the centre of mass of the Polyhedron (assuming uniform density)
-  bArray<double> get_centroid(void) const {
+  [[nodiscard]] bArray<double> get_centroid() const {
     // also following http://wwwf.imperial.ac.uk/~rn/centroid.pdf
     bArray<double> centroid({1u,3u}, 0.);
     double n[3];
@@ -535,7 +545,7 @@ public:
     return centroid/(48 * this->get_volume());
   }
   //! Return the radius of the sphere encompassing the Polyhedron, centred on is centroid
-  double get_circumsphere_radius(void) const {
+  [[nodiscard]] double get_circumsphere_radius() const {
     auto centroid2vertices = vertices - this->get_centroid();
     auto c2v_lengths = norm(centroid2vertices);
     auto longest_c2v = c2v_lengths.max(0);
@@ -544,7 +554,7 @@ public:
     // return norm(vertices - this->get_centroid()).max(0)[0];
   }
 protected:
-  void keep_unique_vertices(void){
+  void keep_unique_vertices(){
     std::vector<bool> flg(vertices.size(0), true);
     for (ind_t i=1; i<vertices.size(0); ++i) for (ind_t j=0; j<i; ++j)
       if (flg[i] && flg[j]) flg[i] = !vertices.match(i,j);
@@ -571,7 +581,7 @@ protected:
       this->vertices = this->vertices.extract(flg);
     }
   }
-  void find_convex_hull(void){
+  void find_convex_hull(){
     /* Find the set of planes which contain all vertices.
        The cross product between two vectors connecting three points defines a
        plane normal. If the plane passing through the three points partitions
@@ -620,7 +630,7 @@ protected:
   // This is the function which is bad for non-convex polyhedra, since it
   // assigns all faces with n⋅(v-p)=0 to a vertex irrespective of whether two
   // faces have opposite direction normals.
-  void find_all_faces_per_vertex(void){
+  void find_all_faces_per_vertex(){
     // std::vector<std::vector<int>> fpv(vertices.size(0));
     // for (size_t i=0; i<vertices.size(0); ++i){
     //   auto isonplane = dot(normals, vertices.view(i)-points).is(brille::cmp::eq,0.);
@@ -637,7 +647,7 @@ protected:
     this->faces_per_vertex = fpv;
   }
 
-  void polygon_vertices_per_face(void) {
+  void polygon_vertices_per_face() {
     bool flag;
     // We have 3+ faces per vertex, so we can now find the vertices per face
     std::vector<std::vector<int>> vpf(this->points.size(0));
@@ -664,7 +674,8 @@ protected:
     for (size_t i=0; i<max; ++i) map.push_back(is_polygon[i] ? count++ : max);
     std::vector<std::vector<int>> reduced_fpv(faces_per_vertex.size());
     for (size_t i=0; i<faces_per_vertex.size(); ++i)
-    for (auto facet: faces_per_vertex[i]) if (is_polygon[facet]) reduced_fpv[i].push_back(static_cast<int>(map[facet]));
+        for (auto facet: faces_per_vertex[i]) if (is_polygon[facet])
+            reduced_fpv[i].push_back(static_cast<int>(map[facet]));
     this->faces_per_vertex = reduced_fpv;
     verbose_update("Faces per vertex reduced to\n", faces_per_vertex);
 
@@ -676,7 +687,7 @@ protected:
     verbose_update("Vertices per (polygon) face\n", vertices_per_face);
   }
 
-  void purge_central_polygon_vertices(void){
+  void purge_central_polygon_vertices(){
     /* We often build polyhedra from convex hulls of points and it is not
        uncommon for such point sets to include central face polygon points.
        Such points are not needed to describe the polyhedra and they inhibit
@@ -703,7 +714,7 @@ protected:
     }
     this->actual_vertex_purge();
   }
-  void actual_vertex_purge(void){
+  void actual_vertex_purge(){
     // go through all faces again and determine whether a vertex is present
     std::vector<bool> keep(vertices.size(0), false);
     for (size_t i=0; i<keep.size(); ++i){
@@ -726,7 +737,7 @@ protected:
       vertices = vertices.extract(keep);
     }
   }
-  void sort_polygons(void){
+  void sort_polygons(){
     std::vector<std::vector<int>> sorted_vpp;
     std::vector<int> facet;
     std::vector<ind_t> perm, used;
@@ -782,7 +793,7 @@ protected:
     }
     this->vertices_per_face = sorted_vpp;
   }
-  void purge_extra_vertices(void){
+  void purge_extra_vertices(){
     /* If we used our convex hull algorithm to determine our polygon, it might
     have extraneous vertices within its convex polygonal faces */
     /* This method should be used only after find_all_faces_per_vertex,
@@ -812,13 +823,13 @@ protected:
     }
     this->actual_vertex_purge();
   }
-  void find_face_points_and_normals(void){
+  void find_face_points_and_normals(){
     // if the Polyhedron is defined from its vertices and vertices_per_face,
     // then we require the input to be correct, and calculate points and normals
     this->points.resize(vertices_per_face.size());
     this->normals.resize(vertices_per_face.size());
     ind_t count = 0;
-    for (auto face: vertices_per_face){
+    for (const auto& face: vertices_per_face){
       // auto centre = vertices.extract(face).sum(0);
       // this->points.set(count, centre/static_cast<double>(face.size()));
       // this->normals.set(count, cross(vertices.view(face[1])-vertices.view(face[0]), vertices.view(face[2])-vertices.view(face[1])));
@@ -834,16 +845,16 @@ protected:
   }
 public:
   //! Return a copy of this Polyhedron with its centre of mass at the origin
-  Polyhedron centre(void) const {
+  [[nodiscard]] Polyhedron centre() const {
     auto centroid = this->get_centroid();
-    return Polyhedron(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
+    return {vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face};
   }
   //! Determine if each of a set of points lies within the Polyhedron
-  std::vector<bool> contains(const std::vector<std::array<double,3>>& x) const {
+  [[nodiscard]] std::vector<bool> contains(const std::vector<std::array<double,3>>& x) const {
     return this->contains(bArray<double>::from_std(x));
   }
   //! Determine if each of a set of points lies within the Polyhedron
-  std::vector<bool> contains(const bArray<double>& x) const {
+  [[nodiscard]] std::vector<bool> contains(const bArray<double>& x) const {
     if (x.ndim()!=2 || x.size(x.ndim()-1)!=3) throw std::runtime_error("x must contain 3-vectors");
     std::vector<bool> out;
     for (ind_t i=0; i<x.size(0); ++i)
@@ -859,14 +870,14 @@ public:
      always contain) the origin.
   */
   //! Determine if the intersection of another Polyhedron with this one is non-null
-  bool intersects(const Polyhedron& other) const {
+  [[nodiscard]] bool intersects(const Polyhedron& other) const {
     verbose_update("Checking intersection of ",this->string_repr()," with ",other.string_repr());
     auto itrsct = Polyhedron::bisect(*this, other.normals, other.points);
     // If two polyhedra intersect one another, their intersection is not null.
     return !brille::approx::scalar(itrsct.get_volume(), 0.);
   }
   //! Return the intersection of another Polyhedron and this one
-  Polyhedron intersection(const Polyhedron& other) const {
+  [[nodiscard]] Polyhedron intersection(const Polyhedron& other) const {
     // auto centroid = this->get_centroid();
     // Polyhedron centred(vertices - centroid, points - centroid, normals, faces_per_vertex, vertices_per_face);
     // Polyhedron ipoly = Polyhedron::bisect(centred, other.normals, other.points-centroid);
@@ -966,7 +977,7 @@ public:
           }
         }
         debug_update_if(new_vector.size()!=new_face_vertex_count, "New vertices is wrong size!");
-        if (new_vector.size()){
+        if (!new_vector.empty()){
           // add the normal and point for the new face
           pn.append(0,n_i);
           pp.append(0,p_i);
@@ -1074,7 +1085,7 @@ public:
     return pout;
   }
   //! Construst a list of random points within the volume of the Polyhedron via rejection
-  bArray<double> rand_rejection(const ind_t n, const unsigned int seed=0) const {
+  [[nodiscard]] bArray<double> rand_rejection(const ind_t n, const unsigned int seed=0) const {
     // initialize the random number generator with an optional non-zero seed:
     auto tics = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine generator(seed>0 ? seed : static_cast<unsigned int>(tics));
@@ -1093,6 +1104,38 @@ public:
     }
     return p;
   }
+#ifdef USE_HIGHFIVE
+public:
+  template<class HF> std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+  to_hdf(HF& obj, const std::string& entry) const {
+    auto group = overwrite_group(obj, entry);
+    bool ok{true};
+    ok &= vertices.to_hdf(group, "vertices");
+    ok &= points.to_hdf(group, "points");
+    ok &= normals.to_hdf(group, "normals");
+    ok &= lists_to_hdf(faces_per_vertex, group, "faces_per_vertex");
+    ok &= lists_to_hdf(vertices_per_face, group, "vertices_per_face");
+    return ok;
+  }
+  [[nodiscard]] bool to_hdf(const std::string& filename, const std::string& dataset, const unsigned perm=HighFive::File::OpenOrCreate) const{
+    HighFive::File file(filename, perm);
+    return this->to_hdf(file, dataset);
+  }
+  template<class HF> static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Polyhedron>
+  from_hdf(HF& obj, const std::string& entry){
+    auto group = obj.getGroup(entry);
+    auto v = bArray<double>::from_hdf(group, "vertices");
+    auto p = bArray<double>::from_hdf(group, "points");
+    auto n = bArray<double>::from_hdf(group, "normals");
+    auto fpv = lists_from_hdf<int>(group, "faces_per_vertex");
+    auto vpf = lists_from_hdf<int>(group, "vertices_per_face");
+    return {v, p, n, fpv, vpf};
+  }
+  static Polyhedron from_hdf(const std::string& filename, const std::string& dataset){
+    HighFive::File file(filename, HighFive::File::ReadOnly);
+    return Polyhedron::from_hdf(file, dataset);
+  }
+#endif //USE_HIGHFIVE
 };
 
 //! Construct a Polyhedron box from its minimal and maximal vertices
@@ -1113,4 +1156,4 @@ Polyhedron polyhedron_box(std::array<T,3>& xmin, std::array<T,3>& xmax){
 }
 
 } // end namespace brille
-#endif // _POLYHEDRON_H_
+#endif // BRILLE_POLYHEDRON_H_

@@ -39,6 +39,7 @@ pages/
 # Various build directories
 *build
 *dist
+cmake-build*
 
 # Built version header
 src/version.hpp
@@ -48,3 +49,6 @@ Pipfile
 Pipfile.lock
 .snakemake
 .status_flag*
+
+# CLion
+.idea/

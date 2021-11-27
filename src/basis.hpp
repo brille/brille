@@ -23,6 +23,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 // #include <vector>
 // #include <array>
 // #include <tuple>
+#include <utility>
+
 #include "symmetry.hpp"
 // #include "utilities.hpp"
 // #include "approx.hpp"
@@ -42,9 +44,9 @@ private:
   std::vector<ind_t> types_;     //!< all atom types
 public:
   //! Explicit empty constructor
-  explicit Basis(){};
+  explicit Basis()= default;
   //! Construct from atom positions only, all of which are of a unique type
-  Basis(const std::vector<point>& pos): positions_(pos){
+  explicit Basis(std::vector<point> pos): positions_(std::move(pos)){
     types_.resize(positions_.size());
     std::iota(types_.begin(), types_.end(), 0u);
   }
@@ -64,17 +66,17 @@ public:
     }
   }
   //! Return the number of atoms in the basis
-  size_t size() const {return this->positions_.size();}
+  [[nodiscard]] size_t size() const {return this->positions_.size();}
   //! Return the atom positions in the basis
-  std::vector<point> positions() const {return this->positions_; }
+  [[nodiscard]] std::vector<point> positions() const {return this->positions_; }
   //! Return the position of an indexed atom
-  point position(const size_t i) const {
+  [[nodiscard]] point position(const size_t i) const {
     if (i<positions_.size())
       return this->positions_[i];
     throw std::runtime_error("Provided index is out of bounds");
   }
   //! Return all atom types in the basis
-  std::vector<ind_t> types() const {return types_;}
+  [[nodiscard]] std::vector<ind_t> types() const {return types_;}
 
   /*! \brief Determine if an atom exists in the basis
 
@@ -85,7 +87,7 @@ public:
             - that atom's index if it exists, or the total number of atoms
               in the basis if it does not
   */
-  std::tuple<bool, ind_t> equivalent_to(const point& Kappa) const {
+  [[nodiscard]] std::tuple<bool, ind_t> equivalent_to(const point& Kappa) const {
     // find κ' equivalent to K in the first unit cell, all elements ∈ [0,1)
     // We need to protect against mapping Kᵢ ≈ -0 to 1; which you might introduce
     // by looking for an equivalent Κ' = Κ%1. This discontinuity near 0 and 1
@@ -137,7 +139,7 @@ public:
     return this->equivalent_to(K_pos);
   }
   //! Return a string representation of the atom types and positions
-  std::string to_string() const {
+  [[nodiscard]] std::string to_string() const {
     std::string repr;
     for (size_t i=0; i<this->size(); ++i)
       repr += std::to_string(types_[i]) + " : " + "( "
@@ -146,6 +148,56 @@ public:
             + std::to_string(positions_[i][2])  + " )\n";
     return repr;
   }
+#ifdef USE_HIGHFIVE
+    template<class HF>
+    std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+    to_hdf(HF& obj, const std::string& entry) const{
+        auto group = overwrite_group(obj, entry);
+        group.createAttribute("size", size());
+        if (size()){
+          // HighFive can't handle std::vector<std::array<T,3>> ?!?
+          std::vector<std::vector<double>> p;
+          for (const auto & pos: positions_){
+            std::vector<double> in;
+            for (const auto& pin: pos) in.push_back(pin);
+            p.push_back(in);
+          }
+          group.createDataSet("positions", p);
+          group.createDataSet("types", types_);
+        }
+        return true;
+    }
+    // Input from HDF5 file/object
+    template<class HF>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Basis>
+    from_hdf(HF& obj, const std::string& entry){
+        auto group = obj.getGroup(entry);
+        std::vector<std::array<double,3>> p;
+        std::vector<ind_t> t;
+        size_t num;
+        group.getAttribute("size").read(num);
+        if (num) {
+          auto pos = group.getDataSet("positions");
+          std::vector<size_t> pos_shape = pos.getDimensions();
+          if (pos_shape.size() != 2u || pos_shape[1] != 3u || pos_shape[0] != num) {
+            throw std::runtime_error("Position should be (N,3) in shape!");
+          }
+          // or can we only read a std::vector<std::vector>?
+          auto tot = pos.getElementCount();
+          auto *pos_data = new double[tot]();
+          pos.read(pos_data);
+          for (size_t i = 0; i < tot; i += 3u) {
+            std::array<double, 3> x{
+                {pos_data[i], pos_data[i + 1], pos_data[i + 2]}};
+            p.push_back(x);
+          }
+          delete[] pos_data;
+
+          group.getDataSet("types").read(t);
+        }
+        return {p,t};
+    }
+#endif //USE_HIGHFIVE
 };
 
 } // end namespace brille

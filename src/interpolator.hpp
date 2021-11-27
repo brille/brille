@@ -33,6 +33,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "permutation_table.hpp"
 // #include "approx.hpp"
 // #include "utilities.hpp"
+#include "rotates.hpp"
 namespace brille {
 
 /*! \brief A function to calculate a scalar property of two arrays
@@ -59,26 +60,6 @@ template<class T> struct is_complex {enum{value = false};};
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 template<class T> struct is_complex<std::complex<T>> {enum {value=true};};
 #endif
-
-/*! \brief Represents how a lattice symmetry operation effects a vector or tensor
-
-The symmetry operations of a lattice contain matrices which are either rotations
-or rotoinversions. Within `brille` these matrices are expressed in the relative
-units of the real space lattice.
-
-How a vector transforms under application of the symmetry operation then depends
-on whehter it is a real space vector, a reciprocal space vector, or an axial
-vector. Similarly real space and reciprocal space tensors transform differently
-under application of a symmetry operation.
-
-An extra enumerated value, `Gamma`, is used to indicate that a quantity
-represents an eigenvector of the grand dynamical matrix, which undergoes a
-permutation and has an additional complex phase applied when transformed by a
-spacegroup symmetry operation.
-*/
-enum class RotatesLike {
-  Real, Reciprocal, Axial, Gamma
-};
 
 /*! \brief A class to hold and linearly interpolate arbitrary data
 
@@ -110,16 +91,26 @@ public:
   template<class Z> using element_t =std::array<Z,3>;
   using costfun_t = CostFunction<T>;
   using shape_t = std::vector<ind_t>;
-private:
+protected:
   bArray<T> data_;      //!< The stored Array2 of points indexed like the holding-Object's vertices
   shape_t shape_;       //!< The shape of the input Array (or Array2)
   element_t<ind_t> _elements; //!< The number of each element type per point and per mode
   RotatesLike rotlike_;   //!< How the elements of `data_` rotate
   element_t<double> _costmult; //!< The relative (multiplicative) cost for differences in each element type
+  element_t<ind_t> _funtype;
   costfun_t _scalarfun; //!< A function to calculate differences between the scalars at two stored points
   costfun_t _vectorfun; //!< A function to calculate differences between the vectors at two stored points
   //costfun_t _matrixfun; //!< A function to calculate the differences between matrices at two stored points
 public:
+  bool operator!=(const Interpolator<T>& other) const {
+    if (data_ != other.data_) return true;
+    if (shape_ != other.shape_) return true;
+    if (_elements != other._elements) return true;
+    if (rotlike_ != other.rotlike_) return true;
+    if (_costmult != other._costmult) return true;
+    if (_funtype != other._funtype) return true;
+    return false;
+  }
   /*! \brief Constructor without data and with optional cost function types
 
   \param scf_type The scalar cost function *type*
@@ -248,6 +239,7 @@ public:
   \see brille::CostFunction
   */
   void set_cost_info(const int scf, const int vcf){
+    _funtype = element_t<ind_t>({0,0,0});
     switch (scf){
       case 0:
       default:
@@ -263,24 +255,28 @@ public:
       this->_vectorfun = [](ind_t n, const T* i, const T* j){
         return brille::utils::vector_distance(n, i, j);
       };
+      _funtype[0] = 1;
       break;
       case 2:
       debug_update("selecting 1-brille::utils::vector_product");
       this->_vectorfun = [](ind_t n, const T* i, const T* j){
         return 1-brille::utils::vector_product(n, i, j);
       };
+      _funtype[0] = 2;
       break;
       case 3:
       debug_update("selecting brille::utils::vector_angle");
       this->_vectorfun = [](ind_t n, const T* i, const T* j){
         return brille::utils::vector_angle(n, i, j);
       };
+      _funtype[0] = 3;
       break;
       case 4:
       debug_update("selecting brille::utils::hermitian_angle");
       this->_vectorfun = [](ind_t n, const T* i, const T* j){
          return brille::utils::hermitian_angle(n,i,j);
       };
+      _funtype[0] = 4;
       break;
       default:
       debug_update("selecting sin**2(brille::utils::hermitian_angle)");
@@ -514,6 +510,8 @@ private:
     // check the input for correctness
     ind_t x = this->branch_span(_elements);
     switch (shape_.size()) {
+      case 0u:
+        break;
       case 1u: // 1 scalar per branch per point
         if (0u == x) x = _elements[0] = 1u;
         if (x > 1u) throw std::runtime_error("1-D data must represent one scalar per point!") ;
@@ -587,6 +585,48 @@ private:
   // interpolate_at_*
   void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, bArray<T>&, const ind_t, const bool) const;
   void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, bArray<T>&, const ind_t, const bool) const;
+
+#ifdef USE_HIGHFIVE
+  public:
+  template<class HF> std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+  to_hdf(HF& object, const std::string& entry) const {
+    auto group = overwrite_group(object, entry);
+    bool ok{true};
+    ok &= data_.to_hdf(group, "data");
+    group.createDataSet("shape", shape_);
+    group.createDataSet("elements", _elements);
+    group.createDataSet("rotlike", rotlike_);
+    group.createDataSet("costmult", _costmult);
+    group.createDataSet("funtype", _funtype);
+    return ok;
+  }
+  [[nodiscard]] bool to_hdf(const std::string& f, const std::string& d, const unsigned p=HighFive::File::OpenOrCreate) const {
+    HighFive::File file(f, p);
+    return this->to_hdf(file, d);
+  }
+  template<class HF> static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Interpolator<T>>
+  from_hdf(HF& object, const std::string& entry){
+    auto group = object.getGroup(entry);
+    auto d = bArray<T>::from_hdf(group, "data");
+    //
+    shape_t s;
+    element_t<ind_t> e, f;
+    RotatesLike r;
+    element_t<double> c;
+    //
+    group.getDataSet("shape").read(s);
+    group.getDataSet("elements").read(e);
+    group.getDataSet("rotlike").read(r);
+    group.getDataSet("costmult").read(c);
+    group.getDataSet("funtype").read(f);
+    //
+    return {d, s, e, r, static_cast<int>(f[0]), static_cast<int>(f[1]), c};
+  }
+  static Interpolator<T> from_hdf(const std::string& filename, const std::string& dataset){
+    HighFive::File file(filename, HighFive::File::ReadOnly);
+    return Interpolator<T>::from_hdf(file, dataset);
+  }
+#endif // USE_HIGHFIVE
 };
 
 #include "interpolator_at.tpp"

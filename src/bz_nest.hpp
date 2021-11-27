@@ -37,6 +37,8 @@ class BrillouinZoneNest3: public Nest<T,S>{
   using SuperClass = Nest<T,S>;
   BrillouinZone brillouinzone;
 public:
+  BrillouinZoneNest3(const SuperClass& pt, BrillouinZone bz): SuperClass(pt), brillouinzone(std::move(bz)) {}
+  BrillouinZoneNest3(SuperClass&& pt, BrillouinZone&& bz): SuperClass(std::move(pt)), brillouinzone(std::move(bz)) {}
   /*! \brief Construct a `BrillouinZoneNest3` from a `BrillouinZone` and variable arguments
 
   All arguments beyond the `BrillouinZone` are passed to the `Nest` constructor.
@@ -115,6 +117,42 @@ public:
     // we're done so bundle the output
     return std::make_tuple(vals, vecs);
   }
+
+#ifdef USE_HIGHFIVE
+    template<class HF>
+    std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
+    to_hdf(HF& obj, const std::string& entry) const{
+        auto group = overwrite_group(obj, entry);
+        bool ok{true};
+        ok &= SuperClass::to_hdf(group, "nest");
+        ok &= brillouinzone.to_hdf(group, "brillouinzone");
+        return ok;
+    }
+    // Implementing this requires Nest3::to/from_hdf and therefore NestNode and NestLeaf to/from_hdf, which is problematic
+//    // Input from HDF5 file/object
+//    template<class HF>
+//    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, BrillouinZoneNest3<T,S>>
+//    from_hdf(HF& obj, const std::string& entry){
+//        auto group = obj.getGroup(entry);
+//        auto nest = SuperClass::from_hdf(group, "nest");
+//        auto bz = BrillouinZone::from_hdf(group, "brillouinzone");
+//        return {bz, nest};
+//    }
+
+    bool to_hdf(const std::string&, const std::string&, unsigned) const {
+//    bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
+      throw std::logic_error("to_hdf not implemented yet due to NestNode and NestLeaf");
+//        HighFive::File file(filename, perm);
+//        return this->to_hdf(file, entry);
+      return false;
+    }
+    static BrillouinZoneNest3<T,S> from_hdf(const std::string&, const std::string&) {
+      throw std::logic_error("from_hdf not implemented yet due to NestNode and NestLeaf");
+//    static BrillouinZoneNest3<T,S> from_hdf(const std::string& filename, const std::string& entry){
+//        HighFive::File file(filename, HighFive::File::ReadOnly);
+//        return BrillouinZoneNest3<T,S>::from_hdf(file, entry);
+    }
+#endif // USE_HIGHFIVE
 };
 
 }

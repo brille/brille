@@ -910,6 +910,46 @@ std::vector<T> Array2<T>::to_std() const {
   return out;
 }
 
+#ifdef USE_HIGHFIVE
+template<class T> template<class R>
+std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+Array2<T>::add_hdf_attributes(R& obj) const {
+  obj.createAttribute("size", numel());
+  obj.createAttribute("shape", shape());
+  return true;
+}
+
+template<class T> template<class R>
+std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
+// bool
+Array2<T>::to_hdf(R& obj, const std::string& node) const {
+  if (numel()) {
+    // Copy the data into a structure that HighFive can handle :/
+    std::vector<std::vector<T>> hf;
+    for (ind_t i = 0; i < _shape[0]; ++i) {
+      std::vector<T> inner;
+      for (ind_t j = 0; j < _shape[1]; ++j) {
+        inner.push_back(this->val(i, j));
+      }
+      hf.push_back(inner);
+    }
+    auto ds = overwrite_data(obj, node, hf);
+    add_hdf_attributes(ds);
+  } else {
+    auto group = overwrite_group(obj, node);
+    add_hdf_attributes(group);
+  }
+  return true;
+}
+
+template<class T>
+bool Array2<T>::to_hdf(const std::string& filename, const std::string& node, const unsigned permissions) const {
+    using namespace HighFive;
+    File file(filename, permissions);
+    return this->to_hdf(file, node);
+}
+#endif // USE_HIGHFIVE
+
 template<class T>
 T* Array2<T>::ptr(const ind_t i0){
   assert(i0 < _shape[0]);

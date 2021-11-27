@@ -4,10 +4,35 @@
 #include <complex>
 #include "debug.hpp"
 #include "bz_trellis.hpp"
+#include <filesystem>
 
 using namespace brille;
 
-TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis]"){
+#ifdef USE_HIGHFIVE
+template<class T, class R>
+bool write_read_test(const BrillouinZoneTrellis3<T,R>& source, const std::string& name){
+  namespace fs = std::filesystem;
+  auto temp_dir = fs::temp_directory_path();
+  fs::path filepath = temp_dir;
+  filepath /= fs::path("brille.h5");
+  auto filename = filepath.string();
+
+  // write the BrillouinZoneTrellis3 to disk:
+  if(!source.to_hdf(filename, name))
+    throw std::runtime_error("Problem writing to HDF file?");
+
+  auto sink = BrillouinZoneTrellis3<T,R>::from_hdf(filename, name);
+
+  return (source == sink);
+}
+#else
+template<class T, class R>
+bool write_read_test(const BrillouinZoneTrellis3<T,R>&, const std::string&){
+  return true;
+}
+#endif
+
+TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis][simple]"){
   // The conventional cell for Nb
   Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
   Reciprocal r = d.star();
@@ -15,6 +40,7 @@ TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis]"){
   double max_volume = 0.01;
   // BrillouinZoneTrellis3<double> bzt0(bz); !! No default maximum volume
   BrillouinZoneTrellis3<double,double> bzt1(bz, max_volume);
+  REQUIRE(write_read_test(bzt1, "first_bzt"));
 }
 TEST_CASE("BrillouinZoneTrellis3 vertex accessors","[trellis][accessors]"){
   Direct d(10.75, 10.75, 10.75, brille::halfpi, brille::halfpi, brille::halfpi, 525);
@@ -292,4 +318,90 @@ TEST_CASE("PolyhedronTrellis construction from 'P1' hexagonal system must contai
   Reciprocal rlat(1.154701, 1.154701, 1, 90, 90, 60);
   BrillouinZone bz(rlat);
   REQUIRE_NOTHROW(BrillouinZoneTrellis3<double,double>(bz, 0.002));
+}
+
+TEST_CASE("PolyNode inclusion rounding error","[trellis][quartz][polynode][61]"){
+  Direct quartz_d(4.85235, 4.85235, 5.350305, brille::halfpi, brille::halfpi, 2*brille::pi/3, 443);
+  BrillouinZone quartz_bz(quartz_d.star());
+  auto max_volume = quartz_bz.get_ir_polyhedron().get_volume()/2000.;
+  BrillouinZoneTrellis3<double,double> quartz_bzt(quartz_bz, max_volume);
+
+  Array<double> zeros(quartz_bzt.get_hkl().size(0), 1u);
+  std::array<ind_t,3> elements{{1, 0, 0}};
+  RotatesLike rl{RotatesLike::Reciprocal};
+  Interpolator<double> val(zeros, elements, rl);
+  quartz_bzt.replace_data(val, val);
+
+  // error identified for delta=1e-9
+  // Check for more powers of 10 for extra assurances
+  for (int i=-15; i<0; ++i){
+    auto delta = std::pow(10., i);
+    std::vector<std::array<double,3>> values{{-0.1+delta, -0.1, 0.}};
+    LQVec<double> q(quartz_d.star(), bArray<double>::from_std(values));
+    REQUIRE_NOTHROW(quartz_bzt.ir_interpolate_at(q, 1));
+  }
+}
+
+TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7][omp][60]"){
+  // lattice information and generators of spacegroup via brilleu/CASTEP
+  std::vector<double> latmat {7.583912824349999, 1.8412792137035698e-32, 0.,
+                              3.791956412170034, 3.791956412170034, 5.362636186024768,
+                              3.791956412170034,-3.791956412170034, 5.362636186024768};
+  //
+  std::vector<int> strides{3*sizeof(double), sizeof(double)};
+  Direct dlat(latmat.data(), strides, "P_1"); // not P₁ but it *is* primitive
+  // the generators are: 4-fold [1 -1 1], 2-fold [-1 1 1], 3-fold [1 1 -3], -𝟙
+  // row-ordered generator matrices
+  std::vector<std::array<int,9>> W {
+    {{ 0,-1, 0,  0, 0,-1,  1, 1, 1}},
+    {{-1,-1,-1,  0, 0, 1,  0, 1, 0}},
+    {{-1,-1,-1,  1, 0, 0,  0, 0, 1}},
+    {{-1, 0, 0,  0,-1, 0,  0, 0,-1}}
+  };
+  std::vector<std::array<double,3>> w{
+    {{0.0, 0.0, 0.5}},
+    {{0.5, 0.0, 0.0}},
+    {{0.5, 0.0, 0.0}},
+    {{0.0, 0.0, 0.0}}
+  };
+  Symmetry::Motions mots;
+  mots.reserve(W.size());
+  for (size_t i=0; i<W.size(); ++i) mots.push_back(Motion<int,double>(W[i], w[i]));
+  Symmetry sym(mots);
+  dlat.set_spacegroup_symmetry(sym.generate());
+
+  auto rlat = dlat.star();
+  BrillouinZone bz(rlat);
+  auto max_volume = bz.get_ir_polyhedron().get_volume()/2000.;
+  BrillouinZoneTrellis3<double, double> bzt(bz, max_volume);
+
+  Array<double> zeros(bzt.get_hkl().size(0), 1u);
+  std::array<ind_t,3> elements{{1, 0, 0}};
+  RotatesLike rl{RotatesLike::Reciprocal};
+  Interpolator<double> val(zeros, elements, rl);
+  bzt.replace_data(val, val);
+
+  int n{500};
+  std::vector<std::array<double,3>> values;
+  values.reserve(n);
+  auto frac = [n](double from, double to, int j){
+    auto step = (to - from) / static_cast<double>(n);
+    return from + j*step;
+  };
+  for (int i=0; i<n; ++i){
+    values.push_back({1.5, frac(-1.5, 2.0, i), frac(4.0, -3.0, i)});
+  }
+
+  LQVec<double> Q(rlat, bArray<double>::from_std(values));
+  LQVec<double> q(rlat);
+  LQVec<int> tau(rlat);
+  std::vector<size_t> r, invr;
+
+  for (int i=0; i<4; ++i){
+    auto nthread = std::pow(2, i);
+    verbose_update("ir_moveinto ",nthread," threads");
+    REQUIRE_NOTHROW(bz.ir_moveinto(Q, q, tau, r, invr, nthread));
+    verbose_update("ir_interpolate_at ",nthread," threads");
+    REQUIRE_NOTHROW(bzt.ir_interpolate_at(Q, nthread));
+  }
 }

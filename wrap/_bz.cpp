@@ -408,10 +408,10 @@ void wrap_brillouinzone(py::module & m){
     int *rptr = (int *) rout.request().ptr;
     int *iptr = (int *) invrout.request().ptr;
     for (size_t i=0; i<Qv.numel()/3; ++i)
-    for (size_t j=0; j<3u; ++j) for (size_t k=0; k<3u; ++k) {
-      rptr[9u*i+3u*j+k] = ptsym.get(rotidx[i])[3u*j+k];
-      iptr[9u*i+3u*j+k] = ptsym.get(invrotidx[i])[3u*j+k];
-    }
+      for (size_t j=0; j<3u; ++j) for (size_t k=0; k<3u; ++k) {
+        rptr[9u*i+3u*j+k] = ptsym.get(rotidx[i])[3u*j+k];
+        iptr[9u*i+3u*j+k] = ptsym.get(invrotidx[i])[3u*j+k];
+      }
     return py::make_tuple(brille::a2py(qv), brille::a2py(tauv), rout, invrout);
   }, "Q"_a, "threads"_a=0, R"pbdoc(
     Find points equivalent to those provided within the irreducible Brillouin zone.
@@ -456,7 +456,8 @@ void wrap_brillouinzone(py::module & m){
     // prepare intermediate outputs
     LQVec<double> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
     std::vector<std::array<int,9>> rots(Qv.numel()/3);
-    if (!b.ir_moveinto_wedge(Qv, qv, rots, threads))
+    std::vector<size_t> ridx(Qv.numel()/3);
+    if (!b.ir_moveinto_wedge(Qv, qv, ridx, threads))
       throw std::runtime_error("Moving points into irreducible zone failed.");
     // prepare Python outputs
     // The rotations array has an extra dimension compared to q and tau
@@ -464,11 +465,12 @@ void wrap_brillouinzone(py::module & m){
     for (auto s: Qv.shape()) sh.push_back(static_cast<pybind11::ssize_t>(s));
     sh.push_back(3);
     auto rout = py::array_t<int,    py::array::c_style>(sh);
+    PointSymmetry ptsym = b.get_pointgroup_symmetry();
     // grab pointers to the underlying data blocks
     int *rptr = (int *) rout.request().ptr;
     for (size_t i=0; i<Qv.numel()/3; ++i)
-    for (size_t j=0; j<3u; ++j) for (size_t k=0; k<3u; ++k)
-      rptr[9u*i+3u*j+k] = rots[i][3u*j+k];
+      for (size_t j=0; j<3u; ++j) for (size_t k=0; k<3u; ++k)
+        rptr[9u*i+3u*j+k] = ptsym.get(ridx[i])[3u*j+k];
     return py::make_tuple(brille::a2py(qv), rout);
   }, "Q"_a, "threads"_a=0, R"pbdoc(
     Find points equivalent to those provided within the irreducible wedge.
@@ -497,4 +499,80 @@ void wrap_brillouinzone(py::module & m){
       for all :math:`\mathbf{Q}`, and the pointgroup operation fulfilling
       :math:`\mathbf{Q}_\text{ir} = R \mathbf{Q}`.
   )pbdoc");
+
+#ifdef USE_HIGHFIVE
+  const std::string default_entry("BrillouinZone");
+  const std::string default_flags("ac");
+  cls.def("to_file",[](CLS& cobj, const std::string& filename, const std::string& entry, const std::string& flags){
+        using namespace HighFive;
+        unsigned flag{0u};
+        if (flags.find('r') != std::string::npos) flag |= File::ReadOnly;
+        if (flags.find('x') != std::string::npos) flag |= File::Excl;
+        if (flags.find('a') != std::string::npos) flag |= File::ReadWrite;
+        if (flags.find('c') != std::string::npos) flag |= File::Create;
+        if (flags.find('t') != std::string::npos) flag |= File::Truncate;
+        info_update("Provided flags", flags," is translated to ",flag);
+        return cobj.to_hdf(filename, entry, flag);
+      }, "filename"_a, "entry"_a=default_entry, "flags"_a=default_flags,
+      R"pbdoc(
+  Save the object to an HDF5 file
+
+  Parameters
+  ----------
+  filename : str
+    The full path specification for the file to write into
+  entry: str
+    The group path, e.g., "my/cool/bz", where to write inside the file,
+    with a default equal to BrillouinZone name
+  flags: str
+    The HDF5 permissions to use when opening the file. Default 'a' writes to an
+    existing file -- if `entry` exists in the file it is overwritten.
+
+  Note
+  ----
+  Possible `flags` are:
+
+  +---------+-------------------------+----------------+
+  | `flags` | meaning                 | HDF equivalent |
+  +=========+=========================+================+
+  | 'r'     | read                    | H5F_ACC_RDONLY |
+  +---------+-------------------------+----------------+
+  | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
+  +---------+-------------------------+----------------+
+  | 'a'     | write, append to file   | H5F_ACC_RDWR   |
+  +---------+-------------------------+----------------+
+  | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
+  +---------+-------------------------+----------------+
+  | 't'     | write, replace existing | H5F_ACC_TRUNC  |
+  +---------+-------------------------+----------------+
+
+
+  Returns
+  -------
+  bool
+    Indication of writing success.
+
+  )pbdoc");
+
+  // how do we define this static?
+  cls.def_static("from_file",[](const std::string& filename, const std::string& entry){
+        return CLS::from_hdf(filename, entry);
+      }, "filename"_a, "entry"_a=default_entry,
+      R"pbdoc(
+  Save the object to an HDF5 file
+
+  Parameters
+  ----------
+  filename : str
+    The full path specification for the file to read from
+  entry: str
+    The group path, e.g., "my/cool/bz", where to read from inside the file,
+    with a default equal to the object Class name
+
+  Returns
+  -------
+  clsObj
+
+  )pbdoc");
+#endif //USE_HIGHFIVE
 }

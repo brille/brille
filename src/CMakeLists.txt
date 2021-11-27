@@ -17,7 +17,8 @@ endif()
 message(STATUS "Using interpreter: ${Python3_EXECUTABLE}")
 
 
-set(CXX_SOURCES
+#set(CXX_SOURCES
+list(APPEND CXX_SOURCES
   bravais.cpp
   bz.cpp
   bz_wedge.cpp
@@ -31,6 +32,10 @@ set(CXX_SOURCES
   spg_database.cpp
   symmetry.cpp
 )
+if(BRILLE_HDF5 AND highfive_FOUND)
+    message(STATUS "Adding hdf_interface.cpp")
+    list(APPEND CXX_SOURCES hdf_interface.cpp)
+endif()
 
 foreach(CXX_TARGET IN LISTS CXX_TARGETS)
   target_sources(${CXX_TARGET} PRIVATE ${CXX_SOURCES})
