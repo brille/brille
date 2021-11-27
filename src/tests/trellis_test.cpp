@@ -319,3 +319,25 @@ TEST_CASE("PolyhedronTrellis construction from 'P1' hexagonal system must contai
   BrillouinZone bz(rlat);
   REQUIRE_NOTHROW(BrillouinZoneTrellis3<double,double>(bz, 0.002));
 }
+
+TEST_CASE("PolyNode inclusion rounding error","[trellis][quartz][polynode][61]"){
+  Direct quartz_d(4.85235, 4.85235, 5.350305, brille::halfpi, brille::halfpi, 2*brille::pi/3, 443);
+  BrillouinZone quartz_bz(quartz_d.star());
+  auto max_volume = quartz_bz.get_ir_polyhedron().get_volume()/2000.;
+  BrillouinZoneTrellis3<double,double> quartz_bzt(quartz_bz, max_volume);
+
+  Array<double> zeros(quartz_bzt.get_hkl().size(0), 1u);
+  std::array<ind_t,3> elements{{1, 0, 0}};
+  RotatesLike rl{RotatesLike::Reciprocal};
+  Interpolator<double> val(zeros, elements, rl);
+  quartz_bzt.replace_data(val, val);
+
+  // error identified for delta=1e-9
+  // Check for more powers of 10 for extra assurances
+  for (int i=-15; i<0; ++i){
+    auto delta = std::pow(10., i);
+    std::vector<std::array<double,3>> values{{-0.1+delta, -0.1, 0.}};
+    LQVec<double> q(quartz_d.star(), bArray<double>::from_std(values));
+    REQUIRE_NOTHROW(quartz_bzt.ir_interpolate_at(q, 1));
+  }
+}

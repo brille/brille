@@ -213,7 +213,10 @@ public:
     std::vector<std::pair<ind_t,double>> iw{};
     if (x.ndim()!=2 && x.size(0)!=1u && x.size(1)!=3u)
       throw std::runtime_error("The indices and weights can only be found for one point at a time.");
-    nodes_.indices_weights(this->node_index(x), vertices_, x, iw);
+    // if node_index does not throw an error then the indicated node *should*
+    // contain the interpolation point (but rounding might be a problem)
+    const bool should_contain = true;
+    nodes_.indices_weights(this->node_index(x), vertices_, x, iw, should_contain);
     return iw;
   }
   //! Check that the held data can be used for linear interpolation
@@ -252,8 +255,11 @@ public:
     for (ind_t i=0; i<x.size(0); ++i){
       verbose_update("Locating ",x.to_string(i));
       auto indwghts = this->indices_weights(x.view(i));
-      if (indwghts.size()<1)
-        throw std::runtime_error("Point not found in PolyhedronTrellis");
+      if (indwghts.size()<1){
+        std::string msg = "The point " + x.to_string(i) + " was not found";
+        msg += " in the PolyhedronTrellis";
+        throw std::runtime_error(msg);
+      }
       data_.interpolate_at(indwghts, vals2, vecs2, i);
     }
     return std::make_tuple(vals_out, vecs_out);

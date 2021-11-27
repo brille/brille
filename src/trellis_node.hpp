@@ -52,7 +52,11 @@ namespace brille {
     //! Return the triangulated tetrahedra indices of this Node
     [[nodiscard]] virtual std::vector<std::array<ind_t,4>> vertices_per_tetrahedron() const {return {};}
     virtual //! Return the indices required and their weights for linear interpolation at a point
-    bool indices_weights(const bArray<double>&, const bArray<double>&, std::vector<std::pair<ind_t,double>>&) const {return false;}
+    bool indices_weights(const bArray<double>&,
+                         const bArray<double>&,
+                         std::vector<std::pair<ind_t,double>>&,
+                         const bool
+                        ) const {return false;}
     //! Return the volume of this Node
     [[nodiscard]] virtual double volume(const bArray<double>&) const {return 0.;}
 #ifdef USE_HIGHFIVE
@@ -134,7 +138,8 @@ namespace brille {
     bool indices_weights(
       const bArray<double>& vertices,
       const bArray<double>& x,
-      std::vector<std::pair<ind_t,double>>& iw
+      std::vector<std::pair<ind_t,double>>& iw,
+      const bool should_contain
     ) const override {
       // The CubeNode object contains the indices into `vertices` necessary to find
       // the 8 corners of the cube. Those indices should be ordered
@@ -145,7 +150,7 @@ namespace brille {
       auto w = abs(x - node_verts).prod(1)/node_volume; // the normalised volume of each sub-parallelpiped
       // If any normalised weights are greater than 1+eps() the point isn't in this node
       iw.clear();
-      if (w.any(brille::cmp::gt, 1.)) return false;
+      if (w.any(brille::cmp::gt, 1.) && !should_contain) return false;
       auto needed = w.is(brille::cmp::gt, 0.);
       for (int i=0; i<8; ++i) if (needed[i]) {
         // the weight corresponds to the vertex opposite the one used to find the partial volume
@@ -269,14 +274,29 @@ namespace brille {
     bool indices_weights(
       const bArray<double>& vertices,
       const bArray<double>& x,
-      std::vector<std::pair<ind_t,double>>& iw
+      std::vector<std::pair<ind_t,double>>& iw,
+      const bool should_contain
     ) const override {
       iw.clear();
       std::array<double,4> w{{0,0,0,0}};
-      for (ind_t i=0; i<vi_t.size(); ++i)
-      if (this->tetrahedra_contains(i, vertices, x, w)){
-        for (int j=0; j<4; ++j) if (!brille::approx::scalar(w[j],0.))
-          iw.emplace_back(vi_t[i][j],w[j]);
+      std::vector<double> most_neg(vi_t.size());
+      for (ind_t i=0; i<vi_t.size(); ++i){
+        most_neg[i] = tetrahedra_contains(i, vertices, x, w);
+        if (most_neg[i] >= 0.){
+          for (int j=0; j<4; ++j) if (!brille::approx::scalar(w[j], 0.))
+            iw.emplace_back(vi_t[i][j], w[j]);
+          return true;
+        }
+      }
+      // orient3d seems to be more precise than the inclusion checks done
+      // thus far :/ so we need an escape-hatch in case a point 'should' be
+      // in *one* of the contained tetrahedra but "isn't".
+      if (should_contain){
+        auto i = std::distance(most_neg.begin(), std::max_element(most_neg.begin(), most_neg.end()));
+        verbose_update("PolyNode does not contain ",x.to_string(0)," but should\n\tUsing tetrahedron with ",most_neg[i]," weight for one vertex");
+        tetrahedra_contains(static_cast<ind_t>(i), vertices, x, w);
+        for (int j=0; j<4; ++j) if (!brille::approx::scalar(w[j], 0.))
+          iw.emplace_back(vi_t[i][j], w[j]);
         return true;
       }
       return false;
@@ -286,7 +306,7 @@ namespace brille {
       return std::accumulate(vol_t.begin(), vol_t.end(), 0.);
     }
   private:
-    bool tetrahedra_contains(
+    double tetrahedra_contains(
       const ind_t t,
       const bArray<double>& v,
       const bArray<double>& x,
@@ -299,8 +319,8 @@ namespace brille {
       w[2] = orient3d( v.ptr(vi_t[t][0u]), v.ptr(vi_t[t][1u]), x.ptr(0),           v.ptr(vi_t[t][3u]) )/vol6;
       w[3] = orient3d( v.ptr(vi_t[t][0u]), v.ptr(vi_t[t][1u]), v.ptr(vi_t[t][2u]), x.ptr(0)           )/vol6;
       if (std::any_of(w.begin(), w.end(), [](double z){return z < 0. && !brille::approx::scalar(z, 0.);}))
-        return false;
-      return true;
+        return *std::min_element(w.begin(), w.end());
+      return 0.;
     }
     [[nodiscard]] bool tetrahedra_might_contain(
       const ind_t t,
@@ -490,12 +510,17 @@ namespace brille {
 
     \see CubeNode::indices_weights, PolyNode::indices_weights
     */
-    bool indices_weights(const ind_t i, const bArray<double>& v, const bArray<double>& x, std::vector<std::pair<ind_t,double>>& iw) const{
+    bool indices_weights(const ind_t i,
+                         const bArray<double>& v,
+                         const bArray<double>& x,
+                         std::vector<std::pair<ind_t,double>>& iw,
+                         const bool sc=false
+                       ) const{
       switch (nodes_[i].first){
         case NodeType::cube:
-        return cube_nodes_[nodes_[i].second].indices_weights(v,x,iw);
+        return cube_nodes_[nodes_[i].second].indices_weights(v,x,iw,sc);
         case NodeType::poly:
-        return poly_nodes_[nodes_[i].second].indices_weights(v,x,iw);
+        return poly_nodes_[nodes_[i].second].indices_weights(v,x,iw,sc);
         case NodeType::null:
           throw std::logic_error("attempting to access null node!");
         default:
