@@ -341,3 +341,67 @@ TEST_CASE("PolyNode inclusion rounding error","[trellis][quartz][polynode][61]")
     REQUIRE_NOTHROW(quartz_bzt.ir_interpolate_at(q, 1));
   }
 }
+
+TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7][omp][60]"){
+  // lattice information and generators of spacegroup via brilleu/CASTEP
+  std::vector<double> latmat {7.583912824349999, 1.8412792137035698e-32, 0.,
+                              3.791956412170034, 3.791956412170034, 5.362636186024768,
+                              3.791956412170034,-3.791956412170034, 5.362636186024768};
+  //
+  std::vector<int> strides{3*sizeof(double), sizeof(double)};
+  Direct dlat(latmat.data(), strides, "P_1"); // not P₁ but it *is* primitive
+  // the generators are: 4-fold [1 -1 1], 2-fold [-1 1 1], 3-fold [1 1 -3], -𝟙
+  // row-ordered generator matrices
+  std::vector<std::array<int,9>> W {
+    {{ 0,-1, 0,  0, 0,-1,  1, 1, 1}},
+    {{-1,-1,-1,  0, 0, 1,  0, 1, 0}},
+    {{-1,-1,-1,  1, 0, 0,  0, 0, 1}},
+    {{-1, 0, 0,  0,-1, 0,  0, 0,-1}}
+  };
+  std::vector<std::array<double,3>> w{
+    {{0.0, 0.0, 0.5}},
+    {{0.5, 0.0, 0.0}},
+    {{0.5, 0.0, 0.0}},
+    {{0.0, 0.0, 0.0}}
+  };
+  Symmetry::Motions mots;
+  mots.reserve(W.size());
+  for (size_t i=0; i<W.size(); ++i) mots.push_back(Motion<int,double>(W[i], w[i]));
+  Symmetry sym(mots);
+  dlat.set_spacegroup_symmetry(sym.generate());
+
+  auto rlat = dlat.star();
+  BrillouinZone bz(rlat);
+  auto max_volume = bz.get_ir_polyhedron().get_volume()/2000.;
+  BrillouinZoneTrellis3<double, double> bzt(bz, max_volume);
+
+  Array<double> zeros(bzt.get_hkl().size(0), 1u);
+  std::array<ind_t,3> elements{{1, 0, 0}};
+  RotatesLike rl{RotatesLike::Reciprocal};
+  Interpolator<double> val(zeros, elements, rl);
+  bzt.replace_data(val, val);
+
+  int n{500};
+  std::vector<std::array<double,3>> values;
+  values.reserve(n);
+  auto frac = [n](double from, double to, int j){
+    auto step = (to - from) / static_cast<double>(n);
+    return from + j*step;
+  };
+  for (int i=0; i<n; ++i){
+    values.push_back({1.5, frac(-1.5, 2.0, i), frac(4.0, -3.0, i)});
+  }
+
+  LQVec<double> Q(rlat, bArray<double>::from_std(values));
+  LQVec<double> q(rlat);
+  LQVec<int> tau(rlat);
+  std::vector<size_t> r, invr;
+
+  for (int i=0; i<4; ++i){
+    auto nthread = std::pow(2, i);
+    verbose_update("ir_moveinto ",nthread," threads");
+    REQUIRE_NOTHROW(bz.ir_moveinto(Q, q, tau, r, invr, nthread));
+    verbose_update("ir_interpolate_at ",nthread," threads");
+    REQUIRE_NOTHROW(bzt.ir_interpolate_at(Q, nthread));
+  }
+}

@@ -294,7 +294,8 @@ namespace brille {
       if (should_contain){
         auto i = std::distance(most_neg.begin(), std::max_element(most_neg.begin(), most_neg.end()));
         verbose_update("PolyNode does not contain ",x.to_string(0)," but should\n\tUsing tetrahedron with ",most_neg[i]," weight for one vertex");
-        tetrahedra_contains(static_cast<ind_t>(i), vertices, x, w);
+        bool allow_shortcut{false}; // just incase we chose a really bad tetrahedron
+        tetrahedra_contains(static_cast<ind_t>(i), vertices, x, w, allow_shortcut);
         for (int j=0; j<4; ++j) if (!brille::approx::scalar(w[j], 0.))
           iw.emplace_back(vi_t[i][j], w[j]);
         return true;
@@ -310,9 +311,13 @@ namespace brille {
       const ind_t t,
       const bArray<double>& v,
       const bArray<double>& x,
-      std::array<double,4>& w
+      std::array<double,4>& w,
+      const bool allow_shortcut = true
     ) const {
-      if (!this->tetrahedra_might_contain(t,x)) return false;
+      if (allow_shortcut){
+        auto away = this->tetrahedra_might_contain(t,x);
+        if (away < 0.) return away;
+      }
       double vol6 = vol_t[t]*6.0;
       w[0] = orient3d( x.ptr(0),           v.ptr(vi_t[t][1u]), v.ptr(vi_t[t][2u]), v.ptr(vi_t[t][3u]) )/vol6;
       w[1] = orient3d( v.ptr(vi_t[t][0u]), x.ptr(0),           v.ptr(vi_t[t][2u]), v.ptr(vi_t[t][3u]) )/vol6;
@@ -322,7 +327,7 @@ namespace brille {
         return *std::min_element(w.begin(), w.end());
       return 0.;
     }
-    [[nodiscard]] bool tetrahedra_might_contain(
+    [[nodiscard]] double tetrahedra_might_contain(
       const ind_t t,
       const bArray<double>& x
     ) const {
@@ -335,7 +340,8 @@ namespace brille {
       double d2{0}, r2 = ci_t[t][3]*ci_t[t][3];
       for (double i : v) d2 += i*i;
       // if the squared distance is no greater than the squared radius, x might be inside the tetrahedra
-      return d2 < r2 || brille::approx::scalar(d2, r2);
+      //return d2 < r2 || brille::approx::scalar(d2, r2);
+      return d2 < r2 || brille::approx::scalar(d2, r2) ? 0. : -d2;
     }
 
 #ifdef USE_HIGHFIVE
