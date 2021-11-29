@@ -3,7 +3,7 @@ name: Build and Publish source and wheels to tag
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
 
 
 jobs:
@@ -113,6 +113,7 @@ jobs:
       shell: bash
 
     - name: Attach tarball to action
+      uses: actions/upload-artifact@v2
       with:
         name: brille - source
         path: dist/*.tar.gz
