@@ -121,7 +121,7 @@ jobs:
 
   collect-artifacts:
     runs-on: ubuntu-latest
-    needs: [build-source, build-manlyinux, build-windows-macos]
+    needs: [build-source, build-manylinux, build-windows-macos]
     steps:
     - uses: actions/download-artifact@v2
       id: download
