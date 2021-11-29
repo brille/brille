@@ -64,8 +64,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         architecture: [ x64 ]
-        python-version: [ "3.7", "3.8", "3.9", "3.10" ]
-        many-version: [ 'cp37-cp37m', 'cp38-cp38', 'cp39-cp39', 'cp310-cp310']
+        python-version: [ 'cp37-cp37m', 'cp38-cp38', 'cp39-cp39', 'cp310-cp310']
 
     steps:
     - uses: actions/checkout@v2
@@ -77,9 +76,9 @@ jobs:
         architecture: ${{ matrix.architecture }}
 
     - name: Build manylinux python ${{ matrix.python-version }} wheel
-      uses: RalfG/python-wheels-manylinux-build@v0.4.0-manylinux2014_x86_64
+      uses: RalfG/python-wheels-manylinux-build@v0.4.0-manylinux2010_x86_64
       with:
-        python-versions: ${{ matrix.many-version }}
+        python-versions: ${{ matrix.python-version }}
         build-requirements: 'cmake'
         system-packages: ''
         package-path: ''
