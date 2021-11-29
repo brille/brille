@@ -1,0 +1,149 @@
+name: Build and Publish source and wheels to tag
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+
+jobs:
+  build-windows-macos:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2019, macos-10.15]
+        architecture: [x64]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+
+    steps:
+    - name: Install OpenMP
+      if: startsWith(matrix.os, 'macos')
+      run: brew install libomp cmake rename
+
+    - uses: actions/checkout@v2
+
+    - name: Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        architecture: ${{ matrix.architecture }}
+        python-version: ${{ matrix.python-version }}
+
+    - name: Update Python dependencies
+      run: python -m pip install --upgrade pip setuptools wheel delvewheel delocate
+      shell: bash
+
+    - name: Build wheel
+      run: python -m pip wheel --no-deps . -w wheelhouse
+      shell: bash
+
+    - name: Fix wheel dependencies -- delocate-wheel
+      if: startsWith(matrix.os, 'macos')
+      run: |
+        delocate-wheel -w dist -v wheelhouse/*.whl
+        rename -e 's/10_15/10_13/' dist/*.whl
+      shell: bash
+
+    - name: Fix wheel dependencies -- delvewheel
+      if: startsWith(matrix.os, 'windows')
+      run: delvewheel repair -w dist -v wheelhouse/*.whl
+      shell: bash
+
+    - name: Attach wheel to action
+      uses: actions/upload-artifact@v2
+      with:
+        name: brille - ${{ matrix.os }} - python ${{ matrix.python-version }}
+        path: dist/*.whl
+
+  build-manylinux:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ox: [ubuntu-latest]
+        architecture: [ x64 ]
+        python-version: [ "3.7", "3.8", "3.9", "3.10" ]
+        many-version: [ 'cp37-cp37m', 'cp38-cp38', 'cp39-cp39', 'cp310-cp310']
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+        architecture: ${{ matrix.architecture }}
+
+    - name: Build manylinux python ${{ matrix.python-version }} wheel
+      uses: RalfG/python-wheels-manylinux-build@v0.4.0-manylinux-2014_x86_64
+      with:
+        python-versions: ${{ matrix.many-version }}
+        build-requirements: 'cmake'
+        system-packages: ''
+        package-path: ''
+        pip-wheel-args: '-w ./dist --no-deps'
+
+    - name: Attach wheel to action
+      uses: actions/upload-artifact@v2
+      with:
+        name: brille - ${{ matrix.os }} - python ${{ matrix.python-version }}
+        path: dist/*.whl
+
+
+  build-source:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+        architecture: x64
+
+    - name: Update Python dependencies
+      run: python -m pip install --upgrade pip setuptools
+      shell: bash
+
+    - name: Build source tarball
+      run: python setup.py sdist
+      shell: bash
+
+    - name: Attach tarball to action
+      with:
+        name: brille - source
+        path: dist/*.tar.gz
+
+
+  collect-artifacts:
+    runs-on: ubuntu-latest
+    needs: [build-source, build-manlyinux, build-windows-macos]
+    steps:
+    - uses: actions/download-artifact@v2
+      id: download
+      with:
+        path: dist
+
+    - name: Echo download path
+      run: echo ${{ steps.download.outputs.download-path }}
+
+    - name: Display structure of downloaded files
+      run: ls -R ${{ steps.download.outputs.download-path }}
+
+    - name: Attach artifacts to GitHub tagged release
+      uses: ncipollo/release-action@v1
+      with:
+        draft: true
+        prerelease: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: "dist/**/*.whl", "dist/**/*.tar.gz"
+
+    - name: Publish artifacts to PyPI
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: ${{ secrets.PYPI_USERNAME }}
+        password: ${{ secrets.PYPI_PASSWORD }}
