@@ -14,6 +14,9 @@ jobs:
         python-version: [ '3.7', '3.8', '3.9', '3.10' ]
         build_type: [Release]
     steps:
+      - if: startsWith(matrix.os, 'macos')
+        shell: bash
+        run: brew install libomp
       - uses: actions/setup-python@v2
         with:
           architecture: ${{ matrix.architecture }}
@@ -61,7 +64,7 @@ jobs:
           architecture: ${{ matrix.architecture }}
           python-version: ${{ matrix.python-version }}
       - shell: bash
-        run: brew install libomp cmake
+        run: brew install libomp
       - uses: g5t/manymac-action@v0
         with:
           name: "macos-${{matrix.architecture}}-py${{matrix.python-version}}"
