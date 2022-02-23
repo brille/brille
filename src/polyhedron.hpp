@@ -612,7 +612,7 @@ public:
       v.erase(itr, v.end());
     }
     auto is_negative = [&](const auto & i){
-      return orientd3(a.ptr(0), b.ptr(0), c.ptr(0), vertices.ptr(i)) < 0;
+      return orient3d(a.ptr(0), b.ptr(0), c.ptr(0), vertices.ptr(i)) < 0;
     };
     return std::all_of(v.begin(), v.end(), is_negative);
   }

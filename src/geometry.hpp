@@ -28,9 +28,10 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "utilities.hpp"
 namespace brille {
 
-  template<class T>
-  std::tuple<bArray<T>, bArray<T>> plane_points_from_normal(const bArray<T> &n, const bArray<T> &p) {
-    bArray<T> a(n.shape(), T(1)), b;
+  template<class T, template<class> class A>
+  std::enable_if_t<isBareArray<T,A>, std::tuple<A<T>, A<T>>>
+  plane_points_from_normal(const A<T> & n, const A<T> & p) {
+    A<T> a(n.shape(), T(1)), b;
     auto n_norm = norm(n); // this *should* be all 1, but maybe it's not
     auto nn = n / n_norm;
     auto a_dot_n = dot(a, nn) * nn;
@@ -49,6 +50,14 @@ namespace brille {
     b = cross(nn, a);  // so that the points (p, a, b) define a plane with normal n
     // the returned a and b should have the property (x - p) . n == 0
     return std::make_tuple(a + p, b + p);
+  }
+
+  template<class T, template<class> class A>
+  std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, A<T>>>
+  plane_points_from_normal(const A<T> & n, const A<T> & p) {
+    assert(n.samelattice(p));
+    auto [b, c] = plane_points_from_normal(n.get_xyz(), p.get_xyz());
+    return std::make_tuple(A<T>::from_invA(p.get_lattice(), b), A<T>::from_invA(p.get_lattice(), c));
   }
 
   template<class T>
@@ -157,26 +166,41 @@ namespace brille {
 
   /*! \brief Check if a point is 'behind' a plane
 
-  \param plane_a the first point defining the plane
-  \param plane_b the second point defining the plane
-  \param plane_c the third point defining the plane
+  \param a the first point defining the plane
+  \param b the second point defining the plane
+  \param c the third point defining the plane
   \param x the point or points to check
   \returns whether `x` is on or behind the plane
 
   \note Uses the geometry predicates orient3d to perform the check within machine precision
   */
-  template<class T>
-  std::vector<bool>
-  point_inside_plane(const bArray<T> &plane_a, const bArray<T> &plane_b, const bArray<T> &plane_c, const bArray<T> &x) {
-    assert(plane_a.numel() == 3 && plane_b.numel() == 3 && plane_c.numel() == 3);
-    assert(plane_a.is_contiguous() && plane_b.is_contiguous() && plane_c.is_contiguous());
+  template<class T, template<class> class A>
+  std::enable_if_t<isBareArray<T,A>, std::vector<bool>>
+  point_inside_plane(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& x) {
+    assert(a.numel() == 3 && b.numel() == 3 && c.numel() == 3);
+    assert(a.is_contiguous() && b.is_contiguous() && c.is_contiguous());
     assert(x.is_contiguous() && x.is_row_ordered() && x.size(1u) == 3);
     std::vector<bool> pip;
     for (ind_t i = 0; i < x.size(0u); ++i) {
-      auto o3d = orient3d(plane_a.ptr(0), plane_b.ptr(0), plane_c.ptr(0), x.ptr(i));
+      auto o3d = orient3d(a.ptr(0), b.ptr(0), c.ptr(0), x.ptr(i));
       pip.push_back(o3d >= 0.);
     }
     return pip;
+  }
+
+  template<class T, class R, template<class> class A, template<class> class B>
+  std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, std::vector<bool>>
+  point_inside_plane(const A<T>& a, const A<T>& b, const A<T>& c, const B<R>& x){
+    assert(a.samelattice(b) && a.samelattice(c));
+    if (x.samelattice(a) || x.starlattice(a)) {
+      // We can (should?) specialize this on whether the two lattices are the
+      // same or each other's inverse. Doing so might make the floating point
+      // comparisons more accurate since there may be a way to avoid multiplying
+      // and dividing by common factors
+      // Actually figuring this out is looking very complicated, so it can wait.
+      return point_inside_plane(a.get_xyz(), b.get_xyz(), c.get_xyz(), x.get_xyz());
+    }
+    throw std::runtime_error("The lattices must be the same or mutually dual");
   }
 
   template<class I>
@@ -249,10 +273,10 @@ namespace brille {
   \param strict whether the facet vertex indices are sorted correctly
   \returns A bArray containing the intersection point, or an empty bArray if there is no intersection
   */
-  template<class T, class I>
-  bArray<T> edge_plane_intersection(
-    const bArray<T> &v, const std::vector<I> &one, const std::vector<I> &two,
-    const bArray<T> &a, const bArray<T> &b, const bArray<T> &c, const bool strict = false) {
+  template<class T, template<class> class A, class I>
+  std::enable_if_t<isBareArray<T,A>, A<T>> edge_plane_intersection(
+    const A<T> &v, const std::vector<I> &one, const std::vector<I> &two,
+    const A<T> &a, const A<T> &b, const A<T> &c, const bool strict = false) {
     // find the correct pair of vertices which form the edge:
     auto[ok, j, k] = common_edge(one, two, strict);
     if (ok) {
@@ -263,7 +287,7 @@ namespace brille {
       if ((o3dj < 0 && o3dk < 0) || (o3dj > 0 && o3dk > 0) || (o3dj == 0 && o3dk == 0)) ok = false;
       if (brille::approx::scalar(o3dj, 0.) && brille::approx::scalar(o3dk, 0.)) ok = false;
     }
-    bArray<T> at;
+    A<T> at;
     if (ok) {
       auto plane_n = three_point_normal(a, b, c);
       auto line_u = v.view(k) - v.view(j);
@@ -280,7 +304,19 @@ namespace brille {
     return at;
   }
 
-  template<class T, template<class> class A> std::enable_if_t<isBareArray<T, A>, std::tuple<Array2<T>, Array2<T>, Array2<T>>>
+  template<class T, class R, template<class> class A, template<class> class B, class I>
+  std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, A<T>> edge_plane_intersection(
+      const A<T> &v, const std::vector<I> &one, const std::vector<I> &two,
+      const B<R> &a, const B<R> &b, const B<R> &c, const bool strict = false) {
+    assert(a.samelattice(b) && a.samelattice(c));
+    if (v.samelattice(a) || v.starlattice(a)) {
+      auto at = edge_plane_intersection(v.get_xyz(), one, two, a.get_xyz(), b.get_xyz(), c.get_xyz(), strict);
+      return A<T>::from_invA(v.get_lattice(), at);
+    }
+    throw std::runtime_error("");
+  }
+
+      template<class T, template<class> class A> std::enable_if_t<isBareArray<T, A>, std::tuple<Array2<T>, Array2<T>, Array2<T>>>
   find_convex_hull_planes(const A<T>& points){
     if (points.size(0) < 4)
       throw std::runtime_error("Not enough points to form a Convex Hull");
@@ -423,6 +459,12 @@ namespace brille {
     return sorted;
   }
 
+  template<class T, template<class> class A> std::enable_if_t<isLatVec<T,A>, std::vector<ind_t>>
+  sort_convex_polygon_face(const A<T>& a, const A<T>& b, const A<T>& c, const std::vector<ind_t>& face, const A<T>& points){
+    assert(a.samelattice(b) && a.samelattice(c) && a.samelattice(points));
+    return sort_convex_polygon_face(a.get_xyz(), b.get_xyz(), c.get_xyz(), face, points.get_xyz());
+  }
+
   template<class T, template<class> class A> std::enable_if_t<isBareArray<T, A>, std::vector<std::vector<ind_t>>>
   polygon_faces(const std::vector<std::vector<ind_t>>& faces, const A<T>& points){
     std::vector<std::vector<ind_t>> reduced_faces;
@@ -528,6 +570,45 @@ namespace brille {
         if (one.size() > 2) updated.push_back(one);
       }
       return std::make_tuple(kept, updated);
+    }
+    return std::make_tuple(points, faces);
+  }
+
+  template<class I> std::vector<std::vector<I>>
+  remove_dangling_faces(const I no, const std::vector<std::vector<I>> & faces){
+    bool again;
+    do {
+      std::vector<I> count(no, 0u);
+      for (I index=0; index < no; ++index) {
+        for (const auto & f: faces) {
+          if (std::find(f.begin(), f.end(), index) != f.end()) ++count[index];
+        }
+      }
+      auto check = [&](const auto & f){return !is_not_dangling(count, f);};
+      auto itr =std::remove_if(faces.begin(), faces.end(), check);
+      again = itr != faces.end();
+      if (again) faces.erase(itr, faces.end());
+    } while (again);
+    return faces;
+  }
+
+  template<class T, template<class> class A, class I> std::enable_if_t<isArray<T,A>, std::tuple<A<T>, std::vector<std::vector<I>>>>
+  remove_faceless_points(const A<T>& points, const std::vector<std::vector<I>> & faces){
+    std::vector<bool> keep(points.size(0), false);
+    for (const auto & face: faces) for (const auto & index: face) keep[index] = true;
+    if (std::find(keep.begin(), keep.end(), false) != keep.end()) {
+      I count{0}, no{points.size(0)};
+      std::vector<I> map;
+      map.reserve(no);
+      for (const auto & b: keep) map.push_back(b ? count++ : no);
+      std::vector<std::vector<I>> updated;
+      updated.reserve(faces.size());
+      for (const auto & face: faces) {
+        std::vector<I> one;
+        std::transform(face.begin(), face.end(), std::back_inserter(one), [map](const auto & i){return map[i];});
+        updated.push_back(one);
+      }
+      return std::make_tuple(points.extract(keep), updated);
     }
     return std::make_tuple(points, faces);
   }

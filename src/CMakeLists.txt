@@ -21,6 +21,7 @@ message(STATUS "Using interpreter: ${Python3_EXECUTABLE}")
 list(APPEND CXX_SOURCES
   bravais.cpp
   bz.cpp
+  bz_move.cpp
   bz_wedge.cpp
   comparisons.cpp
   debug.cpp

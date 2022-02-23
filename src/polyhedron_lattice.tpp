@@ -52,8 +52,8 @@ template<class T> template<class R> bool LQPolyhedron<T>::operator!=(const LQPol
 }
 
 
-template<class T> [[nodiscard]] LQVec<T> LQPolyhedron<T>::face_points() const {
-  LQVec<T> p(_vertices.get_lattice(), face_count(), 3u);
+template<class T> [[nodiscard]] typename LQPolyhedron<T>::vertex_t LQPolyhedron<T>::face_points() const {
+  LQPolyhedron<T>::vertex_t p(_vertices.get_lattice(), face_count(), 3u);
   size_t idx{0};
   for (const auto & face: _faces){
     p.set(idx++, _vertices.extract(face).sum(0) / static_cast<T>(face.size()));
@@ -61,8 +61,8 @@ template<class T> [[nodiscard]] LQVec<T> LQPolyhedron<T>::face_points() const {
   return p;
 }
 
-template<class T>[[nodiscard]] LQVec<T> LQPolyhedron<T>::face_normals() const {
-  LQVec<T> n(_vertices.get_lattice(), face_count(), 3u);
+template<class T>[[nodiscard]] typename LQPolyhedron<T>::vertex_t LQPolyhedron<T>::face_normals() const {
+  LQPolyhedron<T>::vertex_t n(_vertices.get_lattice(), face_count(), 3u);
   size_t idx{0};
   for (const auto & face: _faces) n.set(idx++, three_point_normal(_vertices, face));
   return n;
@@ -93,9 +93,9 @@ template<class T> [[nodiscard]] Array2<ind_t> LQPolyhedron<T>::edges() const {
   return edges;
 }
 
-template<class T> [[nodiscard]] LQVec<T> LQPolyhedron<T>::half_edges() const {
+template<class T> [[nodiscard]] typename LQPolyhedron<T>::vertex_t LQPolyhedron<T>::half_edges() const {
   auto indexes = this->edges();
-  LQVec<T> half(_vertices.get_lattice(), indexes.size(0), 3u);
+  LQPolyhedron<T>::vertex_t half(_vertices.get_lattice(), indexes.size(0), 3u);
   for (ind_t i=0; i<indexes.size(0); ++i){
     half.set(i, (_vertices.view(indexes[{i, 0}]) + _vertices.view(indexes[{i, 1}])) / T(2));
   }
@@ -108,7 +108,7 @@ template<class T> [[nodiscard]] T LQPolyhedron<T>::volume() const {
   (aᵢ, bᵢ, cᵢ), one can define nᵢ = (bᵢ-aᵢ)×(cᵢ-aᵢ) for each face and then
   find that the volume of the polyhedron is V = 1/6 ∑ᵢ₌₁ᴺ aᵢ⋅ nᵢ
   */
-  T volume{0}, sub{0};
+  T volume{0}; //sub{0};
   for (const auto & face: _faces){
     const auto a{_vertices.view(face[0])};
     for (ind_t i=1; i < face.size() - 1; ++i){
@@ -118,8 +118,8 @@ template<class T> [[nodiscard]] T LQPolyhedron<T>::volume() const {
   return volume / T(6);
 }
 
-template<class T> [[nodiscard]] LQVec<T> LQPolyhedron<T>::centroid() const {
-  LQVec<T> cen(_vertices.get_lattice(), {1u, 3u}, T(0));
+template<class T> [[nodiscard]] typename LQPolyhedron<T>::vertex_t LQPolyhedron<T>::centroid() const {
+  LQPolyhedron<T>::vertex_t cen(_vertices.get_lattice(), {1u, 3u}, T(0));
   for (const auto & face: _faces) {
     const auto a{_vertices.view(face[0])};
     for (ind_t i=1; i < face.size() - 1; ++i) {
@@ -136,13 +136,13 @@ template<class T>[[nodiscard]] T LQPolyhedron<T>::circumsphere_radius() const {
   return norm(c2v).max(0).sum();
 }
 
-template<class T>[[nodiscard]] LQVec<T> LQPolyhedron<T>::rand_rejection(const ind_t n, const unsigned int seed) const {
+template<class T>[[nodiscard]] typename LQPolyhedron<T>::vertex_t LQPolyhedron<T>::rand_rejection(const ind_t n, const unsigned int seed) const {
   auto tics = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator(seed > 0 ? seed : static_cast<unsigned int>(tics));
   std::uniform_real_distribution<T> distribution(T(0), T(1));
   auto min = _vertices.min(0);
   auto delta = _vertices.max(0) - min;
-  LQVec<T> points(_vertices.get_lattice(), n, 3u);
+  LQPolyhedron<T>::vertex_t points(_vertices.get_lattice(), n, 3u);
   for (ind_t i=0; i < n; ){
     points.set(i, min + delta * distribution(generator));
     if (this->contains(points.view(i))[0]) ++i;
@@ -211,7 +211,7 @@ template<class T> LQPolyhedron<T> LQPolyhedron<T>::apply(const PointSymmetry& ps
   // a point symmetry describes how the real space lattice transforms, but we have vertices in the reciprocal space
   // So we need to get the transposed rotation matrix
   auto Rt = transpose(ps.get(index));
-  LQVec<T> rotated(_vertices.get_lattice(), _vertices.size(0), 3u);
+  LQPolyhedron<T>::vertex_t rotated(_vertices.get_lattice(), _vertices.size(0), 3u);
   for (ind_t i=0; i < _vertices.size(0); ++i){
     utils::multiply_matrix_vector(rotated.ptr(i), Rt.data(), _vertices.ptr(i));
   }
@@ -221,19 +221,20 @@ template<class T> LQPolyhedron<T> LQPolyhedron<T>::apply(const PointSymmetry& ps
 
 // geometric properties in relation to another point or polyhedron
 template<class T> template<class R> [[nodiscard]] std::vector<bool> LQPolyhedron<T>::contains(const LQVec<R>& x) const {
-  std::vector<bool> out;
-  out.reserve(x.size(0));
+  std::vector<bool> out(x.size(0));
+  // TODO Move n and p to per-thread variables instead of shared?
   auto n = this->normals();
   auto p = this->points();
+#pragma omp parallel for default(none) shared(out, n, p, x) schedule(dynamic)
   for (ind_t i=0; i<x.size(0); ++i){
     // FIXME, consider increasing the tolerance here!
-    out.push_back(dot(n, x.view(i) - p).all(cmp::le, 0.));
+    out[i] = dot(n, x.view(i) - p).all(cmp::le, 0.);
   }
   return out;
 }
 
 template<class T> template<class R> [[nodiscard]] bool LQPolyhedron<T>::intersects(const LQPolyhedron<R>& that) const {
-  return !approx::scalar(this->intersection(that).get_volume(), 0.);
+  return !approx::scalar(this->intersection(that).volume(), 0.);
 }
 
 template<class T> template<class R> [[nodiscard]] LQPolyhedron<T> LQPolyhedron<T>::intersection(const LQPolyhedron<R>& that) const {
@@ -295,18 +296,20 @@ template<class T> template<class R> [[nodiscard]] bool LQPolyhedron<T>::none_bey
   return std::all_of(v.begin(), v.end(), is_negative);
 }
 
-template<class T> template<class R> LQPolyhedron<T> LQPolyhedron<T>::cut(const LQVec<R>& a, const LQVec<R>& b, const LQVec<R>& c) const {
+template<class T> template<class R> LQPolyhedron<T> LQPolyhedron<T>::one_cut(const LQVec<R>& a, const LQVec<R>& b, const LQVec<R>& c) const {
   assert(a.size(0) == b.size(0) && a.size(0) == c.size(0) && a.size(0) == 1);
   if (this->none_beyond(a, b, c)) return *this;
   auto keep = point_inside_plane(a, b, c, _vertices);
   if (std::find(keep.begin(), keep.end(), false) == keep.end()) return *this;
   auto cut = keep_to_cut_list(keep, _faces);
   face_t new_face;
-  ind_t face_count{0}, vertex_count{0};
+  ind_t vertex_count{0};
   auto v = this->vertices(); // make a copy,  I hope
   auto f = this->faces(); // ditto
   for (size_t j=0; j < cut.size() - 1; ++j) for (size_t k=j+1; k < cut.size(); ++k){
-    auto at = edge_plane_intersection(v, f[cut[j]], f[cut[k]], a, b, c);
+    auto & fj{f[cut[j]]};
+    auto & fk{f[cut[k]]};
+    auto at = edge_plane_intersection(v, fj, fk, a, b, c);
     if (at.size(0) == 1){
       auto index = v.first(cmp::eq, at); // == v.size(0) if not found
       if (index < v.size(0)) {
@@ -318,10 +321,9 @@ template<class T> template<class R> LQPolyhedron<T> LQPolyhedron<T>::cut(const L
         v.append(0, at);
         ++vertex_count;
       }
-      utils::add_if_missing(f[cut[j]], index);
-      utils::add_if_missing(f[cut[k]], index);
+      utils::add_if_missing(fj, index);
+      utils::add_if_missing(fk, index);
       new_face.push_back(index);
-      ++face_count;
     }
   }
   // add the new face to the list of faces, if it is not already present
@@ -334,60 +336,43 @@ template<class T> template<class R> LQPolyhedron<T> LQPolyhedron<T>::cut(const L
   std::tie(v, f) = remove_points_and_update_face_indexing(keep, v, f);
 
   // remove any faces without three vertices
-  auto itr = std::remove_if(f.begin(), f.end(), [](const auto & face){return unique(face).size() < 3;});
-  f.erase(itr, f.end());
+  f.erase(std::remove_if(f.begin(), f.end(), [](const auto & face){return unique(face).size() < 3;}), f.end());
 
-  // remove dangling faces
-  bool again{false};
-  do {
-    face_t adjacent_face_count(v.size(0), 0u);
-    for (ind_t j = 0; j < v.size(0); ++j) {
-      for (const auto &face: f) {
-        if (std::find(face.begin(), face.end(), j) != face.end()) ++adjacent_face_count[j];
-      }
-    }
-    auto check = [c = adjacent_face_count](const auto &face) { return !is_not_dangling(c, face); };
-    std::vector<bool> not_ok;
-    std::transform(f.begin(), f.end(), std::back_inserter(not_ok), check);
-    again = std::find(not_ok.begin(), not_ok.end(), true) != not_ok.end();
-    if (again) {
-      f.erase(std::remove_if(f.begin(), f.end(), check), f.end());
-    }
-  } while (again);
-
-  // remove any vertices not on a face
-  std::vector<bool> kv(v.size(0), false);
-  for (const auto & face: f) for (const auto & x: face) kv[x] = true;
-  if (std::find(kv.begin(), kv.end(), false) != kv.end()){
-    face_t kv_map;
-    ind_t kv_count{0};
-    for (auto && j : kv) kv_map.push_back(j ? kv_count++ : v.size(0));
-    for (auto & face: f){
-      // a direct transform is OK since no face vertices are beyond the valid mapping
-      std::transform(face.begin(), face.end(), face.begin(), [kv_map](const auto & i){return kv_map[i];});
-    }
-    v = v.extract(kv);
-  }
-
+  f = remove_dangling_faces(v.size(0), f);
+  std::tie(v, f) = remove_faceless_points(v, f);
   if (v.size(0) < 4 || f.size() < 4) return LQPolyhedron<T>();
   return {v, f};
 }
 
-template<class T> template<class R> LQPolyhedron<T> LQPolyhedron<T>::bisect(const LQVec<R>& p_a, const LQVec<R>& p_b, const LQVec<R>&  p_c) const {
+template<class T> template<class R> LQPolyhedron<T> LQPolyhedron<T>::cut(const LQVec<R>&a, const LQVec<R>&b, const LQVec<R>&c) const {
   // this is, by far, the worst possible implementation of this algorithm
-  auto plane_count = p_a.size(0);
-  assert(p_a.ndim()==2 && p_b.ndim()==2 && p_c.ndim() == 2 && p_a.size(1)==3 && p_b.size(1)==(3) && p_c.size(1) == 3);
-  assert(p_a.size(0) == p_b.size(0) && p_b.size(0) == p_c.size(0));
+  assert(a.ndim()==2 && b.ndim()==2 && c.ndim() == 2);
+  assert(a.size(1)==3 && b.size(1)==3 && c.size(1) == 3);
+  assert(a.size(0) == b.size(0) && b.size(0) == c.size(0));
   LQPolyhedron<T> out(*this);
-  std::vector<ind_t> vertex_map;
-
-  auto pv = out.vertices();
-  auto pn = out.normals();
-  auto faces = out.faces();
-
-  for (ind_t plane=0; plane < plane_count; ++plane){
-    out = out.cut(p_a.view(plane), p_b.view(plane), p_c.view(plane));
+  for (ind_t i=0; i < a.size(0); ++i){
+    out = out.one_cut(a.view(i), b.view(i), c.view(i));
     if (approx::scalar(out.volume(), 0.)) break;
   }
   return out;
+}
+
+
+// non-member template functions:
+template<class T> LQPolyhedron<T> bounding_box(const typename LQPolyhedron<T>::vertex_t& points){
+  auto min = points.min(0);
+  auto max = points.max(0);
+  std::vector<std::array<T,3>> v{
+      {min[{0, 0}], min[{0,1}], min[{0,2}]}, // 000 0
+      {min[{0, 0}], max[{0,1}], min[{0,2}]}, // 010 1
+      {min[{0, 0}], max[{0,1}], max[{0,2}]}, // 011 2
+      {min[{0, 0}], min[{0,1}], max[{0,2}]}, // 001 3
+      {max[{0, 0}], min[{0,1}], min[{0,2}]}, // 100 4
+      {max[{0, 0}], max[{0,1}], min[{0,2}]}, // 110 5
+      {max[{0, 0}], max[{0,1}], max[{0,2}]}, // 111 6
+      {max[{0, 0}], min[{0,1}], max[{0,2}]}  // 101 7
+  };
+  typename LQPolyhedron<T>::faces_t faces{{3,0,4,7},{3,2,1,0},{0,1,5,4},{3,7,6,2},{7,4,5,6},{2,6,5,1}};
+  auto hkl = typename LQPolyhedron<T>::vertex_t::from_std(points.get_lattice(), v);
+  return {hkl, faces};
 }

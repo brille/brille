@@ -3,6 +3,8 @@
 
 #include "polyhedron.hpp"
 #include "lattice.hpp"
+
+#include <utility>
 #include "array_latvec.hpp"
 namespace brille{
   template<class T>
@@ -10,24 +12,45 @@ namespace brille{
   public:
     using face_t = typename std::vector<ind_t>;
     using faces_t = typename std::vector<face_t>;
+    using vertex_t = LQVec<T>;
   protected:
-    LQVec<T> _vertices;
+    vertex_t _vertices;
     faces_t _faces;
   public:
-    explicit LQPolyhedron(const LQVec<T> & vertices) : _vertices(vertices) { construct_convex_hull(); }
-    explicit LQPolyhedron(LQVec<T> && vertices) : _vertices(vertices) { construct_convex_hull(); }
-    LQPolyhedron(const LQVec<T> & vertices, const faces_t & faces) : _vertices(vertices), _faces(faces) {
+    explicit LQPolyhedron(): _vertices(), _faces() {}
+    explicit LQPolyhedron(const vertex_t & vertices) : _vertices(vertices) { construct_convex_hull(); }
+    explicit LQPolyhedron(vertex_t && vertices) : _vertices(vertices) { construct_convex_hull(); }
+    LQPolyhedron(const vertex_t & vertices, faces_t faces) : _vertices(vertices), _faces(std::move(faces)) {
       construct_full_check();
     }
-    LQPolyhedron(LQVec<T> && vertices, faces_t && faces) : _vertices(vertices), _faces(std::move(faces)) {
+    LQPolyhedron(vertex_t && vertices, faces_t && faces) : _vertices(vertices), _faces(std::move(faces)) {
       construct_full_check();
+    }
+    [[deprecated("Can you use the .cut property instead of this constructor?")]]
+    LQPolyhedron(const vertex_t & vertices, const vertex_t & points, const vertex_t & normals) : _vertices(vertices) {
+      auto [b, c] = plane_points_from_normal(normals, points);
+      auto faces_per_vertex = find_planes_containing_point(points, b, c, _vertices);
+      _faces = polygon_faces(points, b, c, faces_per_vertex, _vertices);
+      if (polygon_face_vetex_purge(_vertices, _faces)) debug_update("Some vertices purged");
     }
     LQPolyhedron(const LQPolyhedron<T> & that): _vertices(that._vertices), _faces(that._faces) {}
-    LQPolyhedron(LQPolyhedron<T> && that): _vertices(that._vertices), _faces(std::move(that._faces)) {}
+    LQPolyhedron(LQPolyhedron<T> && that) noexcept : _vertices(that._vertices), _faces(std::move(that._faces)) {}
+
+    LQPolyhedron<T>& operator=(const LQPolyhedron<T>& that){
+      _vertices = that.vertices();
+      _faces = that.faces();
+      return *this;
+    }
+    LQPolyhedron<T>& operator=(LQPolyhedron<T>&& that) noexcept {
+      _vertices = that._vertices;
+      _faces = std::move(that._faces);
+      return *this;
+    }
 
   private:
     void construct_convex_hull() {
-      _vertices = _vertices.unique();
+      auto unique = _vertices.is_unique();
+      _vertices = _vertices.extract(unique);
       auto[a, b, c] = find_convex_hull_planes(_vertices);
       auto fpv = find_planes_containing_point(a, b, c, _vertices);
       _faces = polygon_faces(a, b, c, fpv, _vertices);
@@ -47,18 +70,18 @@ namespace brille{
     // direct accessors
     [[nodiscard]] ind_t vertex_count() const {return _vertices.size(0);}
     [[nodiscard]] size_t face_count() const {return _faces.size();}
-    [[nodiscard]] LQVec<T> vertices() const {return _vertices;}
+    [[nodiscard]] vertex_t vertices() const {return _vertices;}
     [[nodiscard]] faces_t faces() const {return _faces;}
     // calculated accessors
     [[nodiscard]] faces_t faces_per_vertex() const {return utils::invert_lists(_faces);}
-    [[nodiscard]] LQVec<T> face_points() const;
-    [[nodiscard]] LQVec<T> face_normals() const;
+    [[nodiscard]] vertex_t face_points() const;
+    [[nodiscard]] vertex_t face_normals() const;
     [[nodiscard]] Array2<ind_t> edges() const;
-    [[nodiscard]] LQVec<T> half_edges() const;
+    [[nodiscard]] vertex_t half_edges() const;
     [[nodiscard]] T volume() const;
-    [[nodiscard]] LQVec<T> centroid() const;
+    [[nodiscard]] vertex_t centroid() const;
     [[nodiscard]] T circumsphere_radius() const;
-    [[nodiscard]] LQVec<T> rand_rejection(ind_t, unsigned int seed=0) const;
+    [[nodiscard]] vertex_t rand_rejection(ind_t, unsigned int seed=0) const;
 
     template<class R> bool operator!=(const LQPolyhedron<R>&) const;
     template<class R> bool operator==(const LQPolyhedron<R>& that) const {return !this->operator!=(that);}
@@ -86,8 +109,8 @@ namespace brille{
     }
     template<class R> [[nodiscard]] bool none_beyond(const LQVec<R>&, const LQVec<R>&, const LQVec<R>&) const;
 
+    template<class R> LQPolyhedron<T> one_cut(const LQVec<R>&, const LQVec<R>&, const LQVec<R>&) const;
     template<class R> LQPolyhedron<T> cut(const LQVec<R>&, const LQVec<R>&, const LQVec<R>&) const;
-    template<class R> LQPolyhedron<T> bisect(const LQVec<R>&, const LQVec<R>&, const LQVec<R>&) const;
 
 #ifdef USE_HIGHFIVE
     template<class H> std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool> to_hdf(H& obj, const std::string& entry) const {
@@ -101,9 +124,9 @@ namespace brille{
       HighFive::File file(filename, perm);
       return this->to_hdf(file, dataset);
     }
-    template<class H> static std::enable_if_t<std::is_base_of_v<HighFive::Object, LQPolyhedron<T>>, bool> from_hdf(H& obj, const std::string& entry){
+    template<class H> static std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, LQPolyhedron<T>> from_hdf(H& obj, const std::string& entry){
       auto group = obj.getGroup(entry);
-      auto v = LQVec<T>::from_hdf(group, "vertices");
+      auto v = vertex_t::from_hdf(group, "vertices");
       auto faces = lists_from_hdf<ind_t>(group, "faces");
       return {v, faces};
     }
@@ -113,7 +136,8 @@ namespace brille{
     }
 #endif
   };
-
 #include "polyhedron_lattice.tpp"
+
+  template<class T> LQPolyhedron<T> bounding_box(const typename LQPolyhedron<T>::vertex_t&);
 }
 #endif

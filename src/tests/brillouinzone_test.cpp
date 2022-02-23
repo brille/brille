@@ -195,9 +195,9 @@ TEST_CASE("Irreducible Brillouin zone for mp-147","[brillouinzone][materialsproj
   Reciprocal rlat = dlat.star();
   BrillouinZone bz(rlat);
   REQUIRE(bz.check_ir_polyhedron());
-  Polyhedron fbz = bz.get_polyhedron();
-  Polyhedron irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/6));
+  auto fbz = bz.get_polyhedron();
+  auto irp = bz.get_ir_polyhedron();
+  REQUIRE(irp.volume() == Approx(fbz.volume()/6));
   REQUIRE(write_read_test(bz, "mp-147"));
 }
 
@@ -216,9 +216,9 @@ TEST_CASE("Irreducible Brillouin zone for mp-306","[brillouinzone][materialsproj
   Reciprocal rlat = dlat.star();
   BrillouinZone bz(rlat);
   REQUIRE(bz.check_ir_polyhedron());
-  Polyhedron fbz = bz.get_polyhedron();
-  Polyhedron irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/6));
+  auto fbz = bz.get_polyhedron();
+  auto irp = bz.get_ir_polyhedron();
+  REQUIRE(irp.volume() == Approx(fbz.volume()/6));
   REQUIRE(write_read_test(bz, "mp-306"));
 }
 
@@ -237,9 +237,9 @@ TEST_CASE("Irreducible Brillouin zone for mp-661","[brillouinzone][materialsproj
   Reciprocal rlat = dlat.star();
   BrillouinZone bz(rlat);
   REQUIRE(bz.check_ir_polyhedron());
-  Polyhedron fbz = bz.get_polyhedron();
-  Polyhedron irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/12));
+  auto fbz = bz.get_polyhedron();
+  auto irp = bz.get_ir_polyhedron();
+  REQUIRE(irp.volume() == Approx(fbz.volume()/12));
   REQUIRE(write_read_test(bz, "mp-661"));
 }
 
@@ -258,9 +258,9 @@ TEST_CASE("Irreducible Brillouin zone for mp-7041","[brillouinzone][materialspro
   Reciprocal rlat = dlat.star();
   BrillouinZone bz(rlat);
   REQUIRE(bz.check_ir_polyhedron());
-  Polyhedron fbz = bz.get_polyhedron();
-  Polyhedron irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/12));
+  auto fbz = bz.get_polyhedron();
+  auto irp = bz.get_ir_polyhedron();
+  REQUIRE(irp.volume() == Approx(fbz.volume()/12));
   REQUIRE(write_read_test(bz, "mp-7041"));
 }
 
@@ -279,9 +279,9 @@ TEST_CASE("Irreducible Brillouin zone for mp-917","[brillouinzone][materialsproj
   Reciprocal rlat = dlat.star();
   BrillouinZone bz(rlat);
   REQUIRE(bz.check_ir_polyhedron());
-  Polyhedron fbz = bz.get_polyhedron();
-  Polyhedron irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.get_volume() == Approx(fbz.get_volume()/4));
+  auto fbz = bz.get_polyhedron();
+  auto irp = bz.get_ir_polyhedron();
+  REQUIRE(irp.volume() == Approx(fbz.volume()/4));
   REQUIRE(write_read_test(bz, "mp-917"));
 }
 
@@ -301,5 +301,5 @@ TEST_CASE("Nb irreducible Brillouin Zone", "[brillouinzone]"){
   auto fbz = bz.get_polyhedron();
   auto irbz = bz.get_ir_polyhedron();
   auto mult = bz.get_pointgroup_symmetry().size();
-  REQUIRE(irbz.get_volume() == Approx(fbz.get_volume() / mult));
+  REQUIRE(irbz.volume() == Approx(fbz.volume() / mult));
 }
