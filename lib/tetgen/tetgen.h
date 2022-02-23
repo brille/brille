@@ -831,6 +831,8 @@ public:
 
 void exactinit(int, int, int, REAL, REAL, REAL);
 void exactdeinit();
+REAL orient2d(const REAL *pa, const REAL *pb, const REAL *pc);
+REAL incircle(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd);
 REAL orient3d(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd);
 REAL insphere(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe);
 REAL orient4d(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe,

@@ -1,6 +1,6 @@
 /* This file is part of brille.
 
-Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+Copyright © 2019-2022 Greg Tucker <gregory.tucker@ess.eu>
 
 brille is free software: you can redistribute it and/or modify it under the
 terms of the GNU Affero General Public License as published by the Free
@@ -30,7 +30,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <complex>
 #include <chrono>
 // #define VERBOSE_DEBUG
-// #define DEBUG // comment-out for no debugging output
+ #define DEBUG // comment-out for no debugging output
+#define PRINTING_PRECISION 16
 namespace brille {
 // brille::abs (defined here instead of approx to avoid circular referencing)
 #if defined(DOXYGEN_SHOULD_SKIP_THIS)
@@ -117,8 +118,8 @@ const std::string my_to_string(const T x, const size_t width=0){
   size_t w{width};
   if constexpr (!std::is_integral<T>::value){
     streamobj << std::fixed;
-    streamobj << std::setprecision(4);
-    if (w>4) w -= 5u; // account for the decimal mark and four places
+    streamobj << std::setprecision(PRINTING_PRECISION);
+    if (w > PRINTING_PRECISION) w -= 1 + PRINTING_PRECISION; // account for the decimal mark and precision
   }
   // char may or may not be signed, depending on the system
   if constexpr (std::is_base_of<char,T>::value || (std::is_integral<T>::value && std::is_unsigned<T>::value) ){
@@ -138,8 +139,8 @@ const std::string my_to_string(const std::complex<T> x, const size_t width=0){
   size_t w{width};
   if (!std::is_integral<T>::value){
     streamobj << std::fixed;
-    streamobj << std::setprecision(4);
-    if (w>9) w -= 10u; // account for the decimal mark and four places
+    streamobj << std::setprecision(PRINTING_PRECISION);
+    if (w > 1 + 2 * PRINTING_PRECISION) w -= 2 + 2 * PRINTING_PRECISION;
   }
   if (!std::is_integral<T>::value || std::is_signed<T>::value){
     if (w>3) streamobj << std::setw(w-3); // -3 for -±i
@@ -166,6 +167,23 @@ const std::string my_to_string(const T & a, const size_t w=0){
   std::string s;
   for (auto x: a) s += my_to_string(x, w);
   return s;
+}
+
+template<typename T>
+[[nodiscard]] std::string list_to_string(const std::vector<T>& v){
+  std::string s{"["};
+  for (const auto & x: v) s += my_to_string(x) + ", ";
+  s.pop_back();
+  s.pop_back();
+  return s + "]";
+}
+template<typename T>
+[[nodiscard]] std::string lists_to_string(const std::vector<std::vector<T>>& vv){
+ std::string s{"["};
+ for (const auto & v: vv) s += list_to_string(v) + ",\n";
+ s.pop_back();
+ s.pop_back();
+ return s + "]";
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -306,7 +324,7 @@ private:
     //   }
     // } else {
       for (auto y: x){
-        s += " " + my_to_string(y, l);
+        s += " " + my_to_string(y, l) + ",";
         if (!(++count % w)) s += "\n" + this->lead_in();
       }
     // }
@@ -327,7 +345,7 @@ private:
       if (l) w /= l+1;
       size_t count = 0;
       for (size_t i=0; i<N; ++i){
-        s += " " + my_to_string(x[i], l);
+        s += " " + my_to_string(x[i], l) + ",";
         if (!(++count % w)) s += "\n" + this->lead_in();
       }
     // }
@@ -341,14 +359,22 @@ private:
     size_t num;
     std::string s;
     if (l) w /= l+1;
-    for (auto v: vv){
+    s += "[";
+    ++_before;
+    for (size_t i=0; i < vv.size(); ++i){
+      const auto & v{vv[i]};
       num = 0;
-      for (auto x: v){
-        s += my_to_string(x, l);
+      s += "[";
+      for (size_t j=0; j < v.size(); ++j){
+        s += my_to_string(v[j], l);
+        if (j + 1 < v.size()) s += ',';
         if (!(++num %w)) s += "\n" + this->lead_in();
       }
+      s += "]";
+      s += (i + 1 < vv.size()) ? "," : "]";
       s += "\n" + this->lead_in();
     }
+    --_before;
     this->inner_print(s, args...);
   }
   template<typename T, size_t N, typename... L>
@@ -374,7 +400,7 @@ private:
       if (l) w /= l+1;
       for (size_t i=0; i<x.size(); num=0, ++i){
         for (auto y: x[i]){
-          s += my_to_string(y, l);
+          s += my_to_string(y, l) + ",";
           if (!(++num % w)) s += "\n" + this->lead_in();
         }
         s += "\n" + this->lead_in();

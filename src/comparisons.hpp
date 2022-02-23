@@ -58,10 +58,10 @@ private:
   std::function<bool(const T&,const R&)> scalar; /*!< comparison function for scalars */
   std::function<bool(const size_t&,const T*,const size_t&,const R*,const size_t&)> vector; /*!< comparison function for strided vectors */
 public:
-  Comparer(const cmp op){
+  explicit Comparer(const cmp op, int tol=1): useT{false}, relT{0}, relR{0}, absT{0}, absR{0}{
     // predetermine tolerances and which we should use:
     bool c;
-    std::tie(c, this->useT, this->relT, this->relR, this->absT, this->absR) = brille::approx::tols<T,R>();
+    std::tie(c, this->useT, this->relT, this->relR, this->absT, this->absR) = brille::approx::tols<T,R>(tol);
     // set the comparison function
     switch(op){
       case cmp::lt:

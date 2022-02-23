@@ -108,7 +108,24 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
     } else if (!node_is_null[i]) {
       // Find the intersection of the Node Polyhedron and the input Polyhedron
       Polyhedron this_node = node_zero.translate(node_centres.view(i)).intersection(poly);
-      node_is_null[i] = this_node.get_vertices().size(0) < 4u;
+
+//      auto tdir = std::filesystem::temp_directory_path();
+//      std::filesystem::path filepath = tdir;
+//      filepath /= std::filesystem::path("trellis.h5");
+//      auto filename = filepath.string();
+//      node_zero.translate(node_centres.view(i)).to_hdf(filename, "/cube");
+//      auto poly_ok = poly.to_hdf(filename, "/poly");
+//      auto node_ok = this_node.to_hdf(filename, "/node");
+//
+//
+//      // why does the intersection have a doubled face? [0, 2, 3] is present twice!
+//      info_update_if(i==3, "node_zero\nnp.array(",node_zero.get_vertices().to_string(),"),",node_zero.get_vertices_per_face());
+//      info_update_if(i==3, "node_zero.translate\nnp.array(",node_zero.translate(node_centres.view(i)).get_vertices().to_string(),"),",node_zero.translate(node_centres.view(i)).get_vertices_per_face());
+//      info_update_if(i==3, "poly\nnp.array(", poly.get_vertices().to_string(), "),\n", poly.get_vertices_per_face());
+//      info_update_if(i==3, "node\nnp.array(", this_node.get_vertices().to_string(), "),\n", this_node.get_vertices_per_face());
+//      if (i==3) throw std::runtime_error("Halting for output");
+
+      node_is_null[i] = this_node.get_vertices().size(0) < 4u;/**/
       if (!node_is_null[i]){
         double this_node_volume = this_node.get_volume();
         node_is_null[i] = this_node_volume < 0. || brille::approx::scalar(this_node_volume, 0.);

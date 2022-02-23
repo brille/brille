@@ -1,6 +1,6 @@
 /* This file is part of brille.
 
-Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+Copyright © 2019-2022 Greg Tucker <gregory.tucker@ess.eu>
 
 brille is free software: you can redistribute it and/or modify it under the
 terms of the GNU Affero General Public License as published by the Free
@@ -75,19 +75,20 @@ namespace brille{
     -# `boolean`, true if `T` is a floating point datatype
     -# `Trel`, proportional to epsilon of the datatype `T`
     -# `Rrel`, proportional to epsilon of the datatype `R`.
-    -# `Tabs`, a small value `T(5e-9)`
-    -# `Rabs`, a small value `R(5e-9)`
+    -# `Tabs`, a small value `T(5e-12)`
+    -# `Rabs`, a small value `R(5e-12)`
     */
     template<class T, class R>
     std::tuple<bool,bool,T,R,T,R> tols(const int tol=1){
       T Trel = std::numeric_limits<T>::epsilon(); // zero for integer-type T
       R Rrel = std::numeric_limits<R>::epsilon(); // zero for integer-type R
-      T Tabs = T(5)/1000000000; // 0 or 5e-9
-      R Rabs = R(5)/1000000000; // 0 or 5e-9
+      T Tabs = T(5)/1000000000000000; // 0 or 5e-15
+      R Rabs = R(5)/1000000000000000; // 0 or 5e-15
       bool TorRisInteger = Trel*Rrel==0 || std::is_convertible<T,R>::value;
       bool TisFloatingPt = Trel > 0;
       Trel *= static_cast<T>(tol)*static_cast<T>(TOL_MULT);
       Rrel *= static_cast<R>(tol)*static_cast<R>(TOL_MULT);
+      info_update_if(tol > 1, "tol=", tol, " gives Trel=", Trel, " Rrel=", Rrel);
       return std::make_tuple(TorRisInteger, TisFloatingPt, Trel, Rrel, Tabs, Rabs);
     }
 
@@ -188,6 +189,7 @@ namespace brille{
     */
     template<class T, class R>
     bool scalar(const T a, const R b, const int tol=1){
+      info_update_if(tol > 1, "Using a multiplicitive tolerance of ", tol);
       auto [convertible, useT, Trel, Rrel, Tabs, Rabs] = tols<T,R>(tol);
       return convertible && _scalar(a, b, useT, Trel, Rrel, Tabs, Rabs);
     }

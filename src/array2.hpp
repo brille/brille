@@ -1,6 +1,6 @@
-/* This file is part of brille.
+/* This file is part of brille
 
-Copyright © 2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+Copyright © 2020-2022 Greg Tucker <gregory.tucker@ess.eu>
 
 brille is free software: you can redistribute it and/or modify it under the
 terms of the GNU Affero General Public License as published by the Free
@@ -14,29 +14,19 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+
 /*! \file
     \author Greg Tucker
     \brief Two dimensional shared memory Array2 class definition.
 */
 #ifndef BRILLE_ARRAY2_HPP
 #define BRILLE_ARRAY2_HPP
-// #include <functional>
-// #include <algorithm>
-// #include <numeric>
-// #include <vector>
-// #include <array>
-// #include <math.h>
-// #include <cassert>
-// #include <iostream>
 #include <memory>
-// #include <string>
 #include "subscript.hpp"
 #include "utilities.hpp"
 #include "comparisons.hpp"
-// #include "approx.hpp"
 #include "types.hpp"
 #include "array_.hpp"
-// #include "array.hpp"
 #include "hdf_interface.hpp"
 namespace brille {
 /*! \brief A multidimensional shared data array with operator overloads
@@ -82,47 +72,47 @@ public:
   const T* data(const ind_t& idx) const {return _data + this->l2l_d(idx);}
   const T* data(const ind_t& i0, const ind_t& i1) const { return _data + this->s2l_d(i0,i1);}
   const T* data(const shape_t& idx) const {return _data + this->s2l_d(idx);}
-  ind_t raw_size() const {return _num;}
-  ind_t raw_shift() const {return _shift;}
-  bool own() const {return _own;}
-  ref_t ref() const {return _ref;}
-  bool  ismutable(void) const {return _mutable;}
-  bool  isconst(void) const {return !_mutable;}
-  ind_t ndim(void) const {return 2;}
-  ind_t numel(void) const {
+  [[nodiscard]] ind_t raw_size() const {return _num;}
+  [[nodiscard]] ind_t raw_shift() const {return _shift;}
+  [[nodiscard]] bool own() const {return _own;}
+  [[nodiscard]] ref_t ref() const {return _ref;}
+  [[nodiscard]] bool  ismutable() const {return _mutable;}
+  [[nodiscard]] bool  isconst() const {return !_mutable;}
+  [[nodiscard]] ind_t ndim() const {return 2;}
+  [[nodiscard]] ind_t numel() const {
     return _shape[0]*_shape[1];
   }
-  ind_t size(const ind_t dim) const {
+  [[nodiscard]] ind_t size(const ind_t dim) const {
     assert(dim < 2);
     return _shape[dim];
   }
-  shape_t shape(void) const {return _shape;}
-  shape_t stride(void) const {return _stride;}
-  shape_t cstride() const {
+  [[nodiscard]] shape_t shape() const {return _shape;}
+  [[nodiscard]] shape_t stride() const {return _stride;}
+  [[nodiscard]] shape_t cstride() const {
     shape_t cs(_stride);
     for (auto& s: cs) s *= sizeof(T);
     return cs;
   }
-  sItr subItr() const { return sItr(_shape); }
-  sItr subItr(const shape_t& fix) const { return sItr(_shape, fix); }
+  [[nodiscard]] sItr subItr() const { return sItr(_shape); }
+  [[nodiscard]] sItr subItr(const shape_t& fix) const { return {_shape, fix}; }
   aItr valItr() const { return aItr(*this); }
-  bItr broadcastItr(const shape_t& other) const { return bItr(_shape, other); }
+  [[nodiscard]] bItr broadcastItr(const shape_t& other) const { return {_shape, other}; }
   template<class R>
   bItr broadcastItr(const Array2<R>& other) const {return bItr(_shape, other.shape());}
-  bool is_column_ordered() const { // stride {1,2,4,8} is column ordered
+  [[nodiscard]] bool is_column_ordered() const { // stride {1,2,4,8} is column ordered
     return _stride[0] <= _stride[1];
   }
-  bool is_row_ordered() const { // stride {8,4,2,1} is row ordered
+  [[nodiscard]] bool is_row_ordered() const { // stride {8,4,2,1} is row ordered
     return _stride[1] <= _stride[0];
   }
-  bool is_contiguous() const {
+  [[nodiscard]] bool is_contiguous() const {
     shape_t expected({1, 1});
     if (this->is_row_ordered())    expected[0] = _shape[1];
     if (this->is_column_ordered()) expected[1] = _shape[0];
     // if a dimension is 1 (or 0?) then its stride does not impact here
     return (_shape[0]<2||expected[0]==_stride[0]) && (_shape[1]<2||expected[1]==_stride[1]);
   }
-  bool is_vector() const {
+  [[nodiscard]] bool is_vector() const {
     return (_shape[0] == 1u || _shape[1] == 1u);
   }
   // empty initializer
@@ -284,7 +274,7 @@ public:
   // the reference pointer type does not need to be P since a new raw array is made
   // handles also Array2<T>(Array2<T>&) reference type conversion
   template<class R>
-  Array2(const Array2<R>& other)
+  explicit Array2(const Array2<R>& other)
   : _shift(0u), _mutable(true), _shape(other.shape())
   {
     this->set_stride();
@@ -317,20 +307,20 @@ public:
         T& operator[](const shape_t& sub)       {return _data[this->s2l_d(sub)];}
   const T& operator[](const shape_t& sub) const {return _data[this->s2l_d(sub)];}
 protected: // so inherited classes can calculate subscript indexes into their data
-  ind_t l2l_d(const ind_t l) const {
+  [[nodiscard]] ind_t l2l_d(const ind_t l) const {
     return l + _shift;
   }
-  ind_t ij2l_d(const ind_t x, const ind_t y) const {
+  [[nodiscard]] ind_t ij2l_d(const ind_t x, const ind_t y) const {
     return sub2lin(x, y, _stride) + _shift;
   }
-  ind_t s2l_d(const shape_t& s) const {
+  [[nodiscard]] ind_t s2l_d(const shape_t& s) const {
     return sub2lin(s, _stride) + _shift;
   }
 private:
-  ind_t size_from_shape(const shape_t& s) const {
+  [[nodiscard]] ind_t size_from_shape(const shape_t& s) const {
     return s[0]*s[1];
   }
-  ind_t size_from_shape() const {return this->size_from_shape(_shape);}
+  [[nodiscard]] ind_t size_from_shape() const {return this->size_from_shape(_shape);}
   void construct() {
     _num = this->size_from_shape();
     if (_num > 0){
@@ -361,7 +351,7 @@ private:
       throw std::runtime_error(msg);
     }
   }
-  shape_t calculate_stride(const shape_t& shape) const {
+  [[nodiscard]] shape_t calculate_stride(const shape_t& shape) const {
     shape_t stride{{1,1}};
     if (_stride[0] < _stride[1]){
       stride[1] = shape[0];
@@ -416,17 +406,17 @@ public:
   template<size_t Nel> bool set(const ind_t i, const std::array<T,Nel>& in);
   T set(const shape_t& sub, T in);
   Array2<T>& append(const ind_t, const Array2<T>&);
-  std::string to_string() const;
-  std::string to_string(const ind_t) const;
+  [[nodiscard]] std::string to_string() const;
+  [[nodiscard]] std::string to_string(const ind_t) const;
 
   Array2<T>& reshape(const shape_t& ns);
   Array2<T>& resize(const shape_t&, T init=T(0));
   template<class I> Array2<T>& resize(const I, T init=T(0));
-  bool all(ind_t n=0) const;
-  bool any(ind_t n=0) const;
-  ind_t count(ind_t n=0) const;
-  ind_t first(ind_t n=0) const;
-  ind_t last(ind_t n=0) const;
+  [[nodiscard]] bool all(ind_t n=0) const;
+  [[nodiscard]] bool any(ind_t n=0) const;
+  [[nodiscard]] ind_t count(ind_t n=0) const;
+  [[nodiscard]] ind_t first(ind_t n=0) const;
+  [[nodiscard]] ind_t last(ind_t n=0) const;
   // bool all() const;
   // bool any() const;
   // ind_t count() const;
@@ -437,25 +427,29 @@ public:
   ind_t count(T val, ind_t n=0) const;
   ind_t first(T val, ind_t n=0) const;
   ind_t last(T val, ind_t n=0) const;
-  Array2<int> round() const;
-  Array2<int> floor() const;
-  Array2<int> ceil() const;
-  Array2<T> sum(ind_t dim=0) const;
-  Array2<T> prod(ind_t dim=0) const;
+  [[nodiscard]] Array2<int> round() const;
+  [[nodiscard]] Array2<int> floor() const;
+  [[nodiscard]] Array2<int> ceil() const;
+  Array2<T> sum(ind_t dim) const;
+  Array2<T> prod(ind_t dim) const;
   Array2<T> min(ind_t dim=0) const;
   Array2<T> max(ind_t dim=0) const;
   T sum() const;
   T prod() const;
   template<class R, size_t Nel>
-  bool match(ind_t i, ind_t j, const std::array<R,Nel>& rot, int order=1) const;
-  bool match(ind_t i, ind_t j, ops op=ops::plus, T val=T{0}) const;
-  bool all(cmp expr, T val) const;
-  bool any(cmp expr, T val) const;
-  ind_t first(cmp expr, T val) const;
-  ind_t last(cmp expr, T val) const;
-  ind_t count(cmp expr, T val) const;
-  Array2<bool> is(cmp expr, T val) const;
-  std::vector<ind_t> find(cmp expr, T val) const;
+  bool match(ind_t i, ind_t j, const std::array<R,Nel>& rot, int order=1, int tol=1) const;
+  bool match(ind_t i, ind_t j, ops op=ops::plus, T val=T{0}, int tol=1) const;
+  bool all(cmp expr, T val, int tol=1) const;
+  bool any(cmp expr, T val, int tol=1) const;
+  ind_t first(cmp expr, T val, int tol=1) const;
+  ind_t last(cmp expr, T val, int tol=1) const;
+  ind_t count(cmp expr, T val, int tol=1) const;
+  template<class R> ind_t first(cmp expr, const Array2<R>& val, int tol=1) const;
+  template<class R> ind_t last(cmp expr, const Array2<R>& val, int tol=1) const;
+  template<class R> ind_t count(cmp expr, const Array2<R>& val, int tol=1) const;
+  template<class R> std::vector<ind_t> find(cmp expr, const Array2<R>& val, int tol=1) const;
+  Array2<bool> is(cmp expr, T val, int tol=1) const;
+  std::vector<ind_t> find(cmp expr, T val, int tol=1) const;
   /*!\brief Determine the per-element truth-value of this Array2 compared with provided data
 
   \param expr The comparison to be performed
@@ -464,10 +458,11 @@ public:
   \return The truth value of the provided comparison between the stored and
           provided data, will be the same shape a this Array2.
 
-  \note The shape of the compared-against Array2 must match or be broadcastable
+  \note The shape of the compared-against Array2 must match or be broadcastab
+   le
         to the shape of this Array2.
   */
-  template<class R> Array2<bool> is(cmp expr, const Array2<R>& that) const;
+  template<class R> Array2<bool> is(cmp expr, const Array2<R>& that, int tol=1) const;
   /*!\brief Determine the per-row truth-value of this Array2 compared with provided data
 
   \param expr The comparison to be performed
@@ -477,7 +472,8 @@ public:
   \return The per-row truth value of the provided comparison between the stored
           and provided data.
   */
-  template<class R> std::vector<bool> row_is(cmp expr, const std::vector<R>& row) const;
+  template<class R> std::vector<bool> row_is(cmp expr, const std::vector<R>& row, int tol=1) const;
+  template<class R> Array2<bool> row_is(cmp expr, const Array2<R> & that, int tol=1) const;
   /*!\brief Determine the element truth-value of this Array2 compared with provided data
 
   \param expr The comparison to be performed
@@ -487,11 +483,12 @@ public:
   \return The per-element truth value of the provided comparison between the
           stored and provided data.
   */
-  template<class R> std::vector<bool> each_is(cmp expr, const std::vector<R>& vals) const;
-  template<class R> bool is(const Array2<R>& that) const;
-  std::vector<bool> is_unique() const;
-  std::vector<ind_t> unique_idx() const;
-  Array2<T> unique() const;
+  template<class R> std::vector<bool> each_is(cmp expr, const std::vector<R>& vals, int tol=1) const;
+  template<class R> bool is(const Array2<R>& that, int tol=1) const;
+  template<class R> bool operator==(const Array2<R>& that) const {return this->is(that);}
+  [[nodiscard]] std::vector<bool> is_unique(int tol=1) const;
+  [[nodiscard]] std::vector<ind_t> unique_idx(int tol=1) const;
+  Array2<T> unique(int tol=1) const;
   Array2<T>  operator-() const;
   Array2<T>& operator +=(const T&);
   Array2<T>& operator -=(const T&);
@@ -525,6 +522,10 @@ public:
 
   Array2<T> contiguous_copy() const;
   Array2<T> contiguous_row_ordered_copy() const;
+
+  Array2<T> abs() const;
+  template<class R> bool is_permutation(const Array2<R>& other, int tol=1) const;
+  template<class R> std::vector<ind_t> permutation_vector(const Array2<R>& other, int tol=1) const;
   //
 #if USE_HIGHFIVE
   // Read in from a file
@@ -608,7 +609,7 @@ public:
 
   \param a The Array2 to be iterated
   */
-  Array2It(const Array2<T>& a)
+  explicit Array2It(const Array2<T>& a)
   : array(a), subit(a.shape()) // initialises to first element, e.g., {0,…,0}
   {}
   //! Return this ArrayIt with the iterator starting at index {0,0}
@@ -625,7 +626,7 @@ public:
     return *this;
   }
   //! Return the subscript iterator
-  const SubIt2<ind_t>& iterator() const {return subit;}
+  [[nodiscard]] const SubIt2<ind_t>& iterator() const {return subit;}
   /*!\brief Check for subscript iterator equivalency
 
   \note There is no check for held Array2 equivalency

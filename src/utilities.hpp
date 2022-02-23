@@ -1,6 +1,6 @@
 /* This file is part of brille.
 
-Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+Copyright © 2019-2022 Greg Tucker <gregory.tucker@ess.eu>
 
 brille is free software: you can redistribute it and/or modify it under the
 terms of the GNU Affero General Public License as published by the Free
@@ -21,15 +21,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief Various utility functions, mostly linear algebra
 */
-// #include <cmath>
-// #include <type_traits>
-// #include <limits>
-// #include <stdexcept>  // for std::overflow_error
-// #include <string>
-// #include <math.h>
-// #include <numeric>
-// #include <iostream>
-// #include "debug.hpp"
 #include "approx.hpp"
 
 
@@ -648,9 +639,119 @@ template<typename S,typename U> S u2s(const U u);
 //! Convert signed integers to unsigned integers
 template<typename U,typename S> U s2u(const S s);
 
+
+template<class T>
+bool add_if_missing(std::vector<T>& vector, const T value) {
+  if (std::find(vector.begin(), vector.end(), value) == vector.end()){
+    vector.push_back(value);
+    return true;
+  }
+  return false;
+}
+
+template<class I>
+std::tuple<bool, I> all_present(const std::vector<std::vector<I>> & lists) {
+  I maximum{0};
+  for (const auto &list: lists) for (const auto &value: list) if (value > maximum) maximum = value;
+  for (I index = 0; index < maximum + 1; ++index) {
+    bool found{false};
+    for (const auto &list: lists) {
+      for (const auto &value: list) {
+        if (value == index) {
+          found = true;
+          break;
+        }
+      }
+    }
+    if (!found) return std::make_tuple(false, maximum);
+  }
+  return std::make_tuple(true, maximum);
+}
+
+template<class I>
+std::vector<std::vector<I>> invert_lists(const std::vector<std::vector<I>> & lists){
+  auto [ok, maximum] = all_present(lists);
+  assert(ok);
+  std::vector<std::vector<I>> inverted;
+  inverted.reserve(maximum);
+  for (I index=0; index < maximum + 1; ++index){
+    std::vector<I> one;
+    one.reserve(lists.size());
+    for (size_t list_index=0; list_index < lists.size(); ++list_index){
+      const auto & list{lists[list_index]};
+      if (std::find(list.begin(), list.end(), index) != list.end()){
+        one.push_back(static_cast<I>(list_index));
+      }
+    }
+    inverted.push_back(one);
+  }
+  return inverted;
+}
+
+template<class I>
+bool unordered_list_in_lists(const std::vector<I>& list, const std::vector<std::vector<I>>& lists){
+  for (const auto & x: lists) if (x.size() == list.size()){
+    bool equal{true};
+    for (const auto & y: list) if (std::find(x.begin(), x.end(), y) == x.end()) equal = false;
+    if (equal) return true;
+  }
+  return false;
+}
+
+template<class I1, class I2>
+std::enable_if_t<std::is_convertible_v<I2, I1>, void>
+convert_lists_type(const std::vector<std::vector<I2>>& in, std::vector<std::vector<I1>>& out){
+  out.clear();
+  out.reserve(in.size());
+  auto converter = [](const I2& i2)->I1{return static_cast<I1>(i2);};
+  for (const auto & x: in){
+    std::vector<I1> y;
+    y.reserve(x.size());
+    std::transform(x.begin(), x.end(), std::back_inserter(y), converter);
+    out.push_back(y);
+  }
+}
+
+template<class I1, class I2>
+std::enable_if_t<std::is_convertible_v<I2, I1>, std::vector<std::vector<I1>>>
+convert_lists_type(const std::vector<std::vector<I2>>& lists){
+  std::vector<std::vector<I1>> out;
+  convert_lists_type(lists, out);
+  return out;
+}
+
 #include "utilities.tpp"
 
   } // namespace utils
+
+  //! Return a new vector containing the reversed elements of a vector
+  template<class T>
+  std::vector<T> reverse(const std::vector<T> &x) {
+    std::vector<T> r;
+    for (size_t i = x.size(); i--;) r.push_back(x[i]);
+    return r;
+  }
+
+  //! Return a new vector with each element-vector's elements reversed
+  template<class T>
+  std::vector<std::vector<T>> reverse_each(const std::vector<std::vector<T>> &x) {
+    std::vector<std::vector<T>> r;
+    std::transform(x.begin(), x.end(), std::back_inserter(r), [](const std::vector<T> &y) { return reverse(y); });
+    // for (auto i: x) r.push_back(reverse(i));
+    return r;
+  }
+
+  //! Find the unique elements elements of a vector
+  template<typename T>
+  std::vector<T> unique(const std::vector<T> &x) {
+    std::vector<T> out;
+    out.push_back(x[0]);
+    for (auto &v: x)
+      if (std::find(out.begin(), out.end(), v) == out.end())
+        out.push_back(v);
+    return out;
+  }
+
 } // namespace brille
 
 

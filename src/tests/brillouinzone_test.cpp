@@ -40,43 +40,88 @@ TEST_CASE("Primitive Hexagonal BrillouinZone instantiation","[brillouinzone]"){
   BrillouinZone bz(r);
   REQUIRE(write_read_test(bz, "primitive_hexagonal"));
 }
+//
+//TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
+//  std::string spgr;
+//  SECTION("Primitive"){
+//    spgr = "P 1";
+//  }
+//  SECTION("Body-centred"){
+//    spgr = "Im-3m";
+//  }
+//  SECTION("Face-centred"){
+//    spgr = "Fd-3c"; // the previous choice, Fmm2 is orthorhombic. Trying to use it with a=b=c prevents the BrillouinZone algorithm from working
+//  }
+//  Direct d(2.87,2.87,2.87,90.,90.,90.,spgr);
+//  Reciprocal r = d.star();
+//  BrillouinZone bz(r);
+//
+//  std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
+//  std::uniform_real_distribution<double> distribution(-5.0,5.0);
+//
+//  int nQ = 3333;
+//  LQVec<double> Q(r, nQ); // holds an (nQ, 3) shaped Array or Array2
+//  for (auto& v: Q.valItr()) v = distribution(generator);
+//
+//  LQVec<double> q(r,nQ);
+//  LQVec<int> tau(r,nQ);
+//
+//  REQUIRE( bz.moveinto(Q,q,tau) ); // success indicated by return of true
+//  auto inside = bz.isinside(q);
+//  REQUIRE(std::count(inside.begin(), inside.end(), false) == 0);
+//  LQVec<double> Qmq = Q-q;
+//  LQVec<double> Qmqmtau = Q-(q+tau);
+//  for (auto i: Q.subItr()){
+//    REQUIRE(Q[i] == Approx(q[i] + tau[i]));
+//    REQUIRE(brille::approx::scalar(Qmq[i], static_cast<double>(tau[i])));
+//    REQUIRE(brille::approx::scalar(std::abs(Qmqmtau[i]), 0.));
+//  }
+//  REQUIRE(write_read_test(bz, spgr));
+//}
+
 
 TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
   std::string spgr;
+  auto run_tests = [](const std::string & spacegroup){
+    Direct d(2.87,2.87,2.87,90.,90.,90.,spacegroup);
+    Reciprocal r = d.star();
+    BrillouinZone bz(r);
+
+    std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
+    std::uniform_real_distribution<double> distribution(-5.0,5.0);
+
+    int nQ = 3333;
+    LQVec<double> Q(r, nQ); // holds an (nQ, 3) shaped Array or Array2
+    for (auto& v: Q.valItr()) v = distribution(generator);
+
+    LQVec<double> q(r,nQ);
+    LQVec<int> tau(r,nQ);
+
+    REQUIRE( bz.moveinto(Q,q,tau) ); // success indicated by return of true
+    auto inside = bz.isinside(q);
+    REQUIRE(std::count(inside.begin(), inside.end(), false) == 0);
+    LQVec<double> Qmq = Q-q;
+    LQVec<double> Qmqmtau = Q-(q+tau);
+    for (auto i: Q.subItr()){
+      REQUIRE(Q[i] == Approx(q[i] + tau[i]));
+      REQUIRE(brille::approx::scalar(Qmq[i], static_cast<double>(tau[i])));
+      REQUIRE(brille::approx::scalar(std::abs(Qmqmtau[i]), 0.));
+    }
+    REQUIRE(write_read_test(bz, spacegroup));
+  };
   SECTION("Primitive"){
     spgr = "P 1";
+    run_tests(spgr);
   }
   SECTION("Body-centred"){
     spgr = "Im-3m";
+    run_tests(spgr);
   }
   SECTION("Face-centred"){
     spgr = "Fd-3c"; // the previous choice, Fmm2 is orthorhombic. Trying to use it with a=b=c prevents the BrillouinZone algorithm from working
+    run_tests(spgr);
   }
-  Direct d(2.87,2.87,2.87,90.,90.,90.,spgr);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
 
-  std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
-  std::uniform_real_distribution<double> distribution(-5.0,5.0);
-
-  int nQ = 3333;
-  LQVec<double> Q(r, nQ); // holds an (nQ, 3) shaped Array or Array2
-  for (auto& v: Q.valItr()) v = distribution(generator);
-
-  LQVec<double> q(r,nQ);
-  LQVec<int> tau(r,nQ);
-
-  REQUIRE( bz.moveinto(Q,q,tau) ); // success indicated by return of true
-  auto inside = bz.isinside(q);
-  REQUIRE(std::count(inside.begin(), inside.end(), false) == 0);
-  LQVec<double> Qmq = Q-q;
-  LQVec<double> Qmqmtau = Q-(q+tau);
-  for (auto i: Q.subItr()){
-    REQUIRE(Q[i] == Approx(q[i] + tau[i]));
-    REQUIRE(brille::approx::scalar(Qmq[i], static_cast<double>(tau[i])));
-    REQUIRE(brille::approx::scalar(std::abs(Qmqmtau[i]), 0.));
-  }
-  REQUIRE(write_read_test(bz, spgr));
 }
 
 TEST_CASE("BrillouinZone moveinto hexagonal","[brillouinzone][moveinto]"){
@@ -246,4 +291,15 @@ TEST_CASE("No irreducible Brillouin zone for inconsistent parameters and symmetr
   Direct dlat(a,a,c, alpha,alpha,gamma, spacegroup);
   Reciprocal rlat = dlat.star();
   REQUIRE_THROWS_WITH( BrillouinZone(rlat), "Failed to find an irreducible Brillouin zone."); 
+}
+
+TEST_CASE("Nb irreducible Brillouin Zone", "[brillouinzone]"){
+  // The conventional cell for Nb
+  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
+  Reciprocal r = d.star();
+  BrillouinZone bz(r);
+  auto fbz = bz.get_polyhedron();
+  auto irbz = bz.get_ir_polyhedron();
+  auto mult = bz.get_pointgroup_symmetry().size();
+  REQUIRE(irbz.get_volume() == Approx(fbz.get_volume() / mult));
 }

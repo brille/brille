@@ -1358,7 +1358,7 @@ REAL estimate(int elen, REAL *e)
 /*                                                                           */
 /*****************************************************************************/
 
-REAL orient2dfast(REAL *pa, REAL *pb, REAL *pc)
+REAL orient2dfast(const REAL *pa, const REAL *pb, const REAL *pc)
 {
   REAL acx, bcx, acy, bcy;
 
@@ -1369,7 +1369,7 @@ REAL orient2dfast(REAL *pa, REAL *pb, REAL *pc)
   return acx * bcy - acy * bcx;
 }
 
-REAL orient2dexact(REAL *pa, REAL *pb, REAL *pc)
+REAL orient2dexact(const REAL *pa, const REAL *pb, const REAL *pc)
 {
   INEXACT REAL axby1, axcy1, bxcy1, bxay1, cxay1, cxby1;
   REAL axby0, axcy0, bxcy0, bxay0, cxay0, cxby0;
@@ -1411,7 +1411,7 @@ REAL orient2dexact(REAL *pa, REAL *pb, REAL *pc)
   return w[wlength - 1];
 }
 
-REAL orient2dslow(REAL *pa, REAL *pb, REAL *pc)
+REAL orient2dslow(const REAL *pa, const REAL *pb, const REAL *pc)
 {
   INEXACT REAL acx, acy, bcx, bcy;
   REAL acxtail, acytail;
@@ -1452,7 +1452,7 @@ REAL orient2dslow(REAL *pa, REAL *pb, REAL *pc)
   return deter[deterlen - 1];
 }
 
-REAL orient2dadapt(REAL *pa, REAL *pb, REAL *pc, REAL detsum)
+REAL orient2dadapt(const REAL *pa, const REAL *pb, const REAL *pc, REAL detsum)
 {
   INEXACT REAL acx, acy, bcx, bcy;
   REAL acxtail, acytail, bcxtail, bcytail;
@@ -1532,7 +1532,7 @@ REAL orient2dadapt(REAL *pa, REAL *pb, REAL *pc, REAL detsum)
   return(D[Dlength - 1]);
 }
 
-REAL orient2d(REAL *pa, REAL *pb, REAL *pc)
+REAL orient2d(const REAL *pa, const REAL *pb, const REAL *pc)
 {
   REAL detleft, detright, det;
   REAL detsum, errbound;
@@ -2559,7 +2559,7 @@ REAL incircleslow(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
   return deter[deterlen - 1];
 }
 
-REAL incircleadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL permanent)
+REAL incircleadapt(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd, REAL permanent)
 {
   INEXACT REAL adx, bdx, cdx, ady, bdy, cdy;
   REAL det, errbound;
@@ -3131,7 +3131,7 @@ REAL incircleadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL permanent)
   return finnow[finlength - 1];
 }
 
-REAL incircle(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
+REAL incircle(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd)
 {
   REAL adx, bdx, cdx, ady, bdy, cdy;
   REAL bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;

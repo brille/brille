@@ -27,12 +27,12 @@ TEST_CASE("array copying and equivalency","[linalg]"){
   }
 }
 TEST_CASE("approx","[approx]"){
-  // for some reason this compared float(1e-7) with double(1e-15) which has a difference
-  // *of* 1e-7 and was only deemed approximately the same because a check was made whether
-  // the result was less than 0.002384, which is not particularly useful.
-  // Switching this 1e-7 to 1e-9 checks whether (1e-9 - 1e-15) < 3e-9, the absolute tolerance
-  float  f[16] = {1e-9f,1/2,-1/3,1/4,1/5,1/6,-1/7,1/8,1/9,-1/10,1/11,1/12,-1/13,1/14,1/15,1/16};
-  double d[16] ={1e-15,1/2,-1/3,1/4,1/5,1/6,-1/7,1/8,1/9,-1/10,1/11,1/12,-1/13,1/14,1/15,1/16};
+  float  f[16];
+  double d[16];
+  for (int i = 1; i < 16; ++i) f[i] = float(1) / float(i + 1);
+  for (int i = 1; i < 16; ++i) d[i] = double(1) / double(i + 1);
+  f[0] = 1e-15f; // this is smaller than the absolute tolerance in brille::approx ¯\_(ツ)_/¯
+  d[0] = 1e-15;
   SECTION("brille::approx::scalar"){ for (int i=0; i<16; i++) REQUIRE( brille::approx::scalar(f[i],d[i]) ); }
   SECTION("brille::approx::array"){  REQUIRE( brille::approx::array<float,double,2,8>(f,d) ); }
   SECTION("brille::approx::matrix"){ REQUIRE( brille::approx::matrix<float,double,4>(f,d) ); }

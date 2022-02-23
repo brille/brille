@@ -19,30 +19,55 @@ static bool lists_match(const std::vector<std::vector<T>>& a, const std::vector<
   return true;
 }
 
+template<class T>
+static bool equivalent_permutations(const std::vector<T>& a, const std::vector<T>& b){
+    if (a.size() != b.size()) return false;
+    for (size_t roll=0; roll < a.size(); ++roll){
+        bool ok{true};
+        for (size_t i=0; i < a.size(); ++i) ok &= a[i] == b[(i + roll) % a.size()];
+        if (ok) return ok;
+    }
+    return false;
+}
+
 TEST_CASE("Polyhedron instantiation","[polyhedron]"){
   std::vector<std::array<double,3>> va_verts{{1,1,0},{2,0,0},{1,1,1},{0,0,0}};
   auto verts = bArray<double>::from_std(va_verts);
   std::vector<std::vector<int>> vpf{{0,1,3},{0,2,1},{0,3,2},{1,2,3}};
+  std::vector<std::array<double,3>> va_norms{{0,0,-1},{1,1,0},{-1,1,0},{0,-1,1}};
+  auto norms = bArray<double>::from_std(va_norms);
+  norms /= norm(norms);  // ensure the normal vectors have length unity
   Polyhedron poly;
+  auto checks = [verts, norms, vpf](const Polyhedron& p){
+    // verify that the vertices are the same
+    auto pv = p.get_vertices();
+    for (const auto & i: verts.subItr()){
+      REQUIRE(verts[i] == Approx(pv[i]));
+    }
+    // verify that the anticipated faces were found:
+    size_t num_faces_matching{0};
+    auto pvpf = p.get_vertices_per_face();
+    auto pn = p.get_normals();
+    for (size_t i=0; i < pvpf.size(); ++i){
+      for (size_t j=0; j < vpf.size(); ++j){
+        if (equivalent_permutations(pvpf[i], vpf[j])){
+          ++num_faces_matching;
+          REQUIRE(pn.view(i) == norms.view(j));
+        }
+      }
+    }
+    REQUIRE( num_faces_matching == vpf.size() );
+    REQUIRE( p.get_volume() == Approx(2./6.)); // [(200)×(110)]⋅(111)/6
+  };
   SECTION("Convex Hull creation"){
     poly = Polyhedron(verts);
+    checks(poly);
   }
   SECTION("Vertices and Faces creation"){
     poly = Polyhedron(verts, vpf);
+    checks(poly);
   }
-  // verify that the anticipated faces were found:
-  size_t num_faces_matching{0};
-  for (auto cf: poly.get_vertices_per_face()){
-    for (auto f: vpf){
-      if (cf.size()==f.size() &&
-         ((cf[0]==f[0] && cf[1]==f[1] && cf[2]==f[2]) ||
-          (cf[0]==f[1] && cf[1]==f[2] && cf[2]==f[0]) ||
-          (cf[0]==f[2] && cf[1]==f[0] && cf[2]==f[1])   )
-       ) ++num_faces_matching;
-    }
-  }
-  REQUIRE( num_faces_matching == vpf.size() );
-  REQUIRE( poly.get_volume() == Approx(2./6.)); // [(200)×(110)]⋅(111)/6
+
 }
 
 TEST_CASE("Polyhedron intersection","[polyhedron]"){
@@ -53,6 +78,7 @@ TEST_CASE("Polyhedron intersection","[polyhedron]"){
   double x = 0.143963;
   std::array<double,3> boxmin{2*x,0,0}, boxmax{3*x,x,x};
   Polyhedron box = polyhedron_box(boxmin,boxmax);
+  REQUIRE(box.get_volume() == Approx(x*x*x));
   Polyhedron poly_box = poly.intersection(box);
   Polyhedron box_poly = box.intersection(poly);
   REQUIRE(poly_box.get_volume() == Approx(box.get_volume()/2));
@@ -64,18 +90,22 @@ TEST_CASE("Polyhedron bisect","[polyhedron]"){
   std::vector<std::array<double,3>> v{{a,0,0},{0,0,c},{a,a,c},{a,0,c},{a,a,0},{0,0,0}};
   auto poly = Polyhedron(bArray<double>::from_std(v));
   auto doubled_poly = poly + poly.mirror();
-  bArray<double> n({1,3}, 0.), p({1,3}, 0.);
+  bArray<double> pa({1, 3}, 0.), pb({1, 3}, 0.), pc({1, 3}, 0.);
+  pa.val(0, 1) = 1.0;
   SECTION("Hanging line"){
-    n.val(0,0) = -1;
+    // n = (-1 0 0) --> (0, 1, 0), (0, 0, 0), (0, 0, 1)
+    pc.val(0, 2) = 1;
   }
   SECTION("Hanging triangular face"){
-    n.val(0,2) = -1;
+    // n = (0 0 -1) -> (0, 1, 0), (0, 0, 0), (-1, 0, 0)
+    pc.val(0, 0) = -1;
   }
   SECTION("Hanging rectangular face"){
-    n.val(0,0) = -1;
-    n.val(0,1) = 1;
+    // n = (-1, 1, 0) -> (1, 1, 0), (0, 0, 0), (0, 0, 1)
+    pa.val(0, 0) = 1;
+    pc.val(0, 2) = 1;
   }
-  auto cut = Polyhedron::bisect(doubled_poly, n, p);
+  auto cut = Polyhedron::bisect(doubled_poly, pa, pb, pc);
   REQUIRE(cut.get_volume() == Approx(poly.get_volume()));
   REQUIRE(cut.get_vertices().size(0) == 6u);
 }
@@ -131,7 +161,7 @@ TEST_CASE("Polyhedron intersection La2Zr2O7","[polyhedron][intersection]"){
   REQUIRE(cbp.get_vertices().size(0) == 10u);
 }
 
-TEST_CASE("Small face polyhedron convex hull","[!shouldfail][polyhedron][convexhull]"){
+TEST_CASE("Small face polyhedron convex hull","[polyhedron][convexhull]"){
   std::vector<std::array<double,3>> va_verts
   {{0.0846, 0.0217, 0.1775},
    {0.0846, 0.0652, 0.1775},
@@ -205,3 +235,119 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     fs::remove(filepath);
 #endif //USE_HIGHFIVE
 }
+
+TEST_CASE("Plane convention conversion","[plane]"){
+  std::vector<std::array<double, 3>> raw_v{
+    {1, 0, 0}, {0, 1, 0}, {0, 1, 1}, {1, 1, 0}, {0, 1, 1}, {1, 0, 1}, {1, 1, 1}, {1, 1, -2}, {1, -1, 0}, {2, 1, 0}
+  };
+  auto v = bArray<double>::from_std(raw_v);
+  auto [b, c] = plane_points_from_normal(v, v);
+  auto n = three_point_normal(v, b, c);
+  for (ind_t i=0; i < v.size(0); ++i){
+    REQUIRE( dot(v.view(i), n.view(i)).sum() == Approx((norm(v.view(i)) * norm(n.view(i))).sum()));
+  }
+}
+
+TEST_CASE("Doubled face","[polyhedron]"){
+  std::vector<std::array<double,3>> poly_vertices {
+    { 0.00000000000000000000000000000000000000000000000000,  0.66666693318353020814015508221928030252456665039062,  0.49999999999999994448884876874217297881841659545898},
+    { 0.00000000000000000000000000000000000000000000000000,  0.66666693318353020814015508221928030252456665039062, -0.49999999999999972244424384371086489409208297729492},
+    { 0.57735050000000009973177839128766208887100219726562, -0.33333346659176532611468246614094823598861694335938,  0.49999999999999988897769753748434595763683319091797},
+    { 0.57735050000000009973177839128766208887100219726562,  0.33333346659176521509238000362529419362545013427734,  0.49999999999999994448884876874217297881841659545898},
+    { 0.57735050000000009973177839128766208887100219726562, -0.33333346659176521509238000362529419362545013427734, -0.49999999999999972244424384371086489409208297729492},
+    { 0.57735050000000009973177839128766208887100219726562,  0.33333346659176477100317015356267802417278289794922, -0.49999999999999966693309261245303787291049957275391},
+    {-0.57735050000000009973177839128766208887100219726562,  0.33333346659176521509238000362529419362545013427734,  0.49999999999999983346654630622651893645524978637695},
+    {-0.57735050000000009973177839128766208887100219726562,  0.33333346659176510407007754110964015126228332519531, -0.49999999999999983346654630622651893645524978637695},
+    {-0.00000000000000011102230246251565404236316680908203, -0.66666693318353020814015508221928030252456665039062,  0.49999999999999977795539507496869191527366638183594},
+    {-0.57735050000000009973177839128766208887100219726562, -0.33333346659176499304777507859398610889911651611328,  0.49999999999999977795539507496869191527366638183594},
+    {-0.00000000000000022204460492503130808472633361816406, -0.66666693318353020814015508221928030252456665039062, -0.49999999999999983346654630622651893645524978637695},
+    {-0.57735050000000009973177839128766208887100219726562, -0.33333346659176499304777507859398610889911651611328, -0.49999999999999988897769753748434595763683319091797}
+  };
+  std::vector<std::vector<int>> poly_faces {
+    {2, 3, 0, 6, 9, 8},
+    { 1, 5, 4, 10, 11, 7 },
+    { 4, 2, 8, 10 },
+    { 0, 1, 7, 6 },
+    { 0, 3, 5, 1 },
+    { 3, 2, 4, 5 },
+    { 6, 7, 11, 9 },
+    { 8, 9, 11, 10 }
+  };
+
+  std::vector<std::array<double,3>> cube_vertices {
+    {-0.23094020000000003989271135651506483554840087890625, -0.66666693318353020814015508221928030252456665039062, -0.49999999999999988897769753748434595763683319091797},
+    {-0.23094020000000003989271135651506483554840087890625, -0.54545476351379740265201689908280968666076660156250, -0.49999999999999988897769753748434595763683319091797},
+    {-0.23094020000000003989271135651506483554840087890625, -0.54545476351379740265201689908280968666076660156250, -0.37499999999999988897769753748434595763683319091797},
+    {-0.23094020000000003989271135651506483554840087890625, -0.66666693318353020814015508221928030252456665039062, -0.37499999999999988897769753748434595763683319091797},
+    {-0.11547010000000001994635567825753241777420043945312, -0.66666693318353020814015508221928030252456665039062, -0.49999999999999988897769753748434595763683319091797},
+    {-0.11547010000000001994635567825753241777420043945312, -0.54545476351379740265201689908280968666076660156250, -0.49999999999999988897769753748434595763683319091797},
+    {-0.11547010000000001994635567825753241777420043945312, -0.54545476351379740265201689908280968666076660156250, -0.37499999999999988897769753748434595763683319091797},
+    {-0.11547010000000001994635567825753241777420043945312, -0.66666693318353020814015508221928030252456665039062, -0.37499999999999988897769753748434595763683319091797}
+  };
+  std::vector<std::vector<int>> cube_faces {
+    {3, 0, 4, 7},
+    { 3, 2, 1, 0 },
+    { 0, 1, 5, 4 },
+    { 3, 7, 6, 2 },
+    { 7, 4, 5, 6 },
+    { 2, 6, 5, 1 }
+  };
+
+  std::vector<std::array<double, 3>> node_vertices {
+    {-0.11547010000000001994635567825753241777420043945312, -0.54545476351379740265201689908280968666076660156250, -0.49999999999999988897769753748434595763683319091797},
+    {-0.11547010000000001994635567825753241777420043945312, -0.54545476351379740265201689908280968666076660156250, -0.37499999999999988897769753748434595763683319091797},
+    {-0.11547010000000001994635567825753241777420043945312, -0.60000023986517725393952105150674469769001007080078, -0.49999999999999988897769753748434595763683319091797},
+    {-0.20994563636363644532067951331555377691984176635742, -0.54545476351379740265201689908280968666076660156250, -0.49999999999999988897769753748434595763683319091797},
+    {-0.11547010000000001994635567825753241777420043945312, -0.60000023986517725393952105150674469769001007080078, -0.37499999999999988897769753748434595763683319091797},
+    {-0.20994563636363644532067951331555377691984176635742, -0.54545476351379740265201689908280968666076660156250, -0.37499999999999988897769753748434595763683319091797}
+  };
+  std::vector<std::vector<int>> node_faces {
+    {0, 2, 3},
+    { 1, 5, 4 },
+    { 0, 1, 4, 2 },
+    { 1, 0, 3, 5 },
+    { 3, 2, 4, 5 }
+  };
+
+  Polyhedron poly(bArray<double>::from_std(poly_vertices), poly_faces);
+  Polyhedron cube(bArray<double>::from_std(cube_vertices), cube_faces);
+  Polyhedron node(bArray<double>::from_std(node_vertices), node_faces);
+  auto res = cube.intersection(poly);
+//  info_update("Result has vertices and faces \nnp.array(", res.get_vertices().to_string(), "),", res.get_vertices_per_face());
+//  info_update("Expected vertices and faces \nnp.array(", node.get_vertices().to_string(), "),", node.get_vertices_per_face());
+  REQUIRE(res == node);
+  REQUIRE(node == res);
+}
+
+/*  The following test requires HDF5 support *and* an appropriately generated HDF5 file with test objects.
+ *  Sorting-out file-loading from a known location is 'easy' enough, but when we only know, e.g., that the file
+ *  is located somewhere relative in the git repository the problem seems insurmountable. Still, testing objects without
+ *  relying on text-based serialisation seems like a worthwhile functionality to preserve. The following serves as a
+ *  pseudo-template for how such testing *could* be achieved.
+ */
+
+//TEST_CASE("Doubled face from file","[polyhedron]"){
+//  std::vector<std::array<double, 3>> node_vertices {
+//    {-0.11547010000000001994635567825753241777420043945312, -0.54545476351379740265201689908280968666076660156250, -0.49999999999999988897769753748434595763683319091797},
+//    {-0.11547010000000001994635567825753241777420043945312, -0.54545476351379740265201689908280968666076660156250, -0.37499999999999988897769753748434595763683319091797},
+//    {-0.11547010000000001994635567825753241777420043945312, -0.60000023986517725393952105150674469769001007080078, -0.49999999999999988897769753748434595763683319091797},
+//    {-0.20994563636363644532067951331555377691984176635742, -0.54545476351379740265201689908280968666076660156250, -0.49999999999999988897769753748434595763683319091797},
+//    {-0.11547010000000001994635567825753241777420043945312, -0.60000023986517725393952105150674469769001007080078, -0.37499999999999988897769753748434595763683319091797},
+//    {-0.20994563636363644532067951331555377691984176635742, -0.54545476351379740265201689908280968666076660156250, -0.37499999999999988897769753748434595763683319091797}
+//  };
+//  std::vector<std::vector<int>> node_faces {
+//    {0, 2, 3},
+//    { 1, 5, 4 },
+//    { 0, 1, 4, 2 },
+//    { 1, 0, 3, 5 },
+//    { 3, 2, 4, 5 }
+//  };
+//  std::string filepath{"/home/.../file.h5"};
+//
+//  auto poly = Polyhedron::from_hdf(filepath, "/poly");
+//  auto cube = Polyhedron::from_hdf(filepath, "/cube");
+//  Polyhedron node(bArray<double>::from_std(node_vertices), node_faces);
+//  auto res = cube.intersection(poly);
+//  REQUIRE(res == node);
+//  REQUIRE(node == res);
+//}

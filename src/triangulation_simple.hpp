@@ -21,14 +21,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief A class to interact with TetGen in the simplest case
 */
-// #include <vector>
-// #include <array>
-// #include <cassert>
-// #include <algorithm>
 #include "array_latvec.hpp" // defines bArray
 #include "tetgen.h"
-// #include "debug.hpp"
-// #include "approx.hpp"
 namespace brille {
 
 /*! \brief A class to handle interaction with `TetGen`
@@ -44,7 +38,7 @@ class SimpleTet{
   bArray<ind_t> vertices_per_tetrahedron; /*!< The vertices in each of the triangulated tetrahedra */ // (nTetrahedra, 4)
 public:
   //! Explicit empty constructor
-  explicit SimpleTet(void)
+  explicit SimpleTet()
   : vertex_positions(0u,3u), vertices_per_tetrahedron(0u,4u)
   {}
   /*! \brief Triangulate a convex polyhedron
@@ -55,13 +49,14 @@ public:
   \param addGamma   If true the point (0,0,0) will be ensured to exist in the
                     triangulated vertrices
   */
-  SimpleTet(const Polyhedron& poly, const double max_volume=-1, const bool addGamma=false)
+  explicit SimpleTet(const Polyhedron& poly, const double max_volume=-1, const bool addGamma=false)
   : vertex_positions(0u,3u), vertices_per_tetrahedron(0u,4u)
   {
     const auto& verts{poly.get_vertices()};
     const auto& vpf{poly.get_vertices_per_face()};
+    debug_update("Create SimpleTet from vertices, and facets\n",verts.to_string(),",\n", vpf);
     // create the tetgenbehavior object which contains all options/switches for tetrahedralize
-    verbose_update("Creating `tetgenbehavior` object");
+    debug_update("Creating `tetgenbehavior` object");
     tetgenbehavior tgb;
     tgb.plc = 1; // we will always tetrahedralize a piecewise linear complex
     if (max_volume > 0){
@@ -79,11 +74,11 @@ public:
     tgb.quiet = 1;
     #endif
     // make the input and output tetgenio objects and fill the input with our polyhedron
-    verbose_update("Creating input and output `tetgenio` objects");
+    debug_update("Creating input and output `tetgenio` objects");
     tetgenio tgi, tgo;
     // we have to handle initializing points/facets, but tetgenio has a destructor
     // which handles deleting all non-NULL fields.
-    verbose_update("Initialize and fill the input object's pointlist parameter");
+    debug_update("Initialize and fill the input object's pointlist parameter");
     tgi.numberofpoints = static_cast<int>(verts.size(0));
     tgi.pointlist = new double[3*tgi.numberofpoints];
     tgi.pointmarkerlist = new int[tgi.numberofpoints];
@@ -93,7 +88,7 @@ public:
       for (ind_t j=0; j<numel; ++j)
         tgi.pointlist[i*numel+j] = verts.val(i,j);
     }
-    verbose_update_if(addGamma,"Check whether the Gamma point is present");
+    debug_update_if(addGamma,"Check whether the Gamma point is present");
     bool gammaPresent{false};
     if (addGamma) {
       for (ind_t i=0; i<verts.size(0); ++i){
@@ -104,7 +99,7 @@ public:
 	      gammaPresent |= isGamma;
       }
     }
-    verbose_update("Initialize and fill the input object's facetlist parameter");
+    debug_update("Initialize and fill the input object's facetlist parameter");
     tgi.numberoffacets = static_cast<int>(vpf.size());
     tgi.facetlist = new tetgenio::facet[tgi.numberoffacets];
     tgi.facetmarkerlist = new int[tgi.numberoffacets];
@@ -119,7 +114,7 @@ public:
     }
     // The input is now filled with the piecewise linear complex information.
     // so we can call tetrahedralize:
-    verbose_update("Calling tetgen::tetrahedralize");
+    debug_update("Calling tetgen::tetrahedralize");
     try {
       if (addGamma && !gammaPresent){
         tgb.insertaddpoints = 1;
@@ -143,12 +138,12 @@ public:
       std::string msg = "tetgen threw an undetermined error";
       throw std::runtime_error(msg);
     }
-    verbose_update("Copy generated tetgen vertices to SimpleTet object");
+    debug_update("Copy generated tetgen vertices to SimpleTet object");
     vertex_positions.resize(tgo.numberofpoints);
     for (ind_t i=0; i<vertex_positions.size(0); ++i)
       for (ind_t j=0; j<3u; ++j)
         vertex_positions.val(i,j) = tgo.pointlist[3*i+j];
-    verbose_update("Copy generated tetgen indices to SimpleTet object");
+    debug_update("Copy generated tetgen indices to SimpleTet object");
     vertices_per_tetrahedron.resize(tgo.numberoftetrahedra);
     for (ind_t i=0; i<vertices_per_tetrahedron.size(0); ++i)
       for (ind_t j=0; j<4u; ++j)

@@ -45,6 +45,10 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 // #include "approx.hpp"
 #include "hdf_interface.hpp"
 #include "trellis_node.hpp"
+
+
+#include <filesystem>
+
 namespace brille {
 
 /*

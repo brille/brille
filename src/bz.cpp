@@ -69,9 +69,9 @@ bool BrillouinZone::check_ir_polyhedron(void){
   PointSymmetry fullps = this->outerlattice.get_pointgroup_symmetry(this->time_reversal?1:0);
   double volume_goal = this->polyhedron.get_volume() / static_cast<double>(fullps.size());
   Polyhedron irbz = this->get_ir_polyhedron(), rotated;
-  if (!brille::approx::scalar(irbz.get_volume(), volume_goal)){
-    debug_update("The current 'irreducible' polyhedron has the wrong volume");
-    debug_update("Since ",irbz.get_volume()," != ",volume_goal);
+  if (!brille::approx::scalar(irbz.get_volume(), volume_goal, 1000)){ // setting tol=100 moves the relative difference allowed to ~2e-9
+    info_update("The current 'irreducible' polyhedron has the wrong volume since ",irbz.get_volume()," != ",volume_goal);
+    info_update(std::abs(irbz.get_volume() - volume_goal) / (irbz.get_volume() + volume_goal));
     return false;
   }
   /* TODO FIXME -- make a LatticePolyhedron class to handle this? */
@@ -99,15 +99,16 @@ bool BrillouinZone::check_ir_polyhedron(void){
   PointSymmetry ps = fullps.higher(1);
   for (size_t i=0; i<ps.size(); ++i){
     Rt = transpose(ps.get(i)); // Rᵀ
-    debug_update("\ntranspose(R)",Rt);
+    verbose_update("\ntranspose(R)",Rt);
     brille::utils::multiply_matrix_matrix(RtinvB.data(), Rt.data(), invB.data()); // Rᵀ*B⁻¹
-    debug_update("transpose(R) inverse(B)",RtinvB);
+    verbose_update("transpose(R) inverse(B)",RtinvB);
     brille::utils::multiply_matrix_matrix(BRtinvB.data(), B.data(), RtinvB.data()); // B*Rᵀ*B⁻¹
-    debug_update("Rotate the polyhedron by", BRtinvB);
+    verbose_update("Rotate the polyhedron by", BRtinvB);
     rotated = irbz.rotate(BRtinvB);
-    debug_update("Checking for intersection ",i);
+    verbose_update("Checking for intersection ",i);
     if (irbz.intersects(rotated)){
       debug_update("The current 'irreducible' polyhedron intersects with itself and therefore is not correct.");
+      debug_update(ir_polyhedron.python_string());
       return false;
     }
   }
@@ -464,7 +465,6 @@ void BrillouinZone::irreducible_vertex_search(){
 void BrillouinZone::voro_search(const int extent){
   profile_update("Start BrillouinZone::voro_search with ",extent," extent");
   using namespace brille;
-  std::array<double, 3> bbmin{1e3,1e3,1e3}, bbmax{-1e3,-1e3,-1e3};
   LQVec<int> primtau(this->lattice, make_relative_neighbour_indices(extent));
   ind_t ntau = primtau.size(0);
   std::vector<ind_t> perm(ntau);
@@ -473,25 +473,19 @@ void BrillouinZone::voro_search(const int extent){
     return primtau.norm(a) < primtau.norm(b);
   });
   // verbose_update("unsorted primtau\n",primtau.to_string(),norm(primtau).to_string());
-  verbose_update("unsorted primtau\n",cat(1,primtau,norm(primtau)).to_string());
-  verbose_update("permutation:",perm);
+//  verbose_update("unsorted primtau\n",cat(1,primtau,norm(primtau)).to_string());
+//  verbose_update("permutation:",perm);
   primtau.permute(perm);
-  verbose_update("sorted primtau\n",cat(1,primtau,norm(primtau)).to_string());
+//  verbose_update("sorted primtau\n",cat(1,primtau,norm(primtau)).to_string());
   // the first Brillouin zone polyhedron will be expressed in absolute units
   // in the xyz frame of the conventional reciprocal lattice
   auto tau = transform_from_primitive(this->outerlattice, primtau).get_xyz();
-  for (ind_t i=0; i<ntau; ++i) for (ind_t j=0; j<3u; ++j){
-    if (tau.val(i,j) < bbmin[j]) bbmin[j] = tau.val(i,j);
-    if (tau.val(i,j) > bbmax[j]) bbmax[j] = tau.val(i,j);
-  }
-  // create an initialize the voro++ voronoicell object
-  verbose_update("Construct the bounding polyhedron from ",bbmin," to ",bbmax);
-  Polyhedron voronoi = polyhedron_box(bbmin, bbmax);
-  verbose_update("Bounding polyhedron with volume = ",voronoi.get_volume());
+  auto half_tau = tau / 2.0;
+  auto [plane_b, plane_c] = plane_points_from_normal(tau / norm(tau), half_tau);
   // and then use the reciprocal lattice points to subdivide the cell until
   // only the first Brillouin zone is left:
-  Polyhedron firstbz = Polyhedron::bisect(voronoi, tau/norm(tau), tau/2.0);
-  this->polyhedron = firstbz;
+//  Polyhedron firstbz = Polyhedron::bisect(voronoi, tau/norm(tau), tau/2.0);
+  polyhedron = Polyhedron::bisect(point_bounding_box(tau), half_tau, plane_b, plane_c);
   profile_update("  End BrillouinZone::voro_search with ",extent," extent");
 }
 
