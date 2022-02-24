@@ -88,6 +88,29 @@ public:
     Spacegroup s(hall);
     this->bravais = s.bravais;
   }
+//  /*! \brief Return the transformation matrix P
+//
+//  P converts the conventional basis vectors into those of an equivalent
+//  primitive space-filling lattice via
+//
+//      (aₚ,bₚ,cₚ) = (aₛ,bₛ,cₛ)P
+//
+//  for (x,y,z) a matrix with its columns the indicated vectors.
+//
+//  \returns a flattened-3x3 representation of the matrix
+//  */
+//  std::array<double,9> get_P(void) const {
+//    switch (bravais){
+//      case Bravais::_: throw std::runtime_error("Invalid Bravais centring");
+//      case Bravais::I: return {-0.5, 0.5, 0.5,  0.5,-0.5, 0.5,  0.5, 0.5,-0.5};
+//      case Bravais::F: return {  0 , 0.5, 0.5,  0.5,  0 , 0.5,  0.5, 0.5,  0 };
+//      case Bravais::A: return {  1 ,  0 ,  0 ,   0 , 0.5,-0.5,   0 , 0.5, 0.5};
+//      case Bravais::B: return { 0.5,  0 ,-0.5,   0 ,  1 ,  0 ,  0.5,  0 , 0.5};
+//      case Bravais::C: return { 0.5, 0.5,  0 , -0.5, 0.5,  0 ,   0 ,  0 ,  1 };
+//      case Bravais::R: return {2./3.,-1./3.,-1./3.,  1./3., 1./3.,-2./3.,  1./3., 1./3., 1./3.};
+//      default: return {  1 ,  1 ,  1,    1 ,  1 ,  1 ,   1 ,  1 ,  1 };
+//    }
+//  }
   /*! \brief Return the transformation matrix P
 
   P converts the conventional basis vectors into those of an equivalent
@@ -96,19 +119,20 @@ public:
       (aₚ,bₚ,cₚ) = (aₛ,bₛ,cₛ)P
 
   for (x,y,z) a matrix with its columns the indicated vectors.
+  This method returns six times the matrix since P can only contain the values
+  0, ±1/3, ±1/2, ±2/3, 1 which are 0, ±2, ±3, ±4, 6 sixths, respectively.
 
-  \returns a flattened-3x3 representation of the matrix
-  */
-  std::array<double,9> get_P(void) const {
+  \returns a flattened-3x3 representation of the matrix            */
+  [[nodiscard]] std::array<int,9> get_6P() const {
     switch (bravais){
-      case Bravais::_: throw std::runtime_error("Invalid Bravais centring");
-      case Bravais::I: return {-0.5, 0.5, 0.5,  0.5,-0.5, 0.5,  0.5, 0.5,-0.5};
-      case Bravais::F: return {  0 , 0.5, 0.5,  0.5,  0 , 0.5,  0.5, 0.5,  0 };
-      case Bravais::A: return {  1 ,  0 ,  0 ,   0 , 0.5,-0.5,   0 , 0.5, 0.5};
-      case Bravais::B: return { 0.5,  0 ,-0.5,   0 ,  1 ,  0 ,  0.5,  0 , 0.5};
-      case Bravais::C: return { 0.5, 0.5,  0 , -0.5, 0.5,  0 ,   0 ,  0 ,  1 };
-      case Bravais::R: return {2./3.,-1./3.,-1./3.,  1./3., 1./3.,-2./3.,  1./3., 1./3., 1./3.};
-      default: return {  1 ,  1 ,  1,    1 ,  1 ,  1 ,   1 ,  1 ,  1 };
+    case Bravais::_: throw std::runtime_error("Invalid Bravais centring");
+    case Bravais::I: return {-3, 3, 3,  3,-3, 3,  3, 3,-3};
+    case Bravais::F: return { 0, 3, 3,  3, 0, 3,  3, 3, 0};
+    case Bravais::A: return { 6, 0, 0,  0, 3,-3,  0, 3, 3};
+    case Bravais::B: return { 3, 0,-3,  0, 6, 0,  3, 0, 3};
+    case Bravais::C: return { 3, 3, 0, -3, 3, 0,  0, 0, 6};
+    case Bravais::R: return { 4,-2,-2,  2, 2,-4,  2, 2, 2};
+    default: return {6,6,6, 6,6,6, 6,6,6};
     }
   }
   /*! \brief Return the inverse of the transformation matrix P
@@ -122,7 +146,7 @@ public:
 
   \returns a flattened-3x3 representation of the matrix
   */
-  std::array<int,9> get_invP(void) const {
+  [[nodiscard]] std::array<int,9> get_invP() const {
     switch (bravais){
       case Bravais::_: throw std::runtime_error("Invalid Bravais centring");
       case Bravais::I: return { 0, 1, 1,  1, 0, 1,  1, 1, 0};
@@ -134,18 +158,30 @@ public:
       default: return { 1, 0, 0,  0, 1, 0,  0, 0, 1};
     }
   }
-  /*! \brief Return the transpose of the transformation matrix P
+//  /*! \brief Return the transpose of the transformation matrix P
+//
+//  A vector expressed in the conventional reciprocal lattice units can be
+//  expressed in the primitive reciprocal lattice by means of the transformation
+//
+//    qₚ = Pᵀ qₛ
+//
+//  where the qᵢ are column vectors.
+//
+//  \returns a flattened-3x3 representation of the matrix
+//  */
+//  std::array<double,9> get_Pt(void) const { return transpose(this->get_P()); }
+  /*! \brief Return the transpose of the transformation matrix 6*P
 
   A vector expressed in the conventional reciprocal lattice units can be
   expressed in the primitive reciprocal lattice by means of the transformation
 
-    qₚ = Pᵀ qₛ
+          qₚ = Pᵀ qₛ
 
   where the qᵢ are column vectors.
 
   \returns a flattened-3x3 representation of the matrix
-  */
-  std::array<double,9> get_Pt(void) const { return transpose(this->get_P()); }
+                   */
+  [[nodiscard]] std::array<int,9> get_6Pt() const { return transpose(this->get_6P()); }
   /*! \brief Return the transpose of the inverse of the transformation matrix P
 
   If the conventional reciprocal lattice basis vectors form the rows of a matrix
@@ -155,24 +191,24 @@ public:
 
   \returns a flattened-3x3 representation of the matrix
   */
-  std::array<int,9> get_invPt(void) const { return transpose(this->get_invP());}
+  [[nodiscard]] std::array<int,9> get_invPt() const { return transpose(this->get_invP());}
   void print(){
-    std::array<double,9> M = this->get_P();
-    std::array<int,9> invM = this->get_invP();
+    auto sixM = this->get_6P();
+    auto invM = this->get_invP();
     for (int i=0; i<3; ++i){
       printf("%3s", i==1 ? "to" :"");
-      for (int j=0; j<3; ++j) printf(" % 4.2f",M[i*3+j]);
+      for (int j=0; j<3; ++j) printf(" % 4.2f", sixM[i*3+j]/6.);
       printf("%5s", i==1 ? "from" : "");
       for (int j=0; j<3; ++j) printf(" % 2d",invM[i*3+j]);
       printf("\n");
     }
   }
   //! A check if the Matrices *should* do anything, if the centring *is not* Primitive
-  bool does_anything() const { return (bravais!=Bravais::P);}
+  [[nodiscard]] bool does_anything() const { return (bravais!=Bravais::P);}
   //! A check if the Matrices *shouldn't* do anything, if the centring *is* Primitive
-  bool does_nothing() const { return (bravais==Bravais::P);}
+  [[nodiscard]] bool does_nothing() const { return (bravais==Bravais::P);}
   //! Return a basic string representation of the object
-  std::string string_repr() const {
+  [[nodiscard]] std::string string_repr() const {
     std::string repr = "<" + bravais_string(bravais) + " PrimitiveTransform object>";
     return repr;
   }
@@ -188,6 +224,7 @@ or both in the future).
 */
 struct PrimitiveTraits{
   using P = double;
+  using sixP = int;
   using invP = int;
 };
 } // end namespace brille

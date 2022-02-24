@@ -223,8 +223,8 @@ template<class T> LQPolyhedron<T> LQPolyhedron<T>::apply(const PointSymmetry& ps
 template<class T> template<class R> [[nodiscard]] std::vector<bool> LQPolyhedron<T>::contains(const LQVec<R>& x) const {
   std::vector<bool> out(x.size(0));
   // TODO Move n and p to per-thread variables instead of shared?
-  auto n = this->normals();
-  auto p = this->points();
+  auto n = this->face_normals();
+  auto p = this->face_points();
 #pragma omp parallel for default(none) shared(out, n, p, x) schedule(dynamic)
   for (ind_t i=0; i<x.size(0); ++i){
     // FIXME, consider increasing the tolerance here!
@@ -240,19 +240,18 @@ template<class T> template<class R> [[nodiscard]] bool LQPolyhedron<T>::intersec
 template<class T> template<class R> [[nodiscard]] LQPolyhedron<T> LQPolyhedron<T>::intersection(const LQPolyhedron<R>& that) const {
   auto v = that.vertices();
   std::vector<std::vector<ind_t>> abc(3u);
-  for (auto & i: abc) i.reserve(that.faces_count());
+  for (auto & i: abc) i.reserve(that.face_count());
   for (const auto & face: that.faces()){
     for (ind_t i=0; i<3u; ++i) abc[i].push_back(face[i]);
   }
-  return this->bisect(v.extract(abc[0]), v.extract(abc[1]), v.extract(abc[2]));
+  return this->cut(v.extract(abc[0]), v.extract(abc[1]), v.extract(abc[2]));
 }
 
 template<class T> template<class R> [[nodiscard]] LQPolyhedron<T> LQPolyhedron<T>::divide(const LQVec<R>& a, const LQVec<R>& b, const LQVec<R>& c) const {
   // this all seems unnecessary
   auto z = this->centroid();
   LQPolyhedron<T> centred(_vertices - z, _faces);
-  auto divided = centred.bisect(a - z, b - z, c - z);
-  return divided.translate(z);
+  return centred.cut(a - z, b - z, c - z).translate(z);
 }
 
 template<class T> template<class R> [[nodiscard]] size_t LQPolyhedron<T>::face_index(const LQVec<R>& a, const LQVec<R>& b, const LQVec<R>& c) const {
@@ -291,7 +290,7 @@ template<class T> template<class R> [[nodiscard]] bool LQPolyhedron<T>::none_bey
   auto chkl = c.get_hkl();
   auto vhkl = _vertices.get_hkl();
   auto is_negative = [&](const auto & i){
-    return orientd3(ahkl.ptr(0), bhkl.ptr(0), chkl.ptr(0), vhkl.ptr(i)) < 0;
+    return orient3d(ahkl.ptr(0), bhkl.ptr(0), chkl.ptr(0), vhkl.ptr(i)) < 0;
   };
   return std::all_of(v.begin(), v.end(), is_negative);
 }
@@ -373,6 +372,6 @@ template<class T> LQPolyhedron<T> bounding_box(const typename LQPolyhedron<T>::v
       {max[{0, 0}], min[{0,1}], max[{0,2}]}  // 101 7
   };
   typename LQPolyhedron<T>::faces_t faces{{3,0,4,7},{3,2,1,0},{0,1,5,4},{3,7,6,2},{7,4,5,6},{2,6,5,1}};
-  auto hkl = typename LQPolyhedron<T>::vertex_t::from_std(points.get_lattice(), v);
-  return {hkl, faces};
+  auto hkl = LQPolyhedron<T>::vertex_t::from_std(points.get_lattice(), v);
+  return LQPolyhedron<T>(hkl, faces);
 }

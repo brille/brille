@@ -21,23 +21,11 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief Various utility functions, mostly linear algebra
 */
+#include <algorithm>
 #include "approx.hpp"
-
+#include "math.hpp"
 
 namespace brille{
-  const double             pi = 3.14159265358979323846;
-  const double         halfpi = 1.57079632679489661923;
-  // const double      quarterpi = 0.785398163397448309616;
-  // const double      inversepi = 0.318309886183790671538;
-  // const double      twooverpi = 0.636619772367581343076;
-  // const double  twooversqrtpi = 1.12837916709551257390;
-  // const double        sqrttwo = 1.41421356237309504880;
-  // const double sqrttwoovertwo = 0.707106781186547524401;
-  // const double              e = 2.71828182845904523536;
-  // const double          log2e = 1.44269504088896340736;
-  // const double         log10e = 0.434294481903251827651;
-  // const double            ln2 = 0.693147180559945309417;
-  // const double           ln10 = 2.30258509299404568402;
 
   //! Utility functions for `brille`, mostly implementing linear algebra
   namespace utils{
@@ -649,6 +637,21 @@ bool add_if_missing(std::vector<T>& vector, const T value) {
   return false;
 }
 
+template<class T> bool add_between_if_missing(std::vector<T>& vector, const T& preceeding, const T& following, const T& value) {
+  if (std::find(vector.begin(), vector.end(), value) == vector.end()){
+    auto itr = std::find(vector.begin(), vector.end(), preceeding);
+    if (itr == vector.end()){
+      throw std::runtime_error("Preeceeding value " + std::to_string(preceeding) + " missing from " + my_to_string(vector));
+    }
+    if (++itr == vector.end() ? *vector.begin() != following : *itr != following){
+      throw std::runtime_error("Sequence (" +std::to_string(preceeding) + " " + std::to_string(following) + ") missing from " + my_to_string(vector));
+    }
+    vector.insert(itr, value);
+    return true;
+  }
+  return false;
+}
+
 template<class I>
 std::tuple<bool, I> all_present(const std::vector<std::vector<I>> & lists) {
   I maximum{0};
@@ -690,9 +693,19 @@ std::vector<std::vector<I>> invert_lists(const std::vector<std::vector<I>> & lis
 
 template<class I>
 bool unordered_list_in_lists(const std::vector<I>& list, const std::vector<std::vector<I>>& lists){
-  for (const auto & x: lists) if (x.size() == list.size()){
+  for (const auto & list_i: lists) if (list_i.size() == list.size()){
     bool equal{true};
-    for (const auto & y: list) if (std::find(x.begin(), x.end(), y) == x.end()) equal = false;
+    std::vector<I> x;
+    std::copy(list_i.begin(), list_i.end(), std::back_inserter(x));
+    for (const auto & y: list) {
+      auto yat = std::find(x.begin(), x.end(), y);
+      if (yat == x.end()) {
+        equal = false;
+        break;
+      } else {
+        x.erase(yat); // protect against duplicates in list but not list_i
+      }
+    }
     if (equal) return true;
   }
   return false;
@@ -719,6 +732,25 @@ convert_lists_type(const std::vector<std::vector<I2>>& lists){
   convert_lists_type(lists, out);
   return out;
 }
+
+template<class I, size_t N>
+std::enable_if_t<std::is_unsigned_v<I>, bool>
+subscript_ok(const std::array<I, N>& subscript, const std::array<I, N>& shape){
+  for (size_t i=0; i < N; ++i){
+    if (subscript[i] >= shape[i]) return false;
+  }
+  return true;
+}
+template<class I>
+std::enable_if_t<std::is_unsigned_v<I>, bool>
+subscript_ok(const std::vector<I>& subscript, const std::vector<I>& shape){
+  if (subscript.size() != shape.size()) return false;
+  for (size_t i=0; i < shape.size(); ++i){
+    if (subscript[i] >= shape[i]) return false;
+  }
+  return true;
+}
+
 
 #include "utilities.tpp"
 

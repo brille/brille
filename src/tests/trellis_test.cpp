@@ -9,8 +9,8 @@
 using namespace brille;
 
 #ifdef USE_HIGHFIVE
-template<class T, class R>
-bool write_read_test(const BrillouinZoneTrellis3<T,R>& source, const std::string& name){
+template<class T, class R, class S>
+bool write_read_test(const BrillouinZoneTrellis3<T,R,S>& source, const std::string& name){
   namespace fs = std::filesystem;
   auto temp_dir = fs::temp_directory_path();
   fs::path filepath = temp_dir;
@@ -21,7 +21,7 @@ bool write_read_test(const BrillouinZoneTrellis3<T,R>& source, const std::string
   if(!source.to_hdf(filename, name))
     throw std::runtime_error("Problem writing to HDF file?");
 
-  auto sink = BrillouinZoneTrellis3<T,R>::from_hdf(filename, name);
+  auto sink = BrillouinZoneTrellis3<T,R,S>::from_hdf(filename, name);
 
   return (source == sink);
 }
@@ -34,19 +34,19 @@ bool write_read_test(const BrillouinZoneTrellis3<T,R>&, const std::string&){
 
 TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis][simple]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.01;
   // BrillouinZoneTrellis3<double> bzt0(bz); !! No default maximum volume
-  BrillouinZoneTrellis3<double,double> bzt1(bz, max_volume);
+  BrillouinZoneTrellis3<double,double,double> bzt1(bz, max_volume);
   REQUIRE(write_read_test(bzt1, "first_bzt"));
 }
 TEST_CASE("BrillouinZoneTrellis3 vertex accessors","[trellis][accessors]"){
-  Direct d(10.75, 10.75, 10.75, brille::halfpi, brille::halfpi, brille::halfpi, 525);
+  Direct d(10.75, 10.75, 10.75, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 525);
   BrillouinZone bz(d.star());
   double max_volume = 0.002;
-  BrillouinZoneTrellis3<double,double> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,double,double> bzt(bz, max_volume);
 
   SECTION("get_xyz"){auto verts = bzt.get_xyz(); REQUIRE(verts.size(0) > 0u);}
   SECTION("get_hkl"){auto verts = bzt.get_hkl(); REQUIRE(verts.size(0) > 0u);}
@@ -58,11 +58,11 @@ TEST_CASE("BrillouinZoneTrellis3 vertex accessors","[trellis][accessors]"){
 
 TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.0001;
-  BrillouinZoneTrellis3<double,double> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,double,double> bzt(bz, max_volume);
 
   auto Qmap = bzt.get_hkl();
   auto Qxyz = bzt.get_xyz();
@@ -83,7 +83,7 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   // In order to have easily-interpretable results we need to ensure we only
   // interpolate at points within the irreducible meshed volume.
   // Use points distributed randomly in the Irreducible Polyhedron
-  Polyhedron irp = bz.get_ir_polyhedron();
+  auto irp = bz.get_ir_polyhedron();
   LQVec<double> Q = LQVec<double>::from_invA(r, irp.rand_rejection(nQ));
   // Q are now random points in the irreducible Brillouin zone polyhedron
 
@@ -120,7 +120,7 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
 
 TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.0001;
@@ -132,7 +132,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
   std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> distribution(-5.,5.);
 
-  BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,std::complex<double>,double> bzt(bz, max_volume);
   auto Qmap = bzt.get_hkl();
 
   brille::ind_t n_modes{3u}, n_pt{Qmap.size(0)};
@@ -170,7 +170,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
 
 TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profiling]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.0001;
@@ -182,7 +182,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> distribution(-5.,5.);
 
-  BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,std::complex<double>,double> bzt(bz, max_volume);
   auto Qmap = bzt.get_hkl();
 
   brille::ind_t n_modes{3u}, n_pt{Qmap.size(0)};
@@ -212,31 +212,31 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
 }
 
 TEST_CASE("BrillouinZoneTrellis3 creation time","[.][trellis][creation_profiling]"){
-  Direct d(3.,3.,3., brille::halfpi, brille::halfpi, brille::halfpi, 1);
+  Direct d(3.,3.,3., brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 1);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.0001;
   auto timer = Stopwatch<>();
   timer.tic();
-  BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,std::complex<double>,double> bzt(bz, max_volume);
   timer.toc();
   info_update("Creation of Cubic BrilluoinZoneTrellis3 object with max_volume ",max_volume," in ",timer.average()," msec");
 
-  Direct quartz_d(4.85235, 4.85235, 5.350305, brille::halfpi, brille::halfpi, 2*brille::pi/3, 443);
+  Direct quartz_d(4.85235, 4.85235, 5.350305, brille::math::half_pi, brille::math::half_pi, brille::math::two_thirds_pi, 443);
   BrillouinZone quartz_bz(quartz_d.star());
   timer.tic();
-  BrillouinZoneTrellis3<double,std::complex<double>> quartz_bzt(quartz_bz, max_volume);
+  BrillouinZoneTrellis3<double,std::complex<double>,double> quartz_bzt(quartz_bz, max_volume);
   timer.toc();
   info_update("Creation of Quartz BrilluoinZoneTrellis3 object with max_volume ",max_volume," in ",timer.average()," msec");
 }
 
 
 TEST_CASE("BrillouinZoneTrellis3 contains Gamma","[trellis][gamma]"){
-  Direct d(3.,3.,3., brille::halfpi, brille::halfpi, brille::halfpi, 1);
+  Direct d(3.,3.,3., brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 1);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.1;
-  BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, max_volume);
+  BrillouinZoneTrellis3<double,std::complex<double>,double> bzt(bz, max_volume);
 
   auto diff = norm(bzt.vertices()).find(brille::cmp::eq,0.);
   REQUIRE(diff.size() == 1u);
@@ -259,10 +259,11 @@ TEST_CASE("PolyhedronTrellis creation","[polyhedron][trellis]"){
     {3,5,1,4},
     {0,2,1,5}
   };
-  Polyhedron poly(verts, verts_per_face);
+  polyhedron::Faces face(verts_per_face);
+  polyhedron::Poly<double, bArray> poly(verts, face);
 
   for (auto x: {0.1, 0.01, 0.001, 0.0001})
-    REQUIRE_NOTHROW(PolyhedronTrellis<double,std::complex<double>>(poly, x));
+    REQUIRE_NOTHROW(polytrellis::PolyTrellis<double,std::complex<double>,double,bArray>(poly, x));
 }
 
 
@@ -298,8 +299,8 @@ TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trell
   BrillouinZone bz(dlat.star());
   // If the tolerance used in determine_tols is too small the following will
   // fail due to one or more missing vertices in a triangulated cube
-  REQUIRE_NOTHROW(BrillouinZoneTrellis3<double,std::complex<double>>(bz, 0.001));
-  BrillouinZoneTrellis3<double,std::complex<double>> bzt(bz, 0.001);
+  REQUIRE_NOTHROW(BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, 0.001));
+  BrillouinZoneTrellis3<double,std::complex<double>,double> bzt(bz, 0.001);
 
   // The total volume of all of the nodes should be the same as the irreducible
   // Brillouin zone polyhedron volume if the nodes fully fill the polyhedron.
@@ -309,7 +310,7 @@ TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trell
   // The PolyhedronTrellis constructor would happily construct a trellis with
   // imporant (overlapping) nodes inserted as NullNode objects instead of
   // PolyNode objects like they should be.
-  REQUIRE(bzt.total_node_volume() == Approx(bz.get_ir_polyhedron().get_volume()));
+  REQUIRE(bzt.total_node_volume() == Approx(bz.get_ir_polyhedron().volume()));
 }
 
 
@@ -317,14 +318,14 @@ TEST_CASE("PolyhedronTrellis construction from 'P1' hexagonal system must contai
   // this test case was exposed as problematic by the tests in brillem
   Reciprocal rlat(1.154701, 1.154701, 1, 90, 90, 60);
   BrillouinZone bz(rlat);
-  REQUIRE_NOTHROW(BrillouinZoneTrellis3<double,double>(bz, 0.002));
+  REQUIRE_NOTHROW(BrillouinZoneTrellis3<double,double,double>(bz, 0.002));
 }
 
 TEST_CASE("PolyNode inclusion rounding error","[trellis][quartz][polynode][61]"){
-  Direct quartz_d(4.85235, 4.85235, 5.350305, brille::halfpi, brille::halfpi, 2*brille::pi/3, 443);
+  Direct quartz_d(4.85235, 4.85235, 5.350305, brille::math::half_pi, brille::math::half_pi, brille::math::two_thirds_pi, 443);
   BrillouinZone quartz_bz(quartz_d.star());
-  auto max_volume = quartz_bz.get_ir_polyhedron().get_volume()/2000.;
-  BrillouinZoneTrellis3<double,double> quartz_bzt(quartz_bz, max_volume);
+  auto max_volume = quartz_bz.get_ir_polyhedron().volume()/2000.;
+  BrillouinZoneTrellis3<double,double,double> quartz_bzt(quartz_bz, max_volume);
 
   Array<double> zeros(quartz_bzt.get_hkl().size(0), 1u);
   std::array<ind_t,3> elements{{1, 0, 0}};
@@ -372,8 +373,8 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
 
   auto rlat = dlat.star();
   BrillouinZone bz(rlat);
-  auto max_volume = bz.get_ir_polyhedron().get_volume()/2000.;
-  BrillouinZoneTrellis3<double, double> bzt(bz, max_volume);
+  auto max_volume = bz.get_ir_polyhedron().volume()/2000.;
+  BrillouinZoneTrellis3<double, double, double> bzt(bz, max_volume);
 
   Array<double> zeros(bzt.get_hkl().size(0), 1u);
   std::array<ind_t,3> elements{{1, 0, 0}};

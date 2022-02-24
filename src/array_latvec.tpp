@@ -184,7 +184,7 @@ ARRAY_LATVEC_BINARY_OP(/)
     // setup the output array
     auto lat = a.get_lattice();
     typename LatVecTraits<L<T>, double>::star cross_star(lat.star(), oarray);
-    cross_star *= lat.get_volume()/2.0/brille::pi;
+    cross_star *= lat.get_volume()/2.0/brille::math::pi;
     return cross_star.star();
   }
 #else
@@ -233,13 +233,13 @@ dot(const A<T>& a, const A<R>& b) {
 
 template<class T, class R, template<class> class A, class S>
 std::enable_if_t<bothArrays<T,A,R,A>, double>
-same_lattice_dot(const A<R>& x, const A<T>& y, const std::vector<S>& len, const std::vector<S>& ang){
+same_lattice_dot(const A<R>& x, const A<T>& y, const std::array<S,3>& len, const std::array<S,3>& cosines){
   S x0{static_cast<S>(x.val(0,0))}, x1{static_cast<S>(x.val(0,1))}, x2{static_cast<S>(x.val(0,2))};
   S y0{static_cast<S>(y.val(0,0))}, y1{static_cast<S>(y.val(0,1))}, y2{static_cast<S>(y.val(0,2))};
   S out = x0*y0*len[0]*len[0] + x1*y1*len[1]*len[1] + x2*y2*len[2]*len[2]
-        + (x0*y1+x1*y0)*len[0]*len[1]*cos(ang[2])
-        + (x1*y2+x2*y1)*len[1]*len[2]*cos(ang[0])
-        + (x2*y0+x0*y2)*len[2]*len[0]*cos(ang[1]);
+        + (x0*y1+x1*y0)*len[0]*len[1]*cosines[2]
+        + (x1*y2+x2*y1)*len[1]*len[2]*cosines[0]
+        + (x2*y0+x0*y2)*len[2]*len[0]*cosines[1];
   return out;
 }
 
@@ -254,7 +254,7 @@ dot(const L1<T> &a, const L2<R> &b){
   }
   if (!issame){
     auto out = dot(a.get_hkl(), b.get_hkl());
-    out *= 2*brille::pi; // to avoid making a copy of the array, compared to 2π*dot(...)
+    out *= brille::math::two_pi; // to avoid making a copy of the array, compared to 2π*dot(...)
     return out;
   }
   assert( a.size(1) == 3 && b.size(1)==3 );
@@ -264,16 +264,16 @@ dot(const L1<T> &a, const L2<R> &b){
   brille::ind_t oO = (1u == aN) ? bN : aN;
   bArray<double> oarray(oO, 1u);
   auto lat = a.get_lattice();
-  std::vector<double> len{lat.get_a(), lat.get_b(), lat.get_c()};
-  std::vector<double> ang{lat.get_alpha(), lat.get_beta(), lat.get_gamma()};
+  auto len = lat.get_lengths();
+  auto cosines = lat.get_cosines();
   if (1u==aN || 1u==bN){
     if (1u==aN) {
-      for (brille::ind_t i=0; i<bN; ++i) oarray.val(i,0) = same_lattice_dot(a, b.view(i), len, ang);
+      for (brille::ind_t i=0; i<bN; ++i) oarray.val(i,0) = same_lattice_dot(a, b.view(i), len, cosines);
     } else {
-      for (brille::ind_t i=0; i<aN; ++i) oarray.val(i,0) = same_lattice_dot(a.view(i), b, len, ang);
+      for (brille::ind_t i=0; i<aN; ++i) oarray.val(i,0) = same_lattice_dot(a.view(i), b, len, cosines);
     }
   } else {
-    for (brille::ind_t i=0; i<aN; ++i) oarray.val(i,0) = same_lattice_dot(a.view(i), b.view(i), len, ang);
+    for (brille::ind_t i=0; i<aN; ++i) oarray.val(i,0) = same_lattice_dot(a.view(i), b.view(i), len, cosines);
   }
   return oarray;
 }
@@ -491,3 +491,62 @@ operator*(const std::array<R,9>& m, const L<T>& a){
   */
   template<class T, template<class> class L> L<T> abs(const L<T>& array);
 #endif
+
+
+template<class T, template<class> class A>
+std::enable_if_t<isBareArray<T,A>, A<T>>
+from_std_like(const A<T>&, std::vector<std::array<T,3>> components){
+  return A<T>::from_std(std::move(components));
+}
+template<class T, template<class> class A>
+std::enable_if_t<isLatVec<T,A>, A<T>>
+from_std_like(const A<T>& lv, std::vector<std::array<T,3>> components){
+  return A<T>::from_std(lv.get_lattice(), std::move(components));
+}
+
+template<class T, template<class> class A>
+std::enable_if_t<isBareArray<T,A>, bArray<T>>
+triple_product(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
+  bArray<T> out(a.size(0), 1u);
+  for (ind_t i=0; i<a.size(0); ++i) out[i] = orient3d(a.ptr(i), b.ptr(i), c.ptr(i), d.ptr(i));
+  return out;
+}
+
+template<class T, template<class> class A>
+std::enable_if_t<isLatVec<T,A>, bArray<T>>
+triple_product(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
+  return dot(d - a, cross(c - a, b - a));
+}
+template<class T, class I, template<class> class A, template<class> class B>
+std::enable_if_t<(isArray<T,A> && isBareArray<I,B> && std::is_integral_v<I>), bArray<T>>
+triple_product(const A<T>& v, const B<I>& i){
+  bArray<T> out(i.size(0), 1u);
+  for (ind_t j=0; j<i.size(0); ++j)
+    out.set(j, triple_product(v.view(i[{j,0}]), v.view(i[{j,1}]), v.view(i[{j,2}]), v.view(i[{j,3}])));
+  return out;
+}
+
+template<class T, template<class> class A>
+std::enable_if_t<isBareArray<T,A>, std::array<T,4>>
+four_point_sphere(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
+  std::array<T,4> z;
+  tetgenmesh tgm;
+  tgm.circumsphere(a.ptr(0), b.ptr(0), c.ptr(0), d.ptr(0), z.data(), z.data()+3);
+  return z;
+}
+template<class T, template<class> class A>
+std::enable_if_t<isLatVec<T,A>, std::array<T,4>>
+four_point_sphere(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
+  return four_point_sphere(a.get_xyz(), b.get_xyz(), c.get_xyz(), d.get_xyz());
+}
+template<class T, class I, template<class> class A, template<class> class B>
+std::enable_if_t<(isArray<T,A> && isBareArray<I,B> && std::is_integral_v<I>), std::array<T,4>>
+four_point_sphere(const A<T>& v, const B<I>& i){
+  return four_point_sphere(v.view(i[0]), v.view(i[1]), v.view(i[2]), v.view(i[3]));
+}
+
+template<class T, template<class> class A>
+  std::enable_if_t<isBareArray<T,A>, A<T>> get_xyz(const A<T>& array){return array;}
+
+template<class T, template<class> class A>
+  std::enable_if_t<isLatVec<T,A>, bArray<T>> get_xyz(const A<T>& array){return array.get_xyz();}

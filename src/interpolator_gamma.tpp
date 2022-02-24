@@ -27,7 +27,7 @@ e_iqd(const LQVec<T>& q, const I i, const bArray<R>& d, const size_t j)
   I jj = static_cast<I>(j);
   for (I k=0; k<3u; ++k)
     dotqd += q.val(i,k)*d.val(jj,k);
-  std::complex<S> i_2pi_x(0, 2*brille::pi*dotqd);
+  std::complex<S> i_2pi_x(0, brille::math::two_pi * dotqd);
   return std::exp(i_2pi_x);
 }
 

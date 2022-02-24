@@ -78,7 +78,8 @@ bool BrillouinZone::check_ir_polyhedron(){
   ps = ps.higher(1);
   for (size_t i=0; i < ps.size(); ++i) {
     auto rotated = ir_poly.apply(ps, i);
-    if (ir_poly.intersects(rotated)){
+    if (ir_poly.intersects(rotated /*, approx_tolerance*/)){
+      info_update("ir_poly\n",ir_poly.python_string(),"\nintersects\n",rotated.python_string());
       debug_update("The trial irreducible polyhedron intersects itself.");
       return false;
     }
@@ -116,11 +117,11 @@ BrillouinZone::poly_t::vertex_t BrillouinZone::get_primitive_normals() const {
 BrillouinZone::poly_t::vertex_t BrillouinZone::get_half_edges() const{
   return first_poly.half_edges();
 }
-BrillouinZone::poly_t::faces_t BrillouinZone::get_faces_per_vertex() const {
+BrillouinZone::poly_t::faces_t::faces_t BrillouinZone::get_faces_per_vertex() const {
   return first_poly.faces_per_vertex();
 }
-BrillouinZone::poly_t::faces_t BrillouinZone::get_vertices_per_face() const {
-  return first_poly.faces();
+BrillouinZone::poly_t::faces_t::faces_t BrillouinZone::get_vertices_per_face() const {
+  return first_poly.faces().faces();
 }
 // irreducible first Brillouin zone
 BrillouinZone::poly_t::vertex_t BrillouinZone::get_ir_vertices() const {
@@ -147,11 +148,11 @@ BrillouinZone::poly_t::vertex_t BrillouinZone::get_ir_primitive_normals() const 
   if (this->isprimitive()) n = transform_to_primitive(this->outerlattice, n);
   return n;
 }
-BrillouinZone::poly_t::faces_t BrillouinZone::get_ir_faces_per_vertex() const {
+BrillouinZone::poly_t::faces_t::faces_t BrillouinZone::get_ir_faces_per_vertex() const {
   return ir_poly.faces_per_vertex();
 }
-BrillouinZone::poly_t::faces_t BrillouinZone::get_ir_vertices_per_face() const {
-  return ir_poly.faces();
+BrillouinZone::poly_t::faces_t::faces_t BrillouinZone::get_ir_vertices_per_face() const {
+  return ir_poly.faces().faces();
 }
 
 // irreducible reciprocal space
@@ -162,7 +163,7 @@ LQVec<double> BrillouinZone::get_ir_wedge_normals() const {
   return out;
 }
 //
-LQVec<double> BrillouinZone::get_primitive_ir_wedge_normals(void) const {
+LQVec<double> BrillouinZone::get_primitive_ir_wedge_normals() const {
   LQVec<double> lqwn(outerlattice, 0u);
   if (ir_wedge_normals.size(0)){
     lqwn = LQVec<double>(outerlattice, ir_wedge_normals);
@@ -431,7 +432,7 @@ void BrillouinZone::print() const {
 //  verbose_update("Found a ",this->ir_polyhedron.string_repr());
 //}
 
-void BrillouinZone::voro_search(const int extent){
+void BrillouinZone::voro_search(const int extent, const bool divide_primitive){
   profile_update("Start BrillouinZone::voro_search with ",extent," extent");
   using namespace brille;
   LQVec<int> primtau(lattice, make_relative_neighbour_indices(extent));
@@ -442,15 +443,30 @@ void BrillouinZone::voro_search(const int extent){
   });
   primtau.permute(perm);
 //  verbose_update("sorted primtau\n",cat(1,primtau,norm(primtau)).to_string());
-  // the first Brillouin zone polyhedron will be expressed in absolute units
-  // in the xyz frame of the conventional reciprocal lattice
-  auto tau = transform_from_primitive(outerlattice, primtau);
-  auto half_tau = tau / 2.0;
-  auto [plane_b, plane_c] = plane_points_from_normal(tau / norm(tau), half_tau);
+
+  LQVec<int> tau;
+  if (!divide_primitive){
+    tau = transform_from_primitive(outerlattice, primtau);
+  } else {
+    tau = primtau;
+  }
+//  // the first Brillouin zone polyhedron will be expressed in absolute units
+//  // in the xyz frame of the conventional reciprocal lattice
+//  auto tau = transform_from_primitive(outerlattice, primtau);
+
+//  verbose_update("give tau in outer lattice\n", cat(1, tau, norm(tau)).to_string());
+//  verbose_update("in absolute units", (tau / norm(tau)).get_xyz().to_string());
+  auto [plane_a, plane_b, plane_c] = plane_points_from_normal(tau / norm(tau), tau / 2.0);
   // and then use the reciprocal lattice points to subdivide the cell until
   // only the first Brillouin zone is left:
-  auto box = bounding_box<double>(1.0 * tau);
-  first_poly = box.cut(half_tau, plane_b, plane_c);
+  auto box = polyhedron::bounding_box(1.0 * tau);
+//  verbose_update("bounding box\n", box.python_string());
+  first_poly = box.cut(plane_a, plane_b, plane_c, approx_tolerance);
+  if (divide_primitive){
+    auto vertices = transform_from_primitive(outerlattice, first_poly.vertices());
+    first_poly = polyhedron::Poly(vertices, first_poly.faces());
+  }
+//  verbose_update("cut box\n", first_poly.python_string());
   profile_update("  End BrillouinZone::voro_search with ",extent," extent");
 }
 

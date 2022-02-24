@@ -241,8 +241,8 @@ TEST_CASE("Plane convention conversion","[plane]"){
     {1, 0, 0}, {0, 1, 0}, {0, 1, 1}, {1, 1, 0}, {0, 1, 1}, {1, 0, 1}, {1, 1, 1}, {1, 1, -2}, {1, -1, 0}, {2, 1, 0}
   };
   auto v = bArray<double>::from_std(raw_v);
-  auto [b, c] = plane_points_from_normal(v, v);
-  auto n = three_point_normal(v, b, c);
+  auto [a, b, c] = plane_points_from_normal(v, v);
+  auto n = three_point_normal(a, b, c);
   for (ind_t i=0; i < v.size(0); ++i){
     REQUIRE( dot(v.view(i), n.view(i)).sum() == Approx((norm(v.view(i)) * norm(n.view(i))).sum()));
   }

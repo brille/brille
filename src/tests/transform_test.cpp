@@ -22,12 +22,12 @@ TEST_CASE("primitive transforms","[transform]"){
   SECTION("Rhombohedral centring"){ c = Bravais::R; }
   PrimitiveTransform PT(c);
   REQUIRE( !PT.does_nothing() );
-  std::array<double,9> P = PT.get_P();
-  std::array<int,9> invP = PT.get_invP();
-  double I[9]={1.,0.,0., 0.,1.,0., 0.,0.,1.};
-  double res[9];
-  brille::utils::multiply_matrix_matrix<double,int,double,3>(res,invP.data(),P.data());
-  REQUIRE( brille::approx::matrix<double,double,3>(res,I) );
+  std::array<PrimitiveTraits::sixP,9> sixP = PT.get_6P();
+  std::array<PrimitiveTraits::invP,9> invP = PT.get_invP();
+  int I[9]={6,0,0, 0,6,0, 0,0,6};
+  int res[9];
+  brille::utils::multiply_matrix_matrix<int,PrimitiveTraits::invP,PrimitiveTraits::sixP,3>(res,invP.data(),sixP.data());
+  REQUIRE( brille::approx::matrix<int, int, 3>(res,I) );
 }
 
 TEST_CASE("primitive vector transforms","[transform]"){
@@ -35,7 +35,7 @@ TEST_CASE("primitive vector transforms","[transform]"){
   SECTION("Primitive spacegroup"){    spgr = "P 1";   }
   SECTION("Body-centred spacegroup"){ spgr = "Im-3m"; }
   SECTION("Face-centred spacegroup"){ spgr = "Fmm2";  }
-  Direct d(1,1,1,brille::halfpi,brille::halfpi,brille::halfpi,spgr);
+  Direct d(1,1,1,brille::math::half_pi,brille::math::half_pi,brille::math::half_pi,spgr);
   Reciprocal r = d.star();
 
   std::default_random_engine gen(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));

@@ -26,7 +26,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "neighbours.hpp"
 #include "transform.hpp"
 #include "polyhedron.hpp"
-#include "polyhedron_lattice.hpp"
+#include "polyhedron_flex.hpp"
 #include "phonon.hpp"
 #include "hdf_interface.hpp"
 // #include "approx.hpp"
@@ -44,7 +44,7 @@ namespace brille {
 */
 class BrillouinZone {
 public:
-  using poly_t = LQPolyhedron<double>;
+  using poly_t = polyhedron::Poly<double, LQVec>;
 protected:
   Reciprocal lattice;               //!< The primitive reciprocal lattice
   Reciprocal outerlattice;          //!< The lattice passed in at construction
@@ -89,7 +89,8 @@ public:
                 const int extent=1,
                 const bool tr=false,
                 const bool wedge_search=true,
-                const int tol=1000
+                const int tol=1000,
+                const bool divide_primitive=false
                ):
   lattice(toprim ? lat.primitive() : lat), outerlattice(lat), time_reversal(tr), approx_tolerance(tol)
   {
@@ -102,7 +103,7 @@ public:
     // initial test_extent based on spacegroup or pointgroup?
     do {
       old_volume = new_volume;
-      this->voro_search(++test_extent);
+      this->voro_search(++test_extent, divide_primitive);
       new_volume = first_poly.volume();
     } while (!approx::scalar(new_volume, old_volume));
 
@@ -128,8 +129,11 @@ public:
                // other combinations of special_2_folds, special_mirrors,
                // and sort_by_length are possible but not necessarily useful.
       }
-      if (!success)
-        throw std::runtime_error("Failed to find an irreducible Brillouin zone.");
+      if (!success) {
+        info_update("First Brillouin zone ", first_poly.python_string(), "and 'irreducible' Brillouin zone", ir_poly.python_string());
+        throw std::runtime_error(
+            "Failed to find an irreducible Brillouin zone.");
+      }
     }
     profile_update("  End of BrillouinZone construction");
   }
@@ -355,9 +359,9 @@ public:
   //! Returns the normals ( ̂τ ) of the first Brillouin zone polyhedron expressed as primitive unit cell vectors
   [[nodiscard]] poly_t::vertex_t get_primitive_normals() const;
   //! Returns the `points` and `normals` indices for each vertex of the first Brillouin zone polyhedron
-  [[nodiscard]] poly_t::faces_t get_faces_per_vertex() const;
+  [[nodiscard]] poly_t::faces_t::faces_t get_faces_per_vertex() const;
   //! Returns the vertex indices for each facet of the first Brillouin zone polyhedron
-  [[nodiscard]] poly_t::faces_t get_vertices_per_face() const;
+  [[nodiscard]] poly_t::faces_t::faces_t get_vertices_per_face() const;
   //! Returns the irreducible first Brillouin zone polyhedron
   [[nodiscard]] poly_t get_ir_polyhedron(bool true_ir=true) const;
   //! Returns the vertices of the irreducible first Brillouin zone polyhedron expressed as conventional unit cell vectors
@@ -373,9 +377,9 @@ public:
   //! Returns the normals of the irreducible first Brillouin zone polyhedron expressed as primitive unit cell vectors
   [[nodiscard]] poly_t::vertex_t get_ir_primitive_normals() const;
   //! Returns the `points` and `normals` indices for each vertex of the irreducible first Brillouin zone polyhedron
-  [[nodiscard]] poly_t::faces_t get_ir_faces_per_vertex() const;
+  [[nodiscard]] poly_t::faces_t::faces_t get_ir_faces_per_vertex() const;
   //! Returns the vertex indices for each facet of the irreducible first Brillouin zone polyhedron
-  [[nodiscard]] poly_t::faces_t get_ir_vertices_per_face() const;
+  [[nodiscard]] poly_t::faces_t::faces_t get_ir_vertices_per_face() const;
   //! Print a representation of the object to std::cout
   void print() const;
 //  /*! \brief Attempt to find an irreducible section of reciprocal space
@@ -497,7 +501,7 @@ public:
   software library [Voro++]([http://math.lbl.gov/voro++/), especially
   [voro::voronoicell_base](http://math.lbl.gov/voro++/doc/refman/classvoro_1_1voronoicell__base.html).
   */
-  void voro_search(int scale=1);
+  void voro_search(int scale=1, bool divide_primitive=false);
   //! Return true if the lattice used to find the vertices is not the same as the one passed at construction, and is therefore primitive
   [[nodiscard]] bool isprimitive() const {return is_primitive;};
 
@@ -616,6 +620,7 @@ public:
     return time_reversal ? 1 : 0;
   }
 private:
+  void _moveinto_prim(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, const LQVec<double>& a, const LQVec<double>& b, const LQVec<double>& c) const;
   template<class T>
   [[nodiscard]] bool _inside_wedge_outer(const LQVec<T>& p, const bool pos=false) const {
     brille::cmp c = pos||no_ir_mirroring ? brille::cmp::ge : brille::cmp::le_ge;

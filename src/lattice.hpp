@@ -29,6 +29,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "basis.hpp"
 #include "array2.hpp"
 #include "hdf_interface.hpp"
+#include "math.hpp"
 namespace brille {
 
 // forward declare the two types of lattices so that they can be mutually-referential
@@ -92,6 +93,8 @@ class Lattice{
 protected:
   std::array<double,3> len{}; //!< basis vector lengths
   std::array<double,3> ang{}; //!< basis vector angles ordered θ₁₂, θ₀₂, θ₀₁, in radian
+  std::array<double,3> cosines{};
+  std::array<double,3> sines{};
   double volume; //!< volume of the unit cell formed by the basis vectors
   Bravais bravais; //!< Lattice centring type
   Symmetry spgsym; //!< Spacegroup symmetry operators
@@ -117,11 +120,30 @@ protected:
       }
       if (minang < 0.) throw std::runtime_error("Unexpected negative inter-facial cell angle");
       // 1 is not a good separator between π-radian and radian, since 1 radian ≈ 57.3°
-      // au = (maxang < 1.0) ? AngleUnit::pi : (maxang < brille::pi) ? AngleUnit::radian : AngleUnit::degree;
-      au = (maxang < brille::pi) ? AngleUnit::radian : AngleUnit::degree;
+      // au = (maxang < 1.0) ? AngleUnit::pi : (maxang < brille::math::pi) ? AngleUnit::radian : AngleUnit::degree;
+      au = (maxang < brille::math::pi) ? AngleUnit::radian : AngleUnit::degree;
     }
-    double conversion = (AngleUnit::radian == au) ? 1.0 : brille::pi/((AngleUnit::degree == au) ? 180.0 : 1.0);
-    for (int i=0;i<3;i++) this->ang[i] = avec[i*span]*conversion;
+//    double conversion = (AngleUnit::radian == au) ? 1.0 : brille::math::pi/((AngleUnit::degree == au) ? 180.0 : 1.0);
+//    for (int i=0;i<3;i++) this->ang[i] = avec[i*span]*conversion;
+    switch (au){
+    case AngleUnit::degree:
+      for (int i=0; i<3; ++i){
+        std::tie(cosines[i], sines[i]) = math::cos_and_sin_d(avec[i*span]);
+        ang[i] = std::atan2(sines[i], cosines[i]);
+      }
+      break;
+    case AngleUnit::radian:
+      for (int i=0; i<3; ++i){
+        ang[i] = avec[i*span];
+        std::tie(cosines[i], sines[i]) = math::cos_and_sin(ang[i]);
+      }
+      break;
+    default:
+      for (int i=0; i<3; ++i){
+        ang[i] = std::cos(-1.) * avec[i*span];
+        std::tie(cosines[i], sines[i]) = math::cos_and_sin(ang[i]);
+      }
+    }
   }
   // void set_len_scalars(const double, const double, const double);
   // void set_ang_scalars(const double, const double, const double, const AngleUnit);
@@ -130,15 +152,15 @@ protected:
   void check_IT_name(const std::string& itname, const std::string& choice="");
 public:
   //! Construct the Lattice from its components
-  Lattice(const std::array<double,3>& l, const std::array<double,3>& a, double v,
+  Lattice(const std::array<double,3>& l, const std::array<double,3>& a, const std::array<double,3>& c, const std::array<double,3>& s, double v,
           const Bravais b, Symmetry sgs, PointSymmetry pgs, Basis base, const LengthUnit lu=LengthUnit::none)
-  : len(l), ang(a), volume(v), bravais(b), spgsym(std::move(sgs)), ptgsym(std::move(pgs)), basis(std::move(base)), unit(lu) {
+  : len(l), ang(a), cosines(c), sines(s), volume(v), bravais(b), spgsym(std::move(sgs)), ptgsym(std::move(pgs)), basis(std::move(base)), unit(lu) {
   }
   //! Construct the Lattice from its components, excluding the volume which is calculated
-  Lattice(const std::array<double,3>& l, const std::array<double,3>& a,
+  Lattice(const std::array<double,3>& l, const std::array<double,3>& a, const std::array<double,3>& c, const std::array<double,3>& s,
           const Bravais b, Symmetry sgs, PointSymmetry pgs,
           Basis base, const LengthUnit lu=LengthUnit::none):
-    len(l), ang(a), bravais(b), spgsym(std::move(sgs)), ptgsym(std::move(pgs)), basis(std::move(base)), unit(lu) {
+    len(l), ang(a), cosines(c), sines(s), bravais(b), spgsym(std::move(sgs)), ptgsym(std::move(pgs)), basis(std::move(base)), unit(lu) {
       this->volume = this->calculatevolume();
     }
   //! Construct the Lattice from a matrix of the basis vectors
@@ -190,7 +212,7 @@ public:
   //! Construct the Lattice from a vector of the basis vector lengths and a vector of the basis vector angles
   Lattice(const double *, const double *, int h=1, AngleUnit au=AngleUnit::not_provided);
   //! Construct the Lattice from the three scalar lengths and three scalar angles
-  explicit Lattice(double la=1.0, double lb=1.0, double lc=1.0, double al=brille::halfpi, double bl=brille::halfpi, double cl=brille::halfpi, int h=1);
+  explicit Lattice(double la=1.0, double lb=1.0, double lc=1.0, double al=brille::math::half_pi, double bl=brille::math::half_pi, double cl=brille::math::half_pi, int h=1);
   //! Construct the Lattice from a matrix of the basis vectors, specifying an International Tables symmetry name instead of a Hall number
   Lattice(const double *, const std::string&, const std::string& choice="");
   //! Construct the lattice from vectors, specifying an International Tables symmetry name instead of a Hall number
@@ -229,6 +251,8 @@ public:
   [[nodiscard]] double get_gamma () const {return ang[2];}
   //! Return the volume of the parallelpiped unit cell formed by the basis vectors
   [[nodiscard]] double get_volume() const {return volume;}
+  [[nodiscard]] std::array<double,3> get_lengths() const {return len;}
+  [[nodiscard]] std::array<double,3> get_cosines() const {return cosines;}
   //! Calculate and return the unit cell volume
   double calculatevolume();
   /*! Calculate the metric tensor of the Lattice
@@ -349,6 +373,8 @@ public:
         auto group = overwrite_group(obj, entry);
         group.createAttribute("lengths", len);
         group.createAttribute("angles", ang);
+        group.createAttribute("cosines", cosines);
+        group.createAttribute("sines", sines);
         group.createAttribute("volume", volume);
         group.createAttribute("bravais", bravais);
         group.createAttribute("length_unit", unit);
@@ -363,9 +389,11 @@ public:
     static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, Lattice>
     from_hdf(HF& obj, const std::string& entry){
       HighFive::Group group = obj.getGroup(entry);
-      std::array<double, 3> lengths{}, angles{};
+      std::array<double, 3> lengths{}, angles{}, cosines{}, sines{};
       group.getAttribute("lengths").read(lengths);
       group.getAttribute("angles").read(angles);
+      group.getAttribute("cosines").read(cosines);
+      group.getAttribute("sines").read(sines);
       double volume;
       group.getAttribute("volume").read(volume);
       Bravais b;
@@ -373,7 +401,7 @@ public:
       auto spg = Symmetry::from_hdf(group, "spacegroup");
       auto ptg = PointSymmetry::from_hdf(group, "pointgroup");
       auto bas = Basis::from_hdf(group, "basis");
-      return {lengths, angles, volume, b, spg, ptg, bas};
+      return {lengths, angles, cosines, sines, volume, b, spg, ptg, bas};
     }
 #endif //USE_HIGHFIVE
     bool operator==(const Lattice& other) const { return this->issame(other);}

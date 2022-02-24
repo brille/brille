@@ -22,6 +22,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #ifndef BRILLE_ARRAY2_HPP
 #define BRILLE_ARRAY2_HPP
 #include <memory>
+#include <atomic>
 #include "subscript.hpp"
 #include "utilities.hpp"
 #include "comparisons.hpp"
@@ -117,12 +118,12 @@ public:
   }
   // empty initializer
   explicit Array2()
-  : _data(nullptr), _num(0), _shift(0u), _own(false), _ref(std::make_shared<char>()),
+  : _data(nullptr), _num(0), _shift(0u), _own(false), _ref(std::make_shared<std::atomic<char>>()),
   _mutable(false), _shape({0,0}), _stride({0,1})
   {}
   // 1D initializer
   Array2(T* data, const ind_t num, const bool own, const bool mut=true)
-  : _data(data), _num(num), _shift(0u), _own(own), _ref(std::make_shared<char>()),
+  : _data(data), _num(num), _shift(0u), _own(own), _ref(std::make_shared<std::atomic<char>>()),
     _mutable(mut), _shape({num,1}), _stride({1,1})
   {
     this->init_check();
@@ -130,7 +131,7 @@ public:
   // 2D initializer
   Array2(T* data, const ind_t num, const bool own,
     const shape_t& shape, const shape_t& stride, const bool mut=true)
-  : _data(data), _num(num), _shift(0u), _own(own), _ref(std::make_shared<char>()),
+  : _data(data), _num(num), _shift(0u), _own(own), _ref(std::make_shared<std::atomic<char>>()),
     _mutable(mut), _shape(shape), _stride(stride)
   {
     this->init_check();
@@ -314,6 +315,7 @@ protected: // so inherited classes can calculate subscript indexes into their da
     return sub2lin(x, y, _stride) + _shift;
   }
   [[nodiscard]] ind_t s2l_d(const shape_t& s) const {
+    assert(brille::utils::subscript_ok(s, _shape));
     return sub2lin(s, _stride) + _shift;
   }
 private:
@@ -324,7 +326,7 @@ private:
   void construct() {
     _num = this->size_from_shape();
     if (_num > 0){
-      _ref = std::make_shared<char>();
+      _ref = std::make_shared<std::atomic<char>>();
       _data = new T[_num]();
       _own = true;
     } else {
@@ -336,11 +338,11 @@ private:
     this->construct();
     if (_num > 0 && _data != nullptr) std::fill(_data, _data+_num, init);
   }
-  void set_stride(void){
+  void set_stride(){
     _stride[1] = 1;
     _stride[0] = _shape[1];
   }
-  void init_check(void){
+  void init_check(){
     ind_t offset_size = _shift + this->size_from_shape(_shape);
     if (_num < offset_size) {
       std::string msg = "The shift { " + std::to_string(_shift) + " ";
@@ -378,7 +380,7 @@ private:
       for (auto x: this->subItr()) new_data[sub2lin(x,new_st)] = _data[this->s2l_d(x)];
     }
     bool new_own = true; // always take ownership of C++ allocated memory
-    auto new_ref = std::make_shared<char>(); // always use the default with C++ created arrays
+    auto new_ref = std::make_shared<std::atomic<char>>(); // always use the default with C++ created arrays
     bool new_mut = true; // new allocated memory should be mutable
     return Array2<T>(new_data, nnum, new_own, new_ref, _shape, new_st, new_mut);
   }
@@ -399,19 +401,19 @@ public:
   template<class I, size_t Nel> std::enable_if_t<std::is_integral_v<I>, Array2<T>> extract(const std::vector<std::array<I,Nel>>& i) const;
   Array2<T> extract(const Array2<bool>& i) const;
   Array2<T> extract(const std::vector<bool>& i) const;
-  bool set(const ind_t i, const Array2<T>& in);
+  bool set(ind_t i, const Array2<T>& in);
   template<class R>
-  bool set(const ind_t i, const Array2<R>& in);
-  bool set(const ind_t i, const std::vector<T>& in);
-  template<size_t Nel> bool set(const ind_t i, const std::array<T,Nel>& in);
+  bool set(ind_t i, const Array2<R>& in);
+  bool set(ind_t i, const std::vector<T>& in);
+  template<size_t Nel> bool set(ind_t i, const std::array<T,Nel>& in);
   T set(const shape_t& sub, T in);
-  Array2<T>& append(const ind_t, const Array2<T>&);
+  Array2<T>& append(ind_t, const Array2<T>&);
   [[nodiscard]] std::string to_string() const;
-  [[nodiscard]] std::string to_string(const ind_t) const;
+  [[nodiscard]] std::string to_string(ind_t) const;
 
   Array2<T>& reshape(const shape_t& ns);
   Array2<T>& resize(const shape_t&, T init=T(0));
-  template<class I> Array2<T>& resize(const I, T init=T(0));
+  template<class I> Array2<T>& resize(I, T init=T(0));
   [[nodiscard]] bool all(ind_t n=0) const;
   [[nodiscard]] bool any(ind_t n=0) const;
   [[nodiscard]] ind_t count(ind_t n=0) const;
@@ -494,6 +496,7 @@ public:
   Array2<T>& operator -=(const T&);
   Array2<T>& operator *=(const T&);
   Array2<T>& operator /=(const T&);
+  Array2<T> operator ^(const T&);
   template<class R> Array2<T>& operator +=(const Array2<R>&);
   template<class R> Array2<T>& operator -=(const Array2<R>&);
   template<class R> Array2<T>& operator *=(const Array2<R>&);
@@ -505,18 +508,18 @@ public:
   bool swap(ind_t a, ind_t b);
   bool swap(ind_t i, ind_t a, ind_t b);
   std::vector<T> to_std() const;
-  T* ptr(const ind_t i0);
-  T* ptr(const ind_t i0, const ind_t j0);
+  T* ptr(ind_t i0);
+  T* ptr(ind_t i0, ind_t j0);
   T* ptr(const shape_t& partial_subscript);
-  const T* ptr(const ind_t i0) const;
-  const T* ptr(const ind_t i0, const ind_t j0) const;
+  const T* ptr(ind_t i0) const;
+  const T* ptr(ind_t i0, ind_t j0) const;
   const T* ptr(const shape_t& partial_subscript) const;
-  T& val(const ind_t i0);
-  T& val(const ind_t i0, const ind_t j0);
+  T& val(ind_t i0);
+  T& val(ind_t i0, ind_t j0);
   T& val(const shape_t& partial_subscript);
   template<class I> T& val(std::initializer_list<I> l);
-  const T& val(const ind_t i0) const;
-  const T& val(const ind_t i0, const ind_t j0) const;
+  const T& val(ind_t i0) const;
+  const T& val(ind_t i0, ind_t j0) const;
   const T& val(const shape_t& partial_subscript) const;
   template<class I> const T& val(std::initializer_list<I> l) const;
 

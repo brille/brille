@@ -91,6 +91,8 @@ public:
   template<class Z> using element_t =std::array<Z,3>;
   using costfun_t = CostFunction<T>;
   using shape_t = std::vector<ind_t>;
+  using interpolated_out_t = brille::Array<T>;
+  using interpolated_in_t = brille::Array2<T>;
 protected:
   bArray<T> data_;      //!< The stored Array2 of points indexed like the holding-Object's vertices
   shape_t shape_;       //!< The shape of the input Array (or Array2)

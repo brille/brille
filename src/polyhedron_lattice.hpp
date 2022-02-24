@@ -126,9 +126,9 @@ namespace brille{
     }
     template<class H> static std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, LQPolyhedron<T>> from_hdf(H& obj, const std::string& entry){
       auto group = obj.getGroup(entry);
-      auto v = vertex_t::from_hdf(group, "vertices");
-      auto faces = lists_from_hdf<ind_t>(group, "faces");
-      return {v, faces};
+      vertex_t v = vertex_t::from_hdf(group, "vertices");
+      faces_t faces = lists_from_hdf<ind_t>(group, "faces");
+      return LQPolyhedron<T>(v, faces);
     }
     static LQPolyhedron<T> from_hdf(const std::string& filename, const std::string& dataset){
       HighFive::File file(filename, HighFive::File::ReadOnly);

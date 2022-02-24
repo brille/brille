@@ -27,7 +27,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <type_traits>
 #include <limits>
 #include <stdexcept>  // for std::overflow_error
-#include <math.h>
+//#include <math.h>
 #include <numeric>
 #include "debug.hpp"
 
@@ -88,7 +88,7 @@ namespace brille{
       bool TisFloatingPt = Trel > 0;
       Trel *= static_cast<T>(tol)*static_cast<T>(TOL_MULT);
       Rrel *= static_cast<R>(tol)*static_cast<R>(TOL_MULT);
-      info_update_if(tol > 1, "tol=", tol, " gives Trel=", Trel, " Rrel=", Rrel);
+//      info_update_if(tol > 1, "tol=", tol, " gives Trel=", Trel, " Rrel=", Rrel);
       return std::make_tuple(TorRisInteger, TisFloatingPt, Trel, Rrel, Tabs, Rabs);
     }
 
@@ -189,7 +189,7 @@ namespace brille{
     */
     template<class T, class R>
     bool scalar(const T a, const R b, const int tol=1){
-      info_update_if(tol > 1, "Using a multiplicitive tolerance of ", tol);
+//      info_update_if(tol > 1, "Using a multiplicitive tolerance of ", tol);
       auto [convertible, useT, Trel, Rrel, Tabs, Rabs] = tols<T,R>(tol);
       return convertible && _scalar(a, b, useT, Trel, Rrel, Tabs, Rabs);
     }

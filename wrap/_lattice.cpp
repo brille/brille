@@ -59,7 +59,7 @@ void wrap_lattice(py::module &m){
   )pbdoc");
 
   cls.def(py::init<double,double,double,double,double,double,int>(),
-          "a"_a,"b"_a,"c"_a,"alpha"_a=brille::halfpi,"beta"_a=brille::halfpi,"gamma"_a=brille::halfpi,
+          "a"_a,"b"_a,"c"_a,"alpha"_a=brille::math::half_pi,"beta"_a=brille::math::half_pi,"gamma"_a=brille::math::half_pi,
           "HallNumber"_a=1, R"pbdoc(
   Initialize a Lattice from its scalar basis vector lengths and angles
 

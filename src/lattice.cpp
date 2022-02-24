@@ -34,11 +34,10 @@ Lattice::Lattice(const double* lengths, const double* angles, const int h, const
   this->volume=this->calculatevolume();
   this->check_hall_number(h);
 }
-Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const int h):
-  len{{la,lb,lc}}, ang{{al,bl,cl}} {
-  // this->set_len_scalars(la,lb,lc);
-  // this->set_ang_scalars(al,bl,cl, AngleUnit::not_provided);
-  this->check_ang(AngleUnit::not_provided);
+Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const int h){
+  double l[3]{la,lb,lc}, a[3]{al,bl,cl};
+  this->set_len_pointer(l,1);
+  this->set_ang_pointer(a,1, AngleUnit::not_provided);
   this->volume = this->calculatevolume();
   this->check_hall_number(h);
 }
@@ -56,11 +55,10 @@ Lattice::Lattice(const double *lengths, const double *angles, const std::string&
   this->volume=this->calculatevolume();
   this->check_IT_name(itname, choice);
 }
-Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const std::string& itname, const std::string& choice):
-len({{la,lb,lc}}), ang({{al,bl,cl}}) {
-  // this->set_len_scalars(la,lb,lc);
-  // this->set_ang_scalars(al,bl,cl, AngleUnit::not_provided);
-  this->check_ang(AngleUnit::not_provided);
+Lattice::Lattice(const double la, const double lb, const double lc, const double al, const double bl, const double cl, const std::string& itname, const std::string& choice){
+  double l[3]{la,lb,lc}, a[3]{al,bl,cl};
+  this->set_len_pointer(l,1);
+  this->set_ang_pointer(a,1, AngleUnit::not_provided);
   this->volume = this->calculatevolume();
   this->check_IT_name(itname, choice);
 }
@@ -85,10 +83,10 @@ void Lattice::check_ang(const AngleUnit angle_unit){
       if (this->ang[i] > maxang) maxang = this->ang[i];
     }
     if (minang < 0.) throw std::runtime_error("Unexpected negative inter-facial cell angle");
-    au = (maxang < brille::pi) ? AngleUnit::radian : AngleUnit::degree;
+    au = (maxang < brille::math::pi) ? AngleUnit::radian : AngleUnit::degree;
   }
   if (au != AngleUnit::radian){
-    double conversion = brille::pi/((AngleUnit::degree == au) ? 180.0 : 1.0);
+    double conversion = brille::math::pi/((AngleUnit::degree == au) ? 180.0 : 1.0);
     for (int i=0;i<3;i++) this->ang[i] *= conversion;
   }
 }
@@ -119,76 +117,68 @@ void Lattice::check_IT_name(const std::string& itname, const std::string& choice
 }
 double Lattice::unitvolume() const{
   // The volume of a parallelpiped with unit length sides and our body angles
-  double c[3];
-  for (int i=0;i<3;++i) c[i]=std::cos(this->ang[i]);
   double sos=0, prd=2;
   for (int i=0;i<3;++i){
-    sos+=c[i]*c[i];
-    prd*=c[i];
+    sos+=cosines[i]*cosines[i];
+    prd*=cosines[i];
   }
   return std::sqrt( 1 - sos + prd );
 }
 double Lattice::calculatevolume(){
   // we could replace this by l[0]*l[1]*l[2]*this->unitvolume()
-  double tmp=1;
-  double *a = this->ang.data();
-  double *l = this->len.data();
-  tmp *= sin(( a[0] +a[1] +a[2])/2.0);
-  tmp *= sin((-a[0] +a[1] +a[2])/2.0);
-  tmp *= sin(( a[0] -a[1] +a[2])/2.0);
-  tmp *= sin(( a[0] +a[1] -a[2])/2.0);
-  tmp = sqrt(tmp);
-  tmp *= 2*l[0]*l[1]*l[2];
-  this->volume = tmp;
-  if (std::isnan(tmp)){
+//  double tmp=1;
+//  double *a = this->ang.data();
+//  double *l = this->len.data();
+//  tmp *= sin(( a[0] +a[1] +a[2])/2.0);
+//  tmp *= sin((-a[0] +a[1] +a[2])/2.0);
+//  tmp *= sin(( a[0] -a[1] +a[2])/2.0);
+//  tmp *= sin(( a[0] +a[1] -a[2])/2.0);
+//  tmp = sqrt(tmp);
+//  tmp *= 2*l[0]*l[1]*l[2];
+  volume = len[0]*len[1]*len[2] * this->unitvolume(); // is this off by 2pi?
+  if (std::isnan(volume)){
     std::string msg = "Invalid lattice unit cell ";
     if (std::isnan(this->unitvolume())){
       msg += "angles [";
-      for (int i=0; i<3; ++i) msg += " " + std::to_string(a[0]/brille::pi*180.);
+      for (int i=0; i<3; ++i) msg += " " + std::to_string(ang[0]/brille::math::pi*180.);
       msg += " ]";
     } else {
       msg += "lengths [";
-      for (int i=0; i<3; ++i) msg += " " + std::to_string(l[i]);
+      for (int i=0; i<3; ++i) msg += " " + std::to_string(len[i]);
       msg += " ]";
     }
     throw std::domain_error(msg);
   }
-  return tmp;
+  return volume;
 }
 Lattice Lattice::inner_star() const {
-  std::array<double,3> lstar, astar, cosang, sinang;
-  for (size_t i=0; i<3u; ++i){
-    cosang[i] = std::cos(this->ang[i]);
-    sinang[i] = std::sin(this->ang[i]);
-  }
+  std::array<double,3> lstar{}, astar{}, cstar{}, sstar{};
+//  for (size_t i=0; i<3u; ++i){
+//    cosang[i] = std::cos(this->ang[i]);
+//    sinang[i] = std::sin(this->ang[i]);
+//  }
   for (size_t i=0; i<3u; ++i){
     size_t j = (i+1)%3;
     size_t k = (i+2)%3;
-    lstar[i] = 2*brille::pi*sinang[i]*this->len[j]*this->len[k]/this->volume;
-    astar[i] = std::acos((cosang[j]*cosang[k]-cosang[i])/(sinang[j]*sinang[k]));
+    lstar[i] = brille::math::two_pi * sines[i] * len[j] * len[k] / this->volume;
+    cstar[i] = (cosines[j]*cosines[k]-cosines[i])/(sines[j]*sines[k]);
+    astar[i] = std::acos(cstar[i]);
+    sstar[i] = std::sin(astar[i]);
   }
-  return Lattice(lstar, astar, this->bravais, this->spgsym, this->ptgsym, this->basis);
+  return Lattice(lstar, astar, cstar, sstar, this->bravais, this->spgsym, this->ptgsym, this->basis);
 }
 void Lattice::get_metric_tensor(double * mt) const {
-  const double *a = this->ang.data();
-  const double *l = this->len.data();
+  mt[0] = len[0]*len[0];
+  mt[1] = len[1]*len[0]*cosines[2];
+  mt[2] = len[2]*len[0]*cosines[1];
 
-  double cosa, cosb, cosc;
-  cosa = cos(a[0]);
-  cosb = cos(a[1]);
-  cosc = cos(a[2]);
+  mt[3] = len[0]*len[1]*cosines[2];
+  mt[4] = len[1]*len[1];
+  mt[5] = len[2]*len[1]*cosines[0];
 
-  mt[0] = l[0]*l[0];
-  mt[1] = l[1]*l[0]*cosc;
-  mt[2] = l[2]*l[0]*cosb;
-
-  mt[3] = l[0]*l[1]*cosc;
-  mt[4] = l[1]*l[1];
-  mt[5] = l[2]*l[1]*cosa;
-
-  mt[6] = l[0]*l[2]*cosb;
-  mt[7] = l[1]*l[2]*cosa;
-  mt[8] = l[2]*l[2];
+  mt[6] = len[0]*len[2]*cosines[1];
+  mt[7] = len[1]*len[2]*cosines[0];
+  mt[8] = len[2]*len[2];
 }
 void Lattice::get_covariant_metric_tensor(double *mt) const {
   this->get_metric_tensor(mt);
@@ -222,7 +212,7 @@ bool Lattice::issame(const Lattice& lat) const{
 }
 
 bool Lattice::isapprox(const Lattice& lat) const {
-  return this->ispermutation(lat)==0 ? false : true;
+  return this->ispermutation(lat) != 0;
 }
 int Lattice::ispermutation(const Lattice& lat) const {
   double a[3], l[3];
@@ -249,16 +239,16 @@ int Lattice::ispermutation(const Lattice& lat) const {
 
 void Lattice::print(){
   printf("(%g %g %g) " ,this->len[0], this->len[1], this->len[2]);
-  printf("(%g %g %g)\n",this->ang[0]/brille::pi*180, this->ang[1]/brille::pi*180, this->ang[2]/brille::pi*180);
+  printf("(%g %g %g)\n",this->ang[0]/brille::math::pi*180, this->ang[1]/brille::math::pi*180, this->ang[2]/brille::math::pi*180);
 }
 std::string lattice2string(const Lattice& l, const std::string& lenunit="", const std::string& angunit="°"){
   std::string repr;
   repr = "(" + std::to_string(l.get_a()) + " "
              + std::to_string(l.get_b()) + " "
              + std::to_string(l.get_c()) + ")" + lenunit
-       +" (" + std::to_string(l.get_alpha()/brille::pi*180) + " "
-             + std::to_string(l.get_beta()/brille::pi*180)  + " "
-             + std::to_string(l.get_gamma()/brille::pi*180) + ")" + angunit;
+       +" (" + std::to_string(l.get_alpha()/brille::math::pi*180) + " "
+             + std::to_string(l.get_beta()/brille::math::pi*180)  + " "
+             + std::to_string(l.get_gamma()/brille::math::pi*180) + ")" + angunit;
   return repr;
 }
 std::string Lattice::string_repr(){ return lattice2string(*this); }
@@ -286,19 +276,20 @@ template<class I> void Direct::get_lattice_matrix(double *latmat, std::vector<I>
 }
 void Direct::get_lattice_matrix(double *latmat, const size_t c, const size_t r) const{
   // define the lattice basis vectors using the same convention as spglib
-  double c0=std::cos(this->ang[0]), c1=std::cos(this->ang[1]), c2=std::cos(this->ang[2]);
-  double s2=std::sin(this->ang[2]);
+//  double c0=std::cos(this->ang[0]), c1=std::cos(this->ang[1]), c2=std::cos(this->ang[2]);
+//  double s2=std::sin(this->ang[2]);
 
-  double xhat[3]={1,0,0}, yhat[3]={c2,s2,0};
-  double zhat[3]={c1, (c0-c2*c1)/s2, this->unitvolume()/s2};
+  double x[3]{1,0,0};
+  double y[3]{cosines[2],sines[2],0};
+  double z[3]{cosines[1], (cosines[0]-cosines[2]*cosines[1])/sines[2], this->unitvolume()/sines[2]};
 
   for (int i=0;i<3;++i){
-    // latmat[i*c+0*r] = this->len[0]*xhat[i];
-    // latmat[i*c+1*r] = this->len[1]*yhat[i];
-    // latmat[i*c+2*r] = this->len[2]*zhat[i];
-    latmat[0*c+i*r] = this->len[0]*xhat[i]; // ̂x direction, first row
-    latmat[1*c+i*r] = this->len[1]*yhat[i]; // ̂y direction, second row
-    latmat[2*c+i*r] = this->len[2]*zhat[i]; // ̂z direction, third row
+    // latmat[i*c+0*r] = this->len[0]*x[i];
+    // latmat[i*c+1*r] = this->len[1]*y[i];
+    // latmat[i*c+2*r] = this->len[2]*z[i];
+    latmat[0*c+i*r] = len[0]* x[i]; // ̂x direction, first row
+    latmat[1*c+i*r] = len[1]* y[i]; // ̂y direction, second row
+    latmat[2*c+i*r] = len[2]* z[i]; // ̂z direction, third row
   }
 }
 void Direct::get_xyz_transform(double* toxyz) const{
@@ -317,7 +308,7 @@ void Direct::get_xyz_transform(double *toxyz, const size_t c, const size_t r) co
   // use t as a buffer
   brille::utils::matrix_inverse(t,B);
   brille::utils::matrix_transpose(t); // in-place transpose using swap
-  for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) toxyz[i*c+j*r] = 2*brille::pi*t[3*i+j];
+  for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) toxyz[i*c+j*r] = brille::math::two_pi*t[3*i+j];
 }
 std::vector<double> Direct::get_xyz_transform() const {
   std::vector<double> mat(9);
@@ -354,7 +345,7 @@ void Reciprocal::get_lattice_matrix(double *latmat, const size_t c, const size_t
   d.get_lattice_matrix(m, 3u, 1u);
   brille::utils::matrix_inverse(tmp,m);
   brille::utils::matrix_transpose(tmp);
-  for (int i=0; i<9; ++i) tmp[i]*=2*brille::pi;
+  for (int i=0; i<9; ++i) tmp[i]*=brille::math::two_pi;
   for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j) latmat[c*i+r*j] = tmp[3*i+j];
 }
 void Reciprocal::get_B_matrix(double* B) const {
@@ -369,25 +360,26 @@ void Reciprocal::get_B_matrix(double *B, const size_t c, const size_t r) const {
   Direct d = this->star();
 
   double asb, asg;
-  asb = sin(this->get_beta());
+  asb = sines[1];
   if (asb<0) asb*=-1.0;
-  asg = sin(this->get_gamma());
+  asg = sines[2];
   if (asg<0) asg*=-1.0;
   // Be careful about indexing B. Make sure each vector goes in as a column, not a row!
   // if you mix this up, you'll only notice for non-orthogonal space groups
+  auto d_cosines = d.get_cosines();
 
   // a-star along x -- first column (constant row index = 0)
   B[0*c+0*r] = this->get_a();
   B[1*c+0*r] = 0.0;
   B[2*c+0*r] = 0.0;
   // b-star in the x-y plane -- second column
-  B[0*c+1*r] = this->get_b()*cos(this->get_gamma());
+  B[0*c+1*r] = this->get_b()*cosines[2];
   B[1*c+1*r] = this->get_b()*asg;
   B[2*c+1*r] = 0.0;
   // and c-star -- third column
-  B[0*c+2*r] = this->get_c()*cos(this->get_beta());
-  B[1*c+2*r] = -1.0*(this->get_c())*asb*cos(d.get_alpha());
-  B[2*c+2*r] = 2*brille::pi/d.get_c();
+  B[0*c+2*r] = this->get_c()*cosines[1];
+  B[1*c+2*r] = -1.0*(this->get_c())*asb*d_cosines[0]; //cos(d.get_alpha());
+  B[2*c+2*r] = brille::math::two_pi/d.get_c();
 }
 void Reciprocal::get_xyz_transform(double *toxyz) const { this->get_xyz_transform(toxyz, 3u, 1u); }
 template<class I> void Reciprocal::get_xyz_transform(double* toxyz, std::vector<I>& strides) const {
@@ -442,15 +434,15 @@ bool Reciprocal::isstar(const Reciprocal&) const {return false;}
 
 void Direct::print(){
   printf("(%g %g %g)A " ,this->len[0], this->len[1], this->len[2]);
-  printf("(%g %g %g)\n",this->ang[0]/brille::pi*180, this->ang[1]/brille::pi*180, this->ang[2]/brille::pi*180);
+  printf("(%g %g %g)\n",this->ang[0]/brille::math::pi*180, this->ang[1]/brille::math::pi*180, this->ang[2]/brille::math::pi*180);
 }
 void Reciprocal::print(){
   printf("(%g %g %g)/A " ,this->len[0], this->len[1], this->len[2]);
-  printf("(%g %g %g)\n",this->ang[0]/brille::pi*180, this->ang[1]/brille::pi*180, this->ang[2]/brille::pi*180);
+  printf("(%g %g %g)\n",this->ang[0]/brille::math::pi*180, this->ang[1]/brille::math::pi*180, this->ang[2]/brille::math::pi*180);
 }
 
 
-Direct Direct::primitive(void) const{
+Direct Direct::primitive() const{
   PrimitiveTransform P(this->bravais);
   if (P.does_anything()){
     double plm[9], lm[9];
@@ -460,12 +452,13 @@ Direct Direct::primitive(void) const{
     // Aₚ = Aₛ P. But here we have Aₛᵀ and want Aₚᵀ:
     // Aₚᵀ = (Aₛ P)ᵀ = Pᵀ Aₛᵀ
     // So we need the transpose of P from the PrimitiveTransform object:
-    brille::utils::multiply_matrix_matrix<double,double,double,3>(plm,P.get_Pt().data(),lm);
+    brille::utils::multiply_matrix_matrix<double,PrimitiveTraits::sixP,double,3>(plm,P.get_6Pt().data(),lm);
+    for (double & i : plm) i /= 6.0; // correct for having used 6*P
     return Direct(plm);
   }
   return *this;
 }
-Reciprocal Reciprocal::primitive(void) const{
+Reciprocal Reciprocal::primitive() const{
   // We could try to use the fact that for column vectors Bₚ = Bₛ (P⁻¹)ᵀ
   // but it's probably safer to continue using the reciprocal of the primitive
   // of the reciprocal of this lattice.

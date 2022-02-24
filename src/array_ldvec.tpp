@@ -51,7 +51,7 @@ LDVec<T>::star() const {
   auto fx = this->shape(); fx.back() = 0;
   for (auto x: this->subItr(fx))
     brille::utils::multiply_matrix_vector(slv.ptr(x), cvmt.data(), this->ptr(x));
-  slv /= 2.0*brille::pi; // ai= gij/2/pi * ai_star
+  slv /= 2.0*brille::math::pi; // ai= gij/2/pi * ai_star
   return slv;
 }
 template<class T>
@@ -64,7 +64,7 @@ LDVec<T>::cross(const ind_t i, const ind_t j) const {
     Direct dlat = this->get_lattice();
     LQVec<double> lqv(dlat.star(), 1u);
     brille::utils::vector_cross<double,T,T,3>(lqv.ptr(0), this->ptr(i), this->ptr(j));
-    lqv *= dlat.get_volume()/2.0/brille::pi;
+    lqv *= dlat.get_volume()/2.0/brille::math::pi;
     out =  lqv.star();
   }
   return out;
@@ -77,9 +77,7 @@ LDVec<T>::dot(const ind_t i, const ind_t j) const {
   if (i>=this->size(0) || j>=this->size(0))
     throw std::out_of_range("attempted out of bounds access by dot");
   Direct lat = this->get_lattice();
-  std::vector<double> len{lat.get_a(), lat.get_b(), lat.get_c()};
-  std::vector<double> ang{lat.get_alpha(), lat.get_beta(), lat.get_gamma()};
-  return same_lattice_dot(this->view(i),this->view(j),len,ang);
+  return same_lattice_dot(this->view(i),this->view(j), lat.get_lengths(), lat.get_cosines());
 }
 
 template<class T>

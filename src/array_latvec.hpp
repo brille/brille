@@ -23,7 +23,9 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #include <typeinfo> // for std::bad_cast
 #include <exception>
+#include <utility>
 #include "lattice.hpp"
+#include "tetgen.h"
 // #include "array2.hpp"
 
 //! An alias used while deciding between Array and Array2 for data storage
@@ -135,13 +137,74 @@ template<template<class> class A>\
 std::enable_if_t<isArray<T,A>, L <T>>&\
 operator X (const A<T>& b){\
   auto itr = this->broadcastItr(b.shape());\
-  if (!equal_shapes(itr.shape(), this->shape())) throw std::runtime_error("Incompatible shaped Array for binary operation");\
+  if (!equal_shapes(itr.shape(), this->shape())) { \
+    std::string msg="Incompatible shaped " + std::string(#L) + " arrays ";  \
+    msg += list_to_string(this->shape()) + " and " + list_to_string(b.shape()); \
+    msg += " for operation " + std::string(#X);\
+    throw std::runtime_error(msg); \
+  }\
   for (auto [ox, ax, bx]: itr) this->_data[this->s2l_d(ax)] X b[bx];\
   return *this;\
 }
-#define LVEC_INIT_INT(N,L,X) N(const L &lat, const X &n)\
-: bArray<T>(static_cast<brille::ind_t>(n),3), lattice(lat)\
+#define LVEC_INIT_INT(N,L,X) N(L lat, const X &n)\
+: bArray<T>(static_cast<brille::ind_t>(n),3), lattice(std::move(lat))\
 {}
+
+#define LVEC_FROM_STD(A, L, CONTAINER)\
+static A<T> from_std(L lat, const CONTAINER& data) {\
+  return A<T>(std::move(lat), bArray<T>::from_std(data));\
+}
+
+#define LVEC_FROM_STD_VECTOR_ARRAY(A, L) \
+template<class R, size_t N>\
+static A<T> from_std(L lat, const std::vector<std::array<R,N>>& data) { \
+  return A<T>(std::move(lat), bArray<T>::from_std(data));\
+}
+
+#define LVEC_SCALAR_POWER(L) \
+L<T> operator ^ (const T& val) {\
+  L<T> out(this->get_lattice(), this->shape());\
+  for (auto & v: this->subItr()) out[v] = std::pow(this->val(v), val);\
+  return out;\
+}
+
+
+#ifdef USE_HIGHFIVE
+
+#define TO_HDF_OBJ(INDEX_NAMES)\
+template<class H>\
+std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool>\
+ to_hdf(H& obj, const std::string& entry) const {\
+  auto group = overwrite_group(obj, entry);\
+  bool ok{true};\
+  ok &= lattice.to_hdf(group, "lattice");\
+  ok &= bArray<T>::to_hdf(group, "INDEX_NAMES");\
+  return ok;\
+}
+#define FROM_HDF_OBJ(L, LATTICE_TYPE, INDEX_NAMES)\
+template<class H>\
+static std::enable_if_t<std::is_base_of_v<HighFive::Object,H>, L<T>>\
+from_hdf(H& obj, const std::string& entry){\
+  auto group = obj.getGroup(entry);\
+  auto lat = LATTICE_TYPE::from_hdf(group, "lattice");\
+  auto val = bArray<T>::from_hdf(group, "INDEX_NAMES");\
+  return L<T>(lat, val);\
+}
+
+#define TO_HDF_STR \
+[[nodiscard]] bool to_hdf(const std::string& filename, const std::string& dataset, unsigned perm=HighFive::File::OpenOrCreate) const {\
+  HighFive::File file(filename, perm);\
+  return this->to_hdf(file, dataset);\
+}
+
+#define FROM_HDF_STR(L)\
+static L<T> from_hdf(const std::string& filename, const std::string& dataset){\
+  HighFive::File file(filename, HighFive::File::ReadOnly);\
+  return L<T>::from_hdf(file, dataset);\
+}
+
+#endif
+
 #endif
 
 /*! \brief 3-vector(s) expressed in units of a Direct lattice
@@ -154,8 +217,8 @@ class LDVec: public LatVec, public bArray<T>{
   Direct lattice;
 public:
   // default constructor for zero three-vectors:
-  explicit LDVec(const Direct& lat=Direct())
-  : bArray<T>(0,3), lattice(lat)
+  explicit LDVec(Direct lat=Direct())
+  : bArray<T>(0,3), lattice(std::move(lat))
   {
   }
   // (macroed as templates can't be distinguished)
@@ -166,19 +229,19 @@ public:
   LVEC_INIT_INT(LDVec,Direct,unsigned)
   LVEC_INIT_INT(LDVec,Direct,unsigned long)
   LVEC_INIT_INT(LDVec,Direct,unsigned long long)
-  //! Fowarding constructor to let bArray deal with everything else
-  template<typename... Args> LDVec(const Direct& lat, Args... args)
-  : bArray<T>(args...), lattice(lat)
+  //! Forwarding constructor to let bArray deal with everything else
+  template<typename... Args> explicit LDVec(Direct lat, Args... args)
+  : bArray<T>(args...), lattice(std::move(lat))
   {
     this->check_array();
   }
   template<class R>
-  LDVec(const LDVec<R>& other)
+  explicit LDVec(const LDVec<R>& other)
   : bArray<T>(other.get_hkl()), lattice(other.get_lattice())
   {
   }
 
-  Direct get_lattice() const { return lattice; }
+  [[nodiscard]] Direct get_lattice() const { return lattice; }
   template<class R> bool samelattice(const LDVec<R> *vec) const { return lattice.issame(vec->get_lattice()); }
   template<class R> bool samelattice(const LQVec<R> *)    const { return false; }
   template<class R> bool starlattice(const LDVec<R> *)    const { return false; }
@@ -193,18 +256,18 @@ public:
   //! Return a copied subset of the LDVec
   template<typename... A> LDVec<T> extract(A... args) const;
   //! Extract just the coordinates in units of the Direct lattice (strip off the lattice information)
-  bArray<T> get_hkl() const;
+  [[nodiscard]] bArray<T> get_hkl() const;
   //! Extract the coordinates in *an* orthonormal frame
-  bArray<double> get_xyz() const;
+  [[nodiscard]] bArray<double> get_xyz() const;
   //! Return the vector(s) expressed in units of the Reciprocal lattice
-  LQVec<double> star() const;
+  [[nodiscard]] LQVec<double> star() const;
 
   //! Determine the scalar product between two vectors in the object
-  double dot(const ind_t i, const ind_t j) const;
+  [[nodiscard]] double dot(ind_t i, ind_t j) const;
   //! Determine the absolute length of a vector in the object
-  double norm(const ind_t i) const { return sqrt(this->dot(i,i)); }
+  [[nodiscard]] double norm(ind_t i) const { return sqrt(this->dot(i,i)); }
   //! Determine the cross product of two vectors in the object
-  LDVec<double> cross(const ind_t i, const ind_t j) const;
+  [[nodiscard]] LDVec<double> cross(ind_t i, ind_t j) const;
 
   // LDVec<T>& operator-=(const LDVec<T>& av);
   // LDVec<T>& operator+=(const LDVec<T>& av);
@@ -219,6 +282,10 @@ public:
   LVEC_ARRAY_INPLACE_OP_DEF(LDVec,*=)
   LVEC_ARRAY_INPLACE_OP_DEF(LDVec,/=)
 
+  LVEC_FROM_STD(LDVec, Direct, std::vector<T>)
+  LVEC_FROM_STD_VECTOR_ARRAY(LDVec, Direct)
+
+  LVEC_SCALAR_POWER(LDVec)
 
   template<class R>
   void binary_operation_check(const LDVec<R>& b) const{
@@ -238,21 +305,26 @@ public:
     return (this->samelattice(that) && this->bArray<T>::is(that));
   }
   //! Round all elements using std::round
-  LDVec<int> round() const {
+  [[nodiscard]] LDVec<int> round() const {
     return LDVec<int>(this->lattice, this->bArray<T>::round());
   }
   //! Find the floor of all elements using std::floor
-  LDVec<int> floor() const {
+  [[nodiscard]] LDVec<int> floor() const {
     return LDVec<int>(this->lattice, this->bArray<T>::floor());
   }
   //! Find the ceiling of all elements using std::ceil
-  LDVec<int> ceil() const {
+  [[nodiscard]] LDVec<int> ceil() const {
     return LDVec<int>(this->lattice, this->bArray<T>::ceil());
   }
 
   LDVec<T> decouple() {
     return LDVec<T>(lattice, this->bArray<T>::decouple());
   }
+
+  TO_HDF_OBJ(xyz)
+  TO_HDF_STR
+  FROM_HDF_OBJ(LDVec, Direct, xyz)
+  FROM_HDF_STR(LDVec)
 protected:
   void check_array();
 };
@@ -268,8 +340,8 @@ class LQVec:  public LatVec, public bArray<T>{
   Reciprocal lattice;
 public:
   // default constructor for zero three-vectors:
-  explicit LQVec(const Reciprocal& lat=Reciprocal())
-  : bArray<T>(0,3), lattice(lat)
+  explicit LQVec(Reciprocal  lat=Reciprocal())
+  : bArray<T>(0,3), lattice(std::move(lat))
   {
   }
   //! integer number of three-vector constructor (macroed as templates can't be distinguished)
@@ -281,19 +353,19 @@ public:
   LVEC_INIT_INT(LQVec,Reciprocal,unsigned long long)
   //! Fowarding constructor to let bArray deal with everything else
   template<typename... Args>
-  LQVec(const Reciprocal& lat, Args... args)
-  : bArray<T>(args...), lattice(lat)
+  explicit LQVec(Reciprocal  lat, Args... args)
+  : bArray<T>(args...), lattice(std::move(lat))
   {
     this->check_array();
   }
 
   template<class R>
-  LQVec(const LQVec<R>& other)
+  explicit LQVec(const LQVec<R>& other)
   : bArray<T>(other.get_hkl()), lattice(other.get_lattice())
   {
   }
 
-  Reciprocal get_lattice() const { return lattice; }
+  [[nodiscard]] Reciprocal get_lattice() const { return lattice; }
   template<class R> bool samelattice(const LQVec<R> *vec) const { return lattice.issame(vec->get_lattice()); }
   template<class R> bool samelattice(const LDVec<R> *)    const { return false; }
   template<class R> bool starlattice(const LQVec<R> *)    const { return false; }
@@ -308,21 +380,21 @@ public:
   //! Return a copied subset of the LQVec
   template<typename... A> LQVec<T> extract(A... args) const;
   //! Extract just the coordinates in units of the Reciprocal lattice (strip off the lattice information)
-  bArray<T> get_hkl() const;
+  [[nodiscard]] bArray<T> get_hkl() const;
   /*! Extract the coordinates in an orthonormal frame with its first axis, x,
   along a*, its second, y, perpendicular with y⋅b*>0 , and it's third forming
   the right-handed set z=x×y.
   */
-  bArray<double> get_xyz() const;
+  [[nodiscard]] bArray<double> get_xyz() const;
   //! Return the vector(s) expressed in units of the Direct lattice
-  LDVec<double> star() const;
+  [[nodiscard]] LDVec<double> star() const;
 
   //! Determine the scalar product between two vectors in the object.
-  double dot(const ind_t i, const ind_t j) const;
+  [[nodiscard]] double dot(ind_t i, ind_t j) const;
   //! Determine the absolute length of a vector in the object.
-  double norm(const ind_t i) const { return sqrt(this->dot(i,i)); }
+  [[nodiscard]] double norm(ind_t i) const { return sqrt(this->dot(i,i)); }
   //! Determine the cross product of two vectors in the object.
-  LQVec<double> cross(const ind_t i, const ind_t j) const;
+  [[nodiscard]] LQVec<double> cross(ind_t i, ind_t j) const;
 
   LVEC_SCALAR_INPLACE_OP_DEF(LQVec,+=)
   LVEC_SCALAR_INPLACE_OP_DEF(LQVec,-=)
@@ -334,6 +406,11 @@ public:
   LVEC_ARRAY_INPLACE_OP_DEF(LQVec,*=)
   LVEC_ARRAY_INPLACE_OP_DEF(LQVec,/=)
   // LQVec<T> operator -();
+
+  LVEC_FROM_STD(LQVec, Reciprocal, std::vector<T>)
+  LVEC_FROM_STD_VECTOR_ARRAY(LQVec, Reciprocal)
+
+  LVEC_SCALAR_POWER(LQVec)
 
   template<class R>
   void binary_operation_check(const LQVec<R>& b) const{
@@ -353,15 +430,15 @@ public:
     return (this->samelattice(that) && this->bArray<T>::is(that));
   }
   //! Round all elements using std::round
-  LQVec<int> round() const {
+  [[nodiscard]] LQVec<int> round() const {
     return LQVec<int>(this->lattice, this->bArray<T>::round());
   }
   //! Find the floor of all elements using std::floor
-  LQVec<int> floor() const {
+  [[nodiscard]] LQVec<int> floor() const {
     return LQVec<int>(this->lattice, this->bArray<T>::floor());
   }
   //! Find the ceiling of all elements using std::ceil
-  LQVec<int> ceil() const {
+  [[nodiscard]] LQVec<int> ceil() const {
     return LQVec<int>(this->lattice, this->bArray<T>::ceil());
   }
   //
@@ -382,6 +459,11 @@ public:
   LQVec<T> decouple() {
     return LQVec<T>(lattice, this->bArray<T>::decouple());
   }
+
+  TO_HDF_OBJ(hkl)
+  TO_HDF_STR
+  FROM_HDF_OBJ(LQVec, Reciprocal, hkl)
+  FROM_HDF_STR(LQVec)
 protected:
   void check_array();
 };
@@ -389,6 +471,15 @@ protected:
 #undef LVEC_SCALAR_INPLACE_OP_DEF
 #undef LVEC_ARRAY_INPLACE_OP_DEF
 #undef LVEC_INIT_INT
+#undef LVEC_FROM_STD
+#undef LVEC_FROM_STD_VECTOR_ARRAY
+
+#ifdef USE_HIGHFIVE
+#undef TO_HDF_OBJ
+#undef TO_HDF_STR
+#undef FROM_HDF_OBJ
+#undef FROM_HDF_STR
+#endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 // extend the lattice traits structs

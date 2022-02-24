@@ -6,7 +6,7 @@ using namespace brille;
 
 TEST_CASE("BrillouinZoneNest3 instantiation","[nest]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.01;
@@ -16,7 +16,7 @@ TEST_CASE("BrillouinZoneNest3 instantiation","[nest]"){
   BrillouinZoneNest3<double,double> bzn1(bz, max_volume, max_branchings);
 }
 TEST_CASE("BrillouinZoneNest3 vertex accessors","[nest]"){
-  Direct d(10.75, 10.75, 10.75, brille::halfpi, brille::halfpi, brille::halfpi, 525);
+  Direct d(10.75, 10.75, 10.75, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 525);
   BrillouinZone bz(d.star());
   ind_t number_rho = 1000;
   ind_t max_branchings = 5;
@@ -30,7 +30,7 @@ TEST_CASE("BrillouinZoneNest3 vertex accessors","[nest]"){
 
 TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.01;
@@ -89,7 +89,7 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
 
 TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   double max_volume = 0.01;

@@ -67,6 +67,10 @@ template<class T, class R>
 class DualInterpolator{
 public:
   template<class Z> using element_t = std::array<Z,3>;
+  using value_out_t = typename Interpolator<T>::interpolated_out_t;
+  using vector_out_t = typename Interpolator<R>::interpolated_out_t;
+  using value_in_t = typename Interpolator<T>::interpolated_in_t;
+  using vector_in_t = typename Interpolator<R>::interpolated_in_t;
 protected:
   Interpolator<T> values_;
   Interpolator<R> vectors_;

@@ -28,6 +28,7 @@ list(APPEND CXX_SOURCES
   hall_symbol.cpp
   lattice.cpp
   neighbours.cpp
+  polyhedron_faces.cpp
   pointgroup.cpp
   pointsymmetry.cpp
   spg_database.cpp

@@ -7,7 +7,7 @@ using namespace brille;
 
 TEST_CASE("BrillouinZoneMesh3 instantiation","[mesh]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   // double max_size = 0.01;

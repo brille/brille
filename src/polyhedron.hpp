@@ -133,9 +133,9 @@ public:
   vertices(v) {
 //        FIXME
     this->keep_unique_vertices();
-    auto [b, c] = plane_points_from_normal(p, p);
-    auto fpv = find_planes_containing_point(p, b, c, vertices);
-    auto vpf = polygon_faces(p, b, c, fpv, vertices);
+    auto [a, b, c] = plane_points_from_normal(p, p);
+    auto fpv = find_planes_containing_point(a, b, c, vertices);
+    auto vpf = polygon_faces(a, b, c, fpv, vertices);
     if (polygon_face_vertex_purge(vertices, vpf)){
       debug_update("Some vertices purged");
     }
@@ -149,9 +149,9 @@ public:
     verbose_update("Construct a polyhedron from vertices:\n",vertices.to_string());
     verbose_update("and planes (points, normals):\n", cat(1,p,n).to_string());
     this->keep_unique_vertices();
-    auto [b, c] = plane_points_from_normal(n, p);
-    auto fpv = find_planes_containing_point(p, b, c, vertices);
-    auto vpf = polygon_faces(p, b, c, fpv, vertices);
+    auto [a, b, c] = plane_points_from_normal(n, p);
+    auto fpv = find_planes_containing_point(a, b, c, vertices);
+    auto vpf = polygon_faces(a, b, c, fpv, vertices);
     if (polygon_face_vertex_purge(vertices, vpf)){
       debug_update("Some vertices purged");
     }

@@ -51,7 +51,7 @@ public:
   */
   // BrillouinZoneMesh3(const BrillouinZone& bz, const double max_size_invA=-1., const double min_angle=20.0, const double max_angle=-1.0, const double max_ratio=-1., const int max_points=-1):
   //   Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), max_size_invA, min_angle, max_angle, max_ratio, max_points),
-  //   brillouinzone(bz) {}
+  //   bz_(bz) {}
   // BrillouinZoneMesh3(const BrillouinZone& bz) Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face());
   /*! \brief Construct a `BrillouinZoneMesh3` from a `BrillouinZone` and variable arguments
 
@@ -145,7 +145,7 @@ public:
         auto group = overwrite_group(obj, entry);
         bool ok{true};
         ok &= SuperClass::to_hdf(group, "mesh");
-        ok &= brillouinzone.to_hdf(group, "brillouinzone");
+        ok &= brillouinzone.to_hdf(group, "bz_");
         return ok;
     }
     // Input from HDF5 file/object
@@ -154,7 +154,7 @@ public:
     from_hdf(HF& obj, const std::string& entry){
         auto group = obj.getGroup(entry);
         auto mesh = SuperClass::from_hdf(group, "mesh");
-        auto bz = BrillouinZone::from_hdf(group, "brillouinzone");
+        auto bz = BrillouinZone::from_hdf(group, "bz_");
         return {mesh, bz};
     }
 

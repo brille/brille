@@ -356,6 +356,11 @@ public:
 
   holder shape() const {return _shapeO;}
   size_t ndim() const {return _shapeO.size();}
+  T size() const {
+    T prod{1};
+    for (const auto & x: _shapeO) prod *= x;
+    return prod;
+  }
   //const SubIt<T>& itr() const {return _itr;}
 
   BroadcastIt<T>& operator++(){
@@ -477,6 +482,7 @@ public:
 
   holder shape() const {return _shapeO;}
   size_t ndim() const {return 2;}
+  T size() const {return _shapeO[0] * _shapeO[1];}
   //const SubIt<T>& itr() const {return _itr;}
 
   BroadcastIt2<T>& operator++(){

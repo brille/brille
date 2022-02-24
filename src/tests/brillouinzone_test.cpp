@@ -27,21 +27,21 @@ bool write_read_test(const BrillouinZone&, const std::string&){
 }
 #endif
 
-TEST_CASE("Primitive Cubic BrillouinZone instantiation","[brillouinzone]"){
-  Direct d(2*brille::pi,2*brille::pi,2*brille::pi,90.,90.,90.);
+TEST_CASE("Primitive Cubic BrillouinZone instantiation","[bz_]"){
+  Direct d(brille::math::two_pi,brille::math::two_pi,brille::math::two_pi,90.,90.,90.);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   REQUIRE(write_read_test(bz, "primitive_cubic"));
 }
 
-TEST_CASE("Primitive Hexagonal BrillouinZone instantiation","[brillouinzone]"){
+TEST_CASE("Primitive Hexagonal BrillouinZone instantiation","[bz_]"){
   Direct d(3.,3.,3.,90.,90.,120.);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   REQUIRE(write_read_test(bz, "primitive_hexagonal"));
 }
 //
-//TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
+//TEST_CASE("BrillouinZone moveinto","[bz_]"){
 //  std::string spgr;
 //  SECTION("Primitive"){
 //    spgr = "P 1";
@@ -80,7 +80,7 @@ TEST_CASE("Primitive Hexagonal BrillouinZone instantiation","[brillouinzone]"){
 //}
 
 
-TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
+TEST_CASE("BrillouinZone moveinto","[bz_]"){
   std::string spgr;
   auto run_tests = [](const std::string & spacegroup){
     Direct d(2.87,2.87,2.87,90.,90.,90.,spacegroup);
@@ -90,7 +90,7 @@ TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
     std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
     std::uniform_real_distribution<double> distribution(-5.0,5.0);
 
-    int nQ = 3333;
+    int nQ = 50;
     LQVec<double> Q(r, nQ); // holds an (nQ, 3) shaped Array or Array2
     for (auto& v: Q.valItr()) v = distribution(generator);
 
@@ -124,7 +124,7 @@ TEST_CASE("BrillouinZone moveinto","[brillouinzone]"){
 
 }
 
-TEST_CASE("BrillouinZone moveinto hexagonal","[brillouinzone][moveinto]"){
+TEST_CASE("BrillouinZone moveinto hexagonal","[bz_][moveinto]"){
   Direct d(3.,3.,9.,90.,90.,120.,1);
   Reciprocal r(d.star());
   BrillouinZone bz(r);
@@ -139,7 +139,7 @@ TEST_CASE("BrillouinZone moveinto hexagonal","[brillouinzone][moveinto]"){
   REQUIRE(bz.moveinto(Q,q,tau));
 }
 
-TEST_CASE("BrillouinZone moveinto hexagonal extended","[brillouinzone][moveinto][.timing]"){
+TEST_CASE("BrillouinZone moveinto hexagonal extended","[bz_][moveinto][.timing]"){
   Direct dlat(3.,3.,9.,90.,90.,120.,1);
   Reciprocal rlat(dlat.star());
   BrillouinZone bz(rlat);
@@ -174,26 +174,48 @@ TEST_CASE("BrillouinZone moveinto hexagonal extended","[brillouinzone][moveinto]
     timer.tic();
     bz.moveinto(Q,Q,tau);
     times.push_back(timer.toc()); // keep the split-time (in msec)
-    info_update("brillouinzone::moveinto of ",total_points," points performed by ",threads, " threads in ",timer.average(),"+/-",timer.jitter()," msec");
+    info_update("bz_::moveinto of ",total_points," points performed by ",threads, " threads in ",timer.average(),"+/-",timer.jitter()," msec");
   }
   for (size_t i=1u; i<times.size(); ++i)
     REQUIRE(times[i] <= times[0]);
 }
 
-TEST_CASE("Irreducible Brillouin zone for mp-147","[brillouinzone][materialsproject]"){
+TEST_CASE("Irreducible Brillouin zone for mp-147 alt","[bz_][materialsproject]"){
+  // The spacegroup for elemental Se, from https://www.materialsproject.org/materials/mp-147/
+  // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-147.html
+  // If brille::approx::scalar() is too strict this will fail.
+  //
+  std::string hall_symbol = "-R 3";
+  // the non star verion below has slightly-off b vector length
+  double lens[3]{10.699417459999999, 10.699417459999999, 4.528988750000000};
+  double angs[3]{90,90,120};
+  //
+  Direct dlat(lens, angs, hall_symbol);
+  Reciprocal rlat = dlat.star();
+  BrillouinZone bz(rlat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true);
+  REQUIRE(bz.check_ir_polyhedron());
+  auto fbz = bz.get_polyhedron();
+  auto irp = bz.get_ir_polyhedron();
+  REQUIRE(irp.volume() == Approx(fbz.volume()/6));
+  REQUIRE(write_read_test(bz, "mp-147"));
+  info_update("First Brillouin zone\n", fbz.python_string());
+  info_update("Irreducible Brillouin zone\n", irp.python_string());
+}
+
+TEST_CASE("Irreducible Brillouin zone for mp-147","[bz_][materialsproject]"){
   // The spacegroup for elemental Se, from https://www.materialsproject.org/materials/mp-147/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-147.html
   // If brille::approx::scalar() is too strict this will fail.
   double lattice_vectors[9] = {
     10.699417459999999, 0.000000050000000, 0.000000000000000,
     -5.349708760000000, 9.265967300000000, 0.000000000000000,
-     0.000000000000000, 0.000000000000000, 4.528988750000000};
+    0.000000000000000, 0.000000000000000, 4.528988750000000};
   //
   std::string hall_symbol = "-R 3";
   //
   Direct dlat(lattice_vectors, hall_symbol);
   Reciprocal rlat = dlat.star();
-  BrillouinZone bz(rlat);
+  BrillouinZone bz(rlat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -201,7 +223,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147","[brillouinzone][materialsproj
   REQUIRE(write_read_test(bz, "mp-147"));
 }
 
-TEST_CASE("Irreducible Brillouin zone for mp-306","[brillouinzone][materialsproject]"){
+TEST_CASE("Irreducible Brillouin zone for mp-306","[bz_][materialsproject]"){
   // The spacegroup for B₂O₃, from https://www.materialsproject.org/materials/mp-306/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-306.html
   // If brille::approx::scalar() is too strict this will fail.
@@ -222,7 +244,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-306","[brillouinzone][materialsproj
   REQUIRE(write_read_test(bz, "mp-306"));
 }
 
-TEST_CASE("Irreducible Brillouin zone for mp-661","[brillouinzone][materialsproject]"){
+TEST_CASE("Irreducible Brillouin zone for mp-661","[bz_][materialsproject]"){
   // The spacegroup for AlN, from https://www.materialsproject.org/materials/mp-661/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-661.html
   // If brille::approx::scalar() is too strict this will fail.
@@ -243,7 +265,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-661","[brillouinzone][materialsproj
   REQUIRE(write_read_test(bz, "mp-661"));
 }
 
-TEST_CASE("Irreducible Brillouin zone for mp-7041","[brillouinzone][materialsproject]"){
+TEST_CASE("Irreducible Brillouin zone for mp-7041","[bz_][materialsproject]"){
   // The spacegroup for CaHgO₂, from https://www.materialsproject.org/materials/mp-7041/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-7041.html
   // If brille::approx::scalar() is too strict this will fail.
@@ -264,7 +286,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-7041","[brillouinzone][materialspro
   REQUIRE(write_read_test(bz, "mp-7041"));
 }
 
-TEST_CASE("Irreducible Brillouin zone for mp-917","[brillouinzone][materialsproject]"){
+TEST_CASE("Irreducible Brillouin zone for mp-917","[bz_][materialsproject]"){
   // The spacegroup for CaC₂, from https://www.materialsproject.org/materials/mp-917/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-917.html
   // If brille::approx::scalar() is too strict this will fail.
@@ -285,7 +307,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-917","[brillouinzone][materialsproj
   REQUIRE(write_read_test(bz, "mp-917"));
 }
 
-TEST_CASE("No irreducible Brillouin zone for inconsistent parameters and symmetry","[brillouinzone]"){
+TEST_CASE("No irreducible Brillouin zone for inconsistent parameters and symmetry","[bz_]"){
   double a{3.5}, c{12.9}, alpha{90}, gamma{120};
   std::string spacegroup = "P 4";
   Direct dlat(a,a,c, alpha,alpha,gamma, spacegroup);
@@ -293,9 +315,9 @@ TEST_CASE("No irreducible Brillouin zone for inconsistent parameters and symmetr
   REQUIRE_THROWS_WITH( BrillouinZone(rlat), "Failed to find an irreducible Brillouin zone."); 
 }
 
-TEST_CASE("Nb irreducible Brillouin Zone", "[brillouinzone]"){
+TEST_CASE("Nb irreducible Brillouin Zone", "[bz_]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
+  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
   Reciprocal r = d.star();
   BrillouinZone bz(r);
   auto fbz = bz.get_polyhedron();

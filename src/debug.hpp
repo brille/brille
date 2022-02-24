@@ -29,8 +29,9 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <vector>
 #include <complex>
 #include <chrono>
-// #define VERBOSE_DEBUG
- #define DEBUG // comment-out for no debugging output
+#define VERBOSE_DEBUG
+#define DEBUG // comment-out for no debugging output
+
 #define PRINTING_PRECISION 16
 namespace brille {
 // brille::abs (defined here instead of approx to avoid circular referencing)
@@ -168,9 +169,22 @@ const std::string my_to_string(const T & a, const size_t w=0){
   for (auto x: a) s += my_to_string(x, w);
   return s;
 }
+template<class T, class R> std::string my_to_string(const std::pair<T,R>& p, const size_t w=0){
+  size_t h = (w - 1u) / 2u;
+  std::string s = my_to_string(p.first, h) + "—" + my_to_string(p.second, h);
+  return s;
+}
 
 template<typename T>
 [[nodiscard]] std::string list_to_string(const std::vector<T>& v){
+  std::string s{"["};
+  for (const auto & x: v) s += my_to_string(x) + ", ";
+  s.pop_back();
+  s.pop_back();
+  return s + "]";
+}
+template<typename T, size_t N>
+[[nodiscard]] std::string list_to_string(const std::array<T,N>& v){
   std::string s{"["};
   for (const auto & x: v) s += my_to_string(x) + ", ";
   s.pop_back();
@@ -181,8 +195,10 @@ template<typename T>
 [[nodiscard]] std::string lists_to_string(const std::vector<std::vector<T>>& vv){
  std::string s{"["};
  for (const auto & v: vv) s += list_to_string(v) + ",\n";
- s.pop_back();
- s.pop_back();
+ if (vv.size()){
+   s.pop_back();
+   s.pop_back();
+ }
  return s + "]";
 }
 

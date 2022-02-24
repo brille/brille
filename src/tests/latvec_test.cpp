@@ -14,7 +14,7 @@ TEST_CASE("Lattice Vector tests","[latvec]"){
 
   SECTION("length via .norm(integer)"){
     for(ind_t i=0; i<3; i++)
-    REQUIRE( q.norm(i) == Approx(2*brille::pi) );
+    REQUIRE( q.norm(i) == Approx(brille::math::two_pi) );
   }
   SECTION("length via norm()"){
     auto normq = norm(q);

@@ -125,7 +125,7 @@ public:
         auto group = overwrite_group(obj, entry);
         bool ok{true};
         ok &= SuperClass::to_hdf(group, "nest");
-        ok &= brillouinzone.to_hdf(group, "brillouinzone");
+        ok &= brillouinzone.to_hdf(group, "bz_");
         return ok;
     }
     // Implementing this requires Nest3::to/from_hdf and therefore NestNode and NestLeaf to/from_hdf, which is problematic
@@ -134,8 +134,8 @@ public:
 //    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, BrillouinZoneNest3<T,S>>
 //    from_hdf(HF& obj, const std::string& entry){
 //        auto group = obj.getGroup(entry);
-//        auto nest = SuperClass::from_hdf(group, "nest");
-//        auto bz = BrillouinZone::from_hdf(group, "brillouinzone");
+//        auto nest = super_t::from_hdf(group, "nest");
+//        auto bz = BrillouinZone::from_hdf(group, "bz_");
 //        return {bz, nest};
 //    }
 

@@ -227,23 +227,26 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   // Get and combine the characteristic points of the first Brillouin zone:
   // The face centres, face corners, and mid-face-edge points.
   auto special = cat(0, this->get_points(), this->get_vertices(), this->get_half_edges());
+  info_update("First Bz\n", first_poly.python_string(), "with special points\n,np.array(", get_xyz(special).to_string(), ")");
+
   std::vector<size_t> perm(ps.size());
   std::iota(perm.begin(), perm.end(), 0u); // 0u, 1u, 2u,...
-    // ps is sorted in increasing rotation-order order, but we want to sort
   if (sort_by_length){
-      // by increasing stationary-axis length (so that, e.g, [100] is dealt with
-      // before [111]).
-      std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
-          LQVec<int> lq(outerlattice, 2u); // FIXME stationary axes are real-space vectors
-          lq.set(0u, ps.axis(a));
-          lq.set(1u, ps.axis(b));
-          return lq.dot(0u,0u) < lq.dot(1u,1u);
-      });
+    // ps is sorted in increasing rotation-order order, but we want to sort
+    // by increasing stationary-axis length (so that, e.g, [100] is dealt with
+    // before [111]).
+    std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
+        LQVec<int> lq(outerlattice, 2u); // FIXME stationary axes are real-space vectors
+        lq.set(0u, ps.axis(a));
+        lq.set(1u, ps.axis(b));
+        return lq.dot(0u,0u) < lq.dot(1u,1u);
+    });
   } else {
-      // by decreasing isometry so that we deal with rotoinversions last
-      std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
-        return ps.isometry(a) > ps.isometry(b);
-      });
+    // ps is sorted in increasing rotation-order order, but we want to sort
+    // by decreasing isometry so that we deal with rotoinversions last
+    std::sort(perm.begin(), perm.end(), [&](size_t a, size_t b){
+      return ps.isometry(a) > ps.isometry(b);
+    });
   }
   ps.permute(perm); // ps now sorted
 
@@ -300,6 +303,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
 //        debug_update("Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n",special.to_string(),keep.to_string());
         debug_update("1 Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
         special = special.extract(keep);
+        debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
         sym_unused[i] = false;
         cutting_normals.set(n_cut++, nrm);
       }
@@ -317,7 +321,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       keep = dot(nrm, special).is(brille::cmp::ge, 0., approx_tolerance);
       debug_update("Keeping special (LQVec) points p, with (LQVec)",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
       special = special.extract(keep);
-      debug_update("Leaving special points\n", special.to_string());
+      debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
       sym_unused[i] = false;
       cutting_normals.set(n_cut++, nrm);
     }
@@ -335,9 +339,9 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       keep = dot(nrm, special).is(brille::cmp::ge, 0., approx_tolerance);
     }
     if (keep.count() > 2 && have_volume(special.extract(keep), approx_tolerance)){
-//      debug_update("Keeping special points with\n",nrm.to_string()," dot p >=0:\n", special.to_string(), keep.to_string());
       debug_update("3 Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
       special = special.extract(keep);
+      debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
       sym_unused[i] = false;
       cutting_normals.set(n_cut++, nrm);
     }
@@ -490,6 +494,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
               if (keep_count > 2 && keep_count < keep.size(0)){
                 debug_update("Keeping special points (keep, h, k, l):\n",cat(1, 1.0 * keep, special).to_string());
                 special = special.extract(keep);
+                debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
                 sym_unused[i]=false;
                 for (ind_t nc=0; nc<nrm.size(0); ++nc)
                   cutting_normals.set(n_cut++, nrm.view(nc));
@@ -502,8 +507,10 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   // debug_update("Remaining special points\n", special.to_string());
   if (n_cut > 0) { /*protect against view(0,0)*/
     auto cn = cutting_normals.view(0, n_cut); // the cutting direction is opposite the normal
-    auto [cb, cc] = plane_points_from_normal(-1.0 * cn, 0.0 * cn);
-    ir_poly = first_poly.cut(0.0 * cn, cb, cc);
+    auto [ca, cb, cc] = plane_points_from_normal(-1.0 * cn, 0.0 * cn);
+    debug_update("Now cut the first Brillouin zone by normal(s)\n", get_xyz(-1.0 * cn).to_string());
+    debug_update("With on-plane points,\n",get_xyz(ca).to_string(),get_xyz(cb).to_string(),get_xyz(cc).to_string());
+    ir_poly = first_poly.cut(ca, cb, cc);
   } else {
     info_update("No cutting normals in wedge search");
   }
@@ -535,15 +542,16 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
     auto ir_volume = ir_poly.volume();
     auto goal_volume = first_poly.volume()/static_cast<double>(full_ps.size());
     auto aaiu = all_axes.is_unique();
-    if (std::count(aaiu.begin(), aaiu.end(), true) == 1u || brille::approx::scalar(ir_volume, 2.0*goal_volume) ){
+    auto cnt = all_axes.unique().size(0);
+    if ((ir_volume > goal_volume && cnt == 1) || brille::approx::scalar(ir_volume, 2.0*goal_volume) ){
       debug_update("Deal with -1 since there is only one stationary axis (or doubled volume for some other reason)");
       auto bz_n = this->get_normals();
       // auto wg_n = this->get_ir_wedge_normals(); // !! This is empty if the thus-far-found volume is wrong
       auto wg_n = this->get_ir_polyhedron_wedge_normals(); // This pulls directly from the ir_polyhedron
       auto gamma = bz_n.view(0) * 0.;
       for (ind_t i=0; i<bz_n.size(0); ++i){
-        auto [b, c] = plane_points_from_normal(bz_n.view(i), gamma);
-        auto div = ir_poly.one_cut(gamma, b, c);
+        auto [a, b, c] = plane_points_from_normal(bz_n.view(i), gamma);
+        auto div = ir_poly.one_cut(a, b, c);
         if (brille::approx::scalar(div.volume(), goal_volume)){
           // set div to be the ir_polyhedron
           ir_poly = div;
@@ -562,8 +570,8 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
         //LQVec<double> cij(this->outerlattice, 1u);
         for (ind_t i=0; proceed && i<bz_n.size(0)-1; ++i)
         for (ind_t j=i+1; proceed && j<bz_n.size(0); ++j){
-          auto [b, c] = plane_points_from_normal(bz_n.cross(i, j), gamma);
-          auto div = ir_poly.one_cut(gamma, b, c);
+          auto [a, b, c] = plane_points_from_normal(bz_n.cross(i, j), gamma);
+          auto div = ir_poly.one_cut(a, b, c);
           if (brille::approx::scalar(div.volume(), goal_volume)){
             ir_poly = div;
             wg_n.append(0u, -bz_n.cross(i,j));
@@ -595,16 +603,16 @@ bool BrillouinZone::wedge_triclinic(){
   auto origin = 0 * normals.view(0);
   for (ind_t i=0; i<normals.size(0); ++i){
     this->set_ir_wedge_normals(normals.view(i));
-    auto [b, c] = plane_points_from_normal(-1*normals.view(i), origin);
-    ir_poly = first_poly.one_cut(origin, b, c);
+    auto [a, b, c] = plane_points_from_normal(-1*normals.view(i), origin);
+    ir_poly = first_poly.one_cut(a, b, c);
     if (this->check_ir_polyhedron()) return true;
   }
   std::vector<std::array<double,3>> sv{{{1,0,0}},{{0,1,0}},{{0,0,1}},{{1,1,1}}};
   LQVec<double> nrm(outerlattice, bArray<double>::from_std(sv));
   for (ind_t i=0; i<nrm.size(0); ++i){
     this->set_ir_wedge_normals(nrm.view(i));
-    auto [b, c] = plane_points_from_normal(-1*nrm.view(i), origin);
-    ir_poly = first_poly.one_cut(origin, b, c);
+    auto [a, b, c] = plane_points_from_normal(-1*nrm.view(i), origin);
+    ir_poly = first_poly.one_cut(a, b, c);
     if (this->check_ir_polyhedron()) return true;
   }
   return false;

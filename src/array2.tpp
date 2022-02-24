@@ -239,10 +239,12 @@ T Array2<T>::set(const shape_t& sub, const T in){
 
 template<class T>
 std::string Array2<T>::to_string() const{
-  if (this->_num == 0) return std::string("Unallocated Array2");
+  if (this->_num == 0) return std::string("Unallocated Array2\n");
   size_t width{0};
-  for (ind_t i=0; i<_num; ++i){
-    size_t l = my_to_string(_data[i]).size();
+  // If we loop from i=0 to i<_num we cover the *whole* array, not just the part we are viewing!
+  for (auto sub: this->subItr()){
+    auto ms = my_to_string(_data[this->s2l_d(sub)]);
+    size_t l = ms.size();
     if (l > width) width = l;
   }
   std::string out;
@@ -261,7 +263,6 @@ std::string Array2<T>::to_string() const{
       out += "["; // for i=ndim-1;
       preamble=true;
     }
-
     out += my_to_string(_data[this->s2l_d(sub)], width);
     // out += std::to_string(_data[this->s2l_d(sub)]);
     if (sub[ndim-1]+1 < _shape[ndim-1]){
@@ -1273,6 +1274,13 @@ SCALAR_INPLACE_OP(/=)
 //   for (auto& v: this->valItr()) v /= val;
 //   return *this;
 // }
+
+template<class T>
+Array2<T> Array2<T>::operator^(const T& val){
+  Array2<T> out(this->shape());
+  for (auto & v: this->subItr()) out[v] = std::pow(this->operator[](v), val);
+  return out;
+}
 
 /*! \brief Verify that two Array2 shapes can be broadcast together
 

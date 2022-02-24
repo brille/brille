@@ -34,8 +34,8 @@ void declare_bznestq(py::module &m, const std::string &typestr){
   std::string pyclass_name = std::string("BZNestQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());
   // Initializer (BrillouinZone, maximum node volume fraction)
-  cls.def(py::init<BrillouinZone,double,ind_t>(), "brillouinzone"_a, "max_volume"_a, "max_branchings"_a=5);
-  cls.def(py::init<BrillouinZone,ind_t,ind_t>(), "brillouinzone"_a, "number_density"_a, "max_branchings"_a=5);
+  cls.def(py::init<BrillouinZone,double,ind_t>(), "bz_"_a, "max_volume"_a, "max_branchings"_a=5);
+  cls.def(py::init<BrillouinZone,ind_t,ind_t>(), "bz_"_a, "number_density"_a, "max_branchings"_a=5);
 
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
 
