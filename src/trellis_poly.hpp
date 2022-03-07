@@ -324,8 +324,9 @@ public:
   */
   [[nodiscard]] std::array<ind_t,3> node_subscript(const vert_t& p) const {
     std::array<ind_t,3> sub{{0,0,0}};
+    auto pos = get_xyz(p.view(0)).to_std(); // the knots are in the absolute xyz frame
     for (ind_t dim=0; dim<3u; ++dim)
-      sub[dim] = static_cast<ind_t>(find_bin(knots_[dim], p.val(0,dim)));
+      sub[dim] = static_cast<ind_t>(find_bin(knots_[dim], pos[dim]));
     // it's possible that a subscript could go beyond the last bin in any direction!
     bool bad = !subscript_ok_and_not_null(sub);
     if (bad){
@@ -334,7 +335,7 @@ public:
       // directions. if we are, on_boundary returns the direction in which we
       // can safely take a step without leaving the binned region
       for (ind_t i=0; i<3; ++i)
-        close[i] = on_boundary(knots_[i], p.val(0,i), sub[i]);
+        close[i] = on_boundary(knots_[i], pos[i], sub[i]);
       auto num_close = std::count_if(close.begin(), close.end(), [](int a){return a!=0;});
       // check one
       std::array<ind_t,3> newsub{sub};
@@ -366,7 +367,9 @@ public:
       }
       if (!bad) sub = newsub;
       else
-      info_update("The node subscript ",sub," for the point ",p.to_string(0u)," is either invalid or points to a null node!");
+      info_update("The node subscript ",sub,
+                  " for the point (hkl) ", p.to_string(0u), "(xyz) ", pos,
+                  " is either invalid or points to a null node!");
     }
     return sub;
   }
@@ -497,7 +500,7 @@ private:
     return out;
   }
   std::set<size_t> collect_keys();
-  std::set<size_t> collect_keys_node(const ind_t);
+  std::set<size_t> collect_keys_node(ind_t);
 
   [[nodiscard]] std::vector<std::array<double,3>> trellis_centres() const {
     knots_t cents;

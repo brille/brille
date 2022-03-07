@@ -552,3 +552,14 @@ template<class T, template<class> class A>
   std::enable_if_t<isLatVec<T,A>, bArray<T>> get_xyz(const A<T>& array){return array.get_xyz();}
 
 template<class T, template<class> class A> std::enable_if_t<isArray<T,A>, std::string> my_to_string(const A<T>& a){return a.to_string();}
+
+template<class T, template<class> class A, template<class> class B>
+std::enable_if_t<isBareArray<T,A>&&isBareArray<T,B>, B<T>>
+from_xyz_like(const A<T>&, const B<T>& b){
+  return b;
+}
+template<class T, template<class> class A, template<class> class B>
+std::enable_if_t<isLatVec<T,A>&&isBareArray<T,B>, A<T>>
+from_xyz_like(const A<T>& lv, const B<T>& b){
+  return A<T>::from_invA(lv.get_lattice(), b);
+}

@@ -25,7 +25,8 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
   profile_update("Start of PolyTrellis construction");
   assert(poly.face_count() > 3 && poly.volume() > 0);
   // find the extents of the polyhedron
-  const auto & pv{poly.vertices()};
+  const auto v_hkl{poly.vertices()};
+  const auto pv = get_xyz(poly.vertices());
   auto min = pv.min(0).to_std();
   auto max = pv.max(0).to_std();
   auto lengths = pv.max(0) - pv.min(0);
@@ -41,12 +42,12 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
   }
   ind_t nNodes = this->node_count();
 
-  auto node_centres = from_std_like(pv, this->trellis_centres());
+  auto node_centres = from_xyz_like(v_hkl, from_std_like(pv, this->trellis_centres()));
   double max_dist = this->maximum_node_circumsphere_radius() + poly.circumsphere_radius();
   std::vector<bool> node_is_null = norm(node_centres-poly.centroid()).is(brille::cmp::gt, max_dist).to_std();
 
   // pull together the trellis knots
-  auto all_points = from_std_like(pv, this->trellis_intersections());
+  auto all_points = from_xyz_like(v_hkl, from_std_like(pv, this->trellis_intersections()));
   /*
   Find intersections corresponding to nodes that intersect with the polyhedron:
   The original approach was too simplistic as it *only* considered whether an
@@ -99,7 +100,8 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
   for (ind_t i=0; i<nNodes; ++i) if (!node_is_null[i]) {
     auto this_node_faces = trellis_node_faces(i);
     // this limits all_points to have the knots *first*
-    polyhedron::Poly<S, A> this_node_poly(all_points, this_node_faces);
+    auto this_node_poly = polyhedron::Poly(all_points, this_node_faces);
+    verbose_update("Look for intersection of\n", poly.python_string(), " and node\n", this_node_poly.python_string());
     auto intersection = poly.intersection(this_node_poly);
     if (!always_triangulate) {
       node_is_cube[i] = this_node_poly.volume() == intersection.volume() &&
@@ -157,8 +159,8 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
 
   // find the bounding polyhedra vertices in the knots or extra points
   std::vector<ind_t> boundary_map;
-  boundary_map.reserve(pv.size(0));
-  for (ind_t i=0; i < pv.size(0); ++i) add_vertex(pv.view(0), boundary_map); // might modify map_index too
+  boundary_map.reserve(v_hkl.size(0));
+  for (ind_t i=0; i < v_hkl.size(0); ++i) add_vertex(v_hkl.view(i), boundary_map); // might modify map_index too
 
   // we now know which of all_points which are needed by the trellis
   std::vector<size_t> to_extract;
@@ -194,7 +196,7 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
       auto this_node = poly_stash[i];
       auto gin = this_node.contains(Gamma);
       bool contains_Gamma = std::count(gin.begin(), gin.end(), true) == 1;
-      // Triangulate the node polyhedron into tetrahedra
+      // Triangulate the node polyhedron into tetrahedra (the class name LQPolyTet is misleading...)
       auto tri_cut = polyhedron::LQPolyTet(this_node, contains_Gamma);
       if (tri_cut.get_vertices().size(0)<4){
         //something went wrong.
