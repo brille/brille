@@ -83,12 +83,12 @@ namespace brille {
 
 \return The terminal width in characters or 2¹⁵ if the terminal width is zero.
 */
-int terminal_width(void);
+int terminal_width();
 /*! \brief Determine the height of the current terminal window
 
 \return The terminal height in lines or 2¹⁵ if the terminal height is zero.
 */
-int terminal_height(void);
+int terminal_height();
 
 /*! \brief Return the running process ID number
  *
@@ -114,7 +114,7 @@ template<bool C, typename T> using enable_if_t = typename std::enable_if<C,T>::t
 
 /*! \brief Construct a string representation of non-container input */
 template<typename T, typename=typename std::enable_if<!is_container<T>::value>::type>
-const std::string my_to_string(const T x, const size_t width=0){
+std::string my_to_string(const T x, const size_t width=0){
   std::ostringstream streamobj;
   size_t w{width};
   if constexpr (!std::is_integral<T>::value){
@@ -134,7 +134,7 @@ const std::string my_to_string(const T x, const size_t width=0){
 }
 /*! \brief Construct a string representation of complex non-container input */
 template<typename T, typename=typename std::enable_if<!is_container<T>::value>::type>
-const std::string my_to_string(const std::complex<T> x, const size_t width=0){
+std::string my_to_string(const std::complex<T> x, const size_t width=0){
   T r = std::real(x), i=std::imag(x);
   std::ostringstream streamobj;
   size_t w{width};
@@ -157,14 +157,14 @@ const std::string my_to_string(const std::complex<T> x, const size_t width=0){
 template<typename T, template<class> class C,
         typename=typename std::enable_if<!is_container<T>::value>::type,
         typename=typename std::enable_if<is_container<C<T>>::value>::type>
-const std::string my_to_string(const std::vector<C<T>>& v, const size_t){
+std::string my_to_string(const std::vector<C<T>>& v, const size_t){
   std::string s;
   for (C<T> x: v) s += my_to_string(x) + "\n";
   return s;
 }
 /*! \brief Construct a string representation of a container input */
 template<typename T, typename=typename std::enable_if<is_container<T>::value>::type>
-const std::string my_to_string(const T & a, const size_t w=0){
+std::string my_to_string(const T & a, const size_t w=0){
   std::string s;
   for (auto x: a) s += my_to_string(x, w);
   return s;
@@ -274,11 +274,11 @@ public:
     emit_datetime = true;
     #endif
   };
-  bool silenced() const {return _silenced;}
+  [[nodiscard]] bool silenced() const {return _silenced;}
   bool silenced(bool slc) {_silenced = slc; return _silenced;}
   bool silence() {_silenced = true; return _silenced;}
   bool unsilence() {_silenced = false; return !_silenced;}
-  bool datetime() const {return emit_datetime;}
+  [[nodiscard]] bool datetime() const {return emit_datetime;}
   bool datetime(bool edt) {emit_datetime = edt; return emit_datetime;}
   template<typename... L> void print(const std::string& fnc, L... l){
     if (!_silenced){
@@ -314,9 +314,19 @@ private:
     for (size_t i=0; i<_before; ++i) buffer << " ";
     return buffer.str();
   }
+  template<typename... L>
+  void inner_print(const std::string& x, L... l){
+    std::cout << x;
+    this->inner_print(l...);
+  }
+  template<typename... L>
+  void inner_print(const char* x, L... l){
+    std::cout << x;
+    this->inner_print(l...);
+  }
   template<typename T, typename... L>
   enable_if_t<!is_container<T>::value, void> inner_print(const T& x, L... l){
-    std::cout << x;
+    std::cout << my_to_string(x);
     this->inner_print(l...);
   }
   template<typename T, typename... L>
@@ -424,7 +434,7 @@ private:
     // }
     this->inner_print(s, args...);
   }
-  void inner_print(void){};
+  void inner_print(){};
 };
 
 //! The single namespace wide `DebugPrinter` used with the logging macros.

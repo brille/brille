@@ -95,6 +95,7 @@ void Lattice::check_hall_number(const int h){
   this->bravais = spg.get_bravais_type();
   this->spgsym = spg.get_spacegroup_symmetry();
   this->ptgsym = spg.get_pointgroup_symmetry();
+  this->check_parameter_symmetry();
 }
 void Lattice::check_IT_name(const std::string& itname, const std::string& choice){
   int hall_number = brille::string_to_hall_number(itname, choice);
@@ -117,6 +118,7 @@ void Lattice::check_IT_name(const std::string& itname, const std::string& choice
 }
 double Lattice::unitvolume() const{
   // The volume of a parallelpiped with unit length sides and our body angles
+  // Part of equation 2.6.6 in https://www.iucr.org/__data/assets/pdf_file/0019/15823/22.pdf
   double sos=0, prd=2;
   for (int i=0;i<3;++i){
     sos+=cosines[i]*cosines[i];
@@ -125,16 +127,7 @@ double Lattice::unitvolume() const{
   return std::sqrt( 1 - sos + prd );
 }
 double Lattice::calculatevolume(){
-  // we could replace this by l[0]*l[1]*l[2]*this->unitvolume()
-//  double tmp=1;
-//  double *a = this->ang.data();
-//  double *l = this->len.data();
-//  tmp *= sin(( a[0] +a[1] +a[2])/2.0);
-//  tmp *= sin((-a[0] +a[1] +a[2])/2.0);
-//  tmp *= sin(( a[0] -a[1] +a[2])/2.0);
-//  tmp *= sin(( a[0] +a[1] -a[2])/2.0);
-//  tmp = sqrt(tmp);
-//  tmp *= 2*l[0]*l[1]*l[2];
+  // from equation 2.6.6 in https://www.iucr.org/__data/assets/pdf_file/0019/15823/22.pdf
   volume = len[0]*len[1]*len[2] * this->unitvolume(); // is this off by 2pi?
   if (std::isnan(volume)){
     std::string msg = "Invalid lattice unit cell ";
@@ -160,7 +153,10 @@ Lattice Lattice::inner_star() const {
   for (size_t i=0; i<3u; ++i){
     size_t j = (i+1)%3;
     size_t k = (i+2)%3;
-    lstar[i] = brille::math::two_pi * sines[i] * len[j] * len[k] / this->volume;
+    // the grouping of len[j]*len[k] is done to avoid rounding errors when
+    // e.g., a* and b* *should be*  the same but order-of-operations causes
+    // rounding errors
+    lstar[i] = brille::math::two_pi * sines[i] * (len[j] * len[k]) / this->volume;
     cstar[i] = (cosines[j]*cosines[k]-cosines[i])/(sines[j]*sines[k]);
     astar[i] = std::acos(cstar[i]);
     sstar[i] = std::sin(astar[i]);
@@ -257,6 +253,68 @@ Bravais Lattice::set_bravais_type(const Bravais b) {
     this->bravais = b;
     return this->get_bravais_type();
 }
+
+void Lattice::check_parameter_symmetry() {
+  // the point-group symmetry applies to the basis vectors
+  // (the space-group translations do not affect the vectors)
+  // furthermore, only those operations with an order above 1 matter
+  auto to_check = ptgsym.higher(1);
+  std::array<int,3> a{1,0,0}, b{0,1,0}, c{0,0,1};
+  // look for an operation that maps a to b, b to c, or a to c:
+  bool a_to_b{false}, a_to_c{false}, b_to_a{false}, b_to_c{false}, c_to_a{false}, c_to_b{false};
+  for (ind_t i=0; i < to_check.size(); ++i){
+    auto op = to_check.get(i); // these are the operations for the Direct lattice, can we get away with ignoring that?
+    std::array<int,3> t{0,0,0};
+    utils::mul_mat_vec(t.data(), 3u, op.data(), a.data());
+    if (t[0] == b[0] && t[1] == b[1] && t[2] == b[2]) a_to_b = true;
+    if (t[0] == c[0] && t[1] == c[1] && t[2] == c[2]) a_to_c = true;
+    utils::mul_mat_vec(t.data(), 3u, op.data(), b.data());
+    if (t[0] == a[0] && t[1] == a[1] && t[2] == a[2]) b_to_a = true;
+    if (t[0] == c[0] && t[1] == c[1] && t[2] == c[2]) b_to_c = true;
+    utils::mul_mat_vec(t.data(), 3u, op.data(), c.data());
+    if (t[0] == a[0] && t[1] == a[1] && t[2] == a[2]) c_to_a = true;
+    if (t[0] == b[0] && t[1] == b[1] && t[2] == b[2]) c_to_b = true;
+  }
+  if (a_to_b ^ b_to_a || a_to_c ^ c_to_a || b_to_c ^ c_to_b){
+    throw std::runtime_error("Only half of the symmetry found?!");
+  }
+  if ((a_to_b && b_to_c && !a_to_c) || (a_to_b && !b_to_c && a_to_c) || (!a_to_b && b_to_c && a_to_c)) {
+    throw std::runtime_error("Two axis pair equivalencies requires all three pairs!");
+  }
+  if ((a_to_b && b_to_c && a_to_c) && (len[0] != len[1] || len[1] != len[2])) {
+    auto abc = (len[0] + len[1] + len[2]) / 3;
+    info_update("The provided symmetry requires equal basis vector lengths but not all of", len, " are the same. All will be replaced by ", abc);
+    info_update("Check whether the provided angles are appropriate, ", ang, " radian");
+    len[0] = abc;
+    len[1] = abc;
+    len[2] = abc;
+  }
+  if ((a_to_b && !b_to_c && !a_to_c) && (len[0] != len[1])){
+    auto ab = (len[0] + len[1] ) / 2;
+    info_update("The provided symmetry requires equal a & b basis vector lengths but ", len, " are not the same. All will be replaced by ", ab);
+    info_update("Check whether the provided angles are appropriate, ", ang, " radian");
+    info_update("with cos(ang)=", cosines, " and sin(ang)=", sines);
+    len[0] = ab;
+    len[1] = ab;
+  }
+  if ((!a_to_b && b_to_c && !a_to_c) && (len[1] != len[2])){
+    auto bc = (len[1] + len[2] ) / 2;
+    info_update("The provided symmetry requires equal b & c basis vector lengths but ", len, " are not the same. All will be replaced by ", bc);
+    info_update("Check whether the provided angles are appropriate, ", ang, " radian");
+    info_update("with cos(ang)=", cosines, " and sin(ang)=", sines);
+    len[1] = bc;
+    len[2] = bc;
+  }
+  if ((!a_to_b && !b_to_c && a_to_c) && (len[0] != len[2])){
+    auto ac = (len[0] + len[2] ) / 2;
+    info_update("The provided symmetry requires equal a & c basis vector lengths but ", len, " are not the same. All will be replaced by ", ac);
+    info_update("Check whether the provided angles are appropriate, ", ang, " radian");
+    info_update("with cos(ang)=", cosines, " and sin(ang)=", sines);
+    len[0] = ac;
+    len[2] = ac;
+  }
+}
+
 
 std::string Direct::string_repr(){return lattice2string(*this,"Å");}
 std::string Reciprocal::string_repr(){return lattice2string(*this,"Å⁻¹");}

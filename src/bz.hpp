@@ -90,7 +90,7 @@ public:
                 const bool tr=false,
                 const bool wedge_search=true,
                 const int tol=1000,
-                const bool divide_primitive=false
+                const bool divide_primitive=true
                ):
   lattice(toprim ? lat.primitive() : lat), outerlattice(lat), time_reversal(tr), approx_tolerance(tol)
   {

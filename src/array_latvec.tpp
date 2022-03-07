@@ -550,3 +550,5 @@ template<class T, template<class> class A>
 
 template<class T, template<class> class A>
   std::enable_if_t<isLatVec<T,A>, bArray<T>> get_xyz(const A<T>& array){return array.get_xyz();}
+
+template<class T, template<class> class A> std::enable_if_t<isArray<T,A>, std::string> my_to_string(const A<T>& a){return a.to_string();}

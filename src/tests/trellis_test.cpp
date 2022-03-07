@@ -350,7 +350,10 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
                               3.791956412170034,-3.791956412170034, 5.362636186024768};
   //
   std::vector<int> strides{3*sizeof(double), sizeof(double)};
-  Direct dlat(latmat.data(), strides, "P_1"); // not P₁ but it *is* primitive
+  double len[3]{7.583912824346341, 7.583912824346341, 7.583912824346341};
+  double ang[3]{60,60,60};
+//  Direct dlat(latmat.data(), strides, "P_1"); // not P₁ but it *is* primitive
+  Direct dlat(len, ang, "P_1");
   // the generators are: 4-fold [1 -1 1], 2-fold [-1 1 1], 3-fold [1 1 -3], -𝟙
   // row-ordered generator matrices
   std::vector<std::array<int,9>> W {
@@ -373,6 +376,9 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
 
   auto rlat = dlat.star();
   BrillouinZone bz(rlat);
+  info_update("First Brillouin zone\n", bz.get_polyhedron().python_string());
+  info_update("Irreducible Brillouin zone\n", bz.get_ir_polyhedron().python_string());
+
   auto max_volume = bz.get_ir_polyhedron().volume()/2000.;
   BrillouinZoneTrellis3<double, double, double> bzt(bz, max_volume);
 

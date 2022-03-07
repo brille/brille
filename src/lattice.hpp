@@ -150,11 +150,14 @@ protected:
   void check_ang(AngleUnit);
   void check_hall_number(int h);
   void check_IT_name(const std::string& itname, const std::string& choice="");
+private:
+  void check_parameter_symmetry();
 public:
   //! Construct the Lattice from its components
   Lattice(const std::array<double,3>& l, const std::array<double,3>& a, const std::array<double,3>& c, const std::array<double,3>& s, double v,
           const Bravais b, Symmetry sgs, PointSymmetry pgs, Basis base, const LengthUnit lu=LengthUnit::none)
   : len(l), ang(a), cosines(c), sines(s), volume(v), bravais(b), spgsym(std::move(sgs)), ptgsym(std::move(pgs)), basis(std::move(base)), unit(lu) {
+    this->check_parameter_symmetry();
   }
   //! Construct the Lattice from its components, excluding the volume which is calculated
   Lattice(const std::array<double,3>& l, const std::array<double,3>& a, const std::array<double,3>& c, const std::array<double,3>& s,
@@ -162,6 +165,7 @@ public:
           Basis base, const LengthUnit lu=LengthUnit::none):
     len(l), ang(a), cosines(c), sines(s), bravais(b), spgsym(std::move(sgs)), ptgsym(std::move(pgs)), basis(std::move(base)), unit(lu) {
       this->volume = this->calculatevolume();
+      this->check_parameter_symmetry();
     }
   //! Construct the Lattice from a matrix of the basis vectors
   explicit Lattice(const double *, int h=1);
@@ -329,6 +333,7 @@ public:
     spgsym = gens.generate();
     bravais = spgsym.getcentring();
     ptgsym = PointSymmetry(get_unique_rotations(spgsym.getallr(),0));
+    this->check_parameter_symmetry();
     return spgsym;
   }
   //! Return the Pointgroup Symmetry operation object of the Lattice

@@ -75,9 +75,6 @@ template<class T> std::tuple<T,T> check_cos_sin_consistency(T c, T s){
   if (c*c + s*s != T(1)){
     auto new_c = std::sqrt(T(1) - s*s);
     if (c < T(0)) new_c *= -1;
-    if (new_c * new_c + s * s != T(1)){
-      throw std::logic_error("What do we do here?!");
-    }
     return std::make_tuple(new_c, s);
   }
   return std::make_tuple(c, s);

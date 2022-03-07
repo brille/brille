@@ -186,7 +186,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 alt","[bz_][materialsproject]")
   // If brille::approx::scalar() is too strict this will fail.
   //
   std::string hall_symbol = "-R 3";
-  // the non star verion below has slightly-off b vector length
+  // the other version below has slightly-off b vector length
   double lens[3]{10.699417459999999, 10.699417459999999, 4.528988750000000};
   double angs[3]{90,90,120};
   //
@@ -202,7 +202,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 alt","[bz_][materialsproject]")
   info_update("Irreducible Brillouin zone\n", irp.python_string());
 }
 
-TEST_CASE("Irreducible Brillouin zone for mp-147","[bz_][materialsproject]"){
+TEST_CASE("Irreducible Brillouin zone for mp-147 imprecise failure","[bz_][materialsproject]"){
   // The spacegroup for elemental Se, from https://www.materialsproject.org/materials/mp-147/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-147.html
   // If brille::approx::scalar() is too strict this will fail.
@@ -210,6 +210,22 @@ TEST_CASE("Irreducible Brillouin zone for mp-147","[bz_][materialsproject]"){
     10.699417459999999, 0.000000050000000, 0.000000000000000,
     -5.349708760000000, 9.265967300000000, 0.000000000000000,
     0.000000000000000, 0.000000000000000, 4.528988750000000};
+  //
+  std::string hall_symbol = "-R 3";
+  //
+  Direct dlat(lattice_vectors, hall_symbol);
+  Reciprocal rlat = dlat.star();
+  REQUIRE_THROWS_AS(BrillouinZone(rlat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true), std::runtime_error);
+}
+
+TEST_CASE("Irreducible Brillouin zone for mp-147","[bz_][materialsproject]"){
+  // The spacegroup for elemental Se, from https://www.materialsproject.org/materials/mp-147/
+  // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-147.html
+  // If brille::approx::scalar() is too strict this will fail.
+  double lattice_vectors[9] = {
+      10.699417459999999, 0.000000000000000, 0.000000000000000,
+      -5.349708729999997, 9.265967326054772, 0.000000000000000,
+      0.000000000000000, 0.000000000000000, 4.528988750000000};
   //
   std::string hall_symbol = "-R 3";
   //
@@ -284,6 +300,25 @@ TEST_CASE("Irreducible Brillouin zone for mp-7041","[bz_][materialsproject]"){
   auto irp = bz.get_ir_polyhedron();
   REQUIRE(irp.volume() == Approx(fbz.volume()/12));
   REQUIRE(write_read_test(bz, "mp-7041"));
+}
+
+TEST_CASE("Irreducible Brillouin zone for mp-917 atl","[bz_][materialsproject]"){
+  // The spacegroup for CaC₂, from https://www.materialsproject.org/materials/mp-917/
+  // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-917.html
+  // If brille::approx::scalar() is too strict this will fail.
+  double len[3]{7.16797000, 3.84256200, 7.46845574}, ang[3]{90, 106.87385147, 90};
+  std::string hall_symbol = "-C 2y";
+  //
+  Direct dlat(len, ang, hall_symbol);
+  Reciprocal rlat = dlat.star();
+  BrillouinZone bz(rlat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true);
+  REQUIRE(bz.check_ir_polyhedron());
+  auto fbz = bz.get_polyhedron();
+  auto irp = bz.get_ir_polyhedron();
+  REQUIRE(irp.volume() == Approx(fbz.volume()/4));
+  REQUIRE(write_read_test(bz, "mp-917"));
+  info_update("First Brillouin zone\n", fbz.python_string());
+  info_update("Irreducible Brillouin zone\n", irp.python_string());
 }
 
 TEST_CASE("Irreducible Brillouin zone for mp-917","[bz_][materialsproject]"){

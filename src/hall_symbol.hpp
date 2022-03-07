@@ -183,12 +183,12 @@ class HallSymbol {
   std::vector<SeitzSymbol> symbols;
   Motion<double,double> V; // change of basis '4×4' matrix
 public:
-  explicit HallSymbol(const Bravais b, const bool c, const std::vector<SeitzSymbol>& ss):
-    L{b}, centrosymmetric{c}, symbols{ss} {};
+  explicit HallSymbol(const Bravais b, const bool c, std::vector<SeitzSymbol>  ss):
+    L{b}, centrosymmetric{c}, symbols{std::move(ss)} {};
   explicit HallSymbol(const Bravais b=Bravais::_, const bool c=false): L{b}, centrosymmetric{c} {};
-  HallSymbol(const std::string& strrep){ this->from_ascii(strrep); };
+  explicit HallSymbol(const std::string& strrep){ this->from_ascii(strrep); };
   //! Return the Bravais symbol
-  Bravais getl() const { return L; }
+  [[nodiscard]] Bravais getl() const { return L; }
   //! Specify the Bravais symbol
   Bravais setl(const Bravais& b){ L = b; return L; }
   /*! \brief Determine the Bravais symbol from a character
@@ -220,11 +220,11 @@ public:
   //! Decode a Hall symbol from an ASCII encoded string
   bool from_ascii(const std::string&);
   //! Encode this Hall symbol and return an ASCII string
-  std::string to_ascii() const;
+  [[nodiscard]] std::string to_ascii() const;
   //! Validate the internal consistency of this Hall symbol
   bool validate();
   //! Return a Symmetry object with the decoded generators in this Hall symbol
-  Symmetry get_generators() const;
+  [[nodiscard]] Symmetry get_generators() const;
 };
 
 } // namespace brille
