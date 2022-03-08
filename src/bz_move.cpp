@@ -145,9 +145,7 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
     info_update("outside Q:\nnp.array(\n", Q.extract(allinside).to_string(), ")");
     info_update("outside tau:\nnp.array(\n", tau.extract(allinside).to_string(), ")");
     info_update("outside q\nnp.array(\n", q.extract(allinside).to_string(), ")");
-    info_update("outside Qsl:\nnp.array(\n", Qsl.extract(allinside).to_string(), ")");
-    info_update("outside tausl:\nnp.array(\n", tausl.extract(allinside).to_string(), ")");
-    info_update("outside qsl\nnp.array(\n", qsl.extract(allinside).to_string(), ")");
+    info_update("outside q(xyz)\nnp.array(\n", q.extract(allinside).get_xyz().to_string(), ")");
     throw std::runtime_error("Not all points inside Brillouin zone");
     // return false;
   }

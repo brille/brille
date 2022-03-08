@@ -21,7 +21,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Classes representing real space and reciprocal space lattices
 */
 #include <assert.h>
-
 #include <utility>
 // #include <vector>
 #include "enums.hpp"

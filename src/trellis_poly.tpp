@@ -72,8 +72,11 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
   }
 
   auto add_to_maps = [&](const ind_t i, std::vector<ind_t> & map){
-    if (map_idx[i] > n_points) map_idx[i] = n_kept++;
-    map.push_back(i);
+    if (map_idx[i] > n_points) {
+      map_idx[i] = n_kept++;
+      debug_update("vertex ", i, " added to kept list; total kept now ", n_kept);
+    }
+    map.push_back(map_idx[i]);
   };
 
   auto add_vertex = [&](const auto & vertex, std::vector<ind_t> & map){
@@ -81,7 +84,7 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
     auto no = equals.count();
     if (no) {
       if (no>1) throw std::runtime_error("Too many matches to vertex");
-      add_to_maps(equals.first(), map); // modifies map_index too
+      add_to_maps(equals.first(), map); // modifies map_index & n_kept too
       return false;
     }
     equals = extra_points.row_is(brille::cmp::eq, vertex);
@@ -97,25 +100,28 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
     return true;
   };
 
+  debug_update_if(std::find(node_is_null.begin(), node_is_null.end(), true) == node_is_null.end(), "No null nodes!");
+
   for (ind_t i=0; i<nNodes; ++i) if (!node_is_null[i]) {
     auto this_node_faces = trellis_node_faces(i);
     // this limits all_points to have the knots *first*
     auto this_node_poly = polyhedron::Poly(all_points, this_node_faces);
-    verbose_update("Look for intersection of\n", poly.python_string(), " and node\n", this_node_poly.python_string());
+//    verbose_update("Look for intersection of\n", poly.python_string(), " and node\n", this_node_poly.python_string());
     auto intersection = poly.intersection(this_node_poly);
-    if (!always_triangulate) {
-      node_is_cube[i] = this_node_poly.volume() == intersection.volume() &&
-                        !this_node_poly.contains(Gamma)[0];
-    }
+//    if (!always_triangulate) {
+//      node_is_cube[i] = this_node_poly.volume() == intersection.volume() &&
+//                        !this_node_poly.contains(Gamma)[0];
+//    }
+    node_is_cube[i] = !always_triangulate && this_node_poly.volume() == intersection.volume() && !this_node_poly.contains(Gamma)[0];
     if (node_is_cube[i]) {
       verbose_update("Node ", i, " is a cube");
       auto indexes = this_node_faces.indexes();
       node_index_map[i].reserve(indexes.size());
       for (auto idx : indexes) add_to_maps(idx, node_index_map[i]); // modifies map_index too
     } else {
-      if (intersection.face_count() < 4 || intersection.volume() <= 0.) {
-        throw std::runtime_error("The intersection of a non-null node and the bounding polyhedron is null!");
-      }
+      node_is_null[i] = intersection.face_count() < 4 || intersection.volume() <= 0.;
+      if (node_is_null[i]) continue; // we don't want to re-wrap the following code block
+      debug_update("Intersection of node", i, " is \n", intersection.python_string());
       // find which of the vertices of the intersection are knots as well.
       const auto &iv{intersection.vertices()};
       node_index_map[i].reserve(iv.size(0));
@@ -189,8 +195,10 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
       nodes_.push_back(CubeNode(cube_vert_idx));
     } else {
       std::vector<ind_t> poly_vert_idx;
-      for (auto idx: node_index_map[i])
-        poly_vert_idx.push_back( idx < n_kept ? idx : idx - n_points + n_kept);
+      for (auto idx: node_index_map[i]) {
+        debug_update_if(idx > n_kept && idx + n_kept < n_points, "Node ", i, " has an index, ", idx, ", which is out of range!");
+        poly_vert_idx.push_back(idx < n_kept ? idx : idx - n_points + n_kept);
+      }
       auto node_verts = vertices_.extract(poly_vert_idx);
       // get the stashed Polyhedron from before:
       auto this_node = poly_stash[i];

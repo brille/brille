@@ -441,10 +441,13 @@ namespace brille {
   point_inside_all_planes(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& x){
       auto o3d = pseudo_orient3d(a, b, c, x);
       auto v = std::min_element(o3d.begin(), o3d.end());
-      if (*v < 0 && *v > -1e-10){
-        info_update("The point ", x.to_string(), "has parallelpiped volumes ", o3d);
-      }
-      return *v >= 0;
+//      if (*v < 0 && *v > -1e-10){
+//        std::vector<T> below;
+//        std::copy_if(o3d.begin(), o3d.end(), std::back_inserter(below), [](const T& z){return z < 0;});
+//        std::transform(below.begin(), below.end(), below.begin(), [](const T& z){return z * 1e10;});
+//        info_update("The point ", x.to_string(), "has negative parallelepiped volumes ", below, "e10");
+//      }
+      return *v > 0 || approx::scalar(*v, 0.);
   }
 
   template<class T, class R, template<class> class A, template<class> class B>

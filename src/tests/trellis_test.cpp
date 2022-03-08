@@ -379,7 +379,7 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
   info_update("First Brillouin zone\n", bz.get_polyhedron().python_string());
   info_update("Irreducible Brillouin zone\n", bz.get_ir_polyhedron().python_string());
 
-  auto max_volume = bz.get_ir_polyhedron().volume()/2000.;
+  auto max_volume = bz.get_ir_polyhedron().volume()/20.;
   BrillouinZoneTrellis3<double, double, double> bzt(bz, max_volume);
 
   Array<double> zeros(bzt.get_hkl().size(0), 1u);
