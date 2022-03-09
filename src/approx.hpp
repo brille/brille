@@ -346,6 +346,16 @@ namespace brille{
       return brille::approx::vector(N,a,b,tol);
     }
 
+    template<class T, class R, size_t N>
+    bool equal(const std::array<T,N>& a, const std::array<R,N>& b, const int tol=1){
+      return brille::approx::vector(N, a.data(), b.data(), tol);
+    }
+    template<class T, class R>
+    bool equal(const std::vector<T>& a, const std::vector<R>& b, const int tol=1){
+      size_t N{a.size()};
+      return b.size() == N && brille::approx::vector(N, a.data(), b.data(), tol);
+    }
+
   } // approx::
 } // brille::
 

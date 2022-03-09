@@ -46,28 +46,28 @@ public:
     spacegroup_symmetry(s);
     set_point_symmetry();
   }
-  Lattice(const vector_t & lengths, const vector_t & angles, const std::string_view s, const std::string_view c, const LengthUnit lu, const AngleUnit au=AngleUnit::not_provided)
+  Lattice(const vector_t & lengths, const vector_t & angles, const std::string& s, const std::string& c, const LengthUnit lu, const AngleUnit au=AngleUnit::not_provided)
   {
     set_vectors(lengths, angles, lu, au);
     set_metric();
     set_space_symmetry(s, c);
     set_point_symmetry();
   }
-  Lattice(const vector_t & lengths, const vector_t & angles, const std::string_view s, const LengthUnit lu, const AngleUnit au=AngleUnit::not_provided)
+  Lattice(const vector_t & lengths, const vector_t & angles, const std::string& s, const LengthUnit lu, const AngleUnit au=AngleUnit::not_provided)
   {
     set_vectors(lengths, angles, lu, au);
     set_metric();
     set_space_symmetry(s);
     set_point_symmetry();
   }
-  Lattice(const matrix_t & vectors, const std::string_view s, const std::string_view c, const LengthUnit lu)
+  Lattice(const matrix_t & vectors, const std::string& s, const std::string& c, const LengthUnit lu)
   {
     set_vectors(vectors, lu);
     set_metric();
     set_space_symmetry(s, c);
     set_point_symmetry();
   }
-  Lattice(const matrix_t & vectors, const std::string_view s, const LengthUnit lu)
+  Lattice(const matrix_t & vectors, const std::string& s, const LengthUnit lu)
   {
     set_vectors(vectors, lu);
     set_metric();
@@ -104,7 +104,7 @@ private:
       v_prod *= cos[i];
     }
     T vol = std::sqrt(1 - v_sum + v_prod); // sqrt(1 - sum() + 2 * prod())
-    T a_star, b_star, c_star, ca_star, cb_star, cg_star, sb_star, sg_star, ca, two_pi_over_c;
+    T a_star, b_star, c_star, cb_star, cg_star, sb_star, sg_star, ca, two_pi_over_c;
     switch (lu) {
     case LengthUnit::angstrom:
       {
@@ -112,7 +112,7 @@ private:
         a_star = math::two_pi * sin[0] / v[0] / vol;
         b_star = math::two_pi * sin[1] / v[1] / vol;
         c_star = math::two_pi * sin[2] / v[2] / vol;
-        ca_star = (cos[1]*cos[2] - cos[0]) / (sin[1] * sin[2]);
+//        ca_star = (cos[1]*cos[2] - cos[0]) / (sin[1] * sin[2]);
         cb_star = (cos[2]*cos[0] - cos[1]) / (sin[2] * sin[0]);
         cg_star = (cos[0]*cos[1] - cos[2]) / (sin[0] * sin[1]);
         sb_star = std::sin(std::acos(cb_star));
@@ -126,7 +126,7 @@ private:
         a_star = v[0];
         b_star = v[1];
         c_star = v[2];
-        ca_star = cos[0];
+//        ca_star = cos[0];
         cb_star = cos[1];
         cb_star = cos[2];
         sb_star = sin[1];
@@ -189,7 +189,10 @@ private:
 
 public:
 
-  [[nodiscard]] Bravais bravais() const {return _bravais};
+  [[nodiscard]] matrix_t real_basis_vectors() const {return _vectors;}
+  [[nodiscard]] matrix_t reciprocal_basis_vectors() const {return _reciprocal;}
+
+  [[nodiscard]] Bravais bravais() const {return _bravais;}
   [[nodiscard]] Symmetry spacegroup_symmetry() const {return _space;}
   [[nodiscard]] PointSymmetry pointgroup_symmetry() const {return _point;}
   [[nodiscard]] Basis basis() const {return _basis;}
@@ -232,11 +235,25 @@ public:
 //  [[nodiscard]] vector_t lengths(LengthUnit) const;
 //  [[nodiscard]] vector_t angles(LengthUnit, AngleUnit) const;
 
-  [[nodiscard]] bool is_same(const Lattice&) const;
-  [[nodiscard]] bool is_equivalent(const Lattice&) const;
-  [[nodiscard]] int is_permuted(const Lattice&) const;
-  bool operator == (const Lattice& l) const {return is_same(l);}
-  bool operator != (const Lattice& l) const {return !is_same(l);}
+  template<class R>
+  [[nodiscard]] bool is_same(const Lattice<R>& o) const {
+    // two lattices are *the* same if their basis vectors are the same
+    auto bv = o.real_basis_vectors();
+    auto rbv = o.reciprocal_basis_vectors();
+    return approx::equal(bv, _vectors) && approx::equal(rbv, _reciprocal);
+  }
+  template<class R>
+  [[nodiscard]] bool is_equivalent(const Lattice<R>& o) const {
+    return is_same(o);
+  }
+  template<class R>
+  [[nodiscard]] int is_permuted(const Lattice<R>& o) const {
+    return is_same(o);
+  }
+  template<class R>
+  bool operator == (const Lattice<R>& l) const {return is_same(l);}
+  template<class R>
+  bool operator != (const Lattice<R>& l) const {return !is_same(l);}
 
   Symmetry spacegroup_symmetry(const Symmetry& gens){
     _space = gens.generate();
@@ -259,7 +276,7 @@ public:
   [[nodiscard]] matrix_t to_xyz(LengthUnit lu){
     switch (lu) {
     case LengthUnit::angstrom: return _vectors;
-    case LengthUnit::inverse_angstrom: _reciprocal;
+    case LengthUnit::inverse_angstrom: return _reciprocal;
     default:
       throw std::runtime_error("Not implemented");
     }
@@ -271,20 +288,32 @@ public:
 
 
 template<class T, class... Args>
-Lattice<T> Direct(const typename Lattice<T>::vector_t & v, Args ... args){
-  return {v, args..., LengthUnit::angstrom};
+Lattice<T> Direct(const std::array<T,3> & v, const std::array<T,3> & a, Args ... args){
+  return {v, a, args..., LengthUnit::angstrom};
 }
 template<class T, class... Args>
-Lattice<T> Reciprocal(const typename Lattice<T>::vector_t & v, Args ... args){
-  return {v, args..., LengthUnit::inverse_angstrom};
+Lattice<T> Reciprocal(const std::array<T,3> & v, const std::array<T,3> & a, Args ... args){
+  return {v, a, args..., LengthUnit::inverse_angstrom};
 }
+//template<class T, class... Args>
+//Lattice<T> Direct(const std::initializer_list<T> & v, const std::initializer_list<T> & a, Args ... args){
+//  return {v, a, args..., LengthUnit::angstrom};
+//}
+//template<class T, class... Args>
+//Lattice<T> Reciprocal(const std::initializer_list<T> & v, const std::initializer_list<T> & a, Args ... args){
+//  return {v, a, args..., LengthUnit::inverse_angstrom};
+//}
+
+
 template<class T, class... Args>
-Lattice<T> Direct(const typename Lattice<T>::matrix_t & m, Args ... args){
+Lattice<T> Direct(const std::array<T,9> & m, Args ... args){
   return {m, args..., LengthUnit::angstrom};
 }
 template<class T, class... Args>
-Lattice<T> Reciprocal(const typename Lattice<T>::matrix_t & m, Args ... args){
+Lattice<T> Reciprocal(const std::array<T,9> & m, Args ... args){
   return {m, args..., LengthUnit::inverse_angstrom};
 }
 
 }
+
+#endif
