@@ -63,24 +63,24 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
   LQVec<double> Qprim(lattice);
   LQVec<double> qprim(lattice);
   LQVec<int> tauprim(lattice);
-  PrimitiveTransform PT(outerlattice.get_bravais_type());
-  bool transform_needed = PT.does_anything() && outerlattice.issame(Q.get_lattice());
+  PrimitiveTransform PT(_outer.get_bravais_type());
+  bool transform_needed = PT.does_anything() && _outer.issame(Q.get_lattice());
   if (!(already_same || transform_needed)){
     std::string msg = "Q points provided to BrillouinZone::moveinto must be ";
     msg += "in the standard or primitive lattice used to define ";
     msg += "the BrillouinZone object";
     throw std::runtime_error(msg);
   }
-  if (transform_needed)  Qprim = transform_to_primitive(outerlattice,Q);
+  if (transform_needed)  Qprim = transform_to_primitive(_outer,Q);
   const LQVec<double> & Qsl = transform_needed ? Qprim : Q;
   LQVec<double> & qsl = transform_needed ? qprim : q;
   LQVec<int> & tausl = transform_needed? tauprim : tau;
 
   LQVec<double> a, b, c, pa, pb, pc;
-  std::tie(a,b,c) = first_poly.planes();
-  pa = transform_to_primitive(outerlattice, a);
-  pb = transform_to_primitive(outerlattice, b);
-  pc = transform_to_primitive(outerlattice, c);
+  std::tie(a,b,c) = _first.planes();
+  pa = transform_to_primitive(_outer, a);
+  pb = transform_to_primitive(_outer, b);
+  pc = transform_to_primitive(_outer, c);
 
 //
 //  // the face centre points and normals in the primitive lattice:
@@ -124,8 +124,8 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
 //  }
   this->_moveinto_prim(Qsl, qsl, tausl, pa, pb, pc);
   if (transform_needed){ // then we need to transform back q and tau
-    q   = transform_from_primitive(outerlattice,qsl);
-    tau = transform_from_primitive(outerlattice,tausl);
+    q   = transform_from_primitive(_outer,qsl);
+    tau = transform_from_primitive(_outer,tausl);
   }
   auto allinside = this->isinside(q);
   if (std::count(allinside.begin(), allinside.end(), false) > 0){
@@ -156,9 +156,9 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   profile_update("BrillouinZone::ir_moveinto called with ",threads," threads");
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   /* The Point group symmetry information has all rotation matrices defined
-     * in the conventional unit cell -- which is our `outerlattice`.
+     * in the conventional unit cell -- which is our `_outer`.
      * Consequently, we must work in the outer lattice here.  */
-  if (!outerlattice.issame(Q.get_lattice()))
+  if (!_outer.issame(Q.get_lattice()))
     throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
   // ensure q, tau, and Rm can hold one for each Q.
   ind_t nQ = Q.size(0);
@@ -223,8 +223,8 @@ bool BrillouinZone::ir_moveinto_wedge(const LQVec<double>& Q, LQVec<double>& q, 
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   /* The Pointgroup symmetry information comes from, effectively, spglib which
   has all rotation matrices defined in the conventional unit cell -- which is
-  our `outerlattice`. Consequently we must work in the outerlattice here.  */
-  if (!outerlattice.issame(Q.get_lattice()))
+  our `_outer`. Consequently we must work in the _outer here.  */
+  if (!_outer.issame(Q.get_lattice()))
     throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
   // ensure q and R can hold one for each Q.
   ind_t nQ = Q.size(0);
@@ -238,7 +238,7 @@ bool BrillouinZone::ir_moveinto_wedge(const LQVec<double>& Q, LQVec<double>& q, 
 #pragma omp parallel default(none) shared(R, q, Q, lat, snQ) reduction(+:n_outside)
   {
     // get the PointSymmetry object, containing all operations
-    PointSymmetry psym = this->outerlattice.get_pointgroup_symmetry(this->time_reversal);
+    PointSymmetry psym = this->_outer.get_pointgroup_symmetry(this->time_reversal);
     auto eidx = psym.find_identity_index();
     LQVec<double> qj(lat, 1u);
     std::vector<std::array<int, 9>> r_transpose;

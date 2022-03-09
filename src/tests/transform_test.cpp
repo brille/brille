@@ -5,12 +5,14 @@
 
 #include "spg_database.hpp"
 #include "utilities.hpp"
-#include "lattice.hpp"
-#include "array_latvec.hpp"
+#include "lattice_dual.hpp"
+#include "array_.hpp"
 #include "transform.hpp"
 #include "approx.hpp"
 
 using namespace brille;
+using namespace brille::lattice;
+using namespace brille::math;
 
 TEST_CASE("primitive transforms","[transform]"){
   Bravais c{Bravais::_};
@@ -35,8 +37,7 @@ TEST_CASE("primitive vector transforms","[transform]"){
   SECTION("Primitive spacegroup"){    spgr = "P 1";   }
   SECTION("Body-centred spacegroup"){ spgr = "Im-3m"; }
   SECTION("Face-centred spacegroup"){ spgr = "Fmm2";  }
-  Direct d(1,1,1,brille::math::half_pi,brille::math::half_pi,brille::math::half_pi,spgr);
-  Reciprocal r = d.star();
+  auto lat = Direct<double>({1,1,1}, {half_pi, half_pi, half_pi}, spgr);
 
   std::default_random_engine gen(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> dst(-5.0,5.0);
@@ -44,45 +45,43 @@ TEST_CASE("primitive vector transforms","[transform]"){
   int nQ = 33;
   std::vector<std::array<double,3>> rawQ;
   for (int i=0; i<nQ; ++i) rawQ.push_back({dst(gen), dst(gen), dst(gen)});
-  LDVec<double> V(d,bArray<double>::from_std(rawQ));
-  LQVec<double> Q(r,bArray<double>::from_std(rawQ));
+  auto V = LDVec<double>(lat, bArray<double>::from_std(rawQ));
+  auto Q = LQVec<double>(lat, bArray<double>::from_std(rawQ));
 
-  // int nQ = 7;
-  // double rawQ[] = {1.,0.,0., 0.,1.,0., 0.,0.,1., 1.,1.,0., 1.,0.,1., 0.,1.,1., 1.,1.,1.};
-  // LDVec<double> V(d,nQ,rawQ);
-  // LQVec<double> Q(r,nQ,rawQ);
+  auto Vp = transform_to_primitive(lat, V);
 
-  LDVec<double> Vp = transform_to_primitive(d,V);
   // Test 1: make sure that |Vᵢ|==|Vpᵢ| and |Qᵢ|==|Qpᵢ|
   for (int i=0; i<nQ; ++i)
     REQUIRE( Vp.norm(i) == Approx(V.norm(i)) );
   // Test 2: Check compoments, expressed in inverse Angstrom:
-  bArray<double> Vxyz = V.get_xyz();
-  bArray<double> Vpxyz = Vp.get_xyz();
+  auto Vxyz = V.xyz();
+  auto Vpxyz = Vp.xyz();
   for (int i=0; i<nQ; ++i)
     REQUIRE( Vxyz.norm(i) == Approx(Vpxyz.norm(i)) );
   // // THE FOLLOWING WILL FAIL, since the xyz coordinate system is arbitrarily
   // // aligned with x along a, and the direction of a and a' are not guaranteed
   // // to be the same!
   // for (auto i: SubIt(V.shape())) REQUIRE(Vpxyz[i] == Approx(Vxyz[i]));
+
   // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
-  LDVec<double> pVp = transform_from_primitive(d,Vp);
+  auto pVp = transform_from_primitive(lat,Vp);
   for (auto i: V.subItr()) REQUIRE(pVp[i] == Approx(V[i]));
 
-  LQVec<double> Qp = transform_to_primitive(r,Q);
+  auto Qp = transform_to_primitive(lat, Q);
   // Test 1: make sure that |Qᵢ|==|Qpᵢ|
   for (int i=0; i<nQ; ++i)
     REQUIRE( Qp.norm(i) == Approx(Q.norm(i)) );
   // Test 2: Check compoments, expressed in inverse Angstrom:
-  bArray<double> Qxyz = Q.get_xyz();
-  bArray<double> Qpxyz = Qp.get_xyz();
+  bArray<double> Qxyz = Q.xyz();
+  bArray<double> Qpxyz = Qp.xyz();
   for (int i=0; i<nQ; ++i)
     REQUIRE( Qxyz.norm(i) == Approx(Qpxyz.norm(i)) );
   // // THE FOLLOWING WILL FAIL, since the xyz coordinate system is arbitrarily
   // // aligned with x along a, and the direction of a and a' are not guaranteed
   // // to be the same!
   // for (auto i: SubIt(Q.shape())) REQUIRE(Qpxyz[i] == Approx(Qxyz[i]));
+
   // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
-  LQVec<double> pQp = transform_from_primitive(r,Qp);
+  auto pQp = transform_from_primitive(lat, Qp);
   for (auto i: Q.subItr()) REQUIRE(pQp[i] == Approx(Q[i]));
 }

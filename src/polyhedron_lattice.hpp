@@ -2,17 +2,17 @@
 #define _BRILLE_POLYHEDRON_LATTICE_HPP_
 
 #include "polyhedron.hpp"
-#include "lattice.hpp"
+#include "lattice_dual.hpp"
 
 #include <utility>
-#include "array_latvec.hpp"
+#include "array_lvec.hpp"
 namespace brille{
   template<class T>
   class LQPolyhedron {
   public:
     using face_t = typename std::vector<ind_t>;
     using faces_t = typename std::vector<face_t>;
-    using vertex_t = LQVec<T>;
+    using vertex_t = lattice::LVec<T>;
   protected:
     vertex_t _vertices;
     faces_t _faces;
@@ -90,27 +90,27 @@ namespace brille{
     // return a modified copy of this LQPolyhedron
     LQPolyhedron<T> mirror() const {return {T(-1) * _vertices, reverse_each(_faces)};}
     LQPolyhedron<T> centre() const {return {_vertices - this->centroid(), _faces};}
-    template<class R> LQPolyhedron<T> translate(const LQVec<R>& vector) const {return {_vertices + vector, _faces};}
+    template<class R> LQPolyhedron<T> translate(const lattice::LVec<R>& vector) const {return {_vertices + vector, _faces};}
     template<class R> LQPolyhedron<T> rotate(const std::array<R,9>& rot) const;
     LQPolyhedron<T> apply(const PointSymmetry& ps, ind_t index) const;
 
     // geometric properties in relation to another point or polyhedron
-    template<class R> [[nodiscard]] std::vector<bool> contains(const LQVec<R>& x) const;
+    template<class R> [[nodiscard]] std::vector<bool> contains(const lattice::LVec<R>& x) const;
     template<class R> [[nodiscard]] std::vector<bool> contains(const std::vector<std::array<R,3>>& x) const{
-      return this->contains(LQVec<R>(_vertices.get_lattice(), Array2<R>::from_std(x)));
+      return this->contains(lattice::LVec<R>(_vertices.type(), _vertices.lattice(), Array2<R>::from_std(x)));
     }
     template<class R> [[nodiscard]] bool intersects(const LQPolyhedron<R>&) const;
     template<class R> [[nodiscard]] LQPolyhedron<T> intersection(const LQPolyhedron<R>&) const;
-    template<class R> [[nodiscard]] LQPolyhedron<T> divide(const LQVec<R>&, const LQVec<R>&, const LQVec<R>&) const;
+    template<class R> [[nodiscard]] LQPolyhedron<T> divide(const lattice::LVec<R>&, const lattice::LVec<R>&, const lattice::LVec<R>&) const;
 
-    template<class R> [[nodiscard]] size_t face_index(const LQVec<R>&, const LQVec<R>&, const LQVec<R>&) const;
-    template<class R> [[nodiscard]] bool has_face(const LQVec<R>& a, const LQVec<R>& b, const LQVec<R>& c) const {
+    template<class R> [[nodiscard]] size_t face_index(const lattice::LVec<R>&, const lattice::LVec<R>&, const lattice::LVec<R>&) const;
+    template<class R> [[nodiscard]] bool has_face(const lattice::LVec<R>& a, const lattice::LVec<R>& b, const lattice::LVec<R>& c) const {
       return this->face_index(a,b,c) < _faces.size();
     }
-    template<class R> [[nodiscard]] bool none_beyond(const LQVec<R>&, const LQVec<R>&, const LQVec<R>&) const;
+    template<class R> [[nodiscard]] bool none_beyond(const lattice::LVec<R>&, const lattice::LVec<R>&, const lattice::LVec<R>&) const;
 
-    template<class R> LQPolyhedron<T> one_cut(const LQVec<R>&, const LQVec<R>&, const LQVec<R>&) const;
-    template<class R> LQPolyhedron<T> cut(const LQVec<R>&, const LQVec<R>&, const LQVec<R>&) const;
+    template<class R> LQPolyhedron<T> one_cut(const lattice::LVec<R>&, const lattice::LVec<R>&, const lattice::LVec<R>&) const;
+    template<class R> LQPolyhedron<T> cut(const lattice::LVec<R>&, const lattice::LVec<R>&, const lattice::LVec<R>&) const;
 
 #ifdef USE_HIGHFIVE
     template<class H> std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool> to_hdf(H& obj, const std::string& entry) const {

@@ -27,7 +27,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 // #include <cassert>
 // #include <functional>
 #include <omp.h>
-// #include "array_latvec.hpp" // defines bArray
 #include "phonon.hpp"
 #include "permutation.hpp"
 #include "permutation_table.hpp"

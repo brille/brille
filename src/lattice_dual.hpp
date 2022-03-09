@@ -7,10 +7,11 @@
 #include "enums.hpp"
 #include "primitive.hpp"
 #include "basis.hpp"
-#include "array2.hpp"
+#include "array_.hpp"
 #include "hdf_interface.hpp"
 #include "math.hpp"
 #include "hall_symbol.hpp"
+#include "linear_algebra.hpp"
 
 namespace brille::lattice {
 
@@ -205,35 +206,53 @@ public:
     return c;
   }
 
-//  [[nodiscard]] T real_a() const {
-//    T a{0};
-//    for (int i=0; i<3; ++i) a += _vectors[3*i] * _vectors[3*i];
-//    return std::sqrt(a);
-//  }
-//  [[nodiscard]] T real_b() const {
-//    T b{0};
-//    for (int i=0; i<3; ++i) b += _vectors[1+3*i] * _vectors[1+3*i];
-//    return std::sqrt(b);
-//  }
-//  [[nodiscard]] T real_c() const {
-//    T c{0};
-//    for (int i=0; i<3; ++i) c+= _vectors[2+3*i] * _vectors[2+3*i];
-//    return std::sqrt(c);
-//  }
-
-//  [[nodiscard]] T real_alpha() const;
-//  [[nodiscard]] T real_beta() const;
-//  [[nodiscard]] T real_gamma() const;
-//  [[nodiscard]] T real_volume() const;
-//  [[nodiscard]] T star_a() const;
-//  [[nodiscard]] T star_b() const;
-//  [[nodiscard]] T star_c() const;
-//  [[nodiscard]] T star_alpha() const;
-//  [[nodiscard]] T star_beta() const;
-//  [[nodiscard]] T star_gamma() const;
-//  [[nodiscard]] T star_volume() const;
-//  [[nodiscard]] vector_t lengths(LengthUnit) const;
-//  [[nodiscard]] vector_t angles(LengthUnit, AngleUnit) const;
+  template<class I>
+  [[nodiscard]] std::enable_if_t<std::is_integral_v<I>, vector_t> vector(LengthUnit lu, I i){
+    assert(0u <= i && i <= 3u);
+    switch (lu) {
+    case LengthUnit::angstrom:
+      return {_vectors[i], _vectors[i + 3], _vectors[i + 6]};
+    case LengthUnit::inverse_angstrom:
+      return {_reciprocal[i], _reciprocal[i + 3], _reciprocal[i + 6]};
+    default:
+      throw std::logic_error("Not implemented length unit");
+    }
+  }
+  template<class I> [[nodiscard]] std::enable_if_t<std::is_integral_v<I>, T> length(LengthUnit lu, I i){
+    return linear_algebra::norm(vector(lu, i));
+  }
+  template<class I> [[nodiscard]] std::enable_if_t<std::is_integral_v<I>, T> angle(LengthUnit lu, I i, AngleUnit au = AngleUnit::radian){
+    auto vj = vector(lu, (i+i) % 3u);
+    auto vk = vector(lu, (i+2) % 3u);
+    auto cos_angle_i = dot(vj, vk) / norm(vj) / norm(vk);
+    switch (au) {
+    case AngleUnit::radian:
+      return std::acos(cos_angle_i);
+    case AngleUnit::degree:
+      return std::acos(cos_angle_i) / math::pi * T(180);
+    case AngleUnit::pi:
+      return std::acos(cos_angle_i) / math::pi;
+    default:
+      throw std::logic_error("Not implemented angle unit");
+    }
+  }
+  [[nodiscard]] vector_t lengths(LengthUnit lu){
+    return {length(lu, 0u), length(lu, 1u), length(lu, 2u)};
+  }
+  [[nodiscard]] vector_t angles(LengthUnit lu, AngleUnit au = AngleUnit::radian){
+    // this could be more efficient by reusing vi, vj, vk; but maybe its ok.
+    return {angle(lu, 0u, au), angle(lu, 1u, au), angle(lu, 2u, au)};
+  }
+  [[nodiscard]] T volume(LengthUnit lu){
+    switch (lu){
+    case LengthUnit::angstrom:
+      return utils::matrix_determinant(_vectors.data());
+    case LengthUnit::inverse_angstrom:
+      return utils::matrix_determinant(_reciprocal.data());
+    default:
+      throw std::logic_error("Not implemented length unit for volume");
+    }
+  }
 
   template<class R>
   [[nodiscard]] bool is_same(const Lattice<R>& o) const {
@@ -284,6 +303,67 @@ public:
   [[nodiscard]] matrix_t from_xyz(LengthUnit lu){
     return transpose(to_xyz(lu));
   }
+
+#ifdef USE_HIGHFIVE
+  template<class H>
+  std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool>
+  to_hdf(H& obj, const std::string& entry) const {
+    auto group = overwrite_group(obj, entry);
+    group.createAttribute("realspace", _vectors);
+    group.createAttribute("reciprocalspace", _reciprocal);
+    group.createAttribute("metric", _metric);
+    group.createAttribute("bravais", _bravais);
+    bool ok{true};
+    ok &= _space.to_hdf(group, "spacegroup_symmetry");
+    ok &= _point.to_hdf(group, "pointgroup_symmetry");
+    ok &= _basis.to_hdf(group, "basis");
+    return ok;
+  }
+  template<class H>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, Lattice<T>>
+  from_hdf(H& obj, const std::string& entry){
+    auto group = obj.getGroup(entry);
+    matrix_t real, reciprocal, metric;
+    Bravais L;
+    group.getAttribute("realspace", real);
+    group.getAttribute("reciprocalspace", reciprocal);
+    group.getAttribute("metric", metric);
+    group.getAttribute("bravais", L);
+    auto spg = Symmetry::from_hdf(group, "spacegroup_symmetry");
+    auto ptg = PointSymmetry::from_hdf(group, "pointgroup_symmetry");
+    auto bas = Basis::from_hdf(group, "basis");
+    return {real, reciprocal, metric, L, spg, ptg, bas};
+  }
+#endif
+
+  Lattice<T> primitive() const {
+    PrimitiveTransform P(_bravais);
+    if (P.does_anything()){
+      matrix_t pv, pr, pm;
+      // The transformation matrix P gives us the primitive basis column-vector
+      // matrix Aₚ from the standard basis column-vector matrix Aₛ by
+      // Aₚ = Aₛ P.
+      // The PrimitiveTransform object contains 6*P (so that it's integer valued)
+      utils::multiply_matrix_matrix(pv.data(), P.get_6P().data(), _vectors.data());
+      for (auto & x: pv) x /= T(6);
+      // calculating the new metric tensor could be done from _vectors, but
+      // we might as well use the new values in pr
+      pr = transpose(pv); // abuse pr as a temporary array
+      utils::multiply_matrix_matrix(pm.data(), pv.data(), pr.data());
+
+      // The reciprocal lattice vectors (expressed as column vectors of a matrix)
+      // are transformed by the inverse of the transpose (or the transpose of
+      // the inverse) of P
+      utils::multiply_matrix_matrix(pr.data(), P.get_invPt().data(), _reciprocal.data());
+
+      // strictly we should change the spacegroup and pointgroup symmetry
+      // representations, plus the atom basis representation... but that seems
+      // overkill for now. FIXME think about this more.
+      return {pv, pr, pm, _bravais, _space, _point, _basis};
+    }
+    return *this;
+  }
+
 };
 
 

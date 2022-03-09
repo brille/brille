@@ -21,7 +21,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief Functions to build lists of neighbour subscripted indices
 */
-#include "array_latvec.hpp" // defines bArray
+#include "array_.hpp" // defines bArray
 namespace brille {
 
 /*! \brief Build a list of relative neighbour subscripted indices
@@ -34,7 +34,7 @@ combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0).
 Typically `extent`=1 and the returned bArray is
 [(-1,-1,-1,),(-1,-1,0),(-1,-1,1),(-1,0,-1),…,(0,0,-1),(0,0,1),…,(1,0,1),(1,1,-1),(1,1,0),(1,1,1)]
 */
-bArray<int> make_relative_neighbour_indices(const int extent=1);
+bArray<int> make_relative_neighbour_indices(int extent=1);
 /*! \brief Build a 4-D list of relative neighbour subscripted indices
 
 \param extent The magnitude of the relative extent to include
@@ -42,7 +42,7 @@ bArray<int> make_relative_neighbour_indices(const int extent=1);
 Construct an Array2 with 4 elements per array of all (2N+1)⁴-1
 combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0,0).
 */
-bArray<int> make_relative_neighbour_indices4(const int extent=1);
+bArray<int> make_relative_neighbour_indices4(int extent=1);
 /*! \brief Build a special list of relative neighbour subscripted indices
 
 \param extent The maginitude of the relative extent to include
@@ -66,7 +66,7 @@ combinations of {-N,-N+1,…,N-1,N} for N=`extent`, skipping over (0,0,0).
       not be used.
 \see make_relative_neighbour_indices
 */
-bArray<int> make_relative_neighbour_indices_prime(const int extent=1);
+bArray<int> make_relative_neighbour_indices_prime(int extent=1);
 
 } // namespace brille
 #endif

@@ -23,7 +23,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 // #include <set>
 // #include "array.hpp"
 // #include "array2.hpp"
-// #include "array_latvec.hpp" // defines bArray
 // #include <vector>
 // #include <array>
 // #include <omp.h>

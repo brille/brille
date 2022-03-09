@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 #include <filesystem>
 
-#include "array_latvec.hpp" // defines bArray<T> as Array2<T> or Array<T>
+#include "array_.hpp" // defines bArray<T> as Array2<T> or Array<T>
 #include "polyhedron.hpp"
 
 using namespace brille;

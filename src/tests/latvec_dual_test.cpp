@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 
 #include "lattice_dual.hpp"
-#include "array_latvec_dual.hpp"
+#include "array_lvec.hpp"
 
 using namespace brille::latvec;
 using namespace brille::lattice;

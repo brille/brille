@@ -15,8 +15,8 @@ See the GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
-#ifndef BRILLE_ARRAY__HPP_
-#define BRILLE_ARRAY__HPP_
+#ifndef _BRILLE_ARRAY__HPP_
+#define _BRILLE_ARRAY__HPP_
 /*! \file
     \brief Forward declarations for Array* classes which can be constructed
            from each other.
@@ -28,8 +28,13 @@ namespace brille {
   template<class T> class Array;
   template<class T> class Array2;
 
-  // declare their itterators here
+  // declare their iterators here
   template<class T> class ArrayIt;
   template<class T> class Array2It;
 }
+template<class T> using bArray = brille::Array2<T>;
+
+#include "array.hpp"
+#include "array2.hpp"
+
 #endif

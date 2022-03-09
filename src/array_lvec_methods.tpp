@@ -15,57 +15,59 @@ See the GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 template<class T> template<typename... A>
-LQVec<T>
-LQVec<T>::view(A... args) const {
-  return LQVec<T>(this->get_lattice(), this->bArray<T>::view(args...));
+LVec<T>
+LVec<T>::view(A... args) const {
+  return LVec<T>(_lattice, this->bArray<T>::view(args...));
 }
 template<class T> template<typename... A>
-LQVec<T>
-LQVec<T>::extract(A... args) const {
-  return LQVec<T>(this->get_lattice(), this->bArray<T>::extract(args...));
+LVec<T>
+LVec<T>::extract(A... args) const {
+  return LVec<T>(_lattice, this->bArray<T>::extract(args...));
 }
 template<class T>
 bArray<T>
-LQVec<T>::get_hkl() const {
+LVec<T>::get_hkl() const {
   return bArray<T>(*this); // strip off the Lattice information
 }
 template<class T>
 bArray<double>
-LQVec<T>::get_xyz() const {
+LVec<T>::get_xyz() const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->size(this->ndim()-1) == 3);
   bArray<double> xyz(this->shape(), this->stride());
-  std::vector<double> toxyz = this->get_lattice().get_xyz_transform();
-  auto tshape = this->shape();
-  tshape.back() = 0u;
-  for (auto x: this->subItr(tshape))
-    brille::utils::multiply_matrix_vector(xyz.ptr(x), toxyz.data(), this->ptr(x));
+  auto to_xyz = _lattice.to_xyz();
+  auto t_shape = this->shape();
+  t_shape.back() = 0u;
+  for (auto x: this->subItr(t_shape))
+    brille::utils::multiply_matrix_vector(xyz.ptr(x), to_xyz.data(), this->ptr(x));
   return xyz;
 }
 
 template<class T>
 LDVec<double>
-LQVec<T>::star() const {
+LVec<T>::star() const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->size(this->ndim()-1) == 3);
-  std::vector<double> cvmt = this->get_lattice().get_covariant_metric_tensor();
-  LDVec<double> slv(this->get_lattice().star(), this->shape(), this->stride());
+  auto tensor = _lattice.covariant_metric();
+  std::vector<double> cvmt = _lattice.get_covariant_metric_tensor();
+  auto lu = LengthUnit::angstrom == _type ? LengthUnit::inverse_angstrom : LengthUnit::angstrom;
+  LVec<double> slv(lu, _lattice, this->shape(), this->stride());
   auto fx = this->shape(); fx.back() = 0;
   for (auto x: this->subItr(fx))
-    brille::utils::multiply_matrix_vector(slv.ptr(x), cvmt.data(), this->ptr(x));
-  slv /= 2.0*brille::math::pi; // ai= gij/2/pi * ai_star
+    brille::utils::multiply_matrix_vector(slv.ptr(x), tensor.data(), this->ptr(x));
+  slv /= math::two_pi; // ai= gij/2/pi * ai_star
   return slv;
 }
 
 template<class T>
-LQVec<double>
-LQVec<T>::cross(const ind_t i, const ind_t j) const {
+LVec<double>
+LVec<T>::cross(const ind_t i, const ind_t j) const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->ndim()==2 && this->size(this->ndim()-1) == 3);
-  bool bothok = (i<this->size(0) && j<this->size(0));
-  LQVec<double> out(this->get_lattice(), bothok? 1u : 0u, 3u);
-  if (bothok){
-    auto lat = this->get_lattice();
-    LDVec<double> ldv(lat.star(), 1u);
+  bool both_ok = (i<this->size(0) && j<this->size(0));
+  LVec<double> out(_type, _lattice, both_ok ? 1u : 0u, 3u);
+  if (both_ok){
+    auto lu = LengthUnit::angstrom == _type ? LengthUnit::inverse_angstrom : LengthUnit::angstrom;
+    LDVec<double> ldv(_type, _lattice, 1u);
     brille::utils::vector_cross<double,T,T,3>(ldv.ptr(0), this->ptr(i), this->ptr(j));
-    ldv *= lat.get_volume()/2.0/brille::math::pi;
+    ldv *= _lattice.volume()/brille::math::two_pi;
     out = ldv.star();
   }
   return out;
@@ -73,21 +75,20 @@ LQVec<T>::cross(const ind_t i, const ind_t j) const {
 
 template<class T>
 double
-LQVec<T>::dot(const ind_t i, const ind_t j) const {
+LVec<T>::dot(const ind_t i, const ind_t j) const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->ndim()==2 && this->size(this->ndim()-1) == 3);
   if (i>=this->size(0) || j>=this->size(0))
     throw std::out_of_range("attempted out of bounds access by dot");
-  auto lat = this->get_lattice();
-  return same_lattice_dot(this->view(i),this->view(j), lat.get_lengths(), lat.get_cosines());
+  return same_lattice_dot(this->view(i),this->view(j), _latice.metric());
 }
 
 template<class T>
 void
-LQVec<T>::check_array(){
+LVec<T>::check_array(){
   auto last = this->ndim()-1;
   // the last dimension must cover 3-vectors
-  if(this->size(last) != 3) throw std::runtime_error("LQVec objects must have a last dimension of size 3");
+  if(this->size(last) != 3) throw std::runtime_error("LVec objects must have a last dimension of size 3");
   // which must be contiguous in memory for most operations
   auto st = this->stride();
-  if(st[last] != 1) throw std::runtime_error("LQVec objects must have a contiguous last dimension");
+  if(st[last] != 1) throw std::runtime_error("LVec objects must have a contiguous last dimension");
 }

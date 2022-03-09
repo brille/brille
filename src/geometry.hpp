@@ -26,7 +26,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <csignal>
 #include "tetgen.h"
 #include "array_.hpp" // defines bArray
-#include "array_latvec.hpp"
+#include "array_lvec.hpp"
 #include "utilities.hpp"
 namespace brille {
 
@@ -74,8 +74,8 @@ namespace brille {
     template<class T, template<class> class A>
     std::enable_if_t<isLatVec<T,A>, std::vector<T>>
     pseudo_orient2d(const A<T>& a, const A<T>& b, const A<T>& c){
-      assert(a.samelattice(b) && a.samelattice(c));
-      return pseudo_orient2d(a.get_xyz(), b.get_xyz(), c.get_xyz());
+      assert(a.same_lattice(b) && a.same_lattice(c));
+      return pseudo_orient2d(a.xyz(), b.xyz(), c.xyz());
     }
 
     template<class T>
@@ -157,8 +157,8 @@ namespace brille {
     template<class T, template<class> class A>
     std::enable_if_t<isLatVec<T,A>, std::vector<T>>
     pseudo_orient3d(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
-      assert(a.samelattice(b) && a.samelattice(c) && d.samelattice(d));
-      return pseudo_orient3d(a.get_xyz(), b.get_xyz(), c.get_xyz(), d.get_xyz());
+      assert(a.same_lattice(b) && a.same_lattice(c) && d.same_lattice(d));
+      return pseudo_orient3d(a.xyz(), b.xyz(), c.xyz(), d.xyz());
     }
 
 //  template<class T, template<class> class A>
@@ -188,9 +188,9 @@ namespace brille {
 //  template<class T, template<class> class A>
 //  std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, A<T>>>
 //  plane_points_from_normal(const A<T> & n, const A<T> & p) {
-//    assert(n.samelattice(p));
-//    auto [b, c] = plane_points_from_normal(n.get_xyz(), p.get_xyz());
-//    return std::make_tuple(A<T>::from_invA(p.get_lattice(), b), A<T>::from_invA(p.get_lattice(), c));
+//    assert(n.same_lattice(p));
+//    auto [b, c] = plane_points_from_normal(n.xyz(), p.xyz());
+//    return std::make_tuple(A<T>::from_invA(p.lattice(), b), A<T>::from_invA(p.lattice(), c));
 //  }
 
   template<class T, template<class> class A>
@@ -264,12 +264,12 @@ namespace brille {
 //  template<class T, template<class> class A>
 //  std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, A<T>, A<T>>>
 //  plane_points_from_normal(const A<T>& n, const A<T>& p){
-//    auto nxyz = n.get_xyz();
-//    auto pxyz = p.get_xyz();
+//    auto nxyz = n.xyz();
+//    auto pxyz = p.xyz();
 //    auto [a, b, c] = plane_points_from_normal(nxyz, pxyz);
-//    auto al = A<T>::from_invA(n.get_lattice(), a);
-//    auto bl = A<T>::from_invA(n.get_lattice(), b);
-//    auto cl = A<T>::from_invA(n.get_lattice(), c);
+//    auto al = A<T>::from_invA(n.lattice(), a);
+//    auto bl = A<T>::from_invA(n.lattice(), b);
+//    auto cl = A<T>::from_invA(n.lattice(), c);
 //    return std::make_tuple(al, bl, cl);
 //  }
 
@@ -453,8 +453,8 @@ namespace brille {
   template<class T, class R, template<class> class A, template<class> class B>
   std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, bool>
   point_in_plane_lattice_check(const A<T>& a, const A<T>& b, const A<T>& c, const B<R>& x){
-    bool abc = a.samelattice(b) && a.samelattice(c);
-    bool ax = x.samelattice(a) || x.starlattice(a);
+    bool abc = a.same_lattice(b) && a.same_lattice(c);
+    bool ax = x.same_lattice(a) || x.starlattice(a);
     verbose_update_if(!abc, "a, b, and c should have the same lattice!");
     verbose_update_if(!ax, "a and x should have the same or dual lattices");
     return ax && abc;
@@ -465,7 +465,7 @@ namespace brille {
   std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, OUT_TYPE>\
   FUNCTION(const A<T>& a, const A<T>& b, const A<T>& c, const B<R>& x){\
     assert(point_in_plane_lattice_check(a, b, c, x));\
-    return FUNCTION(a.get_xyz(), b.get_xyz(), c.get_xyz(), x.get_xyz());\
+    return FUNCTION(a.xyz(), b.xyz(), c.xyz(), x.xyz());\
   }
   POINT_IN_PLANE(point_inside_plane, std::vector<bool>)
   POINT_IN_PLANE(point_inside_planes, std::vector<bool>)
@@ -612,10 +612,10 @@ namespace brille {
   std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, A<T>> edge_plane_intersection(
       const A<T> &v, const std::vector<I> &one, const std::vector<I> &two,
       const B<R> &a, const B<R> &b, const B<R> &c, const int tol=1, const bool strict = false) {
-    assert(a.samelattice(b) && a.samelattice(c));
-    if (v.samelattice(a) || v.starlattice(a)) {
-      auto at = edge_plane_intersection(v.get_xyz(), one, two, a.get_xyz(), b.get_xyz(), c.get_xyz(), tol, strict);
-      return at.size(0) > 0 ? A<T>::from_invA(v.get_lattice(), at) : A<T>(v.get_lattice(), 0u);
+    assert(a.same_lattice(b) && a.same_lattice(c));
+    if (v.same_lattice(a) || v.starlattice(a)) {
+      auto at = edge_plane_intersection(v.xyz(), one, two, a.xyz(), b.xyz(), c.xyz(), tol, strict);
+      return at.size(0) > 0 ? A<T>::from_invA(v.type(), v.lattice(), at) : A<T>(v.type(), v.lattice(), 0u);
     }
     throw std::runtime_error("");
   }
@@ -704,9 +704,10 @@ namespace brille {
   template<class T, template<class> class A>
   std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, A<T>, A<T>>>
   find_convex_hull_planes(const A<T>& points){
-    auto [a, b, c] = find_convex_hull_planes(points.get_xyz());
-    auto lat = points.get_lattice();
-    return std::make_tuple(A<T>(lat, a), A<T>(lat, b), A<T>(lat, c));
+    auto [a, b, c] = find_convex_hull_planes(points.xyz());
+    auto lat = points.lattice();
+    auto typ = points.type();
+    return std::make_tuple(A<T>(typ, lat, a), A<T>(typ, lat, b), A<T>(typ, lat, c));
   }
 
   template<class T, template<class> class A>
@@ -731,7 +732,7 @@ namespace brille {
   find_planes_containing_point(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& points){
     // if they're all in the same lattice, can we act directly on (hkl)?
     // No. But maybe we can only worry about the co-angles and ignore the basis vector lengths?
-    return find_planes_containing_point(a.get_xyz(), b.get_xyz(), c.get_xyz(), points.get_xyz());
+    return find_planes_containing_point(a.xyz(), b.xyz(), c.xyz(), points.xyz());
   }
 
   template<class T, template<class> class A>
@@ -825,8 +826,8 @@ namespace brille {
   template<class T, template<class> class A>
   std::enable_if_t<isLatVec<T,A>, std::vector<ind_t>>
   sort_convex_polygon_face(const A<T>& a, const A<T>& b, const A<T>& c, const std::vector<ind_t>& face, const A<T>& points){
-    assert(a.samelattice(b) && a.samelattice(c) && a.samelattice(points));
-    return sort_convex_polygon_face(a.get_xyz(), b.get_xyz(), c.get_xyz(), face, points.get_xyz());
+    assert(a.same_lattice(b) && a.same_lattice(c) && a.same_lattice(points));
+    return sort_convex_polygon_face(a.xyz(), b.xyz(), c.xyz(), face, points.xyz());
   }
 
   template<class T, class I, template<class> class A>

@@ -4,8 +4,8 @@
 
 #include <catch2/catch.hpp>
 // for now we want to be able to switch between Array and Array2
-// array_latvec.hpp defines a bArray<T> as one or the other:
-#include "array_latvec.hpp"
+// array_.hpp defines a bArray<T> as one or the other:
+#include "array_.hpp"
 
 using namespace brille;
 

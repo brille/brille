@@ -28,7 +28,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <omp.h>
 // #include <cassert>
 // #include <algorithm>
-#include "array_latvec.hpp" // defines bArray
+#include "array_.hpp" // defines bArray
 #include "tetgen.h"
 // #include "debug.hpp"
 #include "polyhedron.hpp"

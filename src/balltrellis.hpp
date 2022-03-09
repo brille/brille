@@ -23,11 +23,9 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
           tetrahedral mesh into cells by binning their centers of mass and
           circumpsheres into a regular grid
 */
-// #include <vector>
-// #include <array>
-// #include <algorithm>
-#include "array_latvec.hpp"
-// #include "approx.hpp"
+#include <array>
+#include "approx.hpp"
+#include "array_.hpp"
 namespace brille {
 
 class TrellisLeaf{

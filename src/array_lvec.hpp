@@ -32,7 +32,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 template<class T>
 using bArray = brille::Array2<T>;
 
-namespace brille::latvec {
+namespace brille::lattice {
 
 /*! Easier access to ArrayTraits for template substitution
 
@@ -117,63 +117,8 @@ operator X (const A<T>& b){\
 : bArray<T>(static_cast<brille::ind_t>(n),3), _type(std::move(typ)), _lattice(std::move(lat))\
 {}
 
-#define LVEC_FROM_STD(A, CONTAINER)\
-static A<T> from_std(type_t typ, lattice_t lat, const CONTAINER& data) {\
-  return A<T>(std::move(typ), std::move(lat), bArray<T>::from_std(data));\
-}
-
-#define LVEC_FROM_STD_VECTOR_ARRAY(A) \
-template<class R, size_t N>\
-static A<T> from_std(type_t typ, lattice_t lat, const std::vector<std::array<R,N>>& data) { \
-  return A<T>(std::move(typ), std::move(lat), bArray<T>::from_std(data));\
-}
-
-#define LVEC_SCALAR_POWER(L) \
-L<T> operator ^ (const T& val) {\
-  L<T> out(this->get_lattice(), this->shape());\
-  for (auto & v: this->subItr()) out[v] = std::pow(this->val(v), val);\
-  return out;\
-}
 
 
-#ifdef USE_HIGHFIVE
-
-#define TO_HDF_OBJ\
-template<class H>\
-std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool>\
- to_hdf(H& obj, const std::string& entry) const {\
-  auto group = overwrite_group(obj, entry);\
-  bool ok{true};               \
-  group.createAttribute("length_unit", _type);\
-  ok &= _lattice.to_hdf(group, "lattice");                    \
-  ok &= bArray<T>::to_hdf(group, "components");\
-  return ok;\
-}
-#define FROM_HDF_OBJ(L, INDEX_NAMES)\
-template<class H>\
-static std::enable_if_t<std::is_base_of_v<HighFive::Object,H>, L<T>>\
-from_hdf(H& obj, const std::string& entry){\
-  auto group = obj.getGroup(entry);\
-  LengthUnit lu;\
-  group.getAttribute("length_unit").read(lu);\
-  auto lat = lattice_t::from_hdf(group, "lattice");\
-  auto val = bArray<T>::from_hdf(group, "components");\
-  return L<T>(lat, val, lu);\
-}
-
-#define TO_HDF_STR \
-[[nodiscard]] bool to_hdf(const std::string& filename, const std::string& dataset, unsigned perm=HighFive::File::OpenOrCreate) const {\
-  HighFive::File file(filename, perm);\
-  return this->to_hdf(file, dataset);\
-}
-
-#define FROM_HDF_STR(L)\
-static L<T> from_hdf(const std::string& filename, const std::string& dataset){\
-  HighFive::File file(filename, HighFive::File::ReadOnly);\
-  return L<T>::from_hdf(file, dataset);\
-}
-
-#endif
 
 #endif
 
@@ -185,7 +130,7 @@ or more 3-vector in units of a real-space-spanning lattice.
 template<class T>
 class LVec: public bArray<T>{
 public:
-  using lattice_t = lattice::Lattice<double>;
+  using lattice_t = Lattice<double>;
   using type_t = LengthUnit;
 private:
   type_t _type;
@@ -249,10 +194,20 @@ public:
   LVEC_ARRAY_INPLACE_OP_DEF(LVec,*=)
   LVEC_ARRAY_INPLACE_OP_DEF(LVec,/=)
 
-  LVEC_FROM_STD(LVec, std::vector<T>)
-  LVEC_FROM_STD_VECTOR_ARRAY(LVec)
+static LVec<T> from_std(type_t typ, lattice_t lat, const std::vector<T>& data) {
+  return LVec<T>(std::move(typ), std::move(lat), bArray<T>::from_std(data));
+}
 
-  LVEC_SCALAR_POWER(LVec)
+template<class R, size_t N>
+static LVec<T> from_std(type_t typ, lattice_t lat, const std::vector<std::array<R,N>>& data) {
+  return LVec<T>(std::move(typ), std::move(lat), bArray<T>::from_std(data));
+}
+
+LVec<T> operator ^ (const T& val) {
+  LVec<T> out(_type, _lattice, this->shape());
+  for (auto & v: this->subItr()) out[v] = std::pow(this->val(v), val);
+  return out;
+}
 
   template<class R>
   void binary_operation_check(const LVec<R>& b) const{
@@ -281,10 +236,37 @@ public:
     return LVec<T>(_lattice, this->bArray<T>::decouple(), _type);
   }
 
-  TO_HDF_OBJ(xyz)
-  TO_HDF_STR
-  FROM_HDF_OBJ(LDVec, lattice_t, xyz)
-  FROM_HDF_STR(LDVec)
+#ifdef USE_HIGHFIVE
+template<class H>
+std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool>
+ to_hdf(H& obj, const std::string& entry) const {
+  auto group = overwrite_group(obj, entry);
+  bool ok{true};\
+  group.createAttribute("length_unit", _type);
+  ok &= _lattice.to_hdf(group, "lattice");
+  ok &= bArray<T>::to_hdf(group, "components");
+  return ok;
+}
+template<class H>\
+static std::enable_if_t<std::is_base_of_v<HighFive::Object,H>, LVec<T>>
+from_hdf(H& obj, const std::string& entry){
+  auto group = obj.getGroup(entry);
+  LengthUnit lu;
+  group.getAttribute("length_unit").read(lu);
+  auto lat = lattice_t::from_hdf(group, "lattice");
+  auto val = bArray<T>::from_hdf(group, "components");
+  return LVec<T>(lu, lat, val);
+}
+[[nodiscard]] bool to_hdf(const std::string& filename, const std::string& dataset, unsigned perm=HighFive::File::OpenOrCreate) const {
+  HighFive::File file(filename, perm);
+  return this->to_hdf(file, dataset);
+}
+static LVec<T> from_hdf(const std::string& filename, const std::string& dataset){
+  HighFive::File file(filename, HighFive::File::ReadOnly);
+  return LVec<T>::from_hdf(file, dataset);
+}
+#endif
+
 protected:
   void check_array();
 };
@@ -292,15 +274,7 @@ protected:
 #undef LVEC_SCALAR_INPLACE_OP_DEF
 #undef LVEC_ARRAY_INPLACE_OP_DEF
 #undef LVEC_INIT_INT
-#undef LVEC_FROM_STD
-#undef LVEC_FROM_STD_VECTOR_ARRAY
 
-#ifdef USE_HIGHFIVE
-#undef TO_HDF_OBJ
-#undef TO_HDF_STR
-#undef FROM_HDF_OBJ
-#undef FROM_HDF_STR
-#endif
 
 // convenience creation functions for Real and Reciprocal space vectors
 template<class T, class ... P> LVec<T> LDVec(P ... args) {return LVec<T>(LengthUnit::angstrom, args ...);}
@@ -317,29 +291,21 @@ differentiation of otherwise identical function signatures.
   template<class... T> struct ArrayTraits{
     static constexpr bool array = false;  //!< is this an Array2, LQVec, or LDVec
     static constexpr bool latvec = false; //!< is this an LQVec or LDVec
-    static constexpr bool direct = false;
-    static constexpr bool reciprocal = false;
   };
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   template<class T> struct ArrayTraits<bArray<T>>{
     static constexpr bool array = true;
     static constexpr bool latvec = false;
-    static constexpr bool direct = false;
-    static constexpr bool reciprocal = false;
   };
   template<class T> struct ArrayTraits<LVec<T>>{
     static constexpr bool array = true;
     static constexpr bool latvec = true;
-    static constexpr bool direct = false;
-    static constexpr bool reciprocal = false;
   };
-
 #endif
 
-#include "array_dual_latvec.tpp"
-#include "array_dual_ldvec.tpp"
-#include "array_dual_lqvec.tpp"
+#include "array_lvec_functions.tpp"
+#include "array_lvec_methods.tpp"
 
-}
+  }
 
 #endif

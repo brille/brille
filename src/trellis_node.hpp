@@ -19,7 +19,6 @@
 #include "enums.hpp"
 // #include "array.hpp"
 // #include "array2.hpp"
-// #include "array_latvec.hpp" // defines bArray
 #include "polyhedron.hpp"
 // #include "utilities.hpp"
 // #include "debug.hpp"

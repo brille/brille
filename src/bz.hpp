@@ -29,7 +29,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "polyhedron_flex.hpp"
 #include "phonon.hpp"
 #include "hdf_interface.hpp"
-// #include "approx.hpp"
+#include "array_lvec.hpp"
+
 namespace brille {
 
 /*! \brief An object to hold information about the first Brillouin zone of a Reciprocal lattice
@@ -44,12 +45,14 @@ namespace brille {
 */
 class BrillouinZone {
 public:
-  using poly_t = polyhedron::Poly<double, LQVec>;
+  using lattice_t = lattice::Lattice<double>;
+  using vertex_t = lattice::LVec<double>;
+  using poly_t = polyhedron::Poly<double, vertex_t>;
 protected:
-  Reciprocal lattice;               //!< The primitive reciprocal lattice
-  Reciprocal outerlattice;          //!< The lattice passed in at construction
-  poly_t first_poly; //!< The first Brillouin zone polyhedron
-  poly_t ir_poly; //!< The irreducible Brillouin zone polyhedron
+  lattice_t _inner;          //!< The primitive reciprocal lattice
+  lattice_t _outer;          //!< The lattice passed in at construction
+  poly_t _first; //!< The first Brillouin zone polyhedron
+  poly_t _irreducible; //!< The irreducible Brillouin zone polyhedron
   bArray<double> ir_wedge_normals; //!< The normals of the irreducible reciprocal space wedge planes.
   bool time_reversal; //!< A flag to indicate if time reversal symmetry should be included with pointgroup operations
   bool has_inversion; //!< A computed flag indicating if the pointgroup has space inversion symmetry or if time reversal symmetry has been requested
@@ -95,7 +98,7 @@ public:
   lattice(toprim ? lat.primitive() : lat), outerlattice(lat), time_reversal(tr), approx_tolerance(tol)
   {
     profile_update("Start of BrillouinZone construction");
-    is_primitive = !(lattice.issame(outerlattice));
+    is_primitive = !(lattice.issame(_outer));
     has_inversion = time_reversal || lat.has_space_inversion();
     no_ir_mirroring = true;
     double old_volume = -1.0, new_volume=0.0;
@@ -104,7 +107,7 @@ public:
     do {
       old_volume = new_volume;
       this->voro_search(++test_extent, divide_primitive);
-      new_volume = first_poly.volume();
+      new_volume = _first.volume();
     } while (!approx::scalar(new_volume, old_volume));
 
     // fallback in case voro_search fails for some reason?!?
@@ -113,10 +116,10 @@ public:
     }
     // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
     // set the irreducible wedge now as the search will do nothing.
-    ir_poly = first_poly;
+    _irreducible = _first;
     if (wedge_search){
       bool success{false};
-      if (outerlattice.is_triclinic()){
+      if (_outer.is_triclinic()){
         success = !has_inversion || this->wedge_triclinic();
       } else {
         success = this->wedge_brute_force()
@@ -130,7 +133,8 @@ public:
                // and sort_by_length are possible but not necessarily useful.
       }
       if (!success) {
-        info_update("First Brillouin zone ", first_poly.python_string(), "and 'irreducible' Brillouin zone", ir_poly.python_string());
+        info_update("First Brillouin zone ", _first.python_string(), "and 'irreducible' Brillouin zone",
+                    _irreducible.python_string());
         throw std::runtime_error(
             "Failed to find an irreducible Brillouin zone.");
       }
@@ -156,9 +160,9 @@ public:
   void check_if_mirroring_needed(){
     no_ir_mirroring = true;
     if (!has_inversion){
-      PointSymmetry ps = outerlattice.get_pointgroup_symmetry(time_reversal?1:0);
-      auto goal = first_poly.volume() / static_cast<double>(ps.size());
-      auto found = ir_poly.volume();
+      PointSymmetry ps = _outer.get_pointgroup_symmetry(time_reversal?1:0);
+      auto goal = _first.volume() / static_cast<double>(ps.size());
+      auto found = _irreducible.volume();
       if (brille::approx::scalar(goal, 2.0*found, approx_tolerance)){
         info_update("Apply mirroring strategy since ", goal, " ~= 2* ", found);
         /*The current Polyhedron at this->ir_polyhedron has half the anticipated
@@ -168,9 +172,9 @@ public:
         and look for a convex combination of the found polyhedron and its
         mirror with one of the pointgroup operations applied:*/
         std::vector<poly_t> all_unions;
-        auto mirrored = ir_poly.mirror();
+        auto mirrored = _irreducible.mirror();
         for (ind_t i=0; i < ps.size(); ++i){
-          all_unions.push_back(ir_poly + mirrored.apply(ps, i));
+          all_unions.push_back(_irreducible + mirrored.apply(ps, i));
         }
         // The combination of a polyhedron and its rotated inverse which has
         // the least number of vertices is (hopefully) convex.
@@ -188,7 +192,7 @@ public:
         if (brille::approx::scalar(goal, mvu_convex_hull.volume(), approx_tolerance)){
           // we found a polyhedron with the right volume which is convex!
           // so we can keep this as *the* ir_polyhedron
-          ir_poly = mvu_convex_hull;
+          _irreducible = mvu_convex_hull;
           // and we need to update the found volume for the check below
           found = goal;
         }
@@ -210,7 +214,7 @@ public:
   bool check_ir_polyhedron();
 //  bool wedge_explicit();
   //! Returns the lattice passed in at construction
-  [[nodiscard]] Reciprocal get_lattice() const { return outerlattice;};
+  [[nodiscard]] Reciprocal get_lattice() const { return _outer;};
   //! Returns the lattice actually used to find the Brillouin zone vertices,
   //! which may be a primitive lattice depending on the flag at creation
   [[nodiscard]] Reciprocal get_primitive_lattice() const { return lattice;};
@@ -220,13 +224,13 @@ public:
   [[nodiscard]] ind_t faces_count() const { return this->get_points().size(0);};
   // irreducible reciprocal space wedge
   void set_ir_wedge_normals(const LQVec<double>& x){
-    bool already_same = outerlattice.issame(x.get_lattice());
-    LQVec<double> xp(outerlattice);
-    PrimitiveTransform PT(outerlattice.get_bravais_type());
+    bool already_same = _outer.issame(x.get_lattice());
+    LQVec<double> xp(_outer);
+    PrimitiveTransform PT(_outer.get_bravais_type());
     bool transform_needed = ( PT.does_anything() && lattice.issame(x.get_lattice()) );
     if (!(already_same || transform_needed))
       throw std::runtime_error("ir_wedge_normals must be in the standard or primitive lattice used to define the BrillouinZone object");
-    if (transform_needed)  xp = transform_from_primitive(outerlattice,x);
+    if (transform_needed)  xp = transform_from_primitive(_outer,x);
     const LQVec<double> & xref = transform_needed ? xp : x;
     ir_wedge_normals = xref.get_hkl();
   }
@@ -253,16 +257,16 @@ public:
 //    bool both_same = v.get_lattice().issame(p.get_lattice());
 //    if (!both_same)
 //      throw std::runtime_error("The vertices, and points of a polyhedron must all be in the same cooridinate system");
-//    bool is_outer = this->outerlattice.issame(v.get_lattice());
+//    bool is_outer = this->_outer.issame(v.get_lattice());
 //    bool is_inner = this->lattice.issame(v.get_lattice());
-//    LQVec<double> vp(this->outerlattice), pp(this->outerlattice);
-//    PrimitiveTransform PT(this->outerlattice.get_bravais_type());
+//    LQVec<double> vp(this->_outer), pp(this->_outer);
+//    PrimitiveTransform PT(this->_outer.get_bravais_type());
 //    is_inner &= PT.does_anything();
 //    if (!(is_outer || is_inner))
 //      throw std::runtime_error("The polyhedron must be described in the conventional or primitive lattice used to define the BrillouinZone object");
 //    if (is_inner){
-//      vp = transform_from_primitive(this->outerlattice, v);
-//      pp = transform_from_primitive(this->outerlattice, p);
+//      vp = transform_from_primitive(this->_outer, v);
+//      pp = transform_from_primitive(this->_outer, p);
 //    }
 //    const LQVec<double> & vref = is_inner ? vp : v;
 //    const LQVec<double> & pref = is_inner ? pp : p;
@@ -290,22 +294,22 @@ public:
     bool all_same = v.get_lattice().issame(p.get_lattice()) && p.get_lattice().issame(n.get_lattice());
     if (!all_same)
       throw std::runtime_error("The vertices, points, and normals of a polyhedron must all be in the same cooridinate system");
-    bool is_outer = outerlattice.issame(v.get_lattice());
+    bool is_outer = _outer.issame(v.get_lattice());
     bool is_inner = lattice.issame(v.get_lattice());
-    LQVec<double> vp(outerlattice), pp(outerlattice), np(outerlattice);
-    PrimitiveTransform PT(outerlattice.get_bravais_type());
+    LQVec<double> vp(_outer), pp(_outer), np(_outer);
+    PrimitiveTransform PT(_outer.get_bravais_type());
     is_inner &= PT.does_anything();
     if (!(is_outer || is_inner))
       throw std::runtime_error("The polyhedron must be described in the conventional or primitive lattice used to define the BrillouinZone object");
     if (is_inner){
-      vp = transform_from_primitive(outerlattice, v);
-      pp = transform_from_primitive(outerlattice, p);
-      np = transform_from_primitive(outerlattice, n);
+      vp = transform_from_primitive(_outer, v);
+      pp = transform_from_primitive(_outer, p);
+      np = transform_from_primitive(_outer, n);
     }
     const auto & vr{is_inner ? vp : v};
     const auto & pr{is_inner ? pp : p};
     const auto & nr{is_inner ? np : n};
-    ir_poly = poly_t(vr, pr, nr, args...);
+    _irreducible = poly_t(vr, pr, nr, args...);
   }
 //  /*! \brief Set the irreducible first Brillouin zone polyhedron from its vertices
 //
@@ -319,15 +323,15 @@ public:
 //          expected volume and has the expected symmetry.
 //  */
 //  bool set_ir_vertices(const LQVec<double>& v){
-//    bool is_outer = this->outerlattice.issame(v.get_lattice());
+//    bool is_outer = this->_outer.issame(v.get_lattice());
 //    bool is_inner = this->lattice.issame(v.get_lattice());
-//    LQVec<double> vp(this->outerlattice);
-//    PrimitiveTransform PT(this->outerlattice.get_bravais_type());
+//    LQVec<double> vp(this->_outer);
+//    PrimitiveTransform PT(this->_outer.get_bravais_type());
 //    is_inner &= PT.does_anything();
 //    if (!(is_outer || is_inner))
 //      throw std::runtime_error("The polyhedron must be described in the conventional or primitive lattice used to define the BrillouinZone object");
 //    if (is_inner)
-//      vp = transform_from_primitive(this->outerlattice, v);
+//      vp = transform_from_primitive(this->_outer, v);
 //    const LQVec<double> & vref = is_inner ? vp : v;
 //    debug_update("Generate a convex polyhedron from\n", vref.to_string());
 //    this->ir_polyhedron = Polyhedron(vref.get_xyz());
@@ -513,13 +517,13 @@ public:
   template<class T>
   [[nodiscard]] std::vector<bool> isinside(const LQVec<T>& p) const {
     bool inner = lattice.issame(p.get_lattice());
-    if (!(inner || outerlattice.issame(p.get_lattice())))
+    if (!(inner || _outer.issame(p.get_lattice())))
       throw std::runtime_error("Q points must be in the standard or primitive lattice");
-    LQVec<T> pp(outerlattice);
-    PrimitiveTransform PT(outerlattice.get_bravais_type());
+    LQVec<T> pp(_outer);
+    PrimitiveTransform PT(_outer.get_bravais_type());
     inner &= PT.does_anything();
-    if (inner) pp = transform_from_primitive(outerlattice, p);
-    return first_poly.contains(inner ? pp : p);
+    if (inner) pp = transform_from_primitive(_outer, p);
+    return _first.contains(inner ? pp : p);
   }
   /*! \brief Determine whither points are inside the irreducible reciprocal space wedge
 
@@ -539,7 +543,7 @@ public:
   template<class T>
   std::vector<bool>
   isinside_wedge(const LQVec<T> &p, const bool pos=false) const {
-    bool isouter = this->outerlattice.issame(p.get_lattice());
+    bool isouter = this->_outer.issame(p.get_lattice());
     bool isinner = this->lattice.issame(p.get_lattice());
     if (!(isouter||isinner)){
       std::string msg = "Q points provided to BrillouinZone::isinside_wedge ";
@@ -613,7 +617,7 @@ public:
 
   //! \brief Get the PointSymmetry object used by this BrillouinZone object internally
   [[nodiscard]] PointSymmetry get_pointgroup_symmetry() const{
-    return outerlattice.get_pointgroup_symmetry(time_reversal);
+    return _outer.get_pointgroup_symmetry(time_reversal);
   }
   //! \brief Accessor for whether the BrillouinZone was constructed with additional time reversal symmetry
   [[nodiscard]] int add_time_reversal() const {
@@ -734,7 +738,7 @@ private:
   [[nodiscard]] LQVec<double> get_ir_polyhedron_wedge_normals() const;
 
 //    Reciprocal lattice;               //!< The primitive reciprocal lattice
-//    Reciprocal outerlattice;          //!< The lattice passed in at construction
+//    Reciprocal _outer;          //!< The lattice passed in at construction
 //    Polyhedron polyhedron; //!< The vertices, facet normals, and relation information defining the first Brillouin zone polyhedron
 //    Polyhedron ir_polyhedron; //!< The vertices, facet normals, facet points, and relation information defining the irreducible first Bz polyhedron
 //    bArray<double> ir_wedge_normals; //!< The normals of the irreducible reciprocal space wedge planes.
@@ -751,9 +755,9 @@ public:
         auto group = overwrite_group(obj, entry);
         bool ok{true};
         ok &= lattice.to_hdf(group, "lattice");
-        ok &= outerlattice.to_hdf(group, "outerlattice");
-        ok &= first_poly.to_hdf(group, "first_poly");
-        ok &= ir_poly.to_hdf(group, "ir_poly");
+        ok &= _outer.to_hdf(group, "_outer");
+        ok &= _first.to_hdf(group, "_first");
+        ok &= _irreducible.to_hdf(group, "_irreducible");
         ok &= ir_wedge_normals.to_hdf(group, "ir_wedge_normals");
         group.createAttribute("time_reversal", time_reversal);
         group.createAttribute("has_inversion", has_inversion);
@@ -768,9 +772,9 @@ public:
     from_hdf(HF& obj, const std::string& entry) {
         auto group = obj.getGroup(entry);
         auto lat = Reciprocal::from_hdf(group, "lattice");
-        auto olat = Reciprocal::from_hdf(group, "outerlattice");
-        auto poly = BrillouinZone::poly_t::from_hdf(group, "first_poly");
-        auto ir_p = BrillouinZone::poly_t::from_hdf(group, "ir_poly");
+        auto olat = Reciprocal::from_hdf(group, "_outer");
+        auto poly = BrillouinZone::poly_t::from_hdf(group, "_first");
+        auto ir_p = BrillouinZone::poly_t::from_hdf(group, "_irreducible");
         auto ir_w = bArray<double>::from_hdf(group, "ir_wedge_normals");
         bool tr, hi, ip, nim;
         int tol;
@@ -796,9 +800,9 @@ public:
         if (is_primitive != other.is_primitive) return true;
         if (no_ir_mirroring != other.no_ir_mirroring) return true;
         if (lattice != other.lattice) return true;
-        if (outerlattice != other.outerlattice) return true;
-        if (first_poly != other.first_poly) return true;
-        if (ir_poly != other.ir_poly) return true;
+        if (_outer != other._outer) return true;
+        if (_first != other._first) return true;
+        if (_irreducible != other._irreducible) return true;
         if (ir_wedge_normals != other.ir_wedge_normals) return true;
         if (approx_tolerance != other.approx_tolerance) return true;
         return false;

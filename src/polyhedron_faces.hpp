@@ -3,18 +3,19 @@
 
 #include <atomic>
 #include "polyhedron.hpp"
-#include "lattice.hpp"
+#include "lattice_dual.hpp"
 
 #include <utility>
-#include "array_latvec.hpp"
+#include "array_.hpp"
+#include "array_lvec.hpp"
 namespace brille::polyhedron{
-  template<class T, template<class> class A> std::enable_if_t<isBareArray<T,A>, A<T>>
+  template<class T, template<class> class A> std::enable_if_t<lattice::isBareArray<T,A>, A<T>>
   get_hkl(const A<T>& x){
     return x;
   }
-  template<class T, template<class> class A> std::enable_if_t<isLatVec<T,A>, Array2<T>>
+  template<class T, template<class> class A> std::enable_if_t<lattice::isLatVec<T,A>, Array2<T>>
   get_hkl(const A<T>& x){
-    return x.get_hkl();
+    return x.hkl();
   }
 
 
@@ -30,7 +31,7 @@ namespace brille::polyhedron{
 
     explicit Faces(faces_t faces): _faces(std::move(faces)) {}
 
-    template<class T, template<class> class C, std::enable_if_t<!isArray<T,C>>* = nullptr>
+    template<class T, template<class> class C, std::enable_if_t<!lattice::isArray<T,C>>* = nullptr>
     explicit Faces(const C<C<T>>& faces){
       auto to_ind_t = [](const auto & i){return static_cast<ind_t>(i);};
       _faces.reserve(faces.size());
@@ -41,7 +42,7 @@ namespace brille::polyhedron{
       }
     }
 
-    template<class T, template<class> class A, std::enable_if_t<isArray<T,A>>* = nullptr>
+    template<class T, template<class> class A, std::enable_if_t<lattice::isArray<T,A>>* = nullptr>
     explicit Faces(const A<T> & vertices){
       auto unique = vertices.is_unique();
       auto unique_vertices = vertices.extract(unique);
@@ -253,7 +254,7 @@ namespace brille::polyhedron{
 //      return out;
 //  }
     template<class T, class R, template<class> class A, template<class> class B>
-    [[nodiscard]] std::enable_if_t<isBareArray<T,A> && isBareArray<R,B>, std::vector<bool>>
+    [[nodiscard]] std::enable_if_t<lattice::isBareArray<T,A> && lattice::isBareArray<R,B>, std::vector<bool>>
     contains(const A<T>& v, const B<R>& x) const {
       std::vector<std::atomic<int>> tmp(x.size(0));
       A<T> pa, pb, pc;
@@ -270,15 +271,15 @@ namespace brille::polyhedron{
     }
 
     template<class T, class R, template<class> class A, template<class> class B>
-    [[nodiscard]] std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, std::vector<bool>>
+    [[nodiscard]] std::enable_if_t <lattice::isLatVec<T,A> && lattice::isLatVec<R,B>, std::vector<bool>>
     contains(const A<T>& v, const B<R>& x) const {
       assert(x.samelattice(v) || x.starlattice(v));
-      return this->contains(v.get_xyz(), x.get_xyz());
+      return this->contains(v.xyz(), x.xyz());
     }
 
 
     template<class T, class R, template<class> class A, template<class> class B>
-    [[nodiscard]] std::enable_if_t<isArray<T,A> && isArray<R,B>, size_t>
+    [[nodiscard]] std::enable_if_t <lattice::isArray<T,A> &&  lattice::isArray<R,B>, size_t>
     face_index(const A<T>& v, const B<R>& a, const B<R>& b, const B<R>& c) const {
       auto match{_faces.size()};
       auto x = get_hkl(a);
@@ -301,14 +302,14 @@ namespace brille::polyhedron{
       return match;
     }
     template<class T, class R, template<class> class A, template<class> class B>
-    [[nodiscard]] std::enable_if_t<isArray<T,A> && isArray<R,B>, size_t>
+    [[nodiscard]] std::enable_if_t <lattice::isArray<T,A> &&  lattice::isArray<R,B>, size_t>
     has_face(const A<T>& v, const B<R>& a, const B<R>& b, const B<R>& c) const{
       return this->face_index(v,a,b,c) < _faces.size();
     }
     /*! \brief Check whether all vertices are behind a given plane
      * */
     template<class T, class R, template<class> class A, template<class> class B>
-    [[nodiscard]] std::enable_if_t<isArray<T,A> && isArray<R,B>, bool>
+    [[nodiscard]] std::enable_if_t <lattice::isArray<T,A> &&  lattice::isArray<R,B>, bool>
     none_beyond(const A<T>& v, const B<R>& a, const B<R>& b, const B<R>& c) const {
       auto match = face_index(v, a, b, c); // look for a face which is the plane
       face_t f(v.size(0));
@@ -333,7 +334,7 @@ namespace brille::polyhedron{
     }
 
     template<class T, class R, template<class> class A, template<class> class B>
-    [[nodiscard]] std::enable_if_t<isArray<T,A> && isArray<R,B>, std::tuple<A<T>, Faces>>
+    [[nodiscard]] std::enable_if_t <lattice::isArray<T,A> &&  lattice::isArray<R,B>, std::tuple<A<T>, Faces>>
     divide(const A<T>& v, const B<R>& a, const B<R>& b, const B<R>& c) const {
       // this all seems unnecessary
       auto z = this->centroid(v);
@@ -342,7 +343,7 @@ namespace brille::polyhedron{
     }
 
     template<class T, class R, template<class> class A, template<class> class B>
-    [[nodiscard]] std::enable_if_t<isArray<T,A> && isArray<R,B>, std::tuple<A<T>, Faces>>
+    [[nodiscard]] std::enable_if_t <lattice::isArray<T,A> &&  lattice::isArray<R,B>, std::tuple<A<T>, Faces>>
     one_cut(const A<T>& vin, const B<R>& a, const B<R>& b, const B<R>& c, const int tol=1) const {
       assert(a.size(0) == b.size(0) && a.size(0) == c.size(0) && a.size(0) == 1);
       verbose_update("plane passing through\nnp.array(\n", get_xyz(cat(0, a, b, c)).to_string(),")\n",
@@ -420,7 +421,7 @@ namespace brille::polyhedron{
     }
 
     template<class T, class R, template<class> class A, template<class> class B>
-    [[nodiscard]] std::enable_if_t<isArray<T,A> && isArray<R,B>, std::tuple<A<T>, Faces>>
+    [[nodiscard]] std::enable_if_t <lattice::isArray<T,A> && lattice::isArray<R,B>, std::tuple<A<T>, Faces>>
     cut(const A<T>& v, const B<R>&a, const B<R>&b, const B<R>&c, const int tol=1) const {
       // this is, by far, the worst possible implementation of this algorithm
       assert(a.ndim()==2 && b.ndim()==2 && c.ndim() == 2);

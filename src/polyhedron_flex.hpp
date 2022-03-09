@@ -2,10 +2,10 @@
 #define _BRILLE_POLYHEDRON_FLEX_HPP_
 
 #include "polyhedron.hpp"
-#include "lattice.hpp"
+#include "lattice_dual.hpp"
 
 #include <utility>
-#include "array_latvec.hpp"
+#include "array_lvec.hpp"
 #include "polyhedron_faces.hpp"
 
 namespace brille::polyhedron{
@@ -131,7 +131,7 @@ namespace brille::polyhedron{
 //      _vertices.get_lattice().get_B_matrix(B);
 //      utils::matrix_inverse(invB, B);
 //      utils::multiply_matrix_matrix(invB_R, invB, rot.data());
-//      auto xyz = _vertices.get_xyz(); // this is B * (hkl)
+//      auto xyz = _vertices.xyz(); // this is B * (hkl)
 //      for (ind_t i=0; i < xyz.size(0); ++i) {
 //        utils::mul_mat_vec_inplace(3u, invB_R, xyz.ptr(i)); // rotate and convert back to (hkl)
 //      }
@@ -139,20 +139,22 @@ namespace brille::polyhedron{
 //    }
     Poly<T,A> apply(const PointSymmetry& ps, ind_t index) const {
       // FIXME This is only correct if A<T> == LQVec<T>!
-      // a point symmetry describes how the real space lattice transforms,
-      // but we have vertices in the reciprocal space
-      // So we need to get the transposed rotation matrix
-      auto Rt = transpose(ps.get(index));
+      auto r_i = ps.get(index);
+      if (LengthUnit::inverse_angstrom == _vertices.type()){
+        // r_i is the rotation matrix for real-space vectors; but our vertices
+        // are expressed in the reciprocal space so we must find its transposed
+        r_i = transpose(r_i);
+      }
       auto rotated =  0 * _vertices;
       for (ind_t i=0; i < _vertices.size(0); ++i){
-        utils::multiply_matrix_vector(rotated.ptr(i), Rt.data(), _vertices.ptr(i));
+        utils::multiply_matrix_vector(rotated.ptr(i), r_i.data(), _vertices.ptr(i));
       }
       // rotating has the possibility of reordering face vertices too...
       auto pre = this->face_normals();
       auto post = 0 * pre.view(0);
       typename faces_t::faces_t post_faces;
       for (ind_t i=0; i<pre.size(0); ++i){
-        utils::multiply_matrix_vector(post.ptr(0), Rt.data(), pre.ptr(i));
+        utils::multiply_matrix_vector(post.ptr(0), r_i.data(), pre.ptr(i));
         auto i_face = _faces.face(i);
         if (dot(post, three_point_normal(rotated, i_face)).sum() < 0){
           std::swap(i_face[1], i_face[2]);
@@ -266,7 +268,7 @@ namespace brille::polyhedron{
         {max[{0, 0}], min[{0,1}], max[{0,2}]}  // 101 7
     };
     auto faces = typename Poly<T,A>::faces_t({{3,0,4,7},{3,2,1,0},{0,1,5,4},{3,7,6,2},{7,4,5,6},{2,6,5,1}});
-    auto hkl = Poly<T,A>::vertex_t::from_std(points.get_lattice(), v);
+    auto hkl = Poly<T,A>::vertex_t::from_std(points.type(), points.lattice(), v);
     return {hkl, faces};
   }
 }

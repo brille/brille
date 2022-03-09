@@ -35,7 +35,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 // #include <omp.h>
 // #include "array.hpp"
 // #include "array2.hpp"
-// #include "array_latvec.hpp" // defines bArray
 #include "polyhedron.hpp"
 // #include "utilities.hpp"
 // #include "debug.hpp"

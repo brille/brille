@@ -20,7 +20,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief Classes for the effect of symmetry on phonon eigenvectors
 */
-#include "array_latvec.hpp" // defines bArray
+#include "array_.hpp" // defines bArray
 namespace brille {
 
 /*! \brief A superclass for all rotation-required tabulated information

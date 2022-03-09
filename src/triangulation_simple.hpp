@@ -21,7 +21,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief A class to interact with TetGen in the simplest case
 */
-#include "array_latvec.hpp" // defines bArray
+#include "array_.hpp" // defines bArray
 #include "tetgen.h"
 namespace brille {
 

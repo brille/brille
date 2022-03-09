@@ -24,8 +24,10 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Functions to transform Direct and Reciprocal lattice vectors between
            primitive and conventional unit cell representations
 */
-#include "array_latvec.hpp" // defines bArray
-namespace brille {
+#include "array_.hpp" // defines bArray
+#include "primitive.hpp"
+#include "array_lvec.hpp";
+namespace brille::lattice {
 
 //! The datatype of the P PrimitiveTransform matrix
 using sixPtype = PrimitiveTraits::sixP;
@@ -40,22 +42,59 @@ using invPtype = PrimitiveTraits::invP;
   The two LQVec objects have different indices but have the same Å⁻¹
   representation.
 */
-template<class T, typename S=typename std::common_type<T,sixPtype>::type>
-LQVec<S> transform_to_primitive(const Reciprocal& lat, const LQVec<T>& a){
-  if (lat.primitive().issame(a.get_lattice())) return a;
-  if (!lat.issame(a.get_lattice()))
+template<class T, typename S=typename std::common_type_t<T,int>>
+LVec<S> transform_to_primitive(const Lattice<double>& lat, const LVec<T>& a){
+  if (lat.primitive().is_same(a.lattice())) return a;
+  if (!lat.is_same(a.lattice()))
     throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
-  // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
-  PrimitiveTransform PT(lat.get_bravais_type());
-  if (PT.does_nothing()) return LQVec<S>(a);
+  // different lattices can/should we check if the new lattice is the primitive lattice of the input lattice?
+  PrimitiveTransform PT(lat.bravais());
+  if (PT.does_nothing()) return LVec<S>(a);
   assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
-  std::array<sixPtype,9> sixPt = PT.get_6Pt(); // the transpose of the P matrix
+  LengthUnit lu = a.type();
+  std::array<int, 9> transform{0,0,0,0,0,0,0,0,0};
+  switch (lu) {
+  case LengthUnit::angstrom:
+    // For a column vector matrix of basis vectors in the conventional lattice A
+    // The tranformation matrix P gives the primitive basis vectors Aₚ as
+    //      A P = Aₚ
+    // A point in space can be represented in units of either basis, with the
+    // conventional representation, x, and the primitive representation, xₚ.
+    // If these points are the same, then A x == Aₚ xₚ.
+    //      A x = Aₚ  xₚ
+    //      A x = A P xₚ
+    //        x =   P xₚ
+    //    P⁻¹ x =     xₚ
+    transform = PT.get_invP();
+    break;
+  case LengthUnit::inverse_angstrom:
+    // For a row vector matrix of reciprocal basis vectors in the conventional
+    // lattice, B, the same P transformation matrix relates them to the
+    // primitive lattice basis vectors Bₚ
+    //      P⁻¹ B = Bₚ
+    // And a point in space can be represented, again, in either basis with the
+    // conventional representation, q, and the primitive representation, qₚ.
+    // With both representing the same point in space Bᵀ q = Bₚᵀ qₚ
+    //      Bᵀ q = Bₚᵀ qₚ
+    //      Bᵀ q = (P⁻¹ B)ᵀ qₚ
+    //      Bᵀ q = Bᵀ(P⁻¹)ᵀ qₚ
+    //         q =   (P⁻¹)ᵀ qₚ
+    //      Pᵀ q = Pᵀ(P⁻¹)ᵀ qₚ
+    //      Pᵀ q = (P⁻¹P)ᵀ qₚ
+    //      Pᵀ q = qₚ
+    transform = PT.get_6Pt();
+    break;
+  default:
+    throw std::runtime_error("Not implemented");
+  }
   auto sh = a.shape();
-  LQVec<S> out(lat.primitive(), sh);
+  LVec<S> out(lu, lat.primitive(), sh);
   sh.back() = 0;
   for (auto x: a.subItr(sh))
-    brille::utils::multiply_matrix_vector<S,int,T,3>(out.ptr(x), sixPt.data(), a.ptr(x));
-  out /= S(6); // correct for having used 6 * Pt
+    brille::utils::multiply_matrix_vector(out.ptr(x), transform.data(), a.ptr(x));
+  if (LengthUnit::inverse_angstrom == lu){
+    out /= S(6); // correct for having used 6 * Pt
+  }
   return out;
 }
 
@@ -65,97 +104,93 @@ LQVec<S> transform_to_primitive(const Reciprocal& lat, const LQVec<T>& a){
   vector expressed in the primitive version of the lattice and returns an
   equivalent Lattice vector expressed in units of the passed lattice.
 */
-template<class T, typename S=typename std::common_type<T,invPtype>::type>
-LQVec<S> transform_from_primitive(const Reciprocal& lat, const LQVec<T>& a){
-  if (lat.issame(a.get_lattice())) return a;
-  if (!lat.primitive().issame(a.get_lattice()))
+template<class T, typename S=typename std::common_type_t<T,int>>
+LVec<S> transform_from_primitive(const Lattice<double>& lat, const LVec<T>& a){
+  if (lat.is_same(a.lattice())) return a;
+  if (!lat.primitive().is_same(a.lattice()))
     throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
-  PrimitiveTransform PT(lat.get_bravais_type());
-  if (PT.does_nothing()) return LQVec<S>(a);
+  PrimitiveTransform PT(lat.bravais());
+  if (PT.does_nothing()) return LVec<S>(a);
   assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
-  std::array<invPtype,9> Pmat = PT.get_invPt(); // the inverse of the transpose of P (or the transpose of the inverse of P)
+  LengthUnit lu = a.type();
+  std::array<int, 9> transform{0,0,0,0,0,0,0,0,0};
+  switch (lu) {
+  case LengthUnit::angstrom:
+    // For a column vector matrix of basis vectors in the conventional lattice A
+    // The tranformation matrix P gives the primitive basis vectors Aₚ as
+    //      A P = Aₚ
+    // A point in space can be represented in units of either basis, with the
+    // conventional representation, x, and the primitive representation, xₚ.
+    // If these points are the same, then A x == Aₚ xₚ.
+    //      A x = Aₚ  xₚ
+    //      A x = A P xₚ
+    //        x =   P xₚ
+    transform = PT.get_6P();
+    break;
+  case LengthUnit::inverse_angstrom:
+    // For a row vector matrix of reciprocal basis vectors in the conventional
+    // lattice, B, the same P transformation matrix relates them to the
+    // primitive lattice basis vectors Bₚ
+    //      P⁻¹ B = Bₚ
+    // And a point in space can be represented, again, in either basis with the
+    // conventional representation, q, and the primitive representation, qₚ.
+    // With both representing the same point in space Bᵀ q = Bₚᵀ qₚ
+    //      Bᵀ q = Bₚᵀ qₚ
+    //      Bᵀ q = (P⁻¹ B)ᵀ qₚ
+    //      Bᵀ q = Bᵀ(P⁻¹)ᵀ qₚ
+    //         q =   (P⁻¹)ᵀ qₚ
+    transform = PT.get_invPt();
+    break;
+  default:
+    throw std::runtime_error("Not implemented");
+  }
   auto sh = a.shape();
-  LQVec<S> out(lat, sh);
+  LVec<S> out(lu, lat, sh);
   sh.back() = 0;
   for (auto x: a.subItr(sh))
-    brille::utils::multiply_matrix_vector<S,invPtype,T,3>(out.ptr(x), Pmat.data(), a.ptr(x));
-  return out;
-}
-
-/*! \brief transform_to_primitive(Direct, LDVec)
-
-  Takes a Direct lattice, plus a direct lattice
-  vector expressed in the same standard (non-primitive) lattice and returns
-  an equivalent lattice vector expressed in the primitive lattice.
-  The two lattice vectors have different indices but have the same Å⁻¹
-  representation.
-*/
-template<class T, typename S=typename std::common_type<T,invPtype>::type>
-LDVec<S> transform_to_primitive(const Direct& lat, const LDVec<T>& a){
-  if (lat.primitive().issame(a.get_lattice())) return a;
-  if (!lat.issame(a.get_lattice()))
-    throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
-  // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
-  PrimitiveTransform PT(lat.get_bravais_type());
-  if (PT.does_nothing()) return LDVec<S>(a);
-  assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
-  std::array<invPtype,9> Pmat = PT.get_invP(); // xₚ = P⁻¹ xₛ
-  auto sh = a.shape();
-  LDVec<S> out(lat.primitive(), sh);
-  sh.back() = 0;
-  for (auto x: a.subItr(sh))
-    brille::utils::multiply_matrix_vector<S,invPtype,T,3>(out.ptr(x), Pmat.data(), a.ptr(x));
-  return out;
-}
-
-/* \brief transform_from_primitive(Direct, LDVec)
-
-  Takes a Direct lattice, plus a direct lattice
-  vector expressed in the primitive version of the lattice and returns an
-  equivalent Lattice vector expressed in units of the passed lattice.
-*/
-template<class T, typename S=typename std::common_type<T,sixPtype>::type>
-LDVec<S> transform_from_primitive(const Direct& lat, const LDVec<T>& a){
-  if (lat.issame(a.get_lattice())) return a;
-  if (!lat.primitive().issame(a.get_lattice()))
-    throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
-  // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
-  PrimitiveTransform PT(lat.get_bravais_type());
-  if (PT.does_nothing()) return LDVec<S>(a);
-  assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
-  std::array<sixPtype,9> Pmat = PT.get_6P(); // xₛ = P xₚ
-  auto sh = a.shape();
-  LDVec<S> out(lat, sh);
-  sh.back() = 0;
-  for (auto x: a.subItr(sh))
-    brille::utils::multiply_matrix_vector<S,sixPtype,T,3>(out.ptr(x), Pmat.data(), a.ptr(x));
-  out /= S(6); // correct for having used 6*P
+    brille::utils::multiply_matrix_vector(out.ptr(x), transform.data(), a.ptr(x));
+  if (LengthUnit::angstrom == lu){
+    out /= S(6); // since we used 6P instead of P
+  }
   return out;
 }
 
 //! utility functions for conversion of lattice vectors where only their components are stored
-template<class T, typename S=typename std::common_type<T,double>::type>
-bArray<S> xyz_to_hkl(const Reciprocal& lat, const bArray<T>& xyz){
+template<class T, typename S=typename std::common_type_t<T,double>>
+bArray<S> xyz_to_hkl(const Lattice<double>& lat, const LengthUnit lu, const bArray<T>& xyz){
   assert(xyz.stride().back() == 1u && xyz.size(xyz.ndim()-1)==3);
-  auto fromxyz = lat.get_inverse_xyz_transform();
+  typename Lattice<double>::matrix_t tmp, inv;
+  switch (lu) {
+  case LengthUnit::angstrom: tmp = lat.real_basis_vectors(); break;
+  case LengthUnit::inverse_angstrom: tmp = lat.reciprocal_basis_vectors(); break;
+  default: throw std::logic_error("Not implemented");
+  }
+  utils::matrix_inverse(inv.data(), tmp.data());
+
   auto sh = xyz.shape();
   bArray<S> hkl(sh);
   sh.back() = 0;
   for (auto x: xyz.subItr(sh))
-    brille::utils::multiply_matrix_vector<S,double,T,3>(hkl.ptr(x), fromxyz.data(), xyz.ptr(x));
+    brille::utils::multiply_matrix_vector(hkl.ptr(x), inv.data(), xyz.ptr(x));
   return hkl;
 }
 //! utility functions for conversion of lattice vectors where only their components are stored
 template<class T, typename S=typename std::common_type<T,double>::type>
-bArray<S> hkl_to_xyz(const Reciprocal& lat, const bArray<T>& hkl){
+bArray<S> hkl_to_xyz(const Lattice<double>& lat, const LengthUnit lu, const bArray<T>& hkl){
   assert(hkl.stride().back() == 1u && hkl.size(hkl.ndim()-1)==3);
-  auto toxyz = lat.get_xyz_transform();
+  typename Lattice<double>::matrix_t tmp;
+  switch (lu) {
+  case LengthUnit::angstrom: tmp = lat.real_basis_vectors(); break;
+  case LengthUnit::inverse_angstrom: tmp = lat.reciprocal_basis_vectors(); break;
+  default: throw std::logic_error("Not implemented");
+  }
+
   auto sh = hkl.shape();
   bArray<S> xyz(sh);
   sh.back() = 0;
   for (auto x: hkl.subItr(sh))
-    brille::utils::multiply_matrix_vector<S,double,T,3>(xyz.ptr(x), toxyz.data(), hkl.ptr(x));
+    brille::utils::multiply_matrix_vector(xyz.ptr(x), tmp.data(), hkl.ptr(x));
   return xyz;
 }
 
