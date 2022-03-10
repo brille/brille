@@ -17,24 +17,24 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 template<class T> template<typename... A>
 LVec<T>
 LVec<T>::view(A... args) const {
-  return LVec<T>(_lattice, this->bArray<T>::view(args...));
+  return LVec<T>(_type, _lattice, this->bArray<T>::view(args...));
 }
 template<class T> template<typename... A>
 LVec<T>
 LVec<T>::extract(A... args) const {
-  return LVec<T>(_lattice, this->bArray<T>::extract(args...));
+  return LVec<T>(_type, _lattice, this->bArray<T>::extract(args...));
 }
 template<class T>
 bArray<T>
-LVec<T>::get_hkl() const {
+LVec<T>::hkl() const {
   return bArray<T>(*this); // strip off the Lattice information
 }
 template<class T>
 bArray<double>
-LVec<T>::get_xyz() const {
+LVec<T>::xyz() const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->size(this->ndim()-1) == 3);
   bArray<double> xyz(this->shape(), this->stride());
-  auto to_xyz = _lattice.to_xyz();
+  auto to_xyz = _lattice.to_xyz(_type);
   auto t_shape = this->shape();
   t_shape.back() = 0u;
   for (auto x: this->subItr(t_shape))
@@ -43,11 +43,10 @@ LVec<T>::get_xyz() const {
 }
 
 template<class T>
-LDVec<double>
+LVec<double>
 LVec<T>::star() const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->size(this->ndim()-1) == 3);
   auto tensor = _lattice.covariant_metric();
-  std::vector<double> cvmt = _lattice.get_covariant_metric_tensor();
   auto lu = LengthUnit::angstrom == _type ? LengthUnit::inverse_angstrom : LengthUnit::angstrom;
   LVec<double> slv(lu, _lattice, this->shape(), this->stride());
   auto fx = this->shape(); fx.back() = 0;
@@ -65,9 +64,9 @@ LVec<T>::cross(const ind_t i, const ind_t j) const {
   LVec<double> out(_type, _lattice, both_ok ? 1u : 0u, 3u);
   if (both_ok){
     auto lu = LengthUnit::angstrom == _type ? LengthUnit::inverse_angstrom : LengthUnit::angstrom;
-    LDVec<double> ldv(_type, _lattice, 1u);
+    LVec<double> ldv(_type, _lattice, 1u);
     brille::utils::vector_cross<double,T,T,3>(ldv.ptr(0), this->ptr(i), this->ptr(j));
-    ldv *= _lattice.volume()/brille::math::two_pi;
+    ldv *= _lattice.volume(_type)/brille::math::two_pi;
     out = ldv.star();
   }
   return out;
@@ -79,7 +78,7 @@ LVec<T>::dot(const ind_t i, const ind_t j) const {
   assert(this->is_row_ordered() && this->is_contiguous() && this->ndim()==2 && this->size(this->ndim()-1) == 3);
   if (i>=this->size(0) || j>=this->size(0))
     throw std::out_of_range("attempted out of bounds access by dot");
-  return same_lattice_dot(this->view(i),this->view(j), _latice.metric());
+  return same_lattice_dot(this->view(i),this->view(j), _lattice.metric());
 }
 
 template<class T>

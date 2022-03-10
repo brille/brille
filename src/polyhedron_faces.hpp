@@ -31,8 +31,8 @@ namespace brille::polyhedron{
 
     explicit Faces(faces_t faces): _faces(std::move(faces)) {}
 
-    template<class T, template<class> class C, std::enable_if_t<!lattice::isArray<T,C>>* = nullptr>
-    explicit Faces(const C<C<T>>& faces){
+    template<class T>
+    explicit Faces(const std::vector<std::vector<T>>& faces){
       auto to_ind_t = [](const auto & i){return static_cast<ind_t>(i);};
       _faces.reserve(faces.size());
       for (const auto & f: faces){
@@ -42,7 +42,9 @@ namespace brille::polyhedron{
       }
     }
 
-    template<class T, template<class> class A, std::enable_if_t<lattice::isArray<T,A>>* = nullptr>
+//    template<class T, template<class> class A, std::enable_if_t<isArray<T,A>>* = nullptr> // this worked before moving isArray into brille::lattice::
+//    template<class T, template<class> class A, std::enable_if_t<lattice::isArray<T,A>>* = nullptr> // doesn't work
+    template<class T, template<class> class A> // hopefully doesn't capture anything non-brille::Array based
     explicit Faces(const A<T> & vertices){
       auto unique = vertices.is_unique();
       auto unique_vertices = vertices.extract(unique);
@@ -116,7 +118,7 @@ namespace brille::polyhedron{
     [[nodiscard]] Array2<ind_t> edges() const;
     [[nodiscard]] Array2<ind_t> planes() const;
     template<class T, template<class> class A>
-    std::enable_if_t<isArray<T,A>, std::tuple<A<T>, A<T>, A<T>>>
+    std::enable_if_t<lattice::isArray<T,A>, std::tuple<A<T>, A<T>, A<T>>>
     planes(const A<T>& x) const{
       auto p = this->planes();
       auto a = 0 * x.view(0); a.resize(p.size(0));
@@ -136,7 +138,7 @@ namespace brille::polyhedron{
     // and returning the same type as the vertex array
     //! \brief Return the average of the vertices of a face, which *might* be the centroid
     template<class T, template<class> class A>
-    std::enable_if_t<isArray<T,A>, A<T>> face_points(const A<T>&x) const {
+    std::enable_if_t<lattice::isArray<T,A>, A<T>> face_points(const A<T>&x) const {
       if (x.size(0) < 1){
         if (!_faces.empty()) throw std::runtime_error("No vertices provided for face points");
         return x;
@@ -150,7 +152,7 @@ namespace brille::polyhedron{
       return p;
     }
     template<class T, template<class> class A>
-    std::enable_if_t<isArray<T,A>, A<T>> face_normals(const A<T>& x) const {
+    std::enable_if_t<lattice::isArray<T,A>, A<T>> face_normals(const A<T>& x) const {
       if (x.size(0) < 1){
         if (!_faces.empty()) throw std::runtime_error("No vertices provided for face normals");
         return x;
@@ -164,7 +166,7 @@ namespace brille::polyhedron{
       return p;
     }
     template<class T, template<class> class A>
-    std::enable_if_t<isArray<T,A>, A<T>> half_edges(const A<T>& x) const {
+    std::enable_if_t<lattice::isArray<T,A>, A<T>> half_edges(const A<T>& x) const {
       if (x.size(0) < 1){
         if (!_faces.empty()) throw std::runtime_error("No vertices provided for half edges");
         return x;
@@ -178,7 +180,7 @@ namespace brille::polyhedron{
       return half;
     }
     template<class T, template<class> class A>
-    std::enable_if_t<isArray<T,A>, A<T>> centroid(const A<T>& x) const {
+    std::enable_if_t<lattice::isArray<T,A>, A<T>> centroid(const A<T>& x) const {
       if (x.size(0) < 1){
         if (!_faces.empty()) throw std::runtime_error("No vertices provided for centroid");
         return x;
@@ -197,7 +199,7 @@ namespace brille::polyhedron{
       return cen / (T(48) * this->volume(x));
     }
     template<class T, template<class> class A>
-    std::enable_if_t<isArray<T,A>, A<T>> rand_rejection(const A<T>& x, const ind_t n, const unsigned int seed) const {
+    std::enable_if_t<lattice::isArray<T,A>, A<T>> rand_rejection(const A<T>& x, const ind_t n, const unsigned int seed) const {
       auto tics = std::chrono::system_clock::now().time_since_epoch().count();
       std::default_random_engine generator(seed > 0 ? seed : static_cast<unsigned int>(tics));
       std::uniform_real_distribution<T> distribution(T(0), T(1));
@@ -213,7 +215,7 @@ namespace brille::polyhedron{
     }
     // or a scalar with type matching the array element type
     template<class T, template<class> class A>
-    std::enable_if_t<isArray<T,A>, T> volume(const A<T>& x) const {
+    std::enable_if_t<lattice::isArray<T,A>, T> volume(const A<T>& x) const {
       /* per, e.g., http://wwwf.imperial.ac.uk/~rn/centroid.pdf
       For a polyhedron with N triangular faces, each with ordered vertices
       (aᵢ, bᵢ, cᵢ), one can define nᵢ = (bᵢ-aᵢ)×(cᵢ-aᵢ) for each face and then
@@ -229,7 +231,7 @@ namespace brille::polyhedron{
       return volume / T(6);
     }
     template<class T, template<class> class A>
-    std::enable_if_t<isArray<T,A>, T> circumsphere_radius(const A<T>& x) const{
+    std::enable_if_t<lattice::isArray<T,A>, T> circumsphere_radius(const A<T>& x) const{
       auto c2v = x - this->centroid(x);
       return norm(c2v).max(0).sum();
     }
@@ -459,7 +461,7 @@ namespace brille::polyhedron{
 #endif
     [[nodiscard]] Faces combine(const Faces& that, ind_t offset) const;
 
-    std::string python_string() const {
+    [[nodiscard]] std::string python_string() const {
       return lists_to_string(_faces);
     }
   };

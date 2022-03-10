@@ -73,6 +73,7 @@ public:
   [[nodiscard]] Vector<int>          axis(size_t i)                               const;
   [[nodiscard]] Vectors<int>         axes()                                         const;
   [[nodiscard]] bool                 has_space_inversion()                          const;
+  [[nodiscard]] PointSymmetry        add_space_inversion()                          const;
   void                 print(size_t i)                              const;
   void                 print()                                        const;
   [[nodiscard]] PointSymmetry        generate()                                     const;

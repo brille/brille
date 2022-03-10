@@ -243,7 +243,7 @@ public:
     // this could be more efficient by reusing vi, vj, vk; but maybe its ok.
     return {angle(lu, 0u, au), angle(lu, 1u, au), angle(lu, 2u, au)};
   }
-  [[nodiscard]] T volume(LengthUnit lu){
+  [[nodiscard]] T volume(LengthUnit lu) const {
     switch (lu){
     case LengthUnit::angstrom:
       return utils::matrix_determinant(_vectors.data());
@@ -292,7 +292,7 @@ public:
     return _basis;
   }
 
-  [[nodiscard]] matrix_t to_xyz(LengthUnit lu){
+  [[nodiscard]] matrix_t to_xyz(LengthUnit lu) const {
     switch (lu) {
     case LengthUnit::angstrom: return _vectors;
     case LengthUnit::inverse_angstrom: return _reciprocal;

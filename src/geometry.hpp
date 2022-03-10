@@ -47,7 +47,7 @@ namespace brille {
      *       their multiplicities must match.
     */
     template<class T, template<class> class A>
-    std::enable_if_t<isBareArray<T,A>, std::vector<T>>
+    std::enable_if_t<lattice::isBareArray<T,A>, std::vector<T>>
     pseudo_orient2d(const A<T>& a, const A<T>& b, const A<T>& c){
       auto predicate = [](const T& ax, const T& ay, const T& bx, const T& by, const T& cx, const T& cy){
         // possibly replace this with the floating-point predicate?
@@ -72,7 +72,7 @@ namespace brille {
       return out;
     }
     template<class T, template<class> class A>
-    std::enable_if_t<isLatVec<T,A>, std::vector<T>>
+    std::enable_if_t<lattice::isLatVec<T,A>, std::vector<T>>
     pseudo_orient2d(const A<T>& a, const A<T>& b, const A<T>& c){
       assert(a.same_lattice(b) && a.same_lattice(c));
       return pseudo_orient2d(a.xyz(), b.xyz(), c.xyz());
@@ -116,7 +116,7 @@ namespace brille {
      *       their multiplicities must match.
      */
     template<class T, template<class> class A>
-    std::enable_if_t<isBareArray<T,A>, std::vector<T>>
+    std::enable_if_t<lattice::isBareArray<T,A>, std::vector<T>>
     pseudo_orient3d(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
       assert(a.ndim() == 2u && b.ndim() == 2u && c.ndim() == 2u && d.ndim() == 2u);
       assert(a.size(1u) == 3u && b.size(1u) == 3u && c.size(1u) == 3u && d.size(1u) == 3u);
@@ -155,7 +155,7 @@ namespace brille {
       return out;
     }
     template<class T, template<class> class A>
-    std::enable_if_t<isLatVec<T,A>, std::vector<T>>
+    std::enable_if_t<lattice::isLatVec<T,A>, std::vector<T>>
     pseudo_orient3d(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
       assert(a.same_lattice(b) && a.same_lattice(c) && d.same_lattice(d));
       return pseudo_orient3d(a.xyz(), b.xyz(), c.xyz(), d.xyz());
@@ -194,7 +194,7 @@ namespace brille {
 //  }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isArray<T,A>, std::tuple<A<T>, A<T>, A<T>>>
+  std::enable_if_t<lattice::isArray<T,A>, std::tuple<A<T>, A<T>, A<T>>>
   plane_points_from_normal(const A<T> & n, const A<T> & p) {
     auto a = T(1) + T(0) * n;
     auto b = T(0) * n;
@@ -274,24 +274,24 @@ namespace brille {
 //  }
 
 
-  template<class T, template<class> class A> std::enable_if_t<isArray<T,A>, A<T>>
+  template<class T, template<class> class A> std::enable_if_t<lattice::isArray<T,A>, A<T>>
   three_point_normal(const A<T> &a, const A<T> &b, const A<T> &c) {
     auto n = cross(b - a, c - b);
     return n / norm(n);
   }
 
-  template<class T, template<class> class A, class I> std::enable_if_t<isArray<T,A>, A<T>>
+  template<class T, template<class> class A, class I> std::enable_if_t<lattice::isArray<T,A>, A<T>>
   three_point_normal(const A<T> &p, const I a, const I b, const I c) {
     return three_point_normal(p.view(a), p.view(b), p.view(c));
   }
 
-  template<class T, template<class> class A, class I> std::enable_if_t<isArray<T,A>, A<T>>
+  template<class T, template<class> class A, class I> std::enable_if_t<lattice::isArray<T,A>, A<T>>
   three_point_normal(const A<T> &p, const std::vector<I> &f) {
     return three_point_normal(p.view(f[0]), p.view(f[1]), p.view(f[2]));
   }
 
   template<class T, class I, template<class> class A, template<class> class B>
-  std::enable_if_t<isArray<T,A> && isBareArray<I,B>, A<T>>
+  std::enable_if_t<lattice::isArray<T,A> && lattice::isBareArray<I,B>, A<T>>
   three_point_normal(const A<T> &p, const B<I> &t) {
     A<T> out(t.size(0), 3u);
     for (ind_t i = 0; i < t.size(0); ++i)
@@ -306,7 +306,7 @@ namespace brille {
     return std::all_of(face.begin(), face.end(), [counts](const T &x) { return counts[x] > 2u; });
   }
 
-  template<class T, template<class> class A> static std::enable_if_t<isArray<T,A>, void>
+  template<class T, template<class> class A> static std::enable_if_t<lattice::isArray<T,A>, void>
   on_plane_vector(const A<T>& x, const A<T>& y, const A<T>& v3, T* v2){
     v2[0] = dot(v3, x).sum();
     v2[1] = dot(v3, y).sum();
@@ -337,7 +337,7 @@ namespace brille {
 
   template<class T, class R, template<class> class A, template<class> class B>
   [[nodiscard]]
-  std::enable_if_t<isArray<T,A> && isArray<R,B>, std::vector<T>>
+  std::enable_if_t<lattice::isArray<T,A> && lattice::isArray<R,B>, std::vector<T>>
   bare_winding_angles(const A<T>& vectors, const ind_t i, const B<R>& n){
     T b[2];
     // double check that we're dealing with vectors in a plane:
@@ -363,7 +363,7 @@ namespace brille {
 
   //! Check whether the points defining a Polyhedron facet encompass a finite area
   template<class T, template<class> class A>
-  std::enable_if_t<isArray<T,A>, bool>
+  std::enable_if_t<lattice::isArray<T,A>, bool>
   face_has_area(const A<T> &points, const bool strict = false) {
     // first verify that all points are coplanar
     // pick the first three points to define a plane, then ensure all points are in it
@@ -400,7 +400,7 @@ namespace brille {
   \note Uses the geometry predicates orient3d to perform the check within machine precision
   */
   template<class T, template<class> class A>
-  std::enable_if_t<isBareArray<T,A>, std::vector<bool>>
+  std::enable_if_t<lattice::isBareArray<T,A>, std::vector<bool>>
   point_inside_plane(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& x) {
     assert(a.numel() == 3 && b.numel() == 3 && c.numel() == 3);
     assert(a.is_contiguous() && b.is_contiguous() && c.is_contiguous());
@@ -418,7 +418,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isBareArray<T,A>, std::vector<bool>>
+  std::enable_if_t<lattice::isBareArray<T,A>, std::vector<bool>>
   point_inside_planes(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& x){
     auto n_planes = a.size(0);
     assert(n_planes == b.size(0u) && n_planes == c.size(0u));
@@ -437,7 +437,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isBareArray<T,A>, bool>
+  std::enable_if_t<lattice::isBareArray<T,A>, bool>
   point_inside_all_planes(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& x){
       auto o3d = pseudo_orient3d(a, b, c, x);
       auto v = std::min_element(o3d.begin(), o3d.end());
@@ -451,7 +451,7 @@ namespace brille {
   }
 
   template<class T, class R, template<class> class A, template<class> class B>
-  std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, bool>
+  std::enable_if_t<lattice::isLatVec<T,A> && lattice::isLatVec<R,B>, bool>
   point_in_plane_lattice_check(const A<T>& a, const A<T>& b, const A<T>& c, const B<R>& x){
     bool abc = a.same_lattice(b) && a.same_lattice(c);
     bool ax = x.same_lattice(a) || x.starlattice(a);
@@ -462,7 +462,7 @@ namespace brille {
 
   #define POINT_IN_PLANE(FUNCTION, OUT_TYPE) \
   template<class T, class R, template<class> class A, template<class> class B>\
-  std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, OUT_TYPE>\
+  std::enable_if_t<lattice::isLatVec<T,A> && lattice::isLatVec<R,B>, OUT_TYPE>\
   FUNCTION(const A<T>& a, const A<T>& b, const A<T>& c, const B<R>& x){\
     assert(point_in_plane_lattice_check(a, b, c, x));\
     return FUNCTION(a.xyz(), b.xyz(), c.xyz(), x.xyz());\
@@ -576,7 +576,7 @@ namespace brille {
   \returns A bArray containing the intersection point, or an empty bArray if there is no intersection
   */
   template<class T, template<class> class A, class I>
-  std::enable_if_t<isBareArray<T,A>, A<T>> edge_plane_intersection(
+  std::enable_if_t<lattice::isBareArray<T,A>, A<T>> edge_plane_intersection(
     const A<T> &v, const std::vector<I> &one, const std::vector<I> &two,
     const A<T> &a, const A<T> &b, const A<T> &c, const int tol = 1, const bool strict = false) {
     // find the correct pair of vertices which form the edge:
@@ -609,7 +609,7 @@ namespace brille {
   }
 
   template<class T, class R, template<class> class A, template<class> class B, class I>
-  std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, A<T>> edge_plane_intersection(
+  std::enable_if_t<lattice::isLatVec<T,A> && lattice::isLatVec<R,B>, A<T>> edge_plane_intersection(
       const A<T> &v, const std::vector<I> &one, const std::vector<I> &two,
       const B<R> &a, const B<R> &b, const B<R> &c, const int tol=1, const bool strict = false) {
     assert(a.same_lattice(b) && a.same_lattice(c));
@@ -621,7 +621,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A, class I>
-  std::enable_if_t<isArray<T,A>, A<T>> edge_plane_intersection(const A<T>& v, const std::pair<I,I> &edge, const A<T>& a, const A<T>& b, const A<T>& c){
+  std::enable_if_t<lattice::isArray<T,A>, A<T>> edge_plane_intersection(const A<T>& v, const std::pair<I,I> &edge, const A<T>& a, const A<T>& b, const A<T>& c){
     // we *know* that edge.first is on the wrong side of the plane  and edge.second is not.
     // we *know* that there must be an intersection between the two which might be either endpoint?
     auto plane_n = three_point_normal(a, b, c);
@@ -635,7 +635,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A, class I>
-  std::enable_if_t<isArray<T,A>, std::vector<std::tuple<size_t, size_t, std::pair<I,I>, A<T>>>>
+  std::enable_if_t<lattice::isArray<T,A>, std::vector<std::tuple<size_t, size_t, std::pair<I,I>, A<T>>>>
   valid_edge_plane_intersections(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& v, const std::vector<std::tuple<size_t, size_t, std::pair<I,I>>>& edges){
     auto plane_n = three_point_normal(a, b, c);
     std::vector<std::tuple<size_t, size_t, std::pair<I,I>, A<T>>> out;
@@ -663,7 +663,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isBareArray<T, A>, std::tuple<Array2<T>, Array2<T>, Array2<T>>>
+  std::enable_if_t<lattice::isBareArray<T, A>, std::tuple<Array2<T>, Array2<T>, Array2<T>>>
   find_convex_hull_planes(const A<T>& points){
     if (points.size(0) < 4)
       throw std::runtime_error("Not enough points to form a Convex Hull");
@@ -702,7 +702,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, A<T>, A<T>>>
+  std::enable_if_t<lattice::isLatVec<T,A>, std::tuple<A<T>, A<T>, A<T>>>
   find_convex_hull_planes(const A<T>& points){
     auto [a, b, c] = find_convex_hull_planes(points.xyz());
     auto lat = points.lattice();
@@ -711,7 +711,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isBareArray<T, A>, std::vector<std::vector<ind_t>>>
+  std::enable_if_t<lattice::isBareArray<T, A>, std::vector<std::vector<ind_t>>>
   find_planes_containing_point(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& points){
     std::vector<std::vector<ind_t>> result;
     result.reserve(points.size(0));
@@ -728,7 +728,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isLatVec<T,A>, std::vector<std::vector<ind_t>>>
+  std::enable_if_t<lattice::isLatVec<T,A>, std::vector<std::vector<ind_t>>>
   find_planes_containing_point(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& points){
     // if they're all in the same lattice, can we act directly on (hkl)?
     // No. But maybe we can only worry about the co-angles and ignore the basis vector lengths?
@@ -736,7 +736,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isBareArray<T,A>, std::vector<ind_t>>
+  std::enable_if_t<lattice::isBareArray<T,A>, std::vector<ind_t>>
   sort_convex_polygon_face(const A<T>& a, const A<T>& b, const A<T>& c, const std::vector<ind_t>& face, const A<T>& points){
     auto vectors = points.extract(face);
     auto centre = vectors.sum(0) / static_cast<double>(vectors.size(0));
@@ -824,14 +824,14 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isLatVec<T,A>, std::vector<ind_t>>
+  std::enable_if_t<lattice::isLatVec<T,A>, std::vector<ind_t>>
   sort_convex_polygon_face(const A<T>& a, const A<T>& b, const A<T>& c, const std::vector<ind_t>& face, const A<T>& points){
     assert(a.same_lattice(b) && a.same_lattice(c) && a.same_lattice(points));
     return sort_convex_polygon_face(a.xyz(), b.xyz(), c.xyz(), face, points.xyz());
   }
 
   template<class T, class I, template<class> class A>
-  std::enable_if_t<isArray<T,A>, std::vector<ind_t>>
+  std::enable_if_t<lattice::isArray<T,A>, std::vector<ind_t>>
   sort_convex_polygon_face(const std::vector<I>& face, const A<T>& vertices){
     auto a = vertices.view(face[0]);
     auto b = vertices.view(face[1]);
@@ -840,7 +840,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A, class I>
-  std::enable_if_t<isArray<T, A>, std::vector<std::vector<ind_t>>>
+  std::enable_if_t<lattice::isArray<T, A>, std::vector<std::vector<ind_t>>>
   polygon_faces(const std::vector<std::vector<I>>& faces, const A<T>& points){
     std::vector<std::vector<I>> reduced_faces;
     reduced_faces.reserve(faces.size());
@@ -850,7 +850,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A, class I>
-  std::enable_if_t<isArray<T,A>, std::vector<std::vector<I>>>
+  std::enable_if_t<lattice::isArray<T,A>, std::vector<std::vector<I>>>
   polygon_faces(const A<T>& a, const A<T>& b, const A<T>& c, const std::vector<std::vector<I>>& faces_per_point, const A<T>& points){
     auto faces = utils::invert_lists(faces_per_point);
 
@@ -874,7 +874,7 @@ namespace brille {
 
 
   template<class T, template<class> class A>
-  std::enable_if_t<isArray<T,A>, bool>
+  std::enable_if_t<lattice::isArray<T,A>, bool>
   polygon_face_vertex_purge(A<T>& points, std::vector<std::vector<ind_t>>& faces){
     std::vector<bool> keep(points.size(0), false);
     for (ind_t i=0; i<points.size(0); ++i) for(const auto & face: faces) {
@@ -897,7 +897,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isArray<T,A>, std::tuple<A<T>, std::vector<std::vector<ind_t>>>>
+  std::enable_if_t<lattice::isArray<T,A>, std::tuple<A<T>, std::vector<std::vector<ind_t>>>>
   remove_duplicate_points_and_update_face_indexing(const A<T>& points, const std::vector<std::vector<ind_t>> faces){
     auto are_unique = points.is_unique();
     if(std::find(are_unique.begin(), are_unique.end(), false) != are_unique.end()){
@@ -926,7 +926,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isArray<T,A>, std::vector<ind_t>>
+  std::enable_if_t<lattice::isArray<T,A>, std::vector<ind_t>>
   remove_middle_colinear_points(const A<T>& points, const std::vector<ind_t>& face, const int tol){
     std::vector<ind_t> updated;
     updated.reserve(face.size());
@@ -941,7 +941,7 @@ namespace brille {
     return updated;
   }
   template<class T, template<class> class A>
-  std::enable_if_t<isArray<T,A>, std::vector<std::vector<ind_t>>>
+  std::enable_if_t<lattice::isArray<T,A>, std::vector<std::vector<ind_t>>>
   remove_middle_colinear_points(const A<T>& points, const std::vector<std::vector<ind_t>>& faces, const int tol){
     std::vector<std::vector<ind_t>> updated;
     updated.reserve(faces.size());
@@ -954,7 +954,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isArray<T,A>, std::tuple<A<T>, std::vector<std::vector<ind_t>>>>
+  std::enable_if_t<lattice::isArray<T,A>, std::tuple<A<T>, std::vector<std::vector<ind_t>>>>
   remove_points_and_update_face_indexing(const std::vector<bool> & keep, const A<T>& points, const std::vector<std::vector<ind_t>> & faces, const bool sort=true){
     if (std::find(keep.begin(), keep.end(), false) != keep.end()) {
       verbose_update("Prune points; keep=", keep);
@@ -1019,7 +1019,7 @@ namespace brille {
   }
 
   template<class T, template<class> class A, class I>
-  std::enable_if_t<isArray<T,A>, std::tuple<A<T>, std::vector<std::vector<I>>>>
+  std::enable_if_t<lattice::isArray<T,A>, std::tuple<A<T>, std::vector<std::vector<I>>>>
   remove_faceless_points(const A<T>& points, const std::vector<std::vector<I>> & faces){
     std::vector<bool> keep(points.size(0), false);
     for (const auto & face: faces) for (const auto & index: face) keep[index] = true;

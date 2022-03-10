@@ -244,6 +244,15 @@ bool PointSymmetry::has_space_inversion() const {
   return false;
 }
 
+PointSymmetry PointSymmetry::add_space_inversion() const {
+  if (this->has_space_inversion()) return *this;
+  auto gens = this->generators();
+  // add time-reversal/space-inversion
+  std::array<int,9> inversion{{-1,0,0, 0,-1,0, 0,0,-1}};
+  gens.add(inversion);
+  return gens.generate();
+}
+
 bool PointSymmetry::has(const Matrix<int>& m) const {
   for (auto r: R) if (brille::approx::matrix(m.data(), r.data())) return true;
   return false;
