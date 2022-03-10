@@ -67,7 +67,7 @@ namespace brille::polyhedron{
 
     [[nodiscard]] Poly<T,A> convex_hull() const {return Poly(_vertices);}
 
-//    template<class R, template<class> class B> std::enable_if_t<lattice::isArray<R,B>, bool>
+//    template<class R, template<class> class B> std::enable_if_t<isArray<R,B>, bool>
       bool
       operator!=(const Poly<T,A>& that) const{
       bool vertices_permuted{false};
@@ -82,10 +82,10 @@ namespace brille::polyhedron{
       }
       return _faces != that._faces;
     }
-//    template<class R, template<class> class B> std::enable_if_t<lattice::isArray<R,B>, bool>
+//    template<class R, template<class> class B> std::enable_if_t<isArray<R,B>, bool>
       bool operator==(const Poly<T,A>& that) const {return !this->operator!=(that);}
 
-//    template<class R, template<class> class B> std::enable_if_t<lattice::isArray<R,B>, Poly<T,A>>
+//    template<class R, template<class> class B> std::enable_if_t<isArray<R,B>, Poly<T,A>>
       Poly<T,A>
       operator+(const Poly<T,A>& that) const{
       // combine vertices:
@@ -177,7 +177,7 @@ namespace brille::polyhedron{
 
     //FIXME
     template<class R, template<class> class B>
-    [[nodiscard]] std::enable_if_t<lattice::isArray<R,B>, bool> intersects(const Poly<R,B>& that, const int tol=1) const
+    [[nodiscard]] std::enable_if_t<isArray<R,B>, bool> intersects(const Poly<R,B>& that, const int tol=1) const
     {
       auto overlap = this->intersection(that);
       if (!approx::scalar(overlap.volume(), 0., tol)){
@@ -190,36 +190,36 @@ namespace brille::polyhedron{
       return false;
     }
     template<class R, template<class> class B>
-    [[nodiscard]] std::enable_if_t<lattice::isArray<R,B>, Poly<T,A>> intersection(const Poly<R,B>& that) const{
+    [[nodiscard]] std::enable_if_t<isArray<R,B>, Poly<T,A>> intersection(const Poly<R,B>& that) const{
       auto [a, b, c] = that.planes();
       return this->cut(a, b, c);
     }
     template<class R, template<class> class B>
-    [[nodiscard]] std::enable_if_t<lattice::isArray<R,B>, Poly<T,A>> divide(const B<R>& a, const B<R>& b, const B<R>& c) const{
+    [[nodiscard]] std::enable_if_t<isArray<R,B>, Poly<T,A>> divide(const B<R>& a, const B<R>& b, const B<R>& c) const{
       auto [v, f] = _faces.divide(_vertices, a, b, c);
       return {v, f};
     }
     template<class R, template<class> class B>
-    [[nodiscard]] std::enable_if_t<lattice::isArray<R,B>, size_t> face_index(const B<R>& a, const B<R>& b, const B<R>& c) const{
+    [[nodiscard]] std::enable_if_t<isArray<R,B>, size_t> face_index(const B<R>& a, const B<R>& b, const B<R>& c) const{
       return _faces.face_index(_vertices, a, b, c);
     }
     template<class R, template<class> class B>
-    [[nodiscard]] std::enable_if_t<lattice::isArray<R,B>, bool> has_face(const B<R>& a, const B<R>& b, const B<R>& c) const {
+    [[nodiscard]] std::enable_if_t<isArray<R,B>, bool> has_face(const B<R>& a, const B<R>& b, const B<R>& c) const {
       return _faces.has_face(_vertices, a, b, c);
     }
     template<class R, template<class> class B>
-    [[nodiscard]] std::enable_if_t<lattice::isArray<R,B>, bool> none_beyond(const B<R>& a, const B<R>& b, const B<R>& c) const{
+    [[nodiscard]] std::enable_if_t<isArray<R,B>, bool> none_beyond(const B<R>& a, const B<R>& b, const B<R>& c) const{
       return _faces.none_beyond(_vertices, a, b, c);
     }
 
     template<class R, template<class> class B>
-    [[nodiscard]] std::enable_if_t<lattice::isArray<R,B>, Poly<T,A>>
+    [[nodiscard]] std::enable_if_t<isArray<R,B>, Poly<T,A>>
     one_cut(const B<R>& a, const B<R>& b, const B<R>& c, const int tol=1) const {
       auto [v, f] = _faces.one_cut(_vertices, a, b, c, tol);
       return {v, f};
     }
     template<class R, template<class> class B>
-    [[nodiscard]] std::enable_if_t<lattice::isArray<R,B>, Poly<T,A>>
+    [[nodiscard]] std::enable_if_t<isArray<R,B>, Poly<T,A>>
     cut(const B<R>& a, const B<R>& b, const B<R>& c, const int tol=1) const {
       auto [v, f] = _faces.cut(_vertices, a, b, c, tol);
 //      verbose_update("Cut produced vertices\n", v.to_string(), "and faces\n", f.python_string());
@@ -255,10 +255,10 @@ namespace brille::polyhedron{
   };
 
   template<class T, template<class> class A>
-  std::enable_if_t<lattice::isArray<T,A>, Poly<T,A>>
+  std::enable_if_t<isArray<T,A>, Poly<T,A>>
   bounding_box(const A<T>& points){
-    auto min = points.min(0);
-    auto max = points.max(0);
+    auto min = get_xyz(points).min(0);
+    auto max = get_xyz(points).max(0);
     std::vector<std::array<T,3>> v{
         {min[{0, 0}], min[{0,1}], min[{0,2}]}, // 000 0
         {min[{0, 0}], max[{0,1}], min[{0,2}]}, // 010 1
@@ -270,7 +270,7 @@ namespace brille::polyhedron{
         {max[{0, 0}], min[{0,1}], max[{0,2}]}  // 101 7
     };
     auto faces = typename Poly<T,A>::faces_t({{3,0,4,7},{3,2,1,0},{0,1,5,4},{3,7,6,2},{7,4,5,6},{2,6,5,1}});
-    auto hkl = Poly<T,A>::vertex_t::from_std(points.type(), points.lattice(), v);
+    auto hkl = from_xyz_like(points, bArray<T>::from_std(v));
     return {hkl, faces};
   }
 }

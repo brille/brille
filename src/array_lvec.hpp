@@ -34,50 +34,6 @@ using bArray = brille::Array2<T>;
 
 namespace brille::lattice {
 
-/*! Easier access to ArrayTraits for template substitution
-
-true for Array2, LQVec, LDVec
-*/
-template<class T, template<class> class A>
-inline constexpr bool isArray = ArrayTraits<A<T>>::array;
-/*! Easier access to ArrayTraits for template substitution
-
-true for LQVec, LDVec
-*/
-template<class T, template<class> class A>
-inline constexpr bool isLatVec = ArrayTraits<A<T>>::latvec;
-
-template<class T, template<class> class A>
-inline constexpr bool isLQVec = ArrayTraits<A<T>>::reciprocal;
-template<class T, template<class> class A>
-inline constexpr bool isLDVec = ArrayTraits<A<T>>::direct;
-
-/*! Easier access to ArrayTraits for template substitution
-
-true for Array2
-*/
-template<class T, template<class> class A>
-inline constexpr bool isBareArray = isArray<T,A> && !isLatVec<T,A>;
-
-/*! Easier access to ArrayTraits for double template substitution
-
-true for any combination of two Array2, LQVec, LDVec objects
-*/
-template<class T, template<class> class A, class R, template<class> class B>
-inline constexpr bool bothArrays = isArray<T,A> && isArray<R,B>;
-/*! Easier access to ArrayTraits for double template substitution
-
-true for two Array2 objects
-*/
-template<class T, template<class> class A, class R, template<class> class B>
-inline constexpr bool bareArrays = isBareArray<T,A> && isBareArray<R,B>;
-/*! Easier access to ArrayTraits for double template substitution
-
-true for any combination of two LQVec, LDVec objects
-*/
-template<class T, template<class> class A, class R, template<class> class B>
-inline constexpr bool bothLatVecs = isLatVec<T,A> && isLatVec<R,B>;
-
 //! Check if both vectors are the same
 template<class T>
 bool equal_shapes(const std::vector<T>& a, const std::vector<T>&b){
@@ -116,9 +72,6 @@ operator X (const A<T>& b){\
 #define LVEC_INIT_INT(N,X) N(type_t typ, lattice_t lat, const X &n)\
 : bArray<T>(static_cast<brille::ind_t>(n),3), _type(std::move(typ)), _lattice(std::move(lat))\
 {}
-
-
-
 
 #endif
 
@@ -279,29 +232,6 @@ protected:
 // convenience creation functions for Real and Reciprocal space vectors
 template<class T, class ... P> LVec<T> LDVec(P ... args) {return LVec<T>(LengthUnit::angstrom, args ...);}
 template<class T, class ... P> LVec<T> LQVec(P ... args) {return LVec<T>(LengthUnit::inverse_angstrom, args ...);}
-
-/*! \brief Templated struct to help differentiate between Array2 and its derived
-           classes LQVec and LDVec
-
-Since the derived classes add Lattice information some functions behave
-differently for 'raw' Array2 versus LQVec or LDVec objects.
-This struct is used in template arguments to cause substitution failure-based
-differentiation of otherwise identical function signatures.
-*/
-  template<class... T> struct ArrayTraits{
-    static constexpr bool array = false;  //!< is this an Array2, LQVec, or LDVec
-    static constexpr bool latvec = false; //!< is this an LQVec or LDVec
-  };
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-  template<class T> struct ArrayTraits<bArray<T>>{
-    static constexpr bool array = true;
-    static constexpr bool latvec = false;
-  };
-  template<class T> struct ArrayTraits<LVec<T>>{
-    static constexpr bool array = true;
-    static constexpr bool latvec = true;
-  };
-#endif
 
 #include "array_lvec_functions.tpp"
 #include "array_lvec_methods.tpp"

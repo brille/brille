@@ -31,9 +31,14 @@ namespace brille {
   // declare their iterators here
   template<class T> class ArrayIt;
   template<class T> class Array2It;
+
+  namespace lattice {
+  template<class T> class LVec;
+  }
 }
 template<class T> using bArray = brille::Array2<T>;
 
+#include "array_attributes.hpp"
 #include "array.hpp"
 #include "array2.hpp"
 
