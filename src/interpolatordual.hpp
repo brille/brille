@@ -105,7 +105,7 @@ public:
       vectors_.setup_fake(values_.size(), values_.branches());
   }
   //! Return the number of points for which eigenvalues and eigenvectors are stored
-  ind_t size() const {
+  [[nodiscard]] ind_t size() const {
     assert(values_.size() == vectors_.size());
     return values_.size();
   }
@@ -114,7 +114,7 @@ public:
   //! Return a reference to the stored eigenvectors
   const Interpolator<R>& vectors() const {return this->vectors_;}
   //! Return the number of sub-array modes in the stored eigenvalues and eigenvectors
-  ind_t branches() const {
+  [[nodiscard]] ind_t branches() const {
     assert(values_.branches() == vectors_.branches());
     return values_.branches();
   }
@@ -160,8 +160,7 @@ public:
   \return The permutation vector \f$\mathbf{p}_{ij}\f$
   */
   template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
-  std::vector<ind_t>
-  get_permutation(const I, const I) const;
+  std::vector<ind_t> get_permutation(I, I) const;
   /*! \brief Return the permutation vectors for a set of indexed points
 
   \param indices The point indices for which to return pairwise permutation
@@ -240,14 +239,10 @@ public:
     vectors_.set_cost_info(csf, cvf, elcost);
   }
   //! Create a string representation of the values and vectors
-  std::string to_string() const {
+  [[nodiscard]] std::string to_string() const {
     std::string str = "value " + values_.to_string() + " vector " + vectors_.to_string();
     return str;
   }
-  // Calculate the Debye-Waller factor for the provided Q points and ion masses
-  // This returns a 1-D brille::Array (so it can't be a brille::Array2)
-  template<template<class> class A>
-  brille::Array<double> debye_waller(const A<double>& Qpts, const std::vector<double>& Masses, const double t_K) const;
   //
   /*! \brief Determine the assignment cost matrix for the modes at two points
 
@@ -256,7 +251,7 @@ public:
   \return The total cost of mode assignments matrix as a flattened vector
   */
   template<typename S=typename CostTraits<T>::type>
-  std::vector<S> cost_matrix(const ind_t i0, const ind_t i1) const;
+  std::vector<S> cost_matrix(ind_t i0, ind_t i1) const;
   /*! \brief Permute the modes stored for a single point
 
   \param i The point index for the modes to be permuted
@@ -288,9 +283,9 @@ public:
     // we could try and do something fancier, but it's probaby not useful.
   }
   //! Determine the permutation vectors for all connected point pairs
-  void sort(void);
+  void sort();
   //! Determine the permutation vectors for all connected point pairs
-  bool determine_permutation_ij(const ind_t i, const ind_t j, std::mutex& map_mutex);
+  bool determine_permutation_ij(ind_t i, ind_t j, std::mutex& map_mutex);
   /*! \brief Calculate the memory requirements per interpolation result
 
   Linear interpolation of the stored eigenvalues and eigenvectors requires
@@ -299,15 +294,11 @@ public:
   programs to estimate how much memory the two arrays will occupy to avoid
   causing out-of-memory errors at runtime.
   */
-  size_t bytes_per_point() const {
+  [[nodiscard]] size_t bytes_per_point() const {
     return values_.bytes_per_point() + vectors_.bytes_per_point();
   }
-private:
-  bArray<double> debye_waller_sum(const bArray<double>& Qpts, const double t_K) const;
-  bArray<double> debye_waller_sum(const LQVec<double>& Qpts, const double beta) const{ return this->debye_waller_sum(Qpts.get_xyz(), beta); }
 
 #ifdef USE_HIGHFIVE
-public:
   template<class HF>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
   to_hdf(HF& obj, const std::string& entry) const {
@@ -337,72 +328,6 @@ public:
   }
 #endif //USE_HIGHFIVE
 };
-
-
-template<class T, class R>
-bArray<double>
-DualInterpolator<T,R>::debye_waller_sum(const bArray<double>& Qpts, const double t_K) const {
-  const double hbar = 6.582119569E-13; // meV⋅s
-  const double kB   = 8.617333252E-2; // meV⋅K⁻¹
-  ind_t nQ = Qpts.size(0);
-  element_t<ind_t> vector_elements = vectors_.elements();
-  ind_t nIons = vector_elements[1] / 3u; // already checked to be correct
-  bArray<double> WdQ(nQ,nIons); // Wᵈ(Q) has nIons entries per Q point
-  double coth_en, Q_dot_e_2;
-  ind_t vector_nq = vectors_.size();
-  ind_t nbr = vectors_.branches();
-  const double beta = kB*t_K; // meV
-  const double pref{hbar*hbar/static_cast<double>(2*vector_nq)}; // meV²⋅s²
-  const auto& val{ values_.data()};
-  const auto& vec{vectors_.data()};
-  ind_t vecsp = vectors_.branch_span();
-  // for each input Q point
-  for (ind_t Qidx=0; Qidx<nQ; ++Qidx){
-    // and each ion
-    for (ind_t d=0; d<nIons; ++d){
-      double qj_sum{0};
-      // sum over all reduced q in the first Brillouin zone
-      for (ind_t q=0; q<vector_nq; ++q){
-        // and over all 3*nIon branches at each q
-        for (ind_t j=0; j<nbr; ++j){
-          // for each branch energy, find <2nₛ+1>/ħωₛ ≡ coth(2ħωₛβ)/ħωₛ
-          coth_en = brille::utils::coth_over_en(val.val(q,j), beta);
-          // and find |Q⋅ϵₛ|². Note: brille::utils::vector_product(x,y) *is* |x⋅y|²
-          Q_dot_e_2 = brille::utils::vector_product(3u, Qpts.ptr(Qidx), vec.ptr(q,j*vecsp+3u*d));
-          // adding |Q⋅ϵₛ|²coth(2ħωₛβ)/ħωₛ to the sum over s for [Qidx, d]
-          qj_sum += Q_dot_e_2 * coth_en;
-        }
-      }
-      // with the sum over s complete, normalize by ħ²/2 divided by the number
-      // of points in the Brillouin zone and store the result at W[Qidx, d];
-      WdQ.val(Qidx,d) = qj_sum*pref;
-    }
-  }
-  return WdQ;
-}
-
-template<class T, class R>
-template<template<class> class A>
-brille::Array<double>
-DualInterpolator<T,R>::debye_waller(const A<double>& Qpts, const std::vector<double>& Masses, const double t_K) const {
-  element_t<ind_t> vector_elements = vectors_.elements();
-  ind_t nIons = vector_elements[1] / 3u;
-  if (0 == nIons || vector_elements[1] != nIons*3u)
-    throw std::runtime_error("Debye-Waller factor requires 3-vector eigenvector(s).");
-  if (Masses.size() != nIons)
-    throw std::runtime_error("Debye-Waller factor requires an equal number of ions and masses.");
-  auto WdQ = this->debye_waller_sum(Qpts, t_K); // {nQ, nAtoms}
-  brille::shape_t fshape{Qpts.size(0)}; // (nQ,)
-  brille::Array<double> factor(fshape); // we don't want an Array2 here!
-  double d_sum;
-  for (ind_t Qidx=0; Qidx<Qpts.size(0); ++Qidx){
-    d_sum = double(0);
-    for (ind_t d=0; d<nIons; ++d)
-      d_sum += std::exp(WdQ.val(Qidx,d)/Masses[d]);
-    factor[Qidx] = d_sum*d_sum;
-  }
-  return factor;
-}
 
 
 
@@ -473,24 +398,24 @@ DualInterpolator<T,R>::cost_matrix(const ind_t i0, const ind_t i1) const {
 
 template<class T, class R>
 void
-DualInterpolator<T,R>::sort(void){
+DualInterpolator<T,R>::sort(){
   std::set<size_t> keys = permutation_table_.keys();
   // find the keys corresponding to one triangular part of the matrix (i<j)
   std::vector<std::array<ind_t,2>> tri_ij;
   tri_ij.reserve(keys.size()/2);
   ind_t no = this->size();
   for (const auto & key: keys){
-    ind_t i = static_cast<ind_t>(key/no);
+    auto i = static_cast<ind_t>(key/no);
     if (static_cast<size_t>(i)*static_cast<size_t>(no+1) < key)
       tri_ij.push_back({i, static_cast<ind_t>(key-i*no)});
   }
   debug_update("Finding permutations for ",keys.size()," connections between the ",no," vertices");
   // now find the permutations in parallel
   std::mutex m;
-  long long nok = brille::utils::u2s<long long, size_t>(tri_ij.size());
+  auto nok = brille::utils::u2s<long long, size_t>(tri_ij.size());
   #pragma omp parallel for default(none) shared(tri_ij, m, nok)
   for (long long sk=0; sk<nok; ++sk){
-    size_t k = brille::utils::s2u<size_t, long long>(sk);
+    auto k = brille::utils::s2u<size_t, long long>(sk);
     this->determine_permutation_ij(tri_ij[k][0], tri_ij[k][1], m);
   }
   debug_update("Done");

@@ -189,7 +189,7 @@ ARRAY_LATVEC_BINARY_OP(/)
   std::enable_if_t<bothLatVecs<T,L,R,L>, L<S>>
   cross(const L<T>& a, const L<R>& b) {
     assert( a.same_lattice(b) );
-    auto oarray = cross(a.get_hkl(), b.get_hkl());
+    auto oarray = cross(a.hkl(), b.hkl());
     // setup the output array
     auto lat = a.lattice();
     auto lu = a.type() == LengthUnit::angstrom ? LengthUnit::inverse_angstrom : LengthUnit::angstrom;
@@ -241,8 +241,8 @@ dot(const A<T>& a, const A<R>& b) {
   return oarray;
 }
 
-template<class T, class R, template<class> class A, class S>
-std::enable_if_t<bothArrays<T,A,R,A>, double>
+template<class T, class R, template<class> class A, class S=std::common_type_t<T,R>>
+std::enable_if_t<bothArrays<T,A,R,A>, S>
 same_lattice_dot(const A<R>& x, const A<T>& y, const std::array<double,9>& metric){
   S tmp[3]{0, 0, 0};
   utils::mul_mat_vec(tmp, 3u, metric.data(), x.ptr(0));
@@ -257,7 +257,7 @@ std::enable_if_t<bothLatVecs<T,L1,R,L2>, bArray<S>>
 dot(const L1<T> &a, const L2<R> &b){
   bool is_star = a.star_lattice(b);
   if (!( is_star || a.same_lattice(b) )){
-    debug_update("Incompatible lattices\n",a.get_lattice().string_repr(),"\n",b.get_lattice().string_repr());
+//    debug_update("Incompatible lattices\n",a.lattice().string_repr(),"\n",b.lattice().string_repr());
     throw std::runtime_error("the dot product between Lattice Vectors requires same or starred lattices");
   }
   if (is_star){
@@ -315,7 +315,7 @@ dot(const L1<T> &a, const L2<R> &b){
   template<class T, template<class> class L>
   std::enable_if_t<isLatVec<T,L>, bArray<double>>
   norm(const L<T> &a){
-    auto out = dot(a,a);
+    auto out = bArray<double>(dot(a,a));
     for (auto& x: out.valItr()) x = std::sqrt(x);
     return out;
   }
@@ -428,7 +428,7 @@ operator*(const std::array<R,9>& m, const L<T>& a){
   template<class T, template<class> class L>
   std::enable_if_t<isLatVec<T,L>, L<T>>
   operator-(const L<T>& a){
-    L<T> out(a.type(), a.lattice(), -(a.get_hkl()));
+    L<T> out(a.type(), a.lattice(), -(a.hkl()));
     return out;
   }
   // -('pure' brille:Array)

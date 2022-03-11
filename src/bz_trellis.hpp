@@ -23,7 +23,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <utility>
 
 #include "bz.hpp"
-//#include "trellis.hpp"
 #include "trellis_poly.hpp"
 // #include "phonon.hpp"
 namespace brille {
@@ -37,9 +36,11 @@ namespace brille {
   the PolyhedronTrellis.
   */
 template<class T, class R, class S>
-class BrillouinZoneTrellis3: public polytrellis::PolyTrellis<T,R,S,LQVec>{
+class BrillouinZoneTrellis3: public polytrellis::PolyTrellis<T,R,S,lattice::LVec>{
   using child_t = BrillouinZoneTrellis3<T,R,S>;
-  using super_t = polytrellis::PolyTrellis<T,R,S,LQVec>;
+  using super_t = polytrellis::PolyTrellis<T,R,S,lattice::LVec>;
+  template<class V> using VectorClass = lattice::LVec<V>;
+  using vector_t = VectorClass<S>;
   BrillouinZone bz_;
 public:
   BrillouinZoneTrellis3(const super_t & pt, BrillouinZone bz): super_t(pt), bz_(std::move(bz)) {}
@@ -90,10 +91,10 @@ public:
            an error or access unassigned memory and will produce garbage output.
   */
   std::tuple<brille::Array<T>,brille::Array<R>>
-  interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const {
+  interpolate_at(const vector_t& x, const int nth, const bool no_move=false) const {
     profile_update("Start BrillouinZoneTrellis3::interpolate_at");
-    LQVec<S> q(x.get_lattice(), x.size(0));
-    LQVec<int> tau(x.get_lattice(), x.size(0));
+    vector_t q(x.type(), x.lattice(), x.size(0));
+    VectorClass<int> tau(x.type(), x.lattice(), x.size(0));
     if (no_move){
       // Special mode for testing where no specified points are moved
       // IT IS IMPERATIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
@@ -132,11 +133,11 @@ public:
            an error or access unassigned memory and will produce garbage output.
   */
   std::tuple<brille::Array<T>,brille::Array<R>>
-  ir_interpolate_at(const LQVec<S>& x, const int nth, const bool no_move=false) const {
+  ir_interpolate_at(const vector_t& x, const int nth, const bool no_move=false) const {
     verbose_update("BZTrellisQ::ir_interpolate_at called with ",nth," threads");
     profile_update("Start BrillouinZoneTrellis3::ir_interpolate_at");
-    LQVec<S> ir_q(x.get_lattice(), x.size(0));
-    LQVec<int> tau(x.get_lattice(), x.size(0));
+    VectorClass<S> ir_q(x.type(), x.lattice(), x.size(0));
+    VectorClass<int> tau(x.type(), x.lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
     if (no_move){
       // Special mode for testing where no specified points are moved
@@ -157,7 +158,7 @@ public:
     // and might need the Phonon Gamma table
     GammaTable pgt{GammaTable()};
     if (RotatesLike::Gamma == this->data().vectors().rotateslike()){
-      pgt.construct(bz_.get_lattice().star(), bz_.add_time_reversal());
+      pgt.construct(bz_.get_lattice(), bz_.add_time_reversal());
     }
     // make data-sharing Array2 objects for the rotation functions
     brille::Array2<T> vals2(vals);

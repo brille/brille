@@ -92,8 +92,9 @@ private:
   type_t _type;
   lattice_t _lattice;
 public:
+  explicit LVec(type_t typ=LengthUnit::inverse_angstrom): _type(typ), lattice_t() {}
   // default constructor for zero three-vectors:
-  LVec(type_t typ, lattice_t lat): bArray<T>(0,3), _type(std::move(typ)), _lattice(std::move(lat))
+  LVec(type_t typ, lattice_t lat): bArray<T>(0,3), _type(typ), _lattice(std::move(lat))
   {}
   // (macroed as templates can't be distinguished)
   //! integer number of three-vector constructor
@@ -105,7 +106,7 @@ public:
   LVEC_INIT_INT(LVec, unsigned long long)
   //! Forwarding constructor to let bArray deal with everything else
   template<typename... Args> explicit LVec(type_t typ, lattice_t lat, Args... args)
-  : bArray<T>(args...), _type(std::move(typ)), _lattice(std::move(lat))
+  : bArray<T>(args...), _type(typ), _lattice(std::move(lat))
   {
   }
   template<class R>
@@ -177,19 +178,19 @@ LVec<T> operator ^ (const T& val) {
   }
   //! Round all elements using std::round
   [[nodiscard]] LVec<int> round() const {
-    return LVec<int>(_lattice, this->bArray<T>::round(), _type);
+    return LVec<int>(_type, _lattice, this->bArray<T>::round());
   }
   //! Find the floor of all elements using std::floor
   [[nodiscard]] LVec<int> floor() const {
-    return LVec<int>(_lattice, this->bArray<T>::floor(), _type);
+    return LVec<int>(_type, _lattice, this->bArray<T>::floor());
   }
   //! Find the ceiling of all elements using std::ceil
   [[nodiscard]] LVec<int> ceil() const {
-    return LVec<int>(_lattice, this->bArray<T>::ceil(), _type);
+    return LVec<int>(_type, _lattice, this->bArray<T>::ceil());
   }
 
   LVec<T> decouple() {
-    return LVec<T>(_lattice, this->bArray<T>::decouple(), _type);
+    return LVec<T>(_type, _lattice, this->bArray<T>::decouple());
   }
 
 #ifdef USE_HIGHFIVE

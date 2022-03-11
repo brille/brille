@@ -5,6 +5,7 @@
 #include <filesystem>
 
 using namespace brille;
+using namespace brille::lattice;
 
 #ifdef USE_HIGHFIVE
 bool write_read_test(const BrillouinZone& source, const std::string& name){
@@ -28,16 +29,16 @@ bool write_read_test(const BrillouinZone&, const std::string&){
 #endif
 
 TEST_CASE("Primitive Cubic BrillouinZone instantiation","[bz_]"){
-  Direct d(brille::math::two_pi,brille::math::two_pi,brille::math::two_pi,90.,90.,90.);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  auto lat = Direct<double>(
+      {brille::math::two_pi, brille::math::two_pi, brille::math::two_pi},
+      {90., 90., 90.} ,"P 1");
+  BrillouinZone bz(lat);
   REQUIRE(write_read_test(bz, "primitive_cubic"));
 }
 
 TEST_CASE("Primitive Hexagonal BrillouinZone instantiation","[bz_]"){
-  Direct d(3.,3.,3.,90.,90.,120.);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  auto lat = Direct<double>({3., 3., 3.}, {90., 90., 120.}, "P 1");
+  BrillouinZone bz(lat);
   REQUIRE(write_read_test(bz, "primitive_hexagonal"));
 }
 //
@@ -83,25 +84,24 @@ TEST_CASE("Primitive Hexagonal BrillouinZone instantiation","[bz_]"){
 TEST_CASE("BrillouinZone moveinto","[bz_]"){
   std::string spgr;
   auto run_tests = [](const std::string & spacegroup){
-    Direct d(2.87,2.87,2.87,90.,90.,90.,spacegroup);
-    Reciprocal r = d.star();
-    BrillouinZone bz(r);
+    auto lat =Direct<double>({2.87, 2.87, 2.87}, {90., 90., 90.},spacegroup);
+    BrillouinZone bz(lat);
 
     std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
     std::uniform_real_distribution<double> distribution(-5.0,5.0);
 
     int nQ = 50;
-    LQVec<double> Q(r, nQ); // holds an (nQ, 3) shaped Array or Array2
+    auto Q = LQVec<double>(lat, nQ); // holds an (nQ, 3) shaped Array or Array2
     for (auto& v: Q.valItr()) v = distribution(generator);
 
-    LQVec<double> q(r,nQ);
-    LQVec<int> tau(r,nQ);
+    auto q = LQVec<double>(lat, nQ);
+    auto tau = LQVec<int>(lat, nQ);
 
     REQUIRE( bz.moveinto(Q,q,tau) ); // success indicated by return of true
     auto inside = bz.isinside(q);
     REQUIRE(std::count(inside.begin(), inside.end(), false) == 0);
-    LQVec<double> Qmq = Q-q;
-    LQVec<double> Qmqmtau = Q-(q+tau);
+    auto Qmq = Q-q;
+    auto Qmqmtau = Q-(q+tau);
     for (auto i: Q.subItr()){
       REQUIRE(Q[i] == Approx(q[i] + tau[i]));
       REQUIRE(brille::approx::scalar(Qmq[i], static_cast<double>(tau[i])));
@@ -125,24 +125,22 @@ TEST_CASE("BrillouinZone moveinto","[bz_]"){
 }
 
 TEST_CASE("BrillouinZone moveinto hexagonal","[bz_][moveinto]"){
-  Direct d(3.,3.,9.,90.,90.,120.,1);
-  Reciprocal r(d.star());
-  BrillouinZone bz(r);
+  auto lat = Direct<double>({3,3,9}, {90,90,120}, "P 1");
+  BrillouinZone bz(lat);
   std::vector<std::array<double,3>> rawQ;
   for (int i=0; i<21; i++){
     double x = static_cast<double>(i)/20.0;
     rawQ.push_back({x,x,x});
   }
-  LQVec<double> Q(r, bArray<double>::from_std(rawQ));
-  LQVec<double> q(r,Q.size(0));
-  LQVec<int> tau(r,Q.size(0));
+  auto Q = LQVec<double>(lat, bArray<double>::from_std(rawQ));
+  auto q = LQVec<double>(lat, Q.size(0));
+  auto tau = LQVec<int>(lat,  Q.size(0));
   REQUIRE(bz.moveinto(Q,q,tau));
 }
 
 TEST_CASE("BrillouinZone moveinto hexagonal extended","[bz_][moveinto][.timing]"){
-  Direct dlat(3.,3.,9.,90.,90.,120.,1);
-  Reciprocal rlat(dlat.star());
-  BrillouinZone bz(rlat);
+  auto lat = Direct<double>({3, 3, 9}, {90, 90, 120}, "P 1");
+  BrillouinZone bz(lat);
   std::vector<std::array<double,3>> rawQ;
 
   std::default_random_engine g(std::chrono::system_clock::now().time_since_epoch().count());
@@ -153,9 +151,9 @@ TEST_CASE("BrillouinZone moveinto hexagonal extended","[bz_][moveinto][.timing]"
   while (++count < total_points)
     rawQ.push_back(random_array());
 
-  LQVec<double> Q(rlat, bArray<double>::from_std(rawQ));
-  LQVec<double> q(rlat, Q.size(0));
-  LQVec<int> tau(rlat, Q.size(0));
+  auto Q = LQVec<double>(lat, bArray<double>::from_std(rawQ));
+  auto q = LQVec<double>(lat, Q.size(0));
+  auto tau = LQVec<int>(lat, Q.size(0));
   REQUIRE_NOTHROW(bz.moveinto(Q,q,tau));
   
   // construct a timing object, defined in debug.hpp
@@ -187,12 +185,11 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 alt","[bz_][materialsproject]")
   //
   std::string hall_symbol = "-R 3";
   // the other version below has slightly-off b vector length
-  double lens[3]{10.699417459999999, 10.699417459999999, 4.528988750000000};
-  double angs[3]{90,90,120};
+  std::array<double,3> lens{10.699417459999999, 10.699417459999999, 4.528988750000000};
+  std::array<double,3> angs{90,90,120};
   //
-  Direct dlat(lens, angs, hall_symbol);
-  Reciprocal rlat = dlat.star();
-  BrillouinZone bz(rlat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true);
+  auto lat = Direct<double>(lens, angs, hall_symbol);
+  BrillouinZone bz(lat,/*to_prim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -206,32 +203,30 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 imprecise failure","[bz_][mater
   // The spacegroup for elemental Se, from https://www.materialsproject.org/materials/mp-147/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-147.html
   // If brille::approx::scalar() is too strict this will fail.
-  double lattice_vectors[9] = {
+  std::array<double, 9> lattice_vectors {
     10.699417459999999, 0.000000050000000, 0.000000000000000,
     -5.349708760000000, 9.265967300000000, 0.000000000000000,
     0.000000000000000, 0.000000000000000, 4.528988750000000};
   //
   std::string hall_symbol = "-R 3";
   //
-  Direct dlat(lattice_vectors, hall_symbol);
-  Reciprocal rlat = dlat.star();
-  REQUIRE_THROWS_AS(BrillouinZone(rlat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true), std::runtime_error);
+  auto lat = Direct<double>(lattice_vectors, hall_symbol);
+  REQUIRE_THROWS_AS(BrillouinZone(lat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true), std::runtime_error);
 }
 
 TEST_CASE("Irreducible Brillouin zone for mp-147","[bz_][materialsproject]"){
   // The spacegroup for elemental Se, from https://www.materialsproject.org/materials/mp-147/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-147.html
   // If brille::approx::scalar() is too strict this will fail.
-  double lattice_vectors[9] = {
+  std::array<double, 9> lattice_vectors{
       10.699417459999999, 0.000000000000000, 0.000000000000000,
       -5.349708729999997, 9.265967326054772, 0.000000000000000,
       0.000000000000000, 0.000000000000000, 4.528988750000000};
   //
   std::string hall_symbol = "-R 3";
   //
-  Direct dlat(lattice_vectors, hall_symbol);
-  Reciprocal rlat = dlat.star();
-  BrillouinZone bz(rlat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true);
+  auto lat = Direct<double>(lattice_vectors, hall_symbol);
+  BrillouinZone bz(lat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -243,16 +238,15 @@ TEST_CASE("Irreducible Brillouin zone for mp-306","[bz_][materialsproject]"){
   // The spacegroup for B₂O₃, from https://www.materialsproject.org/materials/mp-306/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-306.html
   // If brille::approx::scalar() is too strict this will fail.
-  double lattice_vectors[9] = {
+  std::array<double, 9> lattice_vectors{
      4.350620350000000, 0.000000000000000, 0.000000000000000,
     -2.175310180000000, 3.767747740000000, 0.000000000000000,
      0.000000000000000, 0.000000000000000, 8.339814740000000};
   //
   std::string hall_symbol = "P 31 2\"";
   //
-  Direct dlat(lattice_vectors, hall_symbol);
-  Reciprocal rlat = dlat.star();
-  BrillouinZone bz(rlat);
+  auto lat = Direct<double>((lattice_vectors, hall_symbol);
+  BrillouinZone bz(lat);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -264,16 +258,15 @@ TEST_CASE("Irreducible Brillouin zone for mp-661","[bz_][materialsproject]"){
   // The spacegroup for AlN, from https://www.materialsproject.org/materials/mp-661/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-661.html
   // If brille::approx::scalar() is too strict this will fail.
-  double lattice_vectors[9] = {
+  std::array<double, 9> lattice_vectors{
      3.113692560000000, 0.000000000000000, 0.000000000000000,
     -1.556846270000000, 2.696536850000000, 0.000000000000000,
      0.000000000000000, 0.000000000000000, 4.983221820000000};
   //
   std::string hall_symbol = "P 6c -2c";
   //
-  Direct dlat(lattice_vectors, hall_symbol);
-  Reciprocal rlat = dlat.star();
-  BrillouinZone bz(rlat);
+  auto lat = Direct<double>(lattice_vectors, hall_symbol);
+  BrillouinZone bz(lat);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -285,16 +278,15 @@ TEST_CASE("Irreducible Brillouin zone for mp-7041","[bz_][materialsproject]"){
   // The spacegroup for CaHgO₂, from https://www.materialsproject.org/materials/mp-7041/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-7041.html
   // If brille::approx::scalar() is too strict this will fail.
-  double lattice_vectors[9] = {
+  std::array<double, 9> lattice_vectors{
       3.559547360, 0.0,         0.0,
      -1.779773680, 3.082658440, 0.0,
       0.0,         0.0,        18.659215100000001};
   //
   std::string hall_symbol = "-R 3 2\"";
   //
-  Direct dlat(lattice_vectors, hall_symbol);
-  Reciprocal rlat = dlat.star();
-  BrillouinZone bz(rlat);
+  auto lat = Direct<double>(lattice_vectors, hall_symbol);
+  BrillouinZone bz(lat);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -306,12 +298,11 @@ TEST_CASE("Irreducible Brillouin zone for mp-917 atl","[bz_][materialsproject]")
   // The spacegroup for CaC₂, from https://www.materialsproject.org/materials/mp-917/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-917.html
   // If brille::approx::scalar() is too strict this will fail.
-  double len[3]{7.16797000, 3.84256200, 7.46845574}, ang[3]{90, 106.87385147, 90};
+  std::array<double,3> len{7.16797000, 3.84256200, 7.46845574}, ang{90, 106.87385147, 90};
   std::string hall_symbol = "-C 2y";
   //
-  Direct dlat(len, ang, hall_symbol);
-  Reciprocal rlat = dlat.star();
-  BrillouinZone bz(rlat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true);
+  auto lat = Direct<double>(len, ang, hall_symbol);
+  BrillouinZone bz(lat,/*to_prim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -325,16 +316,15 @@ TEST_CASE("Irreducible Brillouin zone for mp-917","[bz_][materialsproject]"){
   // The spacegroup for CaC₂, from https://www.materialsproject.org/materials/mp-917/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-917.html
   // If brille::approx::scalar() is too strict this will fail.
-  double lattice_vectors[9] = {
+  std::array<double, 9> lattice_vectors{
       7.068488010, 0.0,         0.002640550,
       0.0,         3.774933910, 0.0,
      -2.13512680,  0.0,         7.03226650};
   //
   std::string hall_symbol = "-C 2y";
   //
-  Direct dlat(lattice_vectors, hall_symbol);
-  Reciprocal rlat = dlat.star();
-  BrillouinZone bz(rlat);
+  auto lat = Direct<double>(lattice_vectors, hall_symbol);
+  BrillouinZone bz(lat);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -345,16 +335,16 @@ TEST_CASE("Irreducible Brillouin zone for mp-917","[bz_][materialsproject]"){
 TEST_CASE("No irreducible Brillouin zone for inconsistent parameters and symmetry","[bz_]"){
   double a{3.5}, c{12.9}, alpha{90}, gamma{120};
   std::string spacegroup = "P 4";
-  Direct dlat(a,a,c, alpha,alpha,gamma, spacegroup);
-  Reciprocal rlat = dlat.star();
-  REQUIRE_THROWS_WITH( BrillouinZone(rlat), "Failed to find an irreducible Brillouin zone."); 
+  auto lat = Direct<double>({a,a,c}, {alpha,alpha,gamma}, spacegroup);
+  REQUIRE_THROWS_WITH( BrillouinZone(lat), "Failed to find an irreducible Brillouin zone.");
 }
 
 TEST_CASE("Nb irreducible Brillouin Zone", "[bz_]"){
-  // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  // The conventional cell for Nb.
+  std::string spg("-I 4 2 3");
+  auto lat = Direct<double>({3.2598, 3.2598, 3.2598},
+      {brille::math::half_pi, brille::math::half_pi, brille::math::half_pi}, spg);
+  BrillouinZone bz(lat);
   auto fbz = bz.get_polyhedron();
   auto irbz = bz.get_ir_polyhedron();
   auto mult = bz.get_pointgroup_symmetry().size();

@@ -381,7 +381,7 @@ public:
   */
   template<class R, class RotT>
   bool rotate_in_place(bArray<T>& x,
-                       const LQVec<R>& q,
+                       const lattice::LVec<R>& q,
                        const RotT& rt,
                        const PointSymmetry& ps,
                        const std::vector<size_t>& r,
@@ -571,15 +571,15 @@ private:
   bool rip_recip(bArray<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   bool rip_axial(bArray<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   template<class R>
-  bool rip_gamma_complex(bArray<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  bool rip_gamma_complex(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   template<class R, class S=T>
   enable_if_t<is_complex<S>::value, bool>
-  rip_gamma(bArray<T>& x, const LQVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
+  rip_gamma(bArray<T>& x, const lattice::LVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
     return rip_gamma_complex(x, q, gt, ps, r, ir, nth);
   }
   template<class R, class S=T>
   enable_if_t<!is_complex<S>::value, bool>
-  rip_gamma(bArray<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
+  rip_gamma(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
     throw std::runtime_error("RotatesLike == Gamma requires complex valued data!");
   }
 

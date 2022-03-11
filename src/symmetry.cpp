@@ -143,7 +143,7 @@ Symmetry Symmetry::generate() const {
   }
   return gen;
 }
-Symmetry Symmetry::generators(void) const{
+Symmetry Symmetry::generators() const{
   Symmetry lA(this->getallm()), lB, lC;
   while (lA.size()){
     lB.add(lA.getm(0)); // move the first element of lA to lB

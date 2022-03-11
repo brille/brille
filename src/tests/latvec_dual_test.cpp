@@ -3,7 +3,7 @@
 #include "lattice_dual.hpp"
 #include "array_lvec.hpp"
 
-using namespace brille::latvec;
+using namespace brille;
 using namespace brille::lattice;
 
 TEST_CASE("Lattice Vector tests","[latvec]"){

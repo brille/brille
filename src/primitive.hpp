@@ -82,9 +82,9 @@ private:
   Bravais bravais;    //!< The Bravais enum value
 public:
   //! Construct from the centring type of the conventional lattice
-  PrimitiveTransform(const Bravais c): bravais{c} {}
-  [[deprecated("Call with an enum Bravais instead")]] PrimitiveTransform(const Spacegroup& s): bravais{s.bravais} {}
-  [[deprecated("Call with an enum Bravais instead")]] PrimitiveTransform(const int hall){
+  explicit PrimitiveTransform(const Bravais c): bravais{c} {}
+  [[deprecated("Call with an enum Bravais instead")]] explicit PrimitiveTransform(const Spacegroup& s): bravais{s.bravais} {}
+  [[deprecated("Call with an enum Bravais instead")]] explicit PrimitiveTransform(const int hall){
     Spacegroup s(hall);
     this->bravais = s.bravais;
   }
@@ -192,7 +192,7 @@ public:
   \returns a flattened-3x3 representation of the matrix
   */
   [[nodiscard]] std::array<int,9> get_invPt() const { return transpose(this->get_invP());}
-  void print(){
+  void print() const{
     auto sixM = this->get_6P();
     auto invM = this->get_invP();
     for (int i=0; i<3; ++i){

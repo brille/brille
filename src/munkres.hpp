@@ -91,7 +91,7 @@ public:
     T sum = 0;
     for (size_t i=0; i < cost.size(); ++i) sum+=std::abs(cost[i]);
     // If there is cost information we're not done yet.
-    bool done = (sum>0) ? false : true;
+    bool done = sum <= 0;
     while (!done) {
       // show();
       switch (step) {
@@ -108,9 +108,9 @@ public:
     return finished;
   }
   //! Get a mutable reference to the cost matrix, useful for filling.
-  std::vector<T>& get_cost(void){ return cost;}
+  std::vector<T>& get_cost(){ return cost;}
   //! Get an immutable reference to the cost matrix
-  const std::vector<T>& get_cost(void) const { return cost; }
+  const std::vector<T>& get_cost() const { return cost; }
   /*! After the assignment algorithm has run, use get_assignment to retrieve
       the result
       @param[out] out A size_t pointer at which the N task assignments will be stored
@@ -126,8 +126,8 @@ public:
     return finished;
   }
   //! Return a string representation of the current assignment step
-  std::string to_string() const {
-    std::string x = "X", star = "*", prime = "'", blank = "";
+  [[nodiscard]] std::string to_string() const {
+    std::string x = "X", star = "*", prime = "'", blank;
     std::string repr= "step=" + std::to_string(step) + "\t";
     for (size_t c=0; c<N; ++c) repr += (colcover[c] ? x : blank) + "\t";
     repr += "\n";
@@ -166,7 +166,7 @@ private:
   long long get_col_of_star_in_row(const long long &row){
     bool sir = false;
     long long col = -1;
-    size_t r = (size_t) row;
+    auto r = (size_t) row;
     for (size_t c=0; c<N && !sir; ++c) if (mask[r*N+c]==marker::STARED){
       sir = true;
       col = (long long) c;
@@ -231,8 +231,8 @@ private:
         done = true;
         step = 6;
       } else {
-        size_t r = (size_t)row;
-        size_t c = (size_t)col;
+        auto r = (size_t)row;
+        auto c = (size_t)col;
         mask[r*N+c] = marker::PRIMED;
         col = get_col_of_star_in_row(row);
         if (col>=0) {

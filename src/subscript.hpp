@@ -22,6 +22,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 */
 #include <algorithm>
 #include <array>
+#include <utility>
 #include <vector>
 #include <cassert>
 #include <iostream>
@@ -98,7 +99,7 @@ public:
   explicit SubIt()
   : _shape({0}), _inpt({0}), _sub({0}), _fixed({false}), _first(0)
   {}
-  SubIt(const holder& _sh)
+  explicit SubIt(const holder& _sh)
   : _shape(_sh), _first(0)
   {
     size_t n = _shape.size();
@@ -119,8 +120,8 @@ public:
     }
     this->find_first();
   }
-  SubIt(const holder& _sh, const holder& _in, const holder& _s, const std::vector<bool>& _f)
-  : _shape(_sh), _inpt(_in), _sub(_s), _fixed(_f)
+  SubIt(const holder& _sh, const holder& _in, const holder& _s, std::vector<bool> _f)
+  : _shape(_sh), _inpt(_in), _sub(_s), _fixed(std::move(_f))
   {
     this->find_first();
   }
@@ -128,7 +129,7 @@ public:
   SubIt(const SubIt<T>& o)
   : _shape(o._shape), _inpt(o._inpt), _sub(o._sub), _fixed(o._fixed), _first(o._first)
   {}
-  SubIt(const SubIt<T>* o)
+  explicit SubIt(const SubIt<T>* o)
   : _shape(o->_shape), _inpt(o->_inpt), _sub(o->_sub), _fixed(o->_fixed), _first(o->first)
   {}
 
@@ -142,7 +143,7 @@ public:
   }
 
   const holder& shape() const {return _shape;}
-  size_t ndim() const {return _shape.size();}
+  [[nodiscard]] size_t ndim() const {return _shape.size();}
   SubIt& operator++(){
     size_t n = this->ndim();
     for (size_t dim=n; dim-->0; ) if (!_fixed[dim]) {
@@ -211,7 +212,7 @@ public:
   explicit SubIt2()
   : _shape({0,0}), _inpt({0,0}), _sub({0,0}), _fixed({false,false}), _first(0)
   {}
-  SubIt2(const holder& _sh)
+  explicit SubIt2(const holder& _sh)
   : _shape(_sh), _first(0)
   {
     _inpt = holder({T(0), T(0)});
@@ -238,7 +239,7 @@ public:
   SubIt2(const SubIt2<T>& o)
   : _shape(o._shape), _inpt(o._inpt), _sub(o._sub), _fixed(o._fixed), _first(o._first)
   {}
-  SubIt2(const SubIt2<T>* o)
+  explicit SubIt2(const SubIt2<T>* o)
   : _shape(o->_shape), _inpt(o->_inpt), _sub(o->_sub), _fixed(o->_fixed), _first(o->first)
   {}
 
@@ -252,7 +253,7 @@ public:
   }
 
   const holder& shape() const {return _shape;}
-  size_t ndim() const {return 2;}
+  [[nodiscard]] size_t ndim() const {return 2;}
   SubIt2& operator++(){
     size_t n = 2;
     for (size_t dim=n; dim-->0; ) if (!_fixed[dim]) {
@@ -336,7 +337,7 @@ public:
   : _shape0(a), _shape1(b), _shapeO(a.size(),0), _sub0(a.size(),0), _sub1(a.size(),0), _subO(a.size(),0)
   {
     assert(_shape0.size() == _shape1.size());
-    size_t nd = _shape0.size();
+    auto nd = _shape0.size();
     for (size_t i=0; i<nd; ++i)
       if (_shape0[i]!=_shape1[i] && _shape0[i]!=1 && _shape1[i]!=1){
         std::string msg = "Can not broadcast { ";
@@ -355,7 +356,7 @@ public:
   }
 
   holder shape() const {return _shapeO;}
-  size_t ndim() const {return _shapeO.size();}
+  [[nodiscard]] size_t ndim() const {return _shapeO.size();}
   T size() const {
     T prod{1};
     for (const auto & x: _shapeO) prod *= x;
@@ -481,7 +482,7 @@ public:
   }
 
   holder shape() const {return _shapeO;}
-  size_t ndim() const {return 2;}
+  [[nodiscard]] size_t ndim() const {return 2;}
   T size() const {return _shapeO[0] * _shapeO[1];}
   //const SubIt<T>& itr() const {return _itr;}
 

@@ -372,10 +372,6 @@ public:
   template<typename... A> void set_vector_cost_info(A... args) {data_.set_vector_cost_info(args...);}
   //! Return the number of bytes used per Q point
   size_t bytes_per_point() const {return data_.bytes_per_point(); }
-  template<template<class> class A>
-  brille::Array<double> debye_waller(const A<double>& Qpts, const std::vector<double>& Masses, const double t_K) const{
-    return data_.debye_waller(Qpts,Masses,t_K);
-  }
   void sort() {data_.sort();}
 private:
   void construct(const Polyhedron&, const size_t, const double);
