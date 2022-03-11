@@ -2,12 +2,14 @@
 #define _BRILLE_POLYHEDRON_FACES_HPP_
 
 #include <atomic>
-#include "polyhedron.hpp"
-#include "lattice_dual.hpp"
-
+#include <random>
 #include <utility>
+
+#include "lattice_dual.hpp"
 #include "array_.hpp"
 #include "array_lvec.hpp"
+#include "geometry.hpp"
+
 namespace brille::polyhedron{
   template<class T, template<class> class A> std::enable_if_t<isBareArray<T,A>, A<T>>
   get_hkl(const A<T>& x){

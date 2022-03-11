@@ -21,8 +21,9 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief A class to interact with TetGen in the simplest case
 */
-#include "tetgen.h"
+
 #include "polyhedron_flex.hpp"
+#include "array_tetgen.hpp"
 
 namespace brille::polyhedron {
 

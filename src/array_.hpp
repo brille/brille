@@ -35,11 +35,13 @@ namespace brille {
   namespace lattice {
   template<class T> class LVec;
   }
-}
-template<class T> using bArray = brille::Array2<T>;
 
-#include "array_attributes.hpp"
+  template<class T> using bArray = Array2<T>;
+}
+//template<class T> using bArray = brille::Array2<T>;
 #include "array.hpp"
 #include "array2.hpp"
+#include "array_attributes.hpp"
+#include "array_functions.hpp"
 
 #endif

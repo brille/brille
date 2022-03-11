@@ -179,6 +179,16 @@ bool Symmetry::has_space_inversion() const {
   return false;
 }
 
+Symmetry Symmetry::add_space_inversion() const {
+  if (this->has_space_inversion()) return *this;
+  auto gens = this->generators();
+  // add time-reversal/space-inversion
+  std::array<int,9> inversion{{-1,0,0, 0,-1,0, 0,0,-1}};
+  std::array<double,3> zero{{0,0,0}};
+  gens.add(inversion, zero);
+  return gens.generate();
+}
+
 size_t Symmetry::find_matrix_index(const Matrix<int>& m) const {
   auto itr = std::find_if(this->M.begin(), this->M.end(), [m](const Motion<int,double>& Mot){return Mot.equal_matrix(m);});
   return std::distance(this->M.begin(), itr);

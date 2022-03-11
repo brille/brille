@@ -2,7 +2,7 @@
 #define _BRILLE_POLYHEDRON_FLEX_HPP_
 
 #include <utility>
-#include "polyhedron.hpp"
+//#include "polyhedron.hpp"
 #include "lattice_dual.hpp"
 #include "array_lvec.hpp"
 #include "polyhedron_faces.hpp"

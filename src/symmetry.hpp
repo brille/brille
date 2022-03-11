@@ -165,6 +165,7 @@ public:
   bool operator!=(const Symmetry& other) const { return !this->operator==(other);}
   //! Check whether the Motions contain (̄𝟙, ⃗0)
   bool has_space_inversion() const;
+  [[nodiscard]] Symmetry add_space_inversion() const;
   /*! \brief Find a Matrix in the Motions and return its index
 
   If none of the Motions have a matching Matrix part the total number of

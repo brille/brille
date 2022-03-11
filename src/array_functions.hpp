@@ -14,12 +14,21 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-
+#ifndef BRILLE_ARRAY_FUNCTIONS_HPP_
+#define BRILLE_ARRAY_FUNCTIONS_HPP_
 /*!
 \file
 \author Greg Tucker
 \brief Implementations of template functions for Array2 and LatVec objects
 */
+
+#include "array_attributes.hpp"
+#include "types.hpp"
+#include "utilities.hpp"
+#include "enums.hpp"
+#include "array_.hpp"
+
+namespace brille {
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS // opeator overloading macros
 // In order to overload operations between bArrays and LatVecs unambiguously
@@ -154,8 +163,8 @@ ARRAY_LATVEC_BINARY_OP(/)
   So this variant must be used instead:
 ==============================================================================*/
   // cross (Array × Array)
-  template<class T, class R, template<class> class L>
-  std::enable_if_t<bareArrays<T,L,R,L>, L<double>>
+  template<class T, class R, template<class> class L, class S=std::common_type_t<T, R>>
+  std::enable_if_t<bareArrays<T,L,R,L>, L<S>>
   cross(const L<T>& a, const L<R>& b) {
     using namespace brille::utils;
     assert( a.size(1) == 3 && b.size(1)==3 );
@@ -163,15 +172,15 @@ ARRAY_LATVEC_BINARY_OP(/)
     brille::ind_t aN=a.size(0), bN=b.size(0);
     assert( 1u==aN || 1u==bN || aN==bN );
     brille::ind_t oO = (1u == aN) ? bN : aN;
-    bArray<double> oarray(oO, 3u); // row-ordered contiguous
+    auto oarray = L<S>(oO, 3u); // row-ordered contiguous
     if (1u == aN || 1u == bN){
       if (1u == aN){
-        for (brille::ind_t j=0; j<bN; ++j) vector_cross<double,T,R,3>(oarray.ptr(j), a.ptr(0), b.ptr(j));
+        for (brille::ind_t j=0; j<bN; ++j) vector_cross<S,T,R,3>(oarray.ptr(j), a.ptr(0), b.ptr(j));
       } else {
-        for (brille::ind_t j=0; j<aN; ++j) vector_cross<double,T,R,3>(oarray.ptr(j), a.ptr(j), b.ptr(0));
+        for (brille::ind_t j=0; j<aN; ++j) vector_cross<S,T,R,3>(oarray.ptr(j), a.ptr(j), b.ptr(0));
       }
     } else {
-      for (brille::ind_t j=0; j<aN; ++j) vector_cross<double,T,R,3>(oarray.ptr(j), a.ptr(j), b.ptr(j));
+      for (brille::ind_t j=0; j<aN; ++j) vector_cross<S,T,R,3>(oarray.ptr(j), a.ptr(j), b.ptr(j));
     }
     return oarray;
   }
@@ -210,8 +219,8 @@ ARRAY_LATVEC_BINARY_OP(/)
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 // dot (Array2 ⋅ Array2)
-template<class T, class R, template<class> class A>
-std::enable_if_t<bareArrays<T,A,R,A>, A<double>>
+template<class T, class R, template<class> class A, class S=std::common_type_t<T,R>>
+std::enable_if_t<bareArrays<T,A,R,A>, A<S>>
 dot(const A<T>& a, const A<R>& b) {
   using namespace brille::utils;
   assert( a.size(1) == b.size(1) );
@@ -219,15 +228,15 @@ dot(const A<T>& a, const A<R>& b) {
   brille::ind_t aN=a.size(0), bN=b.size(0), d=a.size(1);
   assert( 1u==aN || 1u==bN || aN==bN );
   brille::ind_t oO = (1u == aN) ? bN : aN;
-  bArray<double> oarray(oO, 1u);
+  auto oarray = A<S>(oO, 1u);
   if (1u==aN || 1u==bN) {
     if (1u==aN){
-      for (brille::ind_t i=0; i<bN; ++i) oarray.val(i,0) = vector_dot<double,T,R>(d, a.ptr(0), b.ptr(i));
+      for (brille::ind_t i=0; i<bN; ++i) oarray.val(i,0) = vector_dot<S,T,R>(d, a.ptr(0), b.ptr(i));
     } else {
-      for (brille::ind_t i=0; i<aN; ++i) oarray.val(i,0) = vector_dot<double,T,R>(d, a.ptr(i), b.ptr(0));
+      for (brille::ind_t i=0; i<aN; ++i) oarray.val(i,0) = vector_dot<S,T,R>(d, a.ptr(i), b.ptr(0));
     }
   } else {
-    for (brille::ind_t i=0; i<aN; ++i) oarray.val(i,0) = vector_dot<double,T,R>(d, a.ptr(i), b.ptr(i));
+    for (brille::ind_t i=0; i<aN; ++i) oarray.val(i,0) = vector_dot<S,T,R>(d, a.ptr(i), b.ptr(i));
   }
   return oarray;
 }
@@ -243,8 +252,8 @@ same_lattice_dot(const A<R>& x, const A<T>& y, const std::array<double,9>& metri
 }
 
 // dot [LatVec ⋅ LatVec]
-template<class T, class R, template<class> class L1, template<class> class L2>
-std::enable_if_t<bothLatVecs<T,L1,R,L2>, bArray<double>>
+template<class T, class R, template<class> class L1, template<class> class L2, class S=std::common_type_t<T,R>>
+std::enable_if_t<bothLatVecs<T,L1,R,L2>, bArray<S>>
 dot(const L1<T> &a, const L2<R> &b){
   bool is_star = a.star_lattice(b);
   if (!( is_star || a.same_lattice(b) )){
@@ -261,7 +270,7 @@ dot(const L1<T> &a, const L2<R> &b){
   brille::ind_t aN=a.size(0), bN=b.size(0);
   assert( 1u==aN || 1u==bN || aN==bN );
   brille::ind_t oO = (1u == aN) ? bN : aN;
-  bArray<double> oarray(oO, 1u);
+  auto oarray = bArray<S>(oO, 1u);
   auto met = a.lattice().metric();
   if (1u==aN || 1u==bN){
     if (1u==aN) {
@@ -306,7 +315,7 @@ dot(const L1<T> &a, const L2<R> &b){
   template<class T, template<class> class L>
   std::enable_if_t<isLatVec<T,L>, bArray<double>>
   norm(const L<T> &a){
-    bArray<double> out = dot(a,a);
+    auto out = dot(a,a);
     for (auto& x: out.valItr()) x = std::sqrt(x);
     return out;
   }
@@ -503,6 +512,13 @@ from_std_like(const A<T>& lv, std::vector<std::array<T,3>> components){
 }
 
 template<class T, template<class> class A>
+  std::enable_if_t<isArray<T,A>, A<T>>
+  from_std_like(const A<T> & v, std::array<T,3> one) {
+    std::vector<std::array<T,3>> components{one};
+    return from_std_like(v, components);
+}
+
+template<class T, template<class> class A>
 std::enable_if_t<isBareArray<T,A>, bArray<T>>
 triple_product(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
   bArray<T> out(a.size(0), 1u);
@@ -526,25 +542,6 @@ triple_product(const A<T>& v, const B<I>& i){
 }
 
 template<class T, template<class> class A>
-std::enable_if_t<isBareArray<T,A>, std::array<T,4>>
-four_point_sphere(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
-  std::array<T,4> z;
-  tetgenmesh tgm;
-  tgm.circumsphere(a.ptr(0), b.ptr(0), c.ptr(0), d.ptr(0), z.data(), z.data()+3);
-  return z;
-}
-template<class T, template<class> class A>
-std::enable_if_t<isLatVec<T,A>, std::array<T,4>>
-four_point_sphere(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
-  return four_point_sphere(a.get_xyz(), b.get_xyz(), c.get_xyz(), d.get_xyz());
-}
-template<class T, class I, template<class> class A, template<class> class B>
-std::enable_if_t<(isArray<T,A> && isBareArray<I,B> && std::is_integral_v<I>), std::array<T,4>>
-four_point_sphere(const A<T>& v, const B<I>& i){
-  return four_point_sphere(v.view(i[0]), v.view(i[1]), v.view(i[2]), v.view(i[3]));
-}
-
-template<class T, template<class> class A>
   std::enable_if_t<isBareArray<T,A>, A<T>> get_xyz(const A<T>& array){return array;}
 
 template<class T, template<class> class A>
@@ -562,3 +559,6 @@ std::enable_if_t<isLatVec<T,A>&&isBareArray<T,B>, A<T>>
 from_xyz_like(const A<T>& lv, const B<T>& b){
   return A<T>::from_invA(lv.type(), lv.lattice(), b);
 }
+
+}
+#endif

@@ -1,8 +1,9 @@
 #include "bz.hpp"
 
 using namespace brille;
+using namespace brille::lattice;
 
-void BrillouinZone::_moveinto_prim(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, const LQVec<double>& pa, const LQVec<double>& pb, const LQVec<double>& pc) const {
+void BrillouinZone::_moveinto_prim(const LVec<double>& Q, LVec<double>& q, LVec<int>& tau, const LVec<double>& pa, const LVec<double>& pb, const LVec<double>& pc) const {
   // Q, q, tau *must* be in the primitive lattice already
 
   // the face centre points and normals in the primitive lattice
@@ -46,8 +47,8 @@ void BrillouinZone::_moveinto_prim(const LQVec<double>& Q, LQVec<double>& q, LQV
             max_nm = N_hkl[max_at = j];
           }
         }
-        q_i -= taus.view(max_at) * static_cast<double>(max_nm); // ensure we subtract LQVec<double>
-        tau_i += taus.view(max_at) * max_nm; // but add LQVec<int>
+        q_i -= taus.view(max_at) * static_cast<double>(max_nm); // ensure we subtract LVec<double>
+        tau_i += taus.view(max_at) * max_nm; // but add LVec<int>
         last_shift = taus.view(max_at) * max_nm;
       }
     }
@@ -56,15 +57,15 @@ void BrillouinZone::_moveinto_prim(const LQVec<double>& Q, LQVec<double>& q, LQV
   }
 }
 
-bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, const int threads) const {
+bool BrillouinZone::moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int>& tau, const int threads) const {
   profile_update("BrillouinZone::moveinto called with ",threads," threads");
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
-  bool already_same = lattice.issame(Q.get_lattice());
-  LQVec<double> Qprim(lattice);
-  LQVec<double> qprim(lattice);
-  LQVec<int> tauprim(lattice);
-  PrimitiveTransform PT(_outer.get_bravais_type());
-  bool transform_needed = PT.does_anything() && _outer.issame(Q.get_lattice());
+  bool already_same = _inner.is_same(Q.lattice());
+  LVec<double> Qprim(Q.type(), _inner);
+  LVec<double> qprim(q.type(), _inner);
+  LVec<int> tauprim(tau.type(), _inner);
+  PrimitiveTransform PT(_outer.bravais());
+  bool transform_needed = PT.does_anything() && _outer.is_same(Q.lattice());
   if (!(already_same || transform_needed)){
     std::string msg = "Q points provided to BrillouinZone::moveinto must be ";
     msg += "in the standard or primitive lattice used to define ";
@@ -72,15 +73,14 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
     throw std::runtime_error(msg);
   }
   if (transform_needed)  Qprim = transform_to_primitive(_outer,Q);
-  const LQVec<double> & Qsl = transform_needed ? Qprim : Q;
-  LQVec<double> & qsl = transform_needed ? qprim : q;
-  LQVec<int> & tausl = transform_needed? tauprim : tau;
+  const auto & Qsl = transform_needed ? Qprim : Q;
+  auto & qsl = transform_needed ? qprim : q;
+  auto & tausl = transform_needed? tauprim : tau;
 
-  LQVec<double> a, b, c, pa, pb, pc;
-  std::tie(a,b,c) = _first.planes();
-  pa = transform_to_primitive(_outer, a);
-  pb = transform_to_primitive(_outer, b);
-  pc = transform_to_primitive(_outer, c);
+  auto [a, b, c] = _first.planes();
+  auto pa = transform_to_primitive(_outer, a);
+  auto pb = transform_to_primitive(_outer, b);
+  auto pc = transform_to_primitive(_outer, c);
 
 //
 //  // the face centre points and normals in the primitive lattice:
@@ -114,8 +114,8 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
 //          if (Nhkl[j]>0 && Nhkl[j]>=maxnm && (0==maxnm || (norm(taus.view(j)+last_shift).all(brille::cmp::gt, 0.) && qidn[j]>qidn[maxat]))){
 //            maxnm = Nhkl[maxat=j];
 //          }
-//        qi -= taus.view(maxat) * static_cast<double>(maxnm); // ensure we subtract LQVec<double>
-//        taui += taus.view(maxat) * maxnm; // but add LQVec<int>
+//        qi -= taus.view(maxat) * static_cast<double>(maxnm); // ensure we subtract LVec<double>
+//        taui += taus.view(maxat) * maxnm; // but add LVec<int>
 //        last_shift = taus.view(maxat) * maxnm;
 //      }
 //    }
@@ -145,20 +145,20 @@ bool BrillouinZone::moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int
     info_update("outside Q:\nnp.array(\n", Q.extract(allinside).to_string(), ")");
     info_update("outside tau:\nnp.array(\n", tau.extract(allinside).to_string(), ")");
     info_update("outside q\nnp.array(\n", q.extract(allinside).to_string(), ")");
-    info_update("outside q(xyz)\nnp.array(\n", q.extract(allinside).get_xyz().to_string(), ")");
+    info_update("outside q(xyz)\nnp.array(\n", q.extract(allinside).xyz().to_string(), ")");
     throw std::runtime_error("Not all points inside Brillouin zone");
     // return false;
   }
   return true; // otherwise, an error has been thrown
 }
 
-bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<int>& tau, std::vector<size_t>& Ridx, std::vector<size_t>& invRidx, const int threads) const {
+bool BrillouinZone::ir_moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int>& tau, std::vector<size_t>& Ridx, std::vector<size_t>& invRidx, const int threads) const {
   profile_update("BrillouinZone::ir_moveinto called with ",threads," threads");
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   /* The Point group symmetry information has all rotation matrices defined
      * in the conventional unit cell -- which is our `_outer`.
      * Consequently, we must work in the outer lattice here.  */
-  if (!_outer.issame(Q.get_lattice()))
+  if (!_outer.is_same(Q.lattice()))
     throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
   // ensure q, tau, and Rm can hold one for each Q.
   ind_t nQ = Q.size(0);
@@ -170,7 +170,7 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
   // find q₁ₛₜ in the first Brillouin zone and τ ∈ [reciprocal lattice vectors]
   // such that Q = q₁ₛₜ + τ
   this->moveinto(Q, q, tau, threads);
-  auto lat = Q.get_lattice();
+  auto lat = Q.lattice();
   // OpenMP 2 (VS) doesn't like unsigned loop counters
   size_t n_outside{0};
   auto snQ = utils::u2s<long long, ind_t>(nQ);
@@ -179,7 +179,7 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
     // get the PointSymmetry object, containing all operations
     PointSymmetry psym = this->get_pointgroup_symmetry();
     auto eidx = psym.find_identity_index();
-    LQVec<double> qj(lat, 1u); // a place to hold the multiplication result
+    std::array<double,3> q_j{0,0,0}; // temporary result storage
     std::vector<std::array<int, 9>> r_transpose;
     for (const auto& r: psym.getall()) r_transpose.push_back(transpose(r));
 #pragma omp for schedule(dynamic)
@@ -194,11 +194,12 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
         for (ind_t j = 0; j < psym.size(); ++j) if (inside) break; else {
             // The point symmetry matrices relate *real space* vectors!
             // We must use their transposes' to rotate reciprocal space vectors.
-            utils::multiply_matrix_vector(qj.ptr(0), r_transpose[j].data(), q.ptr(i));
-            if (_inside_wedge_outer(qj)) {
+            utils::multiply_matrix_vector(q_j.data(), r_transpose[j].data(), q.ptr(i));
+            auto lq_j = from_std_like(q, q_j);
+            if (_inside_wedge_outer(lq_j)) {
               /* store the result */
               // and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.
-              q.set(i, qj);   // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
+              q.set(i, lq_j);   // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
               invRidx[i] = j; // Rⱼ *is* the inverse of what we want for output
               Ridx[i] = psym.get_inverse_index(j); // find the index of Rⱼ⁻¹
               inside = true;
@@ -219,28 +220,29 @@ bool BrillouinZone::ir_moveinto(const LQVec<double>& Q, LQVec<double>& q, LQVec<
 }
 
 
-bool BrillouinZone::ir_moveinto_wedge(const LQVec<double>& Q, LQVec<double>& q, std::vector<size_t>& R, const int threads) const {
+bool BrillouinZone::ir_moveinto_wedge(const LVec<double>& Q, LVec<double>& q, std::vector<size_t>& R, const int threads) const {
   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   /* The Pointgroup symmetry information comes from, effectively, spglib which
   has all rotation matrices defined in the conventional unit cell -- which is
   our `_outer`. Consequently we must work in the _outer here.  */
-  if (!_outer.issame(Q.get_lattice()))
+  if (!_outer.is_same(Q.lattice()))
     throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
   // ensure q and R can hold one for each Q.
   ind_t nQ = Q.size(0);
   auto Qshape = Q.shape();
   q.resize(Qshape);
   R.resize(nQ);
-  auto lat = Q.get_lattice();
+  auto lat = Q.lattice();
   // OpenMP 2 (VS) doesn't like unsigned loop counters
   size_t n_outside{0};
   auto snQ = brille::utils::u2s<long long, ind_t>(nQ);
 #pragma omp parallel default(none) shared(R, q, Q, lat, snQ) reduction(+:n_outside)
   {
     // get the PointSymmetry object, containing all operations
-    PointSymmetry psym = this->_outer.get_pointgroup_symmetry(this->time_reversal);
+    auto psym = this->_outer.pointgroup_symmetry();
+    if (time_reversal) psym = psym.add_space_inversion();
     auto eidx = psym.find_identity_index();
-    LQVec<double> qj(lat, 1u);
+    std::array<double, 3> q_j{0,0,0}; // temporary result storage
     std::vector<std::array<int, 9>> r_transpose;
     for (const auto& r: psym.getall()) r_transpose.push_back(transpose(r));
 #pragma omp for schedule(dynamic)
@@ -255,9 +257,10 @@ bool BrillouinZone::ir_moveinto_wedge(const LQVec<double>& Q, LQVec<double>& q, 
         // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
         for (ind_t j = 0; j < psym.size(); ++j) if (inside) break; else {
             // The point symmetry matrices relate *real space* vectors! We must use their transposes' to rotate reciprocal space vectors.
-            brille::utils::multiply_matrix_vector(qj.ptr(0), r_transpose[j].data(), Q.ptr(i));
-            if (_inside_wedge_outer(qj)) { /* store the result */
-              q.set(i, qj); // keep Rⱼᵀ⋅Qᵢ as qᵢᵣ
+            brille::utils::multiply_matrix_vector(q_j.data(), r_transpose[j].data(), Q.ptr(i));
+            auto lq_j = from_std_like(Q, q_j);
+            if (_inside_wedge_outer(lq_j)) { /* store the result */
+              q.set(i, lq_j); // keep Rⱼᵀ⋅Qᵢ as qᵢᵣ
               R[i] = psym.get_inverse_index(j); // and (Rⱼᵀ)⁻¹ ∈ G, such that Q = (Rⱼᵀ)⁻¹⋅qᵢᵣ
               inside = true;
             }

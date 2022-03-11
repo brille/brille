@@ -26,11 +26,14 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <utility>
 #include "lattice_dual.hpp"
 #include "tetgen.h"
+#include "types.hpp"
+#include "enums.hpp"
+#include "array_.hpp"
 // #include "array2.hpp"
 
 //! An alias used while deciding between Array and Array2 for data storage
-template<class T>
-using bArray = brille::Array2<T>;
+//template<class T>
+//using bArray = brille::Array2<T>;
 
 namespace brille::lattice {
 
@@ -233,9 +236,8 @@ protected:
 template<class T, class ... P> LVec<T> LDVec(P ... args) {return LVec<T>(LengthUnit::angstrom, args ...);}
 template<class T, class ... P> LVec<T> LQVec(P ... args) {return LVec<T>(LengthUnit::inverse_angstrom, args ...);}
 
-#include "array_lvec_functions.tpp"
 #include "array_lvec_methods.tpp"
 
-  }
+}
 
 #endif
