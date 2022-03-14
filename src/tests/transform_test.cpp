@@ -33,55 +33,38 @@ TEST_CASE("primitive transforms","[transform]"){
 }
 
 TEST_CASE("primitive vector transforms","[transform]"){
-  std::string spgr;
-  SECTION("Primitive spacegroup"){    spgr = "P 1";   }
-  SECTION("Body-centred spacegroup"){ spgr = "Im-3m"; }
-  SECTION("Face-centred spacegroup"){ spgr = "Fmm2";  }
-  auto lat = Direct<double>({1,1,1}, {half_pi, half_pi, half_pi}, spgr);
+  auto run_tests = [] (const std::string& spgr, const LengthUnit lu){
+    auto lat = Direct<double>({1,1,1}, {half_pi, half_pi, half_pi}, spgr);
 
-  std::default_random_engine gen(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
-  std::uniform_real_distribution<double> dst(-5.0,5.0);
+    std::default_random_engine gen(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
+    std::uniform_real_distribution<double> dst(-5.0,5.0);
 
-  int nQ = 33;
-  std::vector<std::array<double,3>> rawQ;
-  for (int i=0; i<nQ; ++i) rawQ.push_back({dst(gen), dst(gen), dst(gen)});
-  auto V = LDVec<double>(lat, bArray<double>::from_std(rawQ));
-  auto Q = LQVec<double>(lat, bArray<double>::from_std(rawQ));
+    int nQ = 500;
+    std::vector<std::array<double,3>> rawQ;
+    rawQ.reserve(nQ);
+    for (int i=0; i<nQ; ++i) rawQ.push_back({dst(gen), dst(gen), dst(gen)});
+//    for (int i=0; i<nQ; ++i) rawQ.push_back({static_cast<double>(i), static_cast<double>(i*i), static_cast<double>(i*i*i)});
 
-  auto Vp = transform_to_primitive(lat, V);
+    auto V = LVec<double>(lu, lat, bArray<double>::from_std(rawQ));
+    auto Vp = transform_to_primitive(lat, V);
+    // Test 1: make sure that |Vᵢ|==|Vpᵢ|
+    for (int i=0; i<nQ; ++i)
+      REQUIRE( Vp.norm(i) == Approx(V.norm(i)) );
+    // Test 2: Check components, expressed in absolute LengthUnit units
+    auto Vxyz = V.xyz();
+    auto Vpxyz = Vp.xyz();
+    for (int i=0; i<nQ; ++i) REQUIRE( Vxyz.norm(i) == Approx(Vpxyz.norm(i)) );
+    // Test 2a: Verify that the individual components are the same in the cartesian coordinate system
+    for (auto i: V.subItr()) REQUIRE(Vpxyz[i] == Approx(Vxyz[i]));
 
-  // Test 1: make sure that |Vᵢ|==|Vpᵢ| and |Qᵢ|==|Qpᵢ|
-  for (int i=0; i<nQ; ++i)
-    REQUIRE( Vp.norm(i) == Approx(V.norm(i)) );
-  // Test 2: Check compoments, expressed in inverse Angstrom:
-  auto Vxyz = V.xyz();
-  auto Vpxyz = Vp.xyz();
-  for (int i=0; i<nQ; ++i)
-    REQUIRE( Vxyz.norm(i) == Approx(Vpxyz.norm(i)) );
-  // // THE FOLLOWING WILL FAIL, since the xyz coordinate system is arbitrarily
-  // // aligned with x along a, and the direction of a and a' are not guaranteed
-  // // to be the same!
-  // for (auto i: SubIt(V.shape())) REQUIRE(Vpxyz[i] == Approx(Vxyz[i]));
-
-  // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
-  auto pVp = transform_from_primitive(lat,Vp);
-  for (auto i: V.subItr()) REQUIRE(pVp[i] == Approx(V[i]));
-
-  auto Qp = transform_to_primitive(lat, Q);
-  // Test 1: make sure that |Qᵢ|==|Qpᵢ|
-  for (int i=0; i<nQ; ++i)
-    REQUIRE( Qp.norm(i) == Approx(Q.norm(i)) );
-  // Test 2: Check compoments, expressed in inverse Angstrom:
-  bArray<double> Qxyz = Q.xyz();
-  bArray<double> Qpxyz = Qp.xyz();
-  for (int i=0; i<nQ; ++i)
-    REQUIRE( Qxyz.norm(i) == Approx(Qpxyz.norm(i)) );
-  // // THE FOLLOWING WILL FAIL, since the xyz coordinate system is arbitrarily
-  // // aligned with x along a, and the direction of a and a' are not guaranteed
-  // // to be the same!
-  // for (auto i: SubIt(Q.shape())) REQUIRE(Qpxyz[i] == Approx(Qxyz[i]));
-
-  // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
-  auto pQp = transform_from_primitive(lat, Qp);
-  for (auto i: Q.subItr()) REQUIRE(pQp[i] == Approx(Q[i]));
+    // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
+    auto pVp = transform_from_primitive(lat,Vp);
+    for (auto i: V.subItr()) REQUIRE(pVp[i] == Approx(V[i]));
+  };
+  SECTION("Primitive, direct"){    run_tests("P 1", LengthUnit::angstrom);   }
+  SECTION("Body-centred, direct"){ run_tests("Im-3m", LengthUnit::angstrom); }
+  SECTION("Face-centred, direct"){ run_tests("Fmm2", LengthUnit::angstrom);  }
+  SECTION("Primitive, reciprocal"){    run_tests("P 1", LengthUnit::inverse_angstrom);   }
+  SECTION("Body-centred, reciprocal"){ run_tests("Im-3m", LengthUnit::inverse_angstrom); }
+  SECTION("Face-centred, reciprocal"){ run_tests("Fmm2", LengthUnit::inverse_angstrom);  }
 }

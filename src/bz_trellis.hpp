@@ -56,17 +56,17 @@ public:
   //! get the BrillouinZone object
   [[nodiscard]] BrillouinZone get_brillouinzone() const {return this->bz_;}
   //! get the vertices of the trellis in absolute units
-  [[nodiscard]] bArray<S> get_xyz() const {return this->vertices().get_xyz();}
+  [[nodiscard]] bArray<S> get_xyz() const {return this->vertices().xyz();}
   //! get the vertices of the inner (cubic) nodes in absolute units
-  [[nodiscard]] bArray<S> get_inner_xyz() const {return this->cube_vertices().get_xyz(); }
+  [[nodiscard]] bArray<S> get_inner_xyz() const {return this->cube_vertices().xyz(); }
   //! get the vertices of the outer (polyhedron) nodes in absolute units
-  [[nodiscard]] bArray<S> get_outer_xyz() const {return this->poly_vertices().get_xyz(); }
+  [[nodiscard]] bArray<S> get_outer_xyz() const {return this->poly_vertices().xyz(); }
   //! get the vertices of the trellis in relative lattice units
-  [[nodiscard]] bArray<S> get_hkl() const { return this->vertices().get_hkl();}
+  [[nodiscard]] bArray<S> get_hkl() const { return this->vertices().hkl();}
   //! get the vertices of the inner (cubic) nodes in relative lattice units
-  [[nodiscard]] bArray<S> get_inner_hkl() const {return this->cube_vertices().get_hkl(); }
+  [[nodiscard]] bArray<S> get_inner_hkl() const {return this->cube_vertices().hkl(); }
   //! get the vertices of the outer (polyhedron) nodes in relative lattice units
-  [[nodiscard]] bArray<S> get_outer_hkl() const {return this->poly_vertices().get_hkl(); }
+  [[nodiscard]] bArray<S> get_outer_hkl() const {return this->poly_vertices().hkl(); }
   //! get the indices forming the faces of the tetrahedra
   [[nodiscard]] std::vector<std::array<brille::ind_t,4>> get_vertices_per_tetrahedron() const {return this->vertices_per_tetrahedron();}
 

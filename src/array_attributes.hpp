@@ -20,10 +20,6 @@ template<class T> struct ArrayTraits<bArray<T>>{
   static constexpr bool array = true;
   static constexpr bool latvec = false;
 };
-template<class T> struct ArrayTraits<lattice::LVec<T>>{
-  static constexpr bool array = true;
-  static constexpr bool latvec = true;
-};
 #endif
 
 /*! Easier access to ArrayTraits for template substitution

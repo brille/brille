@@ -86,13 +86,14 @@ or more 3-vector in units of a real-space-spanning lattice.
 template<class T>
 class LVec: public bArray<T>{
 public:
-  using lattice_t = Lattice<double>;
+  using metric_t = double; // this should probably be a template parameter
+  using lattice_t = Lattice<metric_t>;
   using type_t = LengthUnit;
 private:
   type_t _type;
   lattice_t _lattice;
 public:
-  explicit LVec(type_t typ=LengthUnit::inverse_angstrom): _type(typ), lattice_t() {}
+  explicit LVec(type_t typ=LengthUnit::inverse_angstrom): _type(typ), _lattice() {}
   // default constructor for zero three-vectors:
   LVec(type_t typ, lattice_t lat): bArray<T>(0,3), _type(typ), _lattice(std::move(lat))
   {}
@@ -111,7 +112,7 @@ public:
   }
   template<class R>
   explicit LVec(const LVec<R>& other)
-  : bArray<T>(other.hkl()), _type(other.type()), _lattice(other.get_lattice())
+  : bArray<T>(other.hkl()), _type(other.type()), _lattice(other.lattice())
   {
   }
 
@@ -236,8 +237,6 @@ protected:
 // convenience creation functions for Real and Reciprocal space vectors
 template<class T, class ... P> LVec<T> LDVec(P ... args) {return LVec<T>(LengthUnit::angstrom, args ...);}
 template<class T, class ... P> LVec<T> LQVec(P ... args) {return LVec<T>(LengthUnit::inverse_angstrom, args ...);}
-
-#include "array_lvec_methods.tpp"
 
 }
 

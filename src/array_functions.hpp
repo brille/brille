@@ -27,6 +27,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "utilities.hpp"
 #include "enums.hpp"
 #include "array_.hpp"
+//#include "geometry.hpp"
 
 namespace brille {
 
@@ -241,18 +242,20 @@ dot(const A<T>& a, const A<R>& b) {
   return oarray;
 }
 
-template<class T, class R, template<class> class A, class S=std::common_type_t<T,R>>
+template<class T, class R, class M, template<class> class A, class S=std::common_type_t<T,R,M>>
 std::enable_if_t<bothArrays<T,A,R,A>, S>
-same_lattice_dot(const A<R>& x, const A<T>& y, const std::array<double,9>& metric){
-  S tmp[3]{0, 0, 0};
-  utils::mul_mat_vec(tmp, 3u, metric.data(), x.ptr(0));
+same_lattice_dot(const A<R>& x, const A<T>& y, const std::array<M,9>& metric){
+  std::array<S,3> tmp{0,0,0};
+  utils::mul_mat_vec(tmp.data(), 3u, metric.data(), x.ptr(0));
   S out{0};
-  for (int i=0; i<3; ++i) out += tmp[i] * y[i];
+  for (int i=0; i<3; ++i) out += tmp[i] * static_cast<S>(y[i]);
+//  verbose_update("metric x ", x.to_string(0), " = ", tmp , "; dot with ", y.to_string(0), " = ", out);
   return out;
 }
 
 // dot [LatVec ⋅ LatVec]
-template<class T, class R, template<class> class L1, template<class> class L2, class S=std::common_type_t<T,R>>
+template<class T, class R, template<class> class L1, template<class> class L2,
+  class S=std::common_type_t<T,R,typename L1<T>::metric_t, typename L2<R>::metric_t, double>>
 std::enable_if_t<bothLatVecs<T,L1,R,L2>, bArray<S>>
 dot(const L1<T> &a, const L2<R> &b){
   bool is_star = a.star_lattice(b);
@@ -261,7 +264,7 @@ dot(const L1<T> &a, const L2<R> &b){
     throw std::runtime_error("the dot product between Lattice Vectors requires same or starred lattices");
   }
   if (is_star){
-    auto out = dot(a.hkl(), b.hkl());
+    bArray<S>  out(dot(a.hkl(), b.hkl())); // handles element type conversion, if necessary
     out *= brille::math::two_pi; // to avoid making a copy of the array, compared to 2π*dot(...)
     return out;
   }
@@ -271,7 +274,8 @@ dot(const L1<T> &a, const L2<R> &b){
   assert( 1u==aN || 1u==bN || aN==bN );
   brille::ind_t oO = (1u == aN) ? bN : aN;
   auto oarray = bArray<S>(oO, 1u);
-  auto met = a.lattice().metric();
+  auto met = a.lattice().metric(a.type());
+//  verbose_update("Same-lattice dot product with metric ", met);
   if (1u==aN || 1u==bN){
     if (1u==aN) {
       for (brille::ind_t i=0; i<bN; ++i) oarray.val(i,0) = same_lattice_dot(a, b.view(i), met);
@@ -304,18 +308,18 @@ dot(const L1<T> &a, const L2<R> &b){
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
   // [bArray] norm
-  template<class T, template<class> class L>
-  std::enable_if_t<isBareArray<T,L>, L<double>>
+  template<class T, template<class> class L, class S=std::common_type_t<T,double>>
+  std::enable_if_t<isBareArray<T,L>, L<S>>
   norm(const L<T> &a){
-    L<double> out = dot(a,a);
+    L<S> out = dot(a,a);
     for (auto& x : out.valItr()) x = std::sqrt(x);
     return out;
   }
   // [LatVec] norm
-  template<class T, template<class> class L>
-  std::enable_if_t<isLatVec<T,L>, bArray<double>>
+  template<class T, template<class> class L, class S=std::common_type_t<T,typename L<T>::metric_t,double>>
+  std::enable_if_t<isLatVec<T,L>, bArray<S>>
   norm(const L<T> &a){
-    auto out = bArray<double>(dot(a,a));
+    bArray<S> out(dot(a,a));
     for (auto& x: out.valItr()) x = std::sqrt(x);
     return out;
   }
@@ -394,7 +398,7 @@ template<class T, template<class> class L, class S = std::common_type_t<T, doubl
 std::enable_if_t<isLatVec<T,L>, L<S>>
 star(const L<T>& v){
   auto lat = v.lattice();
-  auto covariant_metric = lat.covariant_metric();
+  auto covariant_metric = lat.metric(v.type());
   auto lu = v.type() == LengthUnit::angstrom ? LengthUnit::inverse_angstrom : LengthUnit::angstrom;
   auto vstar = L<S>(lu, lat, v.shape());
   auto vsh = v.shape();
@@ -521,10 +525,12 @@ template<class T, template<class> class A>
 template<class T, template<class> class A>
 std::enable_if_t<isBareArray<T,A>, bArray<T>>
 triple_product(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
-  bArray<T> out(a.size(0), 1u);
-  // TODO Change this to pseudo_orient3d?
-  for (ind_t i=0; i<a.size(0); ++i) out[i] = orient3d(a.ptr(i), b.ptr(i), c.ptr(i), d.ptr(i));
-  return out;
+  auto std_out = pseudo_orient3d(a, b, c, d);
+  return bArray<T>::from_std(std_out);
+//  bArray<T> out(a.size(0), 1u);
+//  // TODO Change this to pseudo_orient3d?
+//  for (ind_t i=0; i<a.size(0); ++i) out[i] = orient3d(a.ptr(i), b.ptr(i), c.ptr(i), d.ptr(i));
+//  return out;
 }
 
 template<class T, template<class> class A>
@@ -554,10 +560,16 @@ std::enable_if_t<isBareArray<T,A>&&isBareArray<T,B>, B<T>>
 from_xyz_like(const A<T>&, const B<T>& b){
   return b;
 }
-template<class T, template<class> class A, template<class> class B>
-std::enable_if_t<isLatVec<T,A>&&isBareArray<T,B>, A<T>>
+template<class T, template<class> class A, template<class> class B, class S=std::common_type_t<T,double>>
+std::enable_if_t<isLatVec<T,A>&&isBareArray<T,B>, A<S>>
 from_xyz_like(const A<T>& lv, const B<T>& b){
-  return A<T>::from_invA(lv.type(), lv.lattice(), b);
+  auto lat = lv.lattice();
+  auto inv_xyz = lat.from_xyz(lv.type());
+  B<S> coords(b.shape());
+  auto x = b.shape();
+  x.back() = 0u;
+  for (auto i: b.subItr(x)) utils::multiply_matrix_vector(coords.ptr(i), inv_xyz.data(), b.ptr(i));
+  return A<S>(lv.type(), lat, coords);
 }
 
 }

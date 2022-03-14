@@ -204,11 +204,13 @@ void BrillouinZone::voro_search(const int extent, const bool divide_primitive){
 //  // in the xyz frame of the conventional reciprocal lattice
 //  auto tau = transform_from_primitive(_outer, primitive_tau);
 
+//  verbose_update("sorted tau\n",cat(1,tau,norm(tau)).to_string());
   auto [plane_a, plane_b, plane_c] = plane_points_from_normal(tau / norm(tau), tau / 2.0);
   // and then use the reciprocal lattice points to subdivide the cell until
   // only the first Brillouin zone is left:
   auto box = polyhedron::bounding_box(1.0 * tau);
 //  verbose_update("bounding box\n", box.python_string());
+//  throw std::runtime_error("time to halt is now!");
   _first = box.cut(plane_a, plane_b, plane_c, approx_tolerance);
   if (divide_primitive){
     auto vertices = transform_from_primitive(_outer, _first.vertices());

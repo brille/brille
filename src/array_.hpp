@@ -21,27 +21,13 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Forward declarations for Array* classes which can be constructed
            from each other.
 */
-
-namespace brille {
-  // declare both Array and Array2 so that they can each contain conversion
-  // constructors for the other.
-  template<class T> class Array;
-  template<class T> class Array2;
-
-  // declare their iterators here
-  template<class T> class ArrayIt;
-  template<class T> class Array2It;
-
-  namespace lattice {
-  template<class T> class LVec;
-  }
-
-  template<class T> using bArray = Array2<T>;
-}
-//template<class T> using bArray = brille::Array2<T>;
+// Declare the array types without defining them
+#include "array_pre.hpp"
+// The arrays need to know about each other so their constructors can act as converts
 #include "array.hpp"
 #include "array2.hpp"
-#include "array_attributes.hpp"
-#include "array_functions.hpp"
+// The following includes must happen *after* Array and Array2 are fully defined
+// (so array.hpp and array2.hpp can not include circular references back to array_.hpp)
+#include "array_post.hpp"
 
 #endif

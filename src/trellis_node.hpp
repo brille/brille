@@ -341,7 +341,7 @@ namespace brille {
     tetrahedra_contains(const ind_t t, const A<T>& v, const A<T>& x, std::array<double,4>& w, const bool allow_shortcut=true) const {
       // FIXME replace orient3d with a lattice-aware volume calculator
       //    Then the two methods here could be combined and copying v avoided
-      return this->tetrahedra_contains(t, v.get_xyz(), x.get_xyz(), w, allow_shortcut);
+      return this->tetrahedra_contains(t, v.xyz(), x.xyz(), w, allow_shortcut);
     }
     template<template<class> class A>
     [[nodiscard]] std::enable_if_t<isBareArray<double,A>, double>
@@ -364,7 +364,7 @@ namespace brille {
     template<class T, template<class> class A>
     [[nodiscard]] std::enable_if_t<isLatVec<T,A>, T>
     tetrahedra_might_contain(const ind_t t, const A<T>& x) const {
-      return this->tetrahedra_might_contain(t, x.get_xyz());
+      return this->tetrahedra_might_contain(t, x.xyz());
     }
 
 #ifdef USE_HIGHFIVE

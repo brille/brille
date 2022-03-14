@@ -23,6 +23,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief Classes for a lattice spacegroup Symmetry operations
 */
+#include <utility>
+
 #include "symmetry_common.hpp"
 #include "motion.hpp"
 #include "bravais.hpp"
@@ -72,7 +74,7 @@ public:
   //! Empty constructor
   explicit Symmetry(size_t n=0) { M.resize(n); }
   //! Construct from a list of symmetry operation Motions
-  explicit Symmetry(const Motions& m): M(m) {};
+  explicit Symmetry(Motions m): M(std::move(m)) {};
   //! Construct from a CIF xyz encoded string of one or more Motions
   explicit Symmetry(const std::string& strrep){ this->from_ascii(strrep); };
   //! Return the centring type of the symmetry operations

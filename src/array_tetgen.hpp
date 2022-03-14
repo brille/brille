@@ -17,7 +17,7 @@ namespace brille {
   template<class T, template<class> class A>
   std::enable_if_t<isLatVec<T,A>, std::array<T,4>>
   four_point_sphere(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
-    return four_point_sphere(a.get_xyz(), b.get_xyz(), c.get_xyz(), d.get_xyz());
+    return four_point_sphere(a.xyz(), b.xyz(), c.xyz(), d.xyz());
   }
   template<class T, class I, template<class> class A, template<class> class B>
   std::enable_if_t<(isArray<T,A> && isBareArray<I,B> && std::is_integral_v<I>), std::array<T,4>>

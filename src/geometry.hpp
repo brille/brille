@@ -26,7 +26,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <csignal>
 #include "tetgen.h"
 #include "array_.hpp" // defines bArray
-#include "array_lvec.hpp"
+#include "array_l_.hpp"
 #include "utilities.hpp"
 namespace brille {
 
@@ -196,6 +196,7 @@ namespace brille {
   template<class T, template<class> class A>
   std::enable_if_t<isArray<T,A>, std::tuple<A<T>, A<T>, A<T>>>
   plane_points_from_normal(const A<T> & n, const A<T> & p) {
+    verbose_update("Find planes from, normals\n", n.to_string(), "points\n", p.to_string());
     auto a = T(1) + T(0) * n;
     auto b = T(0) * n;
     auto n_norm = norm(n); // this *should* be all 1, but maybe it's not
@@ -454,7 +455,7 @@ namespace brille {
   std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, bool>
   point_in_plane_lattice_check(const A<T>& a, const A<T>& b, const A<T>& c, const B<R>& x){
     bool abc = a.same_lattice(b) && a.same_lattice(c);
-    bool ax = x.same_lattice(a) || x.starlattice(a);
+    bool ax = x.same_lattice(a) || x.star_lattice(a);
     verbose_update_if(!abc, "a, b, and c should have the same lattice!");
     verbose_update_if(!ax, "a and x should have the same or dual lattices");
     return ax && abc;
@@ -613,9 +614,10 @@ namespace brille {
       const A<T> &v, const std::vector<I> &one, const std::vector<I> &two,
       const B<R> &a, const B<R> &b, const B<R> &c, const int tol=1, const bool strict = false) {
     assert(a.same_lattice(b) && a.same_lattice(c));
-    if (v.same_lattice(a) || v.starlattice(a)) {
+    if (v.same_lattice(a) || v.star_lattice(a)) {
       auto at = edge_plane_intersection(v.xyz(), one, two, a.xyz(), b.xyz(), c.xyz(), tol, strict);
-      return at.size(0) > 0 ? A<T>::from_invA(v.type(), v.lattice(), at) : A<T>(v.type(), v.lattice(), 0u);
+      // replaced ::from_invA by from_xyz_like
+      return at.size(0) > 0 ? from_xyz_like(v, at) : A<T>(v.type(), v.lattice(), 0u);
     }
     throw std::runtime_error("");
   }

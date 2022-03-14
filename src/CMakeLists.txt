@@ -26,7 +26,6 @@ list(APPEND CXX_SOURCES
   comparisons.cpp
   debug.cpp
   hall_symbol.cpp
-  lattice.cpp
   neighbours.cpp
   polyhedron_faces.cpp
   pointgroup.cpp

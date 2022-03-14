@@ -123,8 +123,8 @@ triangulate(const T max_volume, const bool addGamma, const A<T>& points, const F
 template<class T, template<class> class A>
 std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, Array2<ind_t>>>
 triangulate(const T max_volume, const bool addGamma, const A<T>& points, const Faces& faces){
-  auto [v, t] = triangulate(max_volume, addGamma, points.get_xyz(), faces);
-  return std::make_tuple(A<T>::from_invA(points.get_lattice(), v), t);
+  auto [v, t] = triangulate(max_volume, addGamma, points.xyz(), faces);
+  return std::make_tuple(from_xyz_like(points, v), t);
 }
 
 /*! \brief A class to handle interaction with `TetGen`

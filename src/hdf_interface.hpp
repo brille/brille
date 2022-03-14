@@ -159,6 +159,7 @@ template<> DataType create_datatype<brille::Bravais>();
 template<> DataType create_datatype<brille::LengthUnit>();
 template<> DataType create_datatype<brille::NodeType>();
 template<> DataType create_datatype<brille::HF_Matrix<int>>();
+template<> DataType create_datatype<brille::HF_Matrix<double>>();
 template<> DataType create_datatype<brille::HF_Motion<int,double>>();
 }
 

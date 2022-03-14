@@ -26,7 +26,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 */
 #include "array_.hpp" // defines bArray
 #include "primitive.hpp"
-#include "array_lvec.hpp"
+#include "array_l_.hpp"
 namespace brille::lattice {
 
 //! The datatype of the P PrimitiveTransform matrix

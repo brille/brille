@@ -4,7 +4,7 @@
 #include <utility>
 //#include "polyhedron.hpp"
 #include "lattice_dual.hpp"
-#include "array_lvec.hpp"
+#include "array_l_.hpp"
 #include "polyhedron_faces.hpp"
 
 namespace brille::polyhedron{
@@ -257,8 +257,10 @@ namespace brille::polyhedron{
   template<class T, template<class> class A>
   std::enable_if_t<isArray<T,A>, Poly<T,A>>
   bounding_box(const A<T>& points){
+//    verbose_update("bounding box of\n", points.to_string(), " in xyz frame\n", get_xyz(points).to_string());
     auto min = get_xyz(points).min(0);
     auto max = get_xyz(points).max(0);
+//    verbose_update("Have extreme corners, ", min.to_string(0), " -- ", max.to_string(0));
     std::vector<std::array<T,3>> v{
         {min[{0, 0}], min[{0,1}], min[{0,2}]}, // 000 0
         {min[{0, 0}], max[{0,1}], min[{0,2}]}, // 010 1
@@ -269,8 +271,10 @@ namespace brille::polyhedron{
         {max[{0, 0}], max[{0,1}], max[{0,2}]}, // 111 6
         {max[{0, 0}], min[{0,1}], max[{0,2}]}  // 101 7
     };
+//    verbose_update("producing polygon vertices\n", v);
     auto faces = typename Poly<T,A>::faces_t({{3,0,4,7},{3,2,1,0},{0,1,5,4},{3,7,6,2},{7,4,5,6},{2,6,5,1}});
     auto hkl = from_xyz_like(points, bArray<T>::from_std(v));
+//    verbose_update("which should match \n", hkl.xyz().to_string());
     return {hkl, faces};
   }
 }

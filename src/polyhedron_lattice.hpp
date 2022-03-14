@@ -5,7 +5,7 @@
 #include "lattice_dual.hpp"
 
 #include <utility>
-#include "array_lvec.hpp"
+#include "array_l_.hpp"
 namespace brille{
   template<class T>
   class LQPolyhedron {

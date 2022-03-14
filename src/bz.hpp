@@ -29,7 +29,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "polyhedron_flex.hpp"
 #include "phonon.hpp"
 #include "hdf_interface.hpp"
-#include "array_lvec.hpp"
+#include "array_l_.hpp"
 
 namespace brille {
 

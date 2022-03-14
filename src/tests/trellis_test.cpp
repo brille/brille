@@ -2,11 +2,14 @@
 #include <tuple>
 #include <omp.h>
 #include <complex>
+#include <filesystem>
 #include "debug.hpp"
 #include "bz_trellis.hpp"
-#include <filesystem>
+#include "lattice_dual.hpp"
 
 using namespace brille;
+using namespace brille::lattice;
+using namespace brille::math;
 
 #ifdef USE_HIGHFIVE
 template<class T, class R, class S>
@@ -34,17 +37,20 @@ bool write_read_test(const BrillouinZoneTrellis3<T,R>&, const std::string&){
 
 TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis][simple]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  std::string spg("-I 4 2 3"); // == 529
+  auto lat = Direct<double>({3.2598, 3.2598, 3.2598},
+                            {half_pi, half_pi, half_pi}, spg);
+  BrillouinZone bz(lat);
   double max_volume = 0.01;
   // BrillouinZoneTrellis3<double> bzt0(bz); !! No default maximum volume
   BrillouinZoneTrellis3<double,double,double> bzt1(bz, max_volume);
   REQUIRE(write_read_test(bzt1, "first_bzt"));
 }
 TEST_CASE("BrillouinZoneTrellis3 vertex accessors","[trellis][accessors]"){
-  Direct d(10.75, 10.75, 10.75, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 525);
-  BrillouinZone bz(d.star());
+  std::string spg("F 4d 2 3 -1d"); // == 525
+  auto lat = Direct<double>({10.75, 10.75, 10.75},
+                            {half_pi, half_pi, half_pi}, spg);
+  BrillouinZone bz(lat);
   double max_volume = 0.002;
   BrillouinZoneTrellis3<double,double,double> bzt(bz, max_volume);
 
@@ -58,9 +64,9 @@ TEST_CASE("BrillouinZoneTrellis3 vertex accessors","[trellis][accessors]"){
 
 TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  std::string spg("-I 4 2 3"); // == 529
+  auto lat = Direct<double>({3.2598, 3.2598, 3.2598},  {half_pi, half_pi, half_pi}, spg);
+  BrillouinZone bz(lat);
   double max_volume = 0.0001;
   BrillouinZoneTrellis3<double,double,double> bzt(bz, max_volume);
 
@@ -84,7 +90,7 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   // interpolate at points within the irreducible meshed volume.
   // Use points distributed randomly in the Irreducible Polyhedron
   auto irp = bz.get_ir_polyhedron();
-  LQVec<double> Q = LQVec<double>::from_invA(r, irp.rand_rejection(nQ));
+  auto Q = irp.rand_rejection(nQ);
   // Q are now random points in the irreducible Brillouin zone polyhedron
 
   // We may run into problems if any of the points are too close to the irBz
@@ -94,7 +100,7 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   // the components of Q to try and find an equivalent q and tau.
 
 
-  auto QinvA = Q.get_xyz();
+  auto QinvA = Q.xyz();
   // QinvA is (at present) a brille::Array2<double> and so can not be reshaped
   // to 3D (maybe introducing conversion routines is a good idea?)
   // Instead make a new brille::Array and copy the Q values by hand:
@@ -120,9 +126,9 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
 
 TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  std::string spg("-I 4 2 3"); // == 529
+  auto lat = Direct<double>({3.2598, 3.2598, 3.2598},  {half_pi, half_pi, half_pi}, spg);
+  BrillouinZone bz(lat);
   double max_volume = 0.0001;
 
   // In order to have easily-interpretable results we need to ensure we only
@@ -150,7 +156,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
   REQUIRE(bzt.data().branches() == n_modes);
 
   size_t nQ = 10000;//10000;
-  LQVec<double> Q(r,nQ);
+  auto Q = LVec<double>(LengthUnit::inverse_angstrom, lat, nQ);
   for (auto& i: Q.valItr()) i = distribution(generator);
 
   brille::Array<double> intvals;
@@ -170,9 +176,9 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
 
 TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profiling]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 529);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  std::string spg("-I 4 2 3"); // == 529
+  auto lat = Direct<double>({3.2598, 3.2598, 3.2598},  {half_pi, half_pi, half_pi}, spg);
+  BrillouinZone bz(lat);
   double max_volume = 0.0001;
 
   // In order to have easily-interpretable results we need to ensure we only
@@ -200,7 +206,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   REQUIRE(bzt.data().branches() == n_modes);
 
   size_t nQ = 100000;//10000;
-  LQVec<double> Q(r,nQ);
+  auto Q = LQVec<double>(lat, nQ);
   for (auto& i: Q.valItr()) i = distribution(generator);
 
   int threads = omp_get_max_threads();
@@ -212,9 +218,8 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
 }
 
 TEST_CASE("BrillouinZoneTrellis3 creation time","[.][trellis][creation_profiling]"){
-  Direct d(3.,3.,3., brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 1);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  auto lat = Direct<double>({3,3,3}, {half_pi, half_pi, half_pi}, "P 1");
+  BrillouinZone bz(lat);
   double max_volume = 0.0001;
   auto timer = Stopwatch<>();
   timer.tic();
@@ -222,8 +227,8 @@ TEST_CASE("BrillouinZoneTrellis3 creation time","[.][trellis][creation_profiling
   timer.toc();
   info_update("Creation of Cubic BrilluoinZoneTrellis3 object with max_volume ",max_volume," in ",timer.average()," msec");
 
-  Direct quartz_d(4.85235, 4.85235, 5.350305, brille::math::half_pi, brille::math::half_pi, brille::math::two_thirds_pi, 443);
-  BrillouinZone quartz_bz(quartz_d.star());
+  auto quartz = Direct<double>({4.85235, 4.85235, 5.350305}, {half_pi, half_pi, two_thirds_pi}, "P 32 2\"");
+  BrillouinZone quartz_bz(quartz);
   timer.tic();
   BrillouinZoneTrellis3<double,std::complex<double>,double> quartz_bzt(quartz_bz, max_volume);
   timer.toc();
@@ -232,9 +237,8 @@ TEST_CASE("BrillouinZoneTrellis3 creation time","[.][trellis][creation_profiling
 
 
 TEST_CASE("BrillouinZoneTrellis3 contains Gamma","[trellis][gamma]"){
-  Direct d(3.,3.,3., brille::math::half_pi, brille::math::half_pi, brille::math::half_pi, 1);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  auto lat = Direct<double>({3,3,3}, {half_pi, half_pi, half_pi}, "P 1");
+  BrillouinZone bz(lat);
   double max_volume = 0.1;
   BrillouinZoneTrellis3<double,std::complex<double>,double> bzt(bz, max_volume);
 
@@ -269,12 +273,11 @@ TEST_CASE("PolyhedronTrellis creation","[polyhedron][trellis]"){
 
 TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trellis][polyhedron][intersection][la2zr2o7]"){
   // lattice information and generators of spacegroup via brilleu/CASTEP
-  std::vector<double> latmat {7.583912824349999, 1.8412792137035698e-32, 0.,
+  std::array<double,9> latmat {7.583912824349999, 1.8412792137035698e-32, 0.,
                               3.791956412170034, 3.791956412170034, 5.362636186024768,
                               3.791956412170034,-3.791956412170034, 5.362636186024768};
   //
-  std::vector<int> strides{3*sizeof(double), sizeof(double)};
-  Direct dlat(latmat.data(), strides, "P_1"); // not P₁ but it *is* primitive
+  auto lat = Direct<double>(latmat, "P 1", ""); // not P₁ but it *is* primitive
   // the generators are: 4-fold [1 -1 1], 2-fold [-1 1 1], 3-fold [1 1 -3], -𝟙
   // row-ordered generator matrices
   std::vector<std::array<int,9>> W {
@@ -294,9 +297,9 @@ TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trell
   for (size_t i=0; i<W.size(); ++i) mots.push_back(Motion<int,double>(W[i], w[i]));
   Symmetry sym(mots);
   //
-  dlat.set_spacegroup_symmetry(sym.generate());
+  lat.spacegroup_symmetry(sym.generate());
   //
-  BrillouinZone bz(dlat.star());
+  BrillouinZone bz(lat);
   // If the tolerance used in determine_tols is too small the following will
   // fail due to one or more missing vertices in a triangulated cube
   REQUIRE_NOTHROW(BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, 0.001));
@@ -316,14 +319,14 @@ TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trell
 
 TEST_CASE("PolyhedronTrellis construction from 'P1' hexagonal system must contain Gamma","[trellis][brillem]"){
   // this test case was exposed as problematic by the tests in brillem
-  Reciprocal rlat(1.154701, 1.154701, 1, 90, 90, 60);
-  BrillouinZone bz(rlat);
+  auto lat = Reciprocal<double>({1.154701, 1.154701, 1}, {90, 90, 60}, "P 1");
+  BrillouinZone bz(lat);
   REQUIRE_NOTHROW(BrillouinZoneTrellis3<double,double,double>(bz, 0.002));
 }
 
 TEST_CASE("PolyNode inclusion rounding error","[trellis][quartz][polynode][61]"){
-  Direct quartz_d(4.85235, 4.85235, 5.350305, brille::math::half_pi, brille::math::half_pi, brille::math::two_thirds_pi, 443);
-  BrillouinZone quartz_bz(quartz_d.star());
+  auto quartz = Direct<double>({4.85235, 4.85235, 5.350305}, {half_pi, half_pi, two_thirds_pi}, "P 32 2\"");
+  BrillouinZone quartz_bz(quartz);
   auto max_volume = quartz_bz.get_ir_polyhedron().volume()/2000.;
   BrillouinZoneTrellis3<double,double,double> quartz_bzt(quartz_bz, max_volume);
 
@@ -338,22 +341,22 @@ TEST_CASE("PolyNode inclusion rounding error","[trellis][quartz][polynode][61]")
   for (int i=-15; i<0; ++i){
     auto delta = std::pow(10., i);
     std::vector<std::array<double,3>> values{{-0.1+delta, -0.1, 0.}};
-    LQVec<double> q(quartz_d.star(), bArray<double>::from_std(values));
+    auto q = LQVec<double>(quartz, bArray<double>::from_std(values));
     REQUIRE_NOTHROW(quartz_bzt.ir_interpolate_at(q, 1));
   }
 }
 
 TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7][omp][60]"){
   // lattice information and generators of spacegroup via brilleu/CASTEP
-  std::vector<double> latmat {7.583912824349999, 1.8412792137035698e-32, 0.,
-                              3.791956412170034, 3.791956412170034, 5.362636186024768,
-                              3.791956412170034,-3.791956412170034, 5.362636186024768};
+//  std::array<double,9> latmat {7.583912824349999, 1.8412792137035698e-32, 0.,
+//                              3.791956412170034, 3.791956412170034, 5.362636186024768,
+//                              3.791956412170034,-3.791956412170034, 5.362636186024768};
   //
   std::vector<int> strides{3*sizeof(double), sizeof(double)};
-  double len[3]{7.583912824346341, 7.583912824346341, 7.583912824346341};
-  double ang[3]{60,60,60};
+  std::array<double,3> len{7.583912824346341, 7.583912824346341, 7.583912824346341};
+  std::array<double,3> ang{60,60,60};
 //  Direct dlat(latmat.data(), strides, "P_1"); // not P₁ but it *is* primitive
-  Direct dlat(len, ang, "P_1");
+  auto lat = Direct<double>(len, ang, "P 1");
   // the generators are: 4-fold [1 -1 1], 2-fold [-1 1 1], 3-fold [1 1 -3], -𝟙
   // row-ordered generator matrices
   std::vector<std::array<int,9>> W {
@@ -372,10 +375,9 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
   mots.reserve(W.size());
   for (size_t i=0; i<W.size(); ++i) mots.push_back(Motion<int,double>(W[i], w[i]));
   Symmetry sym(mots);
-  dlat.set_spacegroup_symmetry(sym.generate());
+  lat.spacegroup_symmetry(sym.generate());
 
-  auto rlat = dlat.star();
-  BrillouinZone bz(rlat);
+  BrillouinZone bz(lat);
   info_update("First Brillouin zone\n", bz.get_polyhedron().python_string());
   info_update("Irreducible Brillouin zone\n", bz.get_ir_polyhedron().python_string());
 
@@ -398,10 +400,9 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
   for (int i=0; i<n; ++i){
     values.push_back({1.5, frac(-1.5, 2.0, i), frac(4.0, -3.0, i)});
   }
-
-  LQVec<double> Q(rlat, bArray<double>::from_std(values));
-  LQVec<double> q(rlat);
-  LQVec<int> tau(rlat);
+  auto Q = LQVec<double>(lat, bArray<double>::from_std(values));
+  auto q = LQVec<double>(lat, Q.shape());
+  auto tau = LQVec<int>(lat, Q.shape());
   std::vector<size_t> r, invr;
 
   for (int i=0; i<4; ++i){

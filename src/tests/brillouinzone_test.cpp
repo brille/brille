@@ -189,6 +189,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 alt","[bz_][materialsproject]")
   std::array<double,3> angs{90,90,120};
   //
   auto lat = Direct<double>(lens, angs, hall_symbol);
+  verbose_update(lat.to_verbose_string());
   BrillouinZone bz(lat,/*to_prim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
@@ -245,7 +246,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-306","[bz_][materialsproject]"){
   //
   std::string hall_symbol = "P 31 2\"";
   //
-  auto lat = Direct<double>((lattice_vectors, hall_symbol);
+  auto lat = Direct<double>(lattice_vectors, hall_symbol);
   BrillouinZone bz(lat);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();

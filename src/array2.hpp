@@ -27,7 +27,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "utilities.hpp"
 #include "comparisons.hpp"
 #include "types.hpp"
-#include "array_.hpp"
+#include "array_pre.hpp"
 #include "hdf_interface.hpp"
 namespace brille {
 /*! \brief A multidimensional shared data array with operator overloads

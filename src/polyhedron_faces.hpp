@@ -7,7 +7,7 @@
 
 #include "lattice_dual.hpp"
 #include "array_.hpp"
-#include "array_lvec.hpp"
+#include "array_l_.hpp"
 #include "geometry.hpp"
 
 namespace brille::polyhedron{
@@ -277,7 +277,7 @@ namespace brille::polyhedron{
     template<class T, class R, template<class> class A, template<class> class B>
     [[nodiscard]] std::enable_if_t <isLatVec<T,A> && isLatVec<R,B>, std::vector<bool>>
     contains(const A<T>& v, const B<R>& x) const {
-      assert(x.samelattice(v) || x.starlattice(v));
+      assert(x.same_lattice(v) || x.star_lattice(v));
       return this->contains(v.xyz(), x.xyz());
     }
 

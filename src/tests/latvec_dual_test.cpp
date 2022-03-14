@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 
 #include "lattice_dual.hpp"
-#include "array_lvec.hpp"
+#include "array_l_.hpp"
 
 using namespace brille;
 using namespace brille::lattice;
@@ -20,7 +20,7 @@ TEST_CASE("Lattice Vector tests","[latvec]"){
     auto normq = norm(q);
     REQUIRE( normq.size(0) == q.size(0) );
     REQUIRE( normq.size(1) == 1u );
-    for(int i=0; i<q.size(0); ++i)
+    for(size_t i=0; i<q.size(0); ++i)
       REQUIRE( q.norm(i) == normq[i] );
   }
   SECTION("Single-element access via [integer] and cross product .cross(integer,integer)"){

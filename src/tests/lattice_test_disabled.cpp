@@ -1,14 +1,14 @@
 #include <catch2/catch.hpp>
 
-#include "lattice.hpp"
+#include "lattice_dual.hpp"
 
-using namespace brille;
+using namespace brille::lattice;
+using namespace brille::math;
 
 TEST_CASE("Lattice and its subclasses are tested","[lattice]"){
-  Lattice l(2*math::pi,2*math::pi,2*math::pi,math::half_pi,math::half_pi,math::half_pi);
-  Direct d(l);
-  Reciprocal r(1,1,1,math::half_pi,math::half_pi,math::half_pi);
-  REQUIRE(d.issame(r.star()));
+  auto direct = Direct<double>({two_pi, two_pi, two_pi}, {half_pi, half_pi, half_pi}, "P 1");
+  auto recipr = Reciprocal<double>({1, 1, 1}, {half_pi, half_pi, half_pi}, "P 1");
+  REQUIRE(direct.is_star(recipr));
 }
 
 /*

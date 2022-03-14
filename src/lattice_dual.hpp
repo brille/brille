@@ -21,58 +21,77 @@ public:
   using matrix_t = std::array<T,9>;
   using vector_t = std::array<T,3>;
 private:
-  matrix_t _vectors; //! Real space *column* basis vectors
-  matrix_t _reciprocal;
-  matrix_t _metric; //! The metric tensor G
+  matrix_t _real_vectors; //! Real space *column* basis vectors
+  matrix_t _reciprocal_vectors;
+  matrix_t _real_metric; //! The metric tensor G
+  matrix_t _reciprocal_metric; //! Avoid continually recalculating inverse(G) * 4 pi^2
   Bravais _bravais;
   Symmetry _space;
   PointSymmetry _point;
   Basis _basis;
 public:
-  Lattice(matrix_t v, matrix_t r, matrix_t m, Bravais b, Symmetry s, PointSymmetry p, Basis a)
-      : _vectors{std::move(v)}, _reciprocal{std::move(r)}, _metric{std::move(m)}, _bravais(b), _space(s), _point(p), _basis(a)
+  explicit Lattice()
+    : _real_vectors({{1, 0, 0, 0, 1, 0, 0, 0, 1}}),
+      _reciprocal_vectors({{math::two_pi, 0, 0, 0, math::two_pi, 0, 0, 0, math::two_pi}}),
+      _real_metric({{1, 0, 0, 0, 1, 0, 0, 0, 1}}),
+      _reciprocal_metric({{math::two_pi * math::two_pi, 0, 0, 0, math::two_pi * math::two_pi, 0, 0, 0, math::two_pi * math::two_pi}}),
+      _bravais(Bravais::P),
+      _space({Motion<int, double>()}), _point(), _basis()
+    {}
+
+  Lattice(matrix_t v, matrix_t r, matrix_t m, matrix_t rm, Bravais b, Symmetry s, PointSymmetry p, Basis a)
+      : _real_vectors{std::move(v)},
+        _reciprocal_vectors{std::move(r)},
+        _real_metric{std::move(m)},
+        _reciprocal_metric{std::move(rm)},
+        _bravais(b), _space(std::move(s)), _point(std::move(p)), _basis(std::move(a))
   {}
 //
   Lattice(const vector_t & lengths, const vector_t & angles, const Symmetry s, const LengthUnit lu, const AngleUnit au=AngleUnit::not_provided)
   {
     set_vectors(lengths, angles, lu, au);
-    set_metric();
+    set_metrics();
     spacegroup_symmetry(s);
     set_point_symmetry();
   }
   Lattice(const matrix_t & vectors, const Symmetry s, const LengthUnit lu)
   {
     set_vectors(vectors, lu);
-    set_metric();
+    set_metrics();
     spacegroup_symmetry(s);
+    _bravais = _space.getcentring();
     set_point_symmetry();
   }
   Lattice(const vector_t & lengths, const vector_t & angles, const std::string& s, const std::string& c, const LengthUnit lu, const AngleUnit au=AngleUnit::not_provided)
   {
     set_vectors(lengths, angles, lu, au);
-    set_metric();
+    set_metrics();
     set_space_symmetry(s, c);
+    _bravais = _space.getcentring();
     set_point_symmetry();
   }
   Lattice(const vector_t & lengths, const vector_t & angles, const std::string& s, const LengthUnit lu, const AngleUnit au=AngleUnit::not_provided)
   {
     set_vectors(lengths, angles, lu, au);
-    set_metric();
+    set_metrics();
     set_space_symmetry(s);
+    _bravais = _space.getcentring();
     set_point_symmetry();
   }
   Lattice(const matrix_t & vectors, const std::string& s, const std::string& c, const LengthUnit lu)
   {
     set_vectors(vectors, lu);
-    set_metric();
+    set_metrics();
     set_space_symmetry(s, c);
+    _bravais = _space.getcentring();
     set_point_symmetry();
   }
   Lattice(const matrix_t & vectors, const std::string& s, const LengthUnit lu)
   {
     set_vectors(vectors, lu);
-    set_metric();
+    set_metrics();
     set_space_symmetry(s);
+    _bravais = _space.getcentring();
     set_point_symmetry();
   }
 
@@ -149,21 +168,21 @@ private:
     set_vectors(B, LengthUnit::inverse_angstrom);
   }
   void set_vectors(const matrix_t& m, LengthUnit lu){
-    matrix_t inv_m;
-    utils::matrix_inverse(inv_m.data(), m.data());
+    auto inv_m = linear_algebra::mat_inverse(m);
     for (auto & x: inv_m) x *= math::two_pi;
     inv_m = transpose(inv_m);
     if (LengthUnit::angstrom == lu){
-      _vectors = m;
-      _reciprocal = inv_m;
+      _real_vectors = m;
+      _reciprocal_vectors = inv_m;
     } else if (LengthUnit::inverse_angstrom == lu) {
-      _vectors = inv_m;
-      _reciprocal = m;
+      _real_vectors = inv_m;
+      _reciprocal_vectors = m;
     }
   }
-  void set_metric() {
-    matrix_t vt = transpose(_vectors);
-    utils::multiply_matrix_matrix(_metric.data(), _vectors.data(), vt.data());
+  void set_metrics() {
+    // the two metrics are mutually inverse with a factor of 4 * pi^2
+    _real_metric = linear_algebra::mul_mat_mat(_real_vectors, transpose(_real_vectors));
+    _reciprocal_metric = linear_algebra::mul_mat_mat(_reciprocal_vectors, transpose(_reciprocal_vectors));
   }
   void set_space_symmetry(const std::string& s, const std::string& c=""){
     auto no = string_to_hall_number(s, c);
@@ -189,42 +208,65 @@ private:
   }
 
 public:
+  [[nodiscard]] std::string to_string(const LengthUnit lu, const AngleUnit au=AngleUnit::degree) const {
+    std::string rep;
+    rep += "(" + my_to_string(lengths(lu)) + ")" + (lu == LengthUnit::angstrom ? "Å " : "Å⁻¹ ");
+    rep += "(" + my_to_string(angles(lu, au)) + ")" + (AngleUnit::degree == au ? "°" : AngleUnit::radian ==au ? "rad" : "π");
+    return rep;
+  }
+  [[nodiscard]] std::string to_verbose_string(const AngleUnit au=AngleUnit::degree) const {
+    std::string rep;
+    rep += bravais_string(_bravais) + " Lattice with " + std::to_string(_space.size()) + " space group elements\n";
+    rep += "      Direct{" + to_string(LengthUnit::angstrom, au) + "}\n";
+    rep += "  Reciprocal{" + to_string(LengthUnit::inverse_angstrom, au) + "}\n";
+    return rep;
+  }
 
-  [[nodiscard]] matrix_t real_basis_vectors() const {return _vectors;}
-  [[nodiscard]] matrix_t reciprocal_basis_vectors() const {return _reciprocal;}
+  [[nodiscard]] matrix_t real_basis_vectors() const {return _real_vectors;}
+  [[nodiscard]] matrix_t reciprocal_basis_vectors() const {return _reciprocal_vectors;}
 
   [[nodiscard]] Bravais bravais() const {return _bravais;}
   [[nodiscard]] Symmetry spacegroup_symmetry() const {return _space;}
   [[nodiscard]] PointSymmetry pointgroup_symmetry() const {return _point;}
   [[nodiscard]] Basis basis() const {return _basis;}
 
-  [[nodiscard]] matrix_t metric() const {return _metric;}
-  [[nodiscard]] matrix_t covariant_metric() const {return _metric;}
-  [[nodiscard]] matrix_t contravariant_metric() const {
-    matrix_t c;
-    brille::utils::matrix_inverse(c.data(), _metric.data());
-    return c;
+  [[nodiscard]] matrix_t metric(const LengthUnit lu) const {
+    switch(lu){
+      case LengthUnit::angstrom: return _real_metric;
+      case LengthUnit::inverse_angstrom: return _reciprocal_metric;
+      default:
+        throw std::logic_error("Not implemented length unit");
+    }
   }
+//  [[nodiscard]] matrix_t covariant_metric() const {return _real_metric;}
+//  [[nodiscard]] matrix_t contravariant_metric() const {
+//    return linear_algebra::mat_inverse(_real_metric);
+//  }
 
   template<class I>
-  [[nodiscard]] std::enable_if_t<std::is_integral_v<I>, vector_t> vector(LengthUnit lu, I i){
+  [[nodiscard]] std::enable_if_t<std::is_integral_v<I>, vector_t>
+  vector(LengthUnit lu, I i) const {
     assert(0u <= i && i <= 3u);
     switch (lu) {
     case LengthUnit::angstrom:
-      return {_vectors[i], _vectors[i + 3], _vectors[i + 6]};
+      return {_real_vectors[i], _real_vectors[i + 3], _real_vectors[i + 6]};
     case LengthUnit::inverse_angstrom:
-      return {_reciprocal[i], _reciprocal[i + 3], _reciprocal[i + 6]};
+      return {_reciprocal_vectors[i], _reciprocal_vectors[i + 3], _reciprocal_vectors[i + 6]};
     default:
       throw std::logic_error("Not implemented length unit");
     }
   }
-  template<class I> [[nodiscard]] std::enable_if_t<std::is_integral_v<I>, T> length(LengthUnit lu, I i){
+  template<class I>
+  [[nodiscard]] std::enable_if_t<std::is_integral_v<I>, T>
+  length(LengthUnit lu, I i) const {
     return linear_algebra::norm(vector(lu, i));
   }
-  template<class I> [[nodiscard]] std::enable_if_t<std::is_integral_v<I>, T> angle(LengthUnit lu, I i, AngleUnit au = AngleUnit::radian){
-    auto vj = vector(lu, (i+i) % 3u);
+  template<class I>
+  [[nodiscard]] std::enable_if_t<std::is_integral_v<I>, T>
+  angle(LengthUnit lu, I i, AngleUnit au = AngleUnit::radian) const {
+    auto vj = vector(lu, (i+1) % 3u);
     auto vk = vector(lu, (i+2) % 3u);
-    auto cos_angle_i = dot(vj, vk) / norm(vj) / norm(vk);
+    auto cos_angle_i = linear_algebra::dot(vj, vk) / linear_algebra::norm(vj) / linear_algebra::norm(vk);
     switch (au) {
     case AngleUnit::radian:
       return std::acos(cos_angle_i);
@@ -236,19 +278,19 @@ public:
       throw std::logic_error("Not implemented angle unit");
     }
   }
-  [[nodiscard]] vector_t lengths(LengthUnit lu){
+  [[nodiscard]] vector_t lengths(LengthUnit lu) const {
     return {length(lu, 0u), length(lu, 1u), length(lu, 2u)};
   }
-  [[nodiscard]] vector_t angles(LengthUnit lu, AngleUnit au = AngleUnit::radian){
+  [[nodiscard]] vector_t angles(LengthUnit lu, AngleUnit au = AngleUnit::radian) const {
     // this could be more efficient by reusing vi, vj, vk; but maybe its ok.
     return {angle(lu, 0u, au), angle(lu, 1u, au), angle(lu, 2u, au)};
   }
   [[nodiscard]] T volume(LengthUnit lu) const {
     switch (lu){
     case LengthUnit::angstrom:
-      return utils::matrix_determinant(_vectors.data());
+      return utils::matrix_determinant(_real_vectors.data());
     case LengthUnit::inverse_angstrom:
-      return utils::matrix_determinant(_reciprocal.data());
+      return utils::matrix_determinant(_reciprocal_vectors.data());
     default:
       throw std::logic_error("Not implemented length unit for volume");
     }
@@ -259,7 +301,7 @@ public:
     // two lattices are *the* same if their basis vectors are the same
     auto bv = o.real_basis_vectors();
     auto rbv = o.reciprocal_basis_vectors();
-    return approx::equal(bv, _vectors) && approx::equal(rbv, _reciprocal);
+    return approx::equal(bv, _real_vectors) && approx::equal(rbv, _reciprocal_vectors);
   }
   template<class R>
   [[nodiscard]] bool is_equivalent(const Lattice<R>& o) const {
@@ -293,15 +335,34 @@ public:
   }
 
   [[nodiscard]] matrix_t to_xyz(LengthUnit lu) const {
+    /*  A vector expressed in the orthonormal coordinate system, e⃗, is related to a vector expressed as coordinates
+     *  of the real lattice basis, x⃗, by e⃗ = A x⃗; where A is the column-vector matrix made of the real basis vectors
+     *  expressed in e⃗.
+     *  Similarly, for a vector expressed as coordinates of the reciprocal lattice basis, q⃗, we have e⃗ = B q⃗.
+     *
+     *  This method returns the stored basis vectors matrix to take x⃗ or q⃗ to e⃗.
+     * */
     switch (lu) {
-    case LengthUnit::angstrom: return _vectors;
-    case LengthUnit::inverse_angstrom: return _reciprocal;
-    default:
-      throw std::runtime_error("Not implemented");
+    case LengthUnit::angstrom: return _real_vectors;
+    case LengthUnit::inverse_angstrom: return _reciprocal_vectors;
+    default: throw std::runtime_error("Not implemented");
     }
   }
   [[nodiscard]] matrix_t from_xyz(LengthUnit lu){
-    return transpose(to_xyz(lu));
+    /* Similarly to `to_xyz` we make use of the relationships e⃗ = A x⃗ and e⃗ = B q⃗ to enable finding x⃗ or q⃗ from e⃗.
+     * Inverting A or B and multiplying from the left we find,  x⃗ = A⁻¹ e⃗   and   q⃗ = B⁻¹ e⃗.
+     * However, we can avoid taking the inversion of A or B since we remember that the two sets of basis vectors
+     * are related by B = 2π (A⁻¹)ᵀ. [To find B⁻¹, B⁻¹=(2π (A⁻¹)ᵀ)⁻¹=(Aᵀ/2π) --> BB⁻¹= 2π (A⁻¹)ᵀ Aᵀ / 2π= 𝟙]
+     *    x⃗ = A⁻¹ e⃗ = (Bᵀ/2π) e⃗   and   q⃗ = B⁻¹ e⃗ = (Aᵀ/2π) e⃗
+     * */
+    matrix_t mat;
+    switch (lu) {
+      case LengthUnit::angstrom: mat = _reciprocal_vectors; break;
+      case LengthUnit::inverse_angstrom: mat = _real_vectors; break;
+      default: throw std::runtime_error("Not implemented");
+    }
+    for (auto & x: mat) x /= math::two_pi;
+    return transpose(mat);
   }
 
 #ifdef USE_HIGHFIVE
@@ -309,9 +370,10 @@ public:
   std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool>
   to_hdf(H& obj, const std::string& entry) const {
     auto group = overwrite_group(obj, entry);
-    group.createAttribute("realspace", _vectors);
-    group.createAttribute("reciprocalspace", _reciprocal);
-    group.createAttribute("metric", _metric);
+    group.createAttribute("real_space_vectors", _real_vectors);
+    group.createAttribute("reciprocal_space_vectors", _reciprocal_vectors);
+    group.createAttribute("real_metric", _real_metric);
+    group.createAttribute("reciprocal_metric", _reciprocal_metric);
     group.createAttribute("bravais", _bravais);
     bool ok{true};
     ok &= _space.to_hdf(group, "spacegroup_symmetry");
@@ -323,43 +385,43 @@ public:
   static std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, Lattice<T>>
   from_hdf(H& obj, const std::string& entry){
     auto group = obj.getGroup(entry);
-    matrix_t real, reciprocal, metric;
+    matrix_t real, reciprocal, real_metric, reciprocal_metric;
+    group.getAttribute("real_space_vectors").read(real);
+    group.getAttribute("reciprocal_space_vectors").read(reciprocal);
+    group.getAttribute("real_metric").read(real_metric);
+    group.getAttribute("reciprocal_metric").read(reciprocal_metric);
     Bravais L;
-    group.getAttribute("realspace", real);
-    group.getAttribute("reciprocalspace", reciprocal);
-    group.getAttribute("metric", metric);
-    group.getAttribute("bravais", L);
+    group.getAttribute("bravais").read(L);
     auto spg = Symmetry::from_hdf(group, "spacegroup_symmetry");
     auto ptg = PointSymmetry::from_hdf(group, "pointgroup_symmetry");
     auto bas = Basis::from_hdf(group, "basis");
-    return {real, reciprocal, metric, L, spg, ptg, bas};
+    return {real, reciprocal, real_metric, reciprocal_metric, L, spg, ptg, bas};
   }
 #endif
 
   Lattice<T> primitive() const {
     PrimitiveTransform P(_bravais);
     if (P.does_anything()){
-      matrix_t pv, pr, pm;
       // The transformation matrix P gives us the primitive basis column-vector
       // matrix Aₚ from the standard basis column-vector matrix Aₛ by
       // Aₚ = Aₛ P.
       // The PrimitiveTransform object contains 6*P (so that it's integer valued)
-      utils::multiply_matrix_matrix(pv.data(), P.get_6P().data(), _vectors.data());
+      auto pv = linear_algebra::mul_mat_mat(P.get_6P(), _real_vectors);
       for (auto & x: pv) x /= T(6);
-      // calculating the new metric tensor could be done from _vectors, but
-      // we might as well use the new values in pr
-      pr = transpose(pv); // abuse pr as a temporary array
-      utils::multiply_matrix_matrix(pm.data(), pv.data(), pr.data());
+      // calculating the new metric tensor could be done from _real_vectors, but
+      // we might as well use the new values in pv
+      auto pvm = linear_algebra::mul_mat_mat(pv, transpose(pv));
 
       // The reciprocal lattice vectors (expressed as column vectors of a matrix)
       // are transformed by the inverse of the transpose (or the transpose of
       // the inverse) of P
-      utils::multiply_matrix_matrix(pr.data(), P.get_invPt().data(), _reciprocal.data());
+      auto pr = linear_algebra::mul_mat_mat(P.get_invPt(), _reciprocal_vectors);
+      auto prm = linear_algebra::mul_mat_mat(pr, transpose(pr));
 
       // strictly we should change the spacegroup and pointgroup symmetry
       // representations, plus the atom basis representation... but that seems
       // overkill for now. FIXME think about this more.
-      return {pv, pr, pm, _bravais, _space, _point, _basis};
+      return {pv, pr, pvm, prm, _bravais, _space, _point, _basis};
     }
     return *this;
   }
