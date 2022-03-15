@@ -131,8 +131,7 @@ public:
                // and sort_by_length are possible but not necessarily useful.
       }
       if (!success) {
-        info_update("First Brillouin zone ", _first.python_string(), "and 'irreducible' Brillouin zone",
-                    _irreducible.python_string());
+        info_update("First Brillouin zone\n", _first.python_string(), "\nand 'irreducible' Brillouin zone\n",_irreducible.python_string());
         throw std::runtime_error(
             "Failed to find an irreducible Brillouin zone.");
       }

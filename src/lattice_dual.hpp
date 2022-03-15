@@ -78,17 +78,17 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
   }
-  Lattice(const matrix_t & vectors, const std::string& s, const std::string& c, const LengthUnit lu)
+  Lattice(const matrix_t & vectors, const MatrixVectors mv, const std::string& s, const std::string& c, const LengthUnit lu)
   {
-    set_vectors(vectors, lu);
+    set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu);
     set_metrics();
     set_space_symmetry(s, c);
     _bravais = _space.getcentring();
     set_point_symmetry();
   }
-  Lattice(const matrix_t & vectors, const std::string& s, const LengthUnit lu)
+  Lattice(const matrix_t & vectors, const MatrixVectors mv, const std::string& s, const LengthUnit lu)
   {
-    set_vectors(vectors, lu);
+    set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu);
     set_metrics();
     set_space_symmetry(s);
     _bravais = _space.getcentring();
@@ -167,6 +167,14 @@ private:
     };
     set_vectors(B, LengthUnit::inverse_angstrom);
   }
+  /*! \brief Set the real and reciprocal basis vector matrices
+   *
+   * @param m Either the real space or reciprocal space basis vector matrix,
+   *          which has the three basis vectors as its *columns*.
+   * @param lu An enumerated length unit to indicate if the passed matrix
+   *           represents the real (LengthUnit::angstrom) or reciprocal
+   *           (LengthUnit::inverse_angstrom) basis vectors.
+   */
   void set_vectors(const matrix_t& m, LengthUnit lu){
     auto inv_m = linear_algebra::mat_inverse(m);
     for (auto & x: inv_m) x *= math::two_pi;
@@ -406,16 +414,24 @@ public:
       // matrix Aₚ from the standard basis column-vector matrix Aₛ by
       // Aₚ = Aₛ P.
       // The PrimitiveTransform object contains 6*P (so that it's integer valued)
-      auto pv = linear_algebra::mul_mat_mat(P.get_6P(), _real_vectors);
+      auto pv = linear_algebra::mul_mat_mat(_real_vectors, P.get_6P());
       for (auto & x: pv) x /= T(6);
       // calculating the new metric tensor could be done from _real_vectors, but
       // we might as well use the new values in pv
       auto pvm = linear_algebra::mul_mat_mat(pv, transpose(pv));
 
-      // The reciprocal lattice vectors (expressed as column vectors of a matrix)
-      // are transformed by the inverse of the transpose (or the transpose of
-      // the inverse) of P
-      auto pr = linear_algebra::mul_mat_mat(P.get_invPt(), _reciprocal_vectors);
+      /* We have a column-vector matrix of reciprocal lattice basis vectors
+       * related to the real space matrix by
+       *            Bₛ= 2π(Aₛ⁻¹)ᵀ
+       *      (Bₛ/2π)ᵀ= Aₛ⁻¹
+       *    (Bₛᵀ/2π)⁻¹= Aₛ
+       *     2π(Bₛᵀ)⁻¹= Aₛ, which is of course true for the primitive lattice
+       *
+       *        2π(Bₚᵀ)⁻¹ = 2π(Bₛᵀ)⁻¹P
+       *          (Bₚ⁻¹)ᵀ = (Bₛ⁻¹)ᵀP
+       *          Bₚ⁻¹ = Pᵀ Bₛ⁻¹
+       *          Bₚ = Bₛ (Pᵀ)⁻¹                                              */
+      auto pr = linear_algebra::mul_mat_mat(_reciprocal_vectors, P.get_invPt());
       auto prm = linear_algebra::mul_mat_mat(pr, transpose(pr));
 
       // strictly we should change the spacegroup and pointgroup symmetry

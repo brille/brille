@@ -100,9 +100,10 @@ namespace brille::polyhedron{
        *    if any two faces contain three of the same vertices, they must be co-planar
        * we are, of course, discounting the possibility that two faces are coplanar and overlap without sharing points
        * but that seems *way* too difficult to handle at the moment. */
-      for (ind_t i=0; i < faces.size()-1;  ++i) {
+      std::vector<bool> needed(faces.size(), true);
+      for (ind_t i=0; i < faces.size()-1;  ++i) if (needed[i]) {
         const auto & a{faces[i]};
-        for (ind_t j = i + 1; j < faces.size(); ++j) {
+        for (ind_t j = i + 1; j < faces.size(); ++j) if (needed[j]) {
           const auto & b{faces[j]};
           auto c = std::count_if(a.begin(), a.end(), [&b](const auto & v){return std::count(b.begin(), b.end(), v) > 0;});
           //      if (c == a.size()){
@@ -111,13 +112,29 @@ namespace brille::polyhedron{
           //        // e.g., [0, 1, 2] == [0, 1, 2] || [1, 2, 3] || [2, 3, 0] || [3, 0, 1] for 4-point duplicate check
           //        // or    [0, 2, 1] == [0, 1, 2] || [1, 2, 3] || [2, 3, 0] || [3, 0, 1] for 4-point opposites check
           //      }
+          if (c > 2 && std::is_permutation(a.begin(), a.end(), b.begin())){
+            // either these faces point in opposite directions and should be removed
+            // or in the same direction and only one should be removed(?);
+            needed[i] = is_positive_permutation(a, b); // keep the first face *if* they point the same way
+            needed[j] = false;
+            c = 0;
+            // if neither are kept, this leaves behind a parting line. maybe we can handle this later?
+          }
           if (c > 2) {
+            info_update("With the vertices\nnp.array(\n", vertices.to_string(), "),\n", faces, "\n the faces ", a, " and ", b, " are coplanar");
             std::string msg = "The faces " + std::to_string(i) + " and " + std::to_string(j);
             msg += " contain " + std::to_string(c) + " common vertex indexes, which indicates that they are coplanar!";
             throw std::runtime_error(msg);
             // If this gets thrown we should really think about handling this
           }
         }
+      }
+      if (std::find(needed.begin(), needed.end(), false) != needed.end()){
+        for (ind_t i=0; i<faces.size(); ++i) if (!needed[i]) faces[i].clear();
+        auto last = std::remove_if(faces.begin(), faces.end(), [](const auto & x){return x.size() < 1;});
+        faces.erase(last);
+        // figure out how to remove the unused vertices ...
+//        std::remove_if();
       }
       return {vertices, Faces(faces)};
     }
@@ -164,7 +181,8 @@ namespace brille::polyhedron{
         }
         post_faces.push_back(i_face);
       }
-      return {rotated, faces_t(post_faces)};
+      auto faces = faces_t(post_faces);
+      return {rotated, faces};
     }
 
     // geometric properties in relation to another point or polyhedron

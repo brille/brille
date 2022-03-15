@@ -784,6 +784,23 @@ subscript_ok(const std::vector<I>& subscript, const std::vector<I>& shape){
     return out;
   }
 
+  template<class T>
+  bool is_positive_permutation(const std::vector<T> & a, const std::vector<T> & b){
+    if (a.size() != b.size()) return false;
+    const auto n{a.size()};
+    for (size_t i=0; i<n; ++i){
+      bool ipp = true;
+      for (size_t j=0; j<n; ++j){
+        if (a[(i+j)%n] != b[j]) {
+          ipp = false;
+          break;
+        }
+      }
+      if (ipp) return true;
+    }
+    return false;
+  }
+
 } // namespace brille
 
 

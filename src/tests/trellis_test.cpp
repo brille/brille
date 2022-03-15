@@ -277,7 +277,7 @@ TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trell
                               3.791956412170034, 3.791956412170034, 5.362636186024768,
                               3.791956412170034,-3.791956412170034, 5.362636186024768};
   //
-  auto lat = Direct<double>(latmat, "P 1", ""); // not P₁ but it *is* primitive
+  auto lat = Direct<double>(latmat, MatrixVectors::row, "P 1", ""); // not P₁ but it *is* primitive
   // the generators are: 4-fold [1 -1 1], 2-fold [-1 1 1], 3-fold [1 1 -3], -𝟙
   // row-ordered generator matrices
   std::vector<std::array<int,9>> W {

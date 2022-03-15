@@ -36,11 +36,38 @@ TEST_CASE("Primitive Cubic BrillouinZone instantiation","[bz_]"){
   REQUIRE(write_read_test(bz, "primitive_cubic"));
 }
 
+TEST_CASE("P4 Cubic BrillouinZone instantiation","[bz_]"){
+  auto lat = Direct<double>(
+      {brille::math::two_pi, brille::math::two_pi, brille::math::two_pi},
+      {90., 90., 90.} ,"P 2 2");
+  BrillouinZone bz(lat);
+  REQUIRE(write_read_test(bz, "primitive_cubic"));
+  info_update("First Brillouin zone\n", bz.get_polyhedron().python_string());
+  info_update("Irreducible Brillouin zone\n", bz.get_ir_polyhedron().python_string());
+}
+
+
 TEST_CASE("Primitive Hexagonal BrillouinZone instantiation","[bz_]"){
   auto lat = Direct<double>({3., 3., 3.}, {90., 90., 120.}, "P 1");
   BrillouinZone bz(lat);
+  info_update("First Brillouin zone\n", bz.get_polyhedron().python_string());
+  info_update("Irreducible Brillouin zone\n", bz.get_ir_polyhedron().python_string());
   REQUIRE(write_read_test(bz, "primitive_hexagonal"));
 }
+
+TEST_CASE("Rhombohedral Brillouin zone","[bz_]"){
+  auto lat = Direct<double>({math::two_pi, math::two_pi, math::pi}, {90,90,120}, "-R 3");
+  verbose_update(lat.to_verbose_string());
+  BrillouinZone bz(lat,/*to_prim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, false);
+  REQUIRE(bz.check_ir_polyhedron());
+  auto fbz = bz.get_polyhedron();
+  auto irp = bz.get_ir_polyhedron();
+  REQUIRE(irp.volume() == Approx(fbz.volume()/6));
+  REQUIRE(write_read_test(bz, "mp-147"));
+  info_update("First Brillouin zone\n", fbz.python_string());
+  info_update("Irreducible Brillouin zone\n", irp.python_string());
+}
+
 //
 //TEST_CASE("BrillouinZone moveinto","[bz_]"){
 //  std::string spgr;
@@ -211,7 +238,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 imprecise failure","[bz_][mater
   //
   std::string hall_symbol = "-R 3";
   //
-  auto lat = Direct<double>(lattice_vectors, hall_symbol);
+  auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
   REQUIRE_THROWS_AS(BrillouinZone(lat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true), std::runtime_error);
 }
 
@@ -226,7 +253,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147","[bz_][materialsproject]"){
   //
   std::string hall_symbol = "-R 3";
   //
-  auto lat = Direct<double>(lattice_vectors, hall_symbol);
+  auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
   BrillouinZone bz(lat,/*toprim=*/true,/*extent=*/1,/*tr=*/false,/*wedge_search=*/true,/*tol=*/10000, true);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
@@ -246,7 +273,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-306","[bz_][materialsproject]"){
   //
   std::string hall_symbol = "P 31 2\"";
   //
-  auto lat = Direct<double>(lattice_vectors, hall_symbol);
+  auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
   BrillouinZone bz(lat);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
@@ -266,7 +293,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-661","[bz_][materialsproject]"){
   //
   std::string hall_symbol = "P 6c -2c";
   //
-  auto lat = Direct<double>(lattice_vectors, hall_symbol);
+  auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
   BrillouinZone bz(lat);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
@@ -286,7 +313,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-7041","[bz_][materialsproject]"){
   //
   std::string hall_symbol = "-R 3 2\"";
   //
-  auto lat = Direct<double>(lattice_vectors, hall_symbol);
+  auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
   BrillouinZone bz(lat);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
@@ -324,7 +351,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-917","[bz_][materialsproject]"){
   //
   std::string hall_symbol = "-C 2y";
   //
-  auto lat = Direct<double>(lattice_vectors, hall_symbol);
+  auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
   BrillouinZone bz(lat);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();

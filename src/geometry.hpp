@@ -707,9 +707,7 @@ namespace brille {
   std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, A<T>, A<T>>>
   find_convex_hull_planes(const A<T>& points){
     auto [a, b, c] = find_convex_hull_planes(points.xyz());
-    auto lat = points.lattice();
-    auto typ = points.type();
-    return std::make_tuple(A<T>(typ, lat, a), A<T>(typ, lat, b), A<T>(typ, lat, c));
+    return std::make_tuple(from_xyz_like(points, a), from_xyz_like(points, b), from_xyz_like(points, c));
   }
 
   template<class T, template<class> class A>
@@ -909,7 +907,7 @@ namespace brille {
       for (const auto & b: are_unique) index.push_back(b ? count++ : no);
       for (ind_t i=0; i < no; ++i) {
         if (index[i] >= no) {
-          for (ind_t j = 0; j < no; ++i) {
+          for (ind_t j = 0; j < no; ++j) {
             if (i != j && index[j] < no && points.match(i, j)) index[i] = index[j];
           }
         }

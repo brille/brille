@@ -133,11 +133,12 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       // (expressed in units of the reciprocal lattice) and the second
       // reciprocal space vector.
       nrm.set(0, cross(reis.view(e1).star(), eis.view(e2)));
+      nrm /= norm(nrm);
       if (norm(cross(eis, nrm)).is(brille::cmp::eq, 0., approx_tolerance).count() == 1){
         // keep any special points beyond the bounding plane
         keep = dot(nrm, special).is(brille::cmp::ge, 0., approx_tolerance);
 //        debug_update("Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n",special.to_string(),keep.to_string());
-        debug_update("1 Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
+        debug_update("1 Keeping special points with",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
         special = special.extract(keep);
         debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
         sym_unused[i] = false;
@@ -153,6 +154,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
         case 1: nrm.set(0, eiv[0]); break; /* (010) → n = (100)* */
         default: throw std::runtime_error("Unreachable path reached!");
       }
+      nrm /= norm(nrm);
       // keep any special points beyond the bounding plane
       keep = dot(nrm, special).is(brille::cmp::ge, 0., approx_tolerance);
       debug_update("Keeping special (LVec) points p, with (LVec)",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
@@ -166,6 +168,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   if (special_mirrors) for (size_t i=0; i<ps.size(); ++i) if (ps.isometry(i)==-2){
     vec.set(0, ps.axis(i)); // the mirror plane normal is in the direct lattice
     nrm.set(0, vec.star()); // and we want the normal in the reciprocal lattice
+    nrm /= norm(nrm);
     keep = dot(nrm, special).is(brille::cmp::ge, 0., approx_tolerance);
     // we need at least three points (plus Γ) to define a polyhedron
     // If we are not keeping three points, check if applying the mirror plane
@@ -312,11 +315,13 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
                   nrm.set(0, cross(vec.star(), pt0));
                   nrm.set(1, cross(pt1, vec.star()));
                 }
+                nrm /= norm(nrm);
                 debug_update("give normals:", nrm.to_string(0), " and", nrm.to_string(1));
                 // now check that all special points are inside of the wedge defined by the normals
               } else {
                 // order == 2, so only one normal to worry about:
                 nrm = cross(vec.star(), special.view(s[j]));
+                nrm /= norm(nrm);
                 // make sure we don't remove all points out of the plane containing
                 // the rotation axis and the two special points
                 if (dot(nrm, special).is(brille::cmp::gt,0., approx_tolerance).count() == 0)

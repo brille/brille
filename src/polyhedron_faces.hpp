@@ -54,10 +54,17 @@ namespace brille::polyhedron{
       auto fpv = find_planes_containing_point(a, b, c, unique_vertices);
       _faces = polygon_faces(a, b, c, fpv, unique_vertices);
       if (polygon_face_vertex_purge(unique_vertices, _faces)) {
-        debug_update("Some vertices purged. Now vertices\n", unique_vertices.to_string(), "faces\n", _faces);
+        debug_update("Some vertices purged. Now vertices\nnp.array(\n", unique_vertices.to_string(), "),\n", _faces);
+        // the _faces vectors point into the smaller unique_vertices, so we
+        // need to find *an* equivalent vertex in vertices for each retained
+        // vertex in unique_vertices
+        std::vector<ind_t> map(unique_vertices.size(0), vertices.size(0));
+        for (ind_t i=0; i<unique_vertices.size(0); ++i){
+          map[i] = vertices.first(cmp::eq, unique_vertices.view(i));
+        }
+        for (auto & face: _faces) for (auto & idx: face) idx = map[idx];
+        debug_update("Face indexes updated to point into\nnp.array(\n",vertices.to_string(),"),\n",_faces);
       }
-      // TODO now fix the indexing of faces to point into vertices:
-      info_update("Apparently the faces, ", _faces, " do not point into the vertices ", vertices.to_string());
     }
     template<class T, template<class> class A>
     Faces(faces_t faces, const A<T> & vertices): _faces(std::move(faces)) {
@@ -65,9 +72,17 @@ namespace brille::polyhedron{
       std::tie(v, _faces) = remove_duplicate_points_and_update_face_indexing(v, _faces);
       _faces = polygon_faces(_faces, v);
       if (polygon_face_vertex_purge(v, _faces)){
-        debug_update("Some vertices purged. Now vertices\n", v.to_string(), "faces\n", _faces);
+        debug_update("Some vertices purged. Now vertices\nnp.array(\n", v.to_string(), "),\n", _faces);
+        // the _faces vectors point into the smaller unique_vertices, so we
+        // need to find *an* equivalent vertex in vertices for each retained
+        // vertex in v
+        std::vector<ind_t> map(v.size(0), vertices.size(0));
+        for (ind_t i=0; i<v.size(0); ++i){
+          map[i] = vertices.first(cmp::eq, v.view(i));
+        }
+        for (auto & face: _faces) for (auto & idx: face) idx = map[idx];
+        debug_update("Face indexes updated to point into\nnp.array(\n",vertices.to_string(),"),\n",_faces);
       }
-      // TODO now fix the indexing of faces to point into vertices
     }
 
     template<class T, template<class> class A>

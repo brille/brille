@@ -43,7 +43,7 @@ enum class LengthUnit { none, angstrom, inverse_angstrom};
 enum class NodeType {null, cube, poly};
 
 
-
+enum class MatrixVectors{ row, column };
 
 }
 
