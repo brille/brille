@@ -15,6 +15,62 @@
 
 namespace brille::lattice {
 
+template<class T, class S=std::common_type_t<T, double>> std::tuple<std::array<S,3>, std::array<S,3>, std::array<S,3>>
+dual_lattice_parameters(const std::array<T,3>& lengths, const std::array<T,3>& cosines, const std::array<T,3>& sines){
+  // unit-length parallelepiped volume:
+  S cos_sum{0}, cos_prod{2};
+  for (int i=0; i<3; ++i){
+    cos_sum += cosines[i] * cosines[i];
+    cos_prod *= cosines[i];
+  }
+  S unit_volume = std::sqrt(S(1) - cos_sum + cos_prod); // sqrt(1 - sum() + 2 * prod())
+
+  std::array<S,3> dual_len, dual_cos, dual_sin;
+  for (size_t i=0; i<3; ++i) {
+    size_t j{(i+1u)%3u}, k{(i+2u)%3u}; // cyclical indexing for angles
+    // e.g., a* = 2π b×c / a⋅(b×c) → 2π sin(α) / (a * â(b̂×ĉ))
+    dual_len[i] = math::two_pi * sines[i] / lengths[i] / unit_volume;
+    dual_cos[i] = (cosines[j]*cosines[k] - cosines[i]) / (sines[j] * sines[k]);
+    dual_sin[i] = std::sqrt(S(1) - dual_cos[i] * dual_cos[i]); // ok since angles are less than pi
+  }
+  return std::make_tuple(dual_len, dual_cos, dual_sin);
+}
+
+template<class T, class S=std::common_type_t<T, double>> std::tuple<std::array<S,3>, std::array<S,3>>
+inter_facial_angles_to_cosines_sines(const std::array<T,3>& angles, AngleUnit au){
+  if (AngleUnit::not_provided == au){
+    auto minmax = std::minmax_element(angles.begin(), angles.end());
+    if (*minmax.first < T(0))
+      throw std::logic_error("Inter-facial cell angles must be positive but " + std::to_string(*minmax.first) + " found");
+    au = (*minmax.second < math::pi) ? AngleUnit::radian : AngleUnit::degree;
+  }
+  std::array<S,3> cos, sin;
+  switch (au) {
+  case AngleUnit::degree:
+    for (int i=0; i<3; ++i) std::tie(cos[i], sin[i]) = math::cos_and_sin_d(angles[i]);
+    break;
+  case AngleUnit::radian:
+    for (int i=0; i<3; ++i) std::tie(cos[i], sin[i]) = math::cos_and_sin(angles[i]);
+    break;
+  default:
+    for (int i=0; i<3; ++i) std::tie(cos[i], sin[i]) = math::cos_and_sin(math::pi * angles[i]);
+  }
+  return std::make_tuple(cos, sin);
+}
+
+template<class T> std::array<T,9> metric_from_column_vectors(const std::array<T,9>& vectors){
+  // The column vector matrix A has an associated space metric given by AᵀA
+  //
+  //    [[ ax bx cx ]
+  // A = [ ay by cy ]
+  //     [ az bz cz ]]
+  //
+  //      [[ ax ay az ] [[ ax bx cx ]  [[ a²   a⋅b  a⋅c ]
+  // AᵀA = [ bx by bz ]  [ ay by cy ] = [ b⋅a  b²   b⋅c ]
+  //       [ cx cy cz ]] [ az bz cz ]   [ c⋅a  c⋅b  c²  ]
+  return linear_algebra::mul_mat_mat(transpose(vectors), vectors);
+}
+
 template<class T>
 class Lattice{
 public:
@@ -97,59 +153,14 @@ public:
 
 private:
   void set_vectors(const vector_t& v, const vector_t& a, LengthUnit lu, AngleUnit angle_unit){
-    AngleUnit au{angle_unit};
-
-    if (AngleUnit::not_provided == au){
-      auto minmax = std::minmax_element(a.begin(), a.end());
-      if (*minmax.first < T(0))
-        throw std::logic_error("Inter-facial cell angles must be positive but " + std::to_string(*minmax.first) + " found");
-      au = (*minmax.second < math::pi) ? AngleUnit::radian : AngleUnit::degree;
-    }
-
-    vector_t cos, sin;
-    switch (au) {
-    case AngleUnit::degree:
-      for (int i=0; i<3; ++i) std::tie(cos[i], sin[i]) = math::cos_and_sin_d(a[i]);
-      break;
-    case AngleUnit::radian:
-      for (int i=0; i<3; ++i) std::tie(cos[i], sin[i]) = math::cos_and_sin(a[i]);
-      break;
-    default:
-      for (int i=0; i<3; ++i) std::tie(cos[i], sin[i]) = math::cos_and_sin(math::pi * a[i]);
-    }
-    // unit-length parallelepiped volume:
-    T v_sum{0}, v_prod{2};
-    for (int i=0; i<3; ++i){
-      v_sum += cos[i] * cos[i];
-      v_prod *= cos[i];
-    }
-    T vol = std::sqrt(1 - v_sum + v_prod); // sqrt(1 - sum() + 2 * prod())
-
-    auto dual = [&](){
-      vector_t dual_v, dual_cos, dual_sin;
-      // e.g., a* = 2π b×c / a⋅(b×c) → 2π sin(α) / (a * â(b̂×ĉ))
-      for (size_t i=0; i<3; ++i) dual_v[i] = math::two_pi * sin[i] / v[i] / vol;
-      for (size_t i=0; i<3; ++i) {
-        size_t j{(i+1u)%3u}, k{(i+2u)%3u};
-        dual_cos[i] = (cos[j]*cos[k] - cos[i]) / (sin[j] * sin[k]);
-        dual_sin[i] = std::sqrt(1 - dual_cos[i] * dual_cos[i]); // ok since angles are less than pi
-      }
-      return std::make_tuple(dual_v, dual_cos, dual_sin);
-    };
-    vector_t dv, dcos, dsin, rv, rcos, rsin;
+    auto [cos, sin] = inter_facial_angles_to_cosines_sines(a, angle_unit);
+    // arrays are small; so copying shouldn't hurt
+    vector_t dv{v}, dcos{cos}, dsin{sin}, rv{v}, rcos{cos}, rsin{sin};
     switch (lu) {
     case LengthUnit::angstrom:
-      {
-        std::tie(rv, rcos, rsin) = dual();
-        dv = v; dcos = cos; dsin = sin;
-      }
-      break;
+      std::tie(rv, rcos, rsin) = dual_lattice_parameters(v, cos, sin); break;
     case LengthUnit::inverse_angstrom:
-      {
-        std::tie(dv, dcos, dsin) = dual();
-        rv = v; rcos = cos; rsin = sin;
-      }
-      break;
+      std::tie(dv, dcos, dsin) = dual_lattice_parameters(v, cos, sin); break;
     default:
       throw std::logic_error("The length unit must be angstrom or inverse angstrom!");
     }
@@ -164,28 +175,29 @@ private:
   }
   /*! \brief Set the real and reciprocal basis vector matrices
    *
-   * @param m Either the real space or reciprocal space basis vector matrix,
+   * @param AorB Either the real space or reciprocal space basis vector matrix,
    *          which has the three basis vectors as its *columns*.
    * @param lu An enumerated length unit to indicate if the passed matrix
    *           represents the real (LengthUnit::angstrom) or reciprocal
    *           (LengthUnit::inverse_angstrom) basis vectors.
    */
-  void set_vectors(const matrix_t& m, LengthUnit lu){
-    auto inv_m = linear_algebra::mat_inverse(m);
-    for (auto & x: inv_m) x *= math::two_pi;
-    inv_m = transpose(inv_m);
+  void set_vectors(const matrix_t& AorB, LengthUnit lu){
+    auto BorA_transposed = linear_algebra::mat_inverse(AorB);
+    for (auto & x: BorA_transposed) x *= math::two_pi;
     if (LengthUnit::angstrom == lu){
-      _real_vectors = m;
-      _reciprocal_vectors = inv_m;
+      _real_vectors = AorB;
+      _reciprocal_vectors = transpose(BorA_transposed);
     } else if (LengthUnit::inverse_angstrom == lu) {
-      _real_vectors = inv_m;
-      _reciprocal_vectors = m;
+      _real_vectors = transpose(BorA_transposed);
+      _reciprocal_vectors = AorB;
     }
   }
   void set_metrics() {
     // the two metrics are mutually inverse with a factor of 4 * pi^2
-    _real_metric = linear_algebra::mul_mat_mat(_real_vectors, transpose(_real_vectors));
-    _reciprocal_metric = linear_algebra::mul_mat_mat(_reciprocal_vectors, transpose(_reciprocal_vectors));
+    // and of course A and B are *both* made of column vectors, so their
+    // metrics are AᵀA and BᵀB *not AAᵀ and BBᵀ!
+    _real_metric = metric_from_column_vectors(_real_vectors);
+    _reciprocal_metric = metric_from_column_vectors(_reciprocal_vectors);
   }
   void set_space_symmetry(const std::string& s, const std::string& c=""){
     auto no = string_to_hall_number(s, c);
@@ -413,7 +425,7 @@ public:
       for (auto & x: pv) x /= T(6);
       // calculating the new metric tensor could be done from _real_vectors, but
       // we might as well use the new values in pv
-      auto pvm = linear_algebra::mul_mat_mat(pv, transpose(pv));
+      auto pvm = metric_from_column_vectors(pv);
 
       /* We have a column-vector matrix of reciprocal lattice basis vectors
        * related to the real space matrix by
@@ -427,7 +439,7 @@ public:
        *          Bₚ⁻¹ = Pᵀ Bₛ⁻¹
        *          Bₚ = Bₛ (Pᵀ)⁻¹                                              */
       auto pr = linear_algebra::mul_mat_mat(_reciprocal_vectors, P.get_invPt());
-      auto prm = linear_algebra::mul_mat_mat(pr, transpose(pr));
+      auto prm = metric_from_column_vectors(pr);
 
       // strictly we should change the spacegroup and pointgroup symmetry
       // representations, plus the atom basis representation... but that seems
