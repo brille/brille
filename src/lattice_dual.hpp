@@ -124,35 +124,30 @@ private:
       v_prod *= cos[i];
     }
     T vol = std::sqrt(1 - v_sum + v_prod); // sqrt(1 - sum() + 2 * prod())
-    T a_star, b_star, c_star, cb_star, cg_star, sb_star, sg_star, ca, two_pi_over_c;
+
+    auto dual = [&](){
+      vector_t dual_v, dual_cos, dual_sin;
+      // e.g., a* = 2π b×c / a⋅(b×c) → 2π sin(α) / (a * â(b̂×ĉ))
+      for (size_t i=0; i<3; ++i) dual_v[i] = math::two_pi * sin[i] / v[i] / vol;
+      for (size_t i=0; i<3; ++i) {
+        size_t j{(i+1u)%3u}, k{(i+2u)%3u};
+        dual_cos[i] = (cos[j]*cos[k] - cos[i]) / (sin[j] * sin[k]);
+        dual_sin[i] = std::sqrt(1 - dual_cos[i] * dual_cos[i]); // ok since angles are less than pi
+      }
+      return std::make_tuple(dual_v, dual_cos, dual_sin);
+    };
+    vector_t dv, dcos, dsin, rv, rcos, rsin;
     switch (lu) {
     case LengthUnit::angstrom:
       {
-      // is this a bad idea?
-        a_star = math::two_pi * sin[0] / v[0] / vol;
-        b_star = math::two_pi * sin[1] / v[1] / vol;
-        c_star = math::two_pi * sin[2] / v[2] / vol;
-//        ca_star = (cos[1]*cos[2] - cos[0]) / (sin[1] * sin[2]);
-        cb_star = (cos[2]*cos[0] - cos[1]) / (sin[2] * sin[0]);
-        cg_star = (cos[0]*cos[1] - cos[2]) / (sin[0] * sin[1]);
-        sb_star = std::sin(std::acos(cb_star));
-        sg_star = std::sin(std::acos(cg_star));
-        ca = cos[0];
-        two_pi_over_c = math::two_pi / v[2];
+        std::tie(rv, rcos, rsin) = dual();
+        dv = v; dcos = cos; dsin = sin;
       }
       break;
     case LengthUnit::inverse_angstrom:
       {
-        a_star = v[0];
-        b_star = v[1];
-        c_star = v[2];
-//        ca_star = cos[0];
-        cb_star = cos[1];
-        cb_star = cos[2];
-        sb_star = sin[1];
-        sg_star = sin[2];
-        ca = (cos[1]*cos[2] - cos[0]) / (sin[1] * sin[2]);
-        two_pi_over_c = (vol * v[2]) / sin[2];
+        std::tie(dv, dcos, dsin) = dual();
+        rv = v; rcos = cos; rsin = sin;
       }
       break;
     default:
@@ -161,9 +156,9 @@ private:
     // the B-matrix as in Acta Cryst. (1967). 22, 457 [with the 2pi convention]
     // http://dx.doi.org/10.1107/S0365110X67000970
     matrix_t B {
-        a_star, b_star * cg_star, c_star * cb_star,
-        T(0),   b_star * sg_star, -c_star * sb_star * ca,
-        T(0),   T(0),             two_pi_over_c
+        rv[0], rv[1] * rcos[2],  rv[2] * rcos[1],
+        T(0),  rv[1] * rsin[2], -rv[2] * rsin[1] * dcos[0],
+        T(0),  T(0),             math::two_pi / dv[2]
     };
     set_vectors(B, LengthUnit::inverse_angstrom);
   }
