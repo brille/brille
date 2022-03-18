@@ -997,13 +997,41 @@ namespace brille {
     // copy the faces which are ok to a new vector of vectors
     auto loop = [no, has](const auto & source){
       if (source.size() < 1) return std::make_tuple(false, source);
+      verbose_update("De-dangling loop for ", source);
+      // count how many times each vertex appears in the faces lists
       std::vector<I> co(no);
       std::iota(co.begin(), co.end(), 0u);
+      verbose_update("vertices ", co);
       std::transform(co.begin(), co.end(), co.begin(), [source, has](const I i){
         I c{0};
         for (const auto & f : source) if (has(f, i)) ++c;
         return c;
       });
+      verbose_update("  counts ", co);
+      // for each face, remove any points which appear on less than three faces
+      // and then remove faces with less than three vertices
+      auto checked_face = [co](const auto & f){
+        std::vector<I> face;
+        face.reserve(f.size());
+        for (const auto & x: f) if (co[x] > 2u) face.push_back(x);
+        return face;
+      };
+      std::vector<std::vector<I>> checked;
+      checked.reserve(source.size());
+      std::transform(source.begin(), source.end(), std::back_inserter(checked), checked_face);
+      std::vector<std::vector<I>> valid;
+      valid.reserve(checked.size());
+      std::copy_if(checked.begin(), checked.end(), std::back_inserter(valid), [](const auto & f){return f.size() > 2u;});
+      //
+      return std::make_tuple(source.size() > valid.size(), valid);
+
+      /*
+       The following version works if all faces are fully formed without
+       extraneous edge points. If there are extraneous edge points they may
+       appear on two faces which should be retained after the extraneous points
+       are removed.
+
+      // copy a face if all of its vertices appear at least twice
       auto check = [co](const auto & f){
         return std::all_of(f.begin(), f.end(), [co](const I &x) {return co[x] > 2u;});
       };
@@ -1011,10 +1039,12 @@ namespace brille {
       sink.reserve(source.size());
       std::copy_if(source.begin(), source.end(), std::back_inserter(sink), check);
       return std::make_tuple(source.size() > sink.size(), sink);
+      */
     };
     // actually run the good-face reduction until all faces are good (or gone)
     auto [again, out] = loop(faces);
     while (again) std::tie(again, out) = loop(out);
+    verbose_update("De-dangled faces:\n", out);
     return out;
   }
 
@@ -1035,6 +1065,7 @@ namespace brille {
         std::transform(face.begin(), face.end(), std::back_inserter(one), [map](const auto & i){return map[i];});
         updated.push_back(one);
       }
+      verbose_update("Keep ", keep, " face-full points\nnp.array(", get_xyz(points), "),\n", updated);
       return std::make_tuple(points.extract(keep), updated);
     }
     return std::make_tuple(points, faces);

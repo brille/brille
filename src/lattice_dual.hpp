@@ -234,6 +234,7 @@ public:
     rep += bravais_string(_bravais) + " Lattice with " + std::to_string(_space.size()) + " space group elements\n";
     rep += "      Direct{" + to_string(LengthUnit::angstrom, au) + "}\n";
     rep += "  Reciprocal{" + to_string(LengthUnit::inverse_angstrom, au) + "}\n";
+    if (Bravais::P != _bravais) rep += this->primitive().to_verbose_string();
     return rep;
   }
 
@@ -444,7 +445,7 @@ public:
       // strictly we should change the spacegroup and pointgroup symmetry
       // representations, plus the atom basis representation... but that seems
       // overkill for now. FIXME think about this more.
-      return {pv, pr, pvm, prm, _bravais, _space, _point, _basis};
+      return {pv, pr, pvm, prm, Bravais::P, _space, _point, _basis};
     }
     return *this;
   }

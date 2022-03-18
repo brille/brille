@@ -416,6 +416,10 @@ namespace brille::polyhedron{
       if (new_face.size() > 2 && face_not_in_faces(new_face, this->faces())){
         f.push_back(sort_convex_polygon_face(a, b, c, new_face, v));
       }
+      // We *may* have decided to keep all vertices and, in case of a rounding
+      // error, also added new points. We should not add any points if we've
+      // kept everything because keeping all vertices means no cut was performed
+      if (std::find(keep.begin(), keep.end(), false) == keep.end()) return std::make_tuple(vin, *this);
       // extend to cover the newly found vertices
       for (ind_t z=0; z<vertex_count; ++z) keep.push_back(true);
       verbose_update("keeping vertices ", keep);
