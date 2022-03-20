@@ -106,8 +106,8 @@ public:
       throw std::runtime_error(msg);
     }
     if (nth < 2)
-      return this->super_t::interpolate_at(q.get_xyz());
-    return this->super_t::interpolate_at(q.get_xyz(), nth);
+      return this->super_t::interpolate_at(q);
+    return this->super_t::interpolate_at(q, nth);
   }
 
   /*! \brief Interpolate at an equivalent irreducible reciprocal lattice point

@@ -21,6 +21,9 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Classes for the effect of symmetry on phonon eigenvectors
 */
 #include "array_.hpp" // defines bArray
+#include "array_l_.hpp"
+//#include "lattice_dual.hpp"
+
 namespace brille {
 
 /*! \brief A superclass for all rotation-required tabulated information

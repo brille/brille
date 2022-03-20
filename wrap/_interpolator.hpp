@@ -84,7 +84,7 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, py::array_t<double> py
   std::array<double,3> wght{{1,1,1}};
   bi = pywght.request();
   if (bi.ndim != 1) throw std::runtime_error("weights must be a 1-D array");
-  double *dblwght = (double*) bi.ptr;
+  auto *dblwght = (double*) bi.ptr;
   for (pybind11::ssize_t i=0; i<bi.shape[0] && i<3; ++i) wght[i] = dblwght[i];
   // tie everything up
   // return std::make_tuple(data, el, rl, csf, cvf, wght);

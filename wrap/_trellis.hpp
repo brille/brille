@@ -26,11 +26,11 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 namespace py = pybind11;
 
-template<class T,class R>
+template<class T,class R,class S>
 void declare_bztrellisq(py::module &m, const std::string &typestr){
   using namespace pybind11::literals;
   using namespace brille;
-  using Class = BrillouinZoneTrellis3<T,R>;
+  using Class = BrillouinZoneTrellis3<T,R,S>;
   std::string pyclass_name = std::string("BZTrellisQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());
   // Initializer (BrillouinZone, maximum node volume fraction, always_triangulate)
@@ -67,7 +67,6 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
   def_grid_interpolate(cls);
   def_grid_ir_interpolate(cls);
   def_grid_sort(cls);
-  def_grid_debye_waller(cls);
 
 #ifdef USE_HIGHFIVE
   def_grid_hdf_interface(cls, pyclass_name);

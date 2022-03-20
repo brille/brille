@@ -17,11 +17,11 @@
 namespace py = pybind11;
 namespace br = brille;
 
-template<template<class, class> class Grid, class T, class R>
-void def_grid_fill(py::class_<Grid<T,R>>& cls){
+template<template<class, class, class> class Grid, class T, class R, class S>
+void def_grid_fill(py::class_<Grid<T,R,S>>& cls){
   using namespace pybind11::literals;
   using namespace brille;
-  using Class = Grid<T,R>;
+  using Class = Grid<T,R,S>;
 
   cls.def("fill",
   [](Class& cobj,
@@ -231,19 +231,20 @@ Note
   )pbdoc");
 }
 
-template<template<class, class> class Grid, class T, class R>
-void def_grid_ir_interpolate(py::class_<Grid<T,R>>& cls){
+template<template<class, class, class> class Grid, class T, class R, class S>
+void def_grid_ir_interpolate(py::class_<Grid<T,R,S>>& cls){
   using namespace pybind11::literals;
-  using Class = Grid<T,R>;
+  using Class = Grid<T,R,S>;
   cls.def("ir_interpolate_at",
   [](
     Class& cobj, py::array_t<double> pyX, const bool& useparallel,
     const int& threads, const bool& no_move
   ){
     using namespace brille;
+    using namespace brille::lattice;
     profile_update("Start of 'ir_interpolate_at' operation");
     brille::Array2<double> bX = brille::py2a2(pyX);
-    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), bX);
+    auto qv = LQVec<double>(cobj.get_brillouinzone().get_lattice(), bX);
     profile_update("Q array wrapped for C++ use");
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -295,83 +296,85 @@ R"pbdoc(
       for the eigenvalues and eigenvectors, respectively.
 )pbdoc");
 
-  cls.def("ir_interpolate_at_dw",
-  [](
-    Class& cobj, py::array_t<double> pyX, py::array_t<double> pyM,
-    double temp_k, const bool& useparallel, const int& threads, const bool& no_move
-  ){
-    using namespace brille;
-    profile_update("Start of 'ir_interpolate_at_dw' operation");
-    brille::Array2<double> bX = brille::py2a2(pyX);
-    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), bX);
-    profile_update("Q array wrapped for C++ use");
-    if (qv.size(qv.ndim()-1) != 3)
-      throw std::runtime_error("Interpolation requires one or more 3-vectors");
-    // perform the interpolation and rotate and vectors/tensors afterwards
-    const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
-    int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
-    auto [val, vec] = cobj.ir_interpolate_at(qv, nthreads, no_move);
-    profile_update("Interpolated values found");
-    // calculate the Debye-Waller factor
-    auto Wd = brille::a2py(cobj.debye_waller(qv, np2vec(pyM), temp_k));
-    profile_update("  End of 'ir_interpolate_at_dw' operation");
-    return std::make_tuple(brille::a2py(val), brille::a2py(vec), Wd);
-  },"Q"_a,"M/amu"_a,"temperature/K"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false,
-R"pbdoc(
-  Perform both the linear interpolation and Debye Waller calculation
-
-  Parameters
-  ----------
-  Q : :py:class:`numpy.ndarray`
-    A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-    which an interpolated result is required, expressed in units of the
-    reciprocal lattice.
-  M : vector like
-    The masses of atoms in the lattice basis in Atomic Mass Units (amu)
-  temperature : float
-    The temperature at which to perform the Debye-Waller calculation
-  useparallel : bool, optional
-    Whether a serial or parallel code should be utilised
-  threads : int, optional
-    How many OpenMP workers should be utilised; if this value is less than one
-    the environment variable ``OMP_NUM_THREADS`` will be used.
-  do_not_move_points: bool, optional
-    If ``True`` the provided **Q** points must already lie within the first Brillouin
-    zone. No check is made to verify this requirement and if any **Q** lie outside
-    of the gridded volume out-of-bounds errors may result in bad data or runtime
-    errors.
-
-  Returns
-  -------
-  tuple
-      The interpolated eigenvalues and eigenvectors at the equivalent
-      irreducible first Brillouin zone points, and the result of the
-      Debye-Waller calculation at the input Q points.
-      The shape of each output will depend on the shape of the data provided to
-      the :py:meth:`~brille._brille.BZTrellisQdc.fill` method.
-      If the filled eigenvalues were of shape
-      ``[N_grid_points, N_modes, A, ..., B]``, the eigenvectors were of shape
-      ``[N_grid_points, N_modes, C, ..., D]``, and the provided points of shape
-      ``[N_Q_points, 3]`` then the output shapes will be
-      ``[N_Q_points, N_modes, A, ..., B]`` and ``[N_Q_points, N_modes, C, ..., D]``
-      for the eigenvalues and eigenvectors, respectively.
-      The Debye Waller result is always a ``[N_Q_points]`` vector.
-)pbdoc");
+//  cls.def("ir_interpolate_at_dw",
+//  [](
+//    Class& cobj, py::array_t<double> pyX, py::array_t<double> pyM,
+//    double temp_k, const bool& useparallel, const int& threads, const bool& no_move
+//  ){
+//    using namespace brille;
+//    using namespace brille::lattice;
+//    profile_update("Start of 'ir_interpolate_at_dw' operation");
+//    brille::Array2<double> bX = brille::py2a2(pyX);
+//    auto qv = LQVec<double>(cobj.get_brillouinzone().get_lattice(), bX);
+//    profile_update("Q array wrapped for C++ use");
+//    if (qv.size(qv.ndim()-1) != 3)
+//      throw std::runtime_error("Interpolation requires one or more 3-vectors");
+//    // perform the interpolation and rotate and vectors/tensors afterwards
+//    const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
+//    int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
+//    auto [val, vec] = cobj.ir_interpolate_at(qv, nthreads, no_move);
+//    profile_update("Interpolated values found");
+//    // calculate the Debye-Waller factor
+//    auto Wd = brille::a2py(cobj.debye_waller(qv, np2vec(pyM), temp_k));
+//    profile_update("  End of 'ir_interpolate_at_dw' operation");
+//    return std::make_tuple(brille::a2py(val), brille::a2py(vec), Wd);
+//  },"Q"_a,"M/amu"_a,"temperature/K"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false,
+//R"pbdoc(
+//  Perform both the linear interpolation and Debye Waller calculation
+//
+//  Parameters
+//  ----------
+//  Q : :py:class:`numpy.ndarray`
+//    A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+//    which an interpolated result is required, expressed in units of the
+//    reciprocal lattice.
+//  M : vector like
+//    The masses of atoms in the lattice basis in Atomic Mass Units (amu)
+//  temperature : float
+//    The temperature at which to perform the Debye-Waller calculation
+//  useparallel : bool, optional
+//    Whether a serial or parallel code should be utilised
+//  threads : int, optional
+//    How many OpenMP workers should be utilised; if this value is less than one
+//    the environment variable ``OMP_NUM_THREADS`` will be used.
+//  do_not_move_points: bool, optional
+//    If ``True`` the provided **Q** points must already lie within the first Brillouin
+//    zone. No check is made to verify this requirement and if any **Q** lie outside
+//    of the gridded volume out-of-bounds errors may result in bad data or runtime
+//    errors.
+//
+//  Returns
+//  -------
+//  tuple
+//      The interpolated eigenvalues and eigenvectors at the equivalent
+//      irreducible first Brillouin zone points, and the result of the
+//      Debye-Waller calculation at the input Q points.
+//      The shape of each output will depend on the shape of the data provided to
+//      the :py:meth:`~brille._brille.BZTrellisQdc.fill` method.
+//      If the filled eigenvalues were of shape
+//      ``[N_grid_points, N_modes, A, ..., B]``, the eigenvectors were of shape
+//      ``[N_grid_points, N_modes, C, ..., D]``, and the provided points of shape
+//      ``[N_Q_points, 3]`` then the output shapes will be
+//      ``[N_Q_points, N_modes, A, ..., B]`` and ``[N_Q_points, N_modes, C, ..., D]``
+//      for the eigenvalues and eigenvectors, respectively.
+//      The Debye Waller result is always a ``[N_Q_points]`` vector.
+//)pbdoc");
 }
 
-template<template<class, class> class Grid, class T, class R>
-void def_grid_interpolate(py::class_<Grid<T,R>>& cls){
+template<template<class, class, class> class Grid, class T, class R, class S>
+void def_grid_interpolate(py::class_<Grid<T,R,S>>& cls){
   using namespace pybind11::literals;
-  using Class = Grid<T,R>;
+  using Class = Grid<T,R,S>;
   cls.def("interpolate_at",
   [](
     Class& cobj, py::array_t<double> pyX, const bool& useparallel,
     const int& threads, const bool& no_move
   ){
     using namespace brille;
+    using namespace brille::lattice;
     profile_update("Start of 'interpolate_at' operation");
     brille::Array2<double> bX = brille::py2a2(pyX);
-    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), bX);
+    auto qv = LQVec<double>(cobj.get_brillouinzone().get_lattice(), bX);
     profile_update("Q array wrapped for C++ use");
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
@@ -424,11 +427,11 @@ R"pbdoc(
 )pbdoc");
 }
 
-template<template<class, class> class Grid, class T, class R>
-void def_grid_sort(py::class_<Grid<T,R>>& cls){
+template<template<class, class, class> class Grid, class T, class R, class S>
+void def_grid_sort(py::class_<Grid<T,R,S>>& cls){
   using namespace pybind11::literals;
   using namespace brille;
-  using Class = Grid<T,R>;
+  using Class = Grid<T,R,S>;
 
   cls.def("sort",&Class::sort);
 
@@ -517,51 +520,52 @@ void def_grid_sort(py::class_<Grid<T,R>>& cls){
     Integer values outside of the mapped range (or missing) are replaced by 0.
   )pbdoc");
 }
-
-template<template<class, class> class Grid, class T, class R>
-void def_grid_debye_waller(py::class_<Grid<T,R>>& cls){
-  using namespace pybind11::literals;
-  using namespace brille;
-  using Class = Grid<T,R>;
-
-  cls.def("debye_waller",[](Class& cobj, py::array_t<double> pyX, py::array_t<double> pyM, double temp_k){
-    // handle Q
-    brille::Array2<double> bX = brille::py2a2(pyX);
-    LQVec<double> qv(cobj.get_brillouinzone().get_lattice(), bX);
-    if (qv.size(qv.ndim()-1) != 3)
-      throw std::runtime_error("Interpolation requires one or more 3-vectors");
-    return brille::a2py(cobj.debye_waller(qv, np2vec(pyM), temp_k));
-  }, "Q"_a, "masses"_a, "Temperature_in_K"_a,
-  R"pbdoc(
-  Calculate the Debye-Waller factor by integrating over the Brillouin zone grid
-
-  Parameters
-  ----------
-  pyX : float, array_like
-    A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-    which to calculate the Debye-Waller factor
-  pyM : float, array_like
-    The atom masses in Atomic Mass Units, matching the atom types provided to
-    the :py:class:`Direct` constructor for the crystal basis
-  temp_K : float
-    The temperature at which to calculate the Debye-Waller factor in Kelvin
-
-
-  Returns
-  -------
-  :py:class:`numpy.ndarray`
-    A one-dimensional array of the Debye-Waller factor evaluated at each input
-
-  )pbdoc");
-}
+//
+//template<template<class, class, class> class Grid, class T, class R, class S>
+//void def_grid_debye_waller(py::class_<Grid<T,R,S>>& cls){
+//  using namespace pybind11::literals;
+//  using namespace brille;
+//  using namespace brille::lattice;
+//  using Class = Grid<T,R,S>;
+//
+//  cls.def("debye_waller",[](Class& cobj, py::array_t<double> pyX, py::array_t<double> pyM, double temp_k){
+//    // handle Q
+//    brille::Array2<double> bX = brille::py2a2(pyX);
+//    auto qv = LQVec<double>(cobj.get_brillouinzone().get_lattice(), bX);
+//    if (qv.size(qv.ndim()-1) != 3)
+//      throw std::runtime_error("Interpolation requires one or more 3-vectors");
+//    return brille::a2py(cobj.debye_waller(qv, np2vec(pyM), temp_k));
+//  }, "Q"_a, "masses"_a, "Temperature_in_K"_a,
+//  R"pbdoc(
+//  Calculate the Debye-Waller factor by integrating over the Brillouin zone grid
+//
+//  Parameters
+//  ----------
+//  pyX : float, array_like
+//    A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+//    which to calculate the Debye-Waller factor
+//  pyM : float, array_like
+//    The atom masses in Atomic Mass Units, matching the atom types provided to
+//    the :py:class:`Direct` constructor for the crystal basis
+//  temp_K : float
+//    The temperature at which to calculate the Debye-Waller factor in Kelvin
+//
+//
+//  Returns
+//  -------
+//  :py:class:`numpy.ndarray`
+//    A one-dimensional array of the Debye-Waller factor evaluated at each input
+//
+//  )pbdoc");
+//}
 
 #ifdef USE_HIGHFIVE
-template<template<class, class> class Grid, class T, class R>
-void def_grid_hdf_interface(py::class_<Grid<T,R>>& cls, const std::string& default_entry){
+template<template<class, class, class> class Grid, class T, class R, class S>
+void def_grid_hdf_interface(py::class_<Grid<T,R,S>>& cls, const std::string& default_entry){
   using namespace pybind11::literals;
   using namespace brille;
   using namespace HighFive;
-  using Class = Grid<T,R>;
+  using Class = Grid<T,R, S>;
   const std::string default_flag("ac");
 
   cls.def("to_file",[](Class& cobj, const std::string& filename, const std::string& entry, const std::string& flags){

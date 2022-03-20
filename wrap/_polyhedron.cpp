@@ -15,54 +15,13 @@ See the GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <pybind11/pybind11.h>
-#include "_array.hpp"
-#include "_c_to_python.hpp"
-#include "polyhedron.hpp"
-#include "utilities.hpp"
-
+#include "_polyhedron.hpp"
 void wrap_polyhedron(pybind11::module &m){
-  using namespace pybind11::literals;
-  using namespace brille;
-  pybind11::class_<Polyhedron> cls(m, "Polyhedron");
+  py::class_<brille::polyhedron::Poly<double,brille::bArray>> bare(m);
+  define_polyhedron_inits<double>(bare);
+  define_polyhedron<double>(bare);
 
-  cls.def(pybind11::init([](py::array_t<double> pyv){
-    return Polyhedron(brille::py2a2(pyv));
-  }),"vertices"_a);
-
-  cls.def(pybind11::init([](py::array_t<double> pyv, const std::vector<std::vector<int>>& vpf){
-    return Polyhedron(brille::py2a2(pyv), vpf);
-  }),"vertices"_a, "vertices_per_face"_a);
-
-  cls.def_property_readonly("vertices",[](const Polyhedron& o){return brille::a2py(o.get_vertices());});
-
-  cls.def_property_readonly("points",[](const Polyhedron& o){return brille::a2py(o.get_points());});
-
-  cls.def_property_readonly("normals",[](const Polyhedron& o){return brille::a2py(o.get_normals());});
-
-  cls.def_property_readonly("vertices_per_face",&Polyhedron::get_vertices_per_face);
-
-  cls.def_property_readonly("faces_per_vertex",&Polyhedron::get_faces_per_vertex);
-
-  cls.def_property_readonly("volume",&Polyhedron::get_volume);
-
-  cls.def_property_readonly("mirror",&Polyhedron::mirror);
-
-  cls.def_property_readonly("centre",&Polyhedron::centre);
-
-  cls.def("intersection",&Polyhedron::intersection);
-
-  cls.def("rotate",[](const Polyhedron& o, pybind11::array_t<double> rot){
-    pybind11::buffer_info info = rot.request();
-    if (info.ndim != 2)
-      throw std::runtime_error("Number of dimensions of rotation matrix must be two");
-    if (info.shape[0]!=3 || info.shape[1]!=3)
-      throw std::runtime_error("Rotation matrix must be 3x3");
-    std::array<double, 9> crot;
-    double* ptr = (double*) info.ptr;
-    auto s0 = info.strides[0]/sizeof(double);
-    auto s1 = info.strides[1]/sizeof(double);
-    for (size_t i=0; i<3u; ++i) for (size_t j=0; j<3u; ++j)
-    crot[i*3u+j] = ptr[i*s0 + j*s1];
-    return o.rotate(crot);
-  });
+  py::class_<brille::polyhedron::Poly<double,brille::lattice::LVec>> lvec(m);
+  define_polyhedron<double>(lvec);
+  define_polyhedron_lvec<double>(lvec);
 }

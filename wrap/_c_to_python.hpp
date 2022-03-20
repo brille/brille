@@ -48,6 +48,42 @@ template<typename I, typename T, size_t N> py::array_t<T> sa2np(const std::vecto
   for (size_t i=0; i<numel; ++i) ptr[i] = sv[i];
   return np;
 }
+template<typename T, size_t N>
+std::array<T,N> np2sa(const py::array_t<T>& pya){
+  py::buffer_info info = pya.request();
+  size_t array_size{1u};
+  for (pybind11::ssize_t i=0; i < info.ndim; ++i) array_size *= info.shape[i];
+  if (N != array_size){
+    std::string msg = "wrong number of elements for array of ";
+    msg += std::to_string(N) + " elements";
+    throw std::runtime_error(msg);
+  }
+  std::array<T,N> sa; sa.fill(T(0));
+  T * ptr = (T*) info.ptr;
+
+  // find the row-ordered spans
+  std::vector<size_t> spans(info.ndim, 1u);
+  for (pybind11::ssize_t i=info.ndim-1u; i-->0; ) // first i in loop is ndim-2
+    spans[i] = spans[i+1]*info.shape[i+1];
+  // check if input np *is* row ordered
+  bool row_ord{true};
+  for (pybind11::ssize_t i=0; i<info.ndim; ++i) row_ord &= info.strides[i]/sizeof(T) == spans[i];
+
+  auto l2s2l = [spans,row_ord,s=info.strides,n=info.ndim](const auto & l){
+    if (row_ord) return l;
+    size_t lin{0};
+    size_t tmp{l};
+    for (pybind11::ssize_t i=0; i < n; ++i){
+      size_t idx{tmp / spans[i]};
+      tmp -= idx * spans[i];
+      lin += idx * s[i]/sizeof(T);
+    }
+    return lin;
+  };
+  for (size_t i=0; i<N; ++i) sa[i] = ptr[l2s2l(i)];
+  return sa;
+}
+
 template<typename I, typename T> py::array_t<T> sv2np(const std::vector<I>& sz, const std::vector<T>& sv){
   size_t numel =determine_numel(sz);
   if (sv.size() != numel){
@@ -94,7 +130,7 @@ np2sva(py::array_t<T> np){
     throw std::runtime_error(msg);
   }
   std::vector<std::array<T,N>> v;
-  size_t vlen = static_cast<size_t>(info.shape[0]);
+  auto vlen = static_cast<size_t>(info.shape[0]);
   v.reserve(vlen);
   T * ptr = (T*) info.ptr;
 
@@ -143,7 +179,7 @@ std::vector<T> np2vec(py::array_t<T> pyV){
     throw std::runtime_error("np2vec expects a 1-D input buffer object");
   size_t span = static_cast<size_t>(vinfo.strides[0])/sizeof(T);
   std::vector<T> v;
-  size_t vlen = static_cast<size_t>(vinfo.shape[0]);
+  auto vlen = static_cast<size_t>(vinfo.shape[0]);
   v.reserve(vlen);
   T * vptr = (T*) vinfo.ptr;
   for (size_t i=0; i<vlen; ++i) v.push_back(vptr[i*span]);

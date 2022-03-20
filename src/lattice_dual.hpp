@@ -110,9 +110,9 @@ public:
     spacegroup_symmetry(s);
     set_point_symmetry();
   }
-  Lattice(const matrix_t & vectors, const Symmetry s, const LengthUnit lu)
+  Lattice(const matrix_t & vectors, const MatrixVectors mv, const Symmetry s, const LengthUnit lu)
   {
-    set_vectors(vectors, lu);
+    set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu);
     set_metrics();
     spacegroup_symmetry(s);
     _bravais = _space.getcentring();

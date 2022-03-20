@@ -20,11 +20,11 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <pybind11/complex.h>
 #include <pybind11/stl.h>
 #include <thread>
+#include <utility>
 
 #include "_array.hpp"
 #include "_c_to_python.hpp"
-#include "lattice.hpp"
-#include "array.hpp"
+#include "lattice_dual.hpp"
 #include "utilities.hpp"
 
 
@@ -32,21 +32,11 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #define WRAP_BRILLE_LATTICE_HPP_
 namespace py = pybind11;
 namespace br = brille;
+namespace lt = brille::lattice;
 
 template<class R, class T>
-void declare_lattice_scl_init(py::class_<T,br::Lattice> &pclass, const std::string &lenunit, const std::string &argname, const R defarg){
-  pclass.def(py::init<double,double,double, double,double,double, R>(),
-    py::arg( ("a/"+lenunit).c_str() ),
-    py::arg( ("b/"+lenunit).c_str() ),
-    py::arg( ("c/"+lenunit).c_str() ),
-    py::arg("alpha")=90.0,
-    py::arg("beta")=90.0,
-    py::arg("gamma")=90.0,
-    py::arg(argname.c_str())=defarg );
-}
-template<class R, class T>
-void declare_lattice_vec_init(py::class_<T,br::Lattice> &pclass, const std::string &lenunit, const std::string &argname, const R defarg){
-  pclass.def(py::init( [](py::array_t<double> lens, py::array_t<double> angs, const R groupid){
+void declare_lattice_vec_init(py::class_<T> &pclass, const std::string &lenunit, const std::string &argname, const R defarg){
+  pclass.def(py::init( [](const py::array_t<double>& lens, const py::array_t<double>& angs, const R groupid){
     py::buffer_info linfo = lens.request(), ainfo = angs.request();
     if ( linfo.ndim!=1 || ainfo.ndim!=1)
       throw std::runtime_error("Number of dimensions must be one");
@@ -58,8 +48,8 @@ void declare_lattice_vec_init(py::class_<T,br::Lattice> &pclass, const std::stri
       py::arg("angles"), py::arg(argname.c_str())=defarg);
 }
 template<class R, class T>
-void declare_lattice_mat_init(py::class_<T,br::Lattice> &pclass, const std::string &argname, const R defarg){
-  pclass.def(py::init( [](py::array_t<double> vecs, const R groupid){
+void declare_lattice_mat_init(py::class_<T> &pclass, const std::string &argname, const R defarg){
+  pclass.def(py::init( [](const py::array_t<double>& vecs, const R groupid){
     py::buffer_info info = vecs.request();
     if ( info.ndim!=2 )
       throw std::runtime_error("Number of dimensions must be two");
@@ -70,8 +60,8 @@ void declare_lattice_mat_init(py::class_<T,br::Lattice> &pclass, const std::stri
 }
 
 template<class R, class T>
-void declare_lattice_mat_basis_init(py::class_<T,br::Lattice> &pclass, const std::string &argname, const R defarg){
-  pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<br::ind_t> typ, const R groupid){
+void declare_lattice_mat_basis_init(py::class_<T> &pclass, const std::string &argname, const R defarg){
+  pclass.def(py::init( [](const py::array_t<double>& vecs, py::array_t<double> pypos, std::vector<br::ind_t> typ, const R groupid){
     py::buffer_info info = vecs.request();
     if ( info.ndim!=2 )
       throw std::runtime_error("Number of dimensions must be two");
@@ -80,10 +70,10 @@ void declare_lattice_mat_basis_init(py::class_<T,br::Lattice> &pclass, const std
     T lattice((double *) info.ptr, info.strides, groupid);
     // pull in the basis information
     // br::Array<double> avpos = br::py2a(pypos);
-    br::Array2<double> avpos = br::py2a2(pypos);
+    br::Array2<double> avpos = br::py2a2(std::move(pypos));
     std::vector<std::array<double,3>> pos;
     for (br::ind_t i=0; i<avpos.size(0); ++i){
-      std::array<double,3> one;
+      std::array<double,3> one{{0,0,0}};
       for (br::ind_t j=0; j<3u; ++j){
         one[j] = avpos.val(i,j);
       }
@@ -95,16 +85,16 @@ void declare_lattice_mat_basis_init(py::class_<T,br::Lattice> &pclass, const std
 }
 
 template<class T>
-void declare_lattice_mat_basis_sym_init(py::class_<T,br::Lattice> &pclass){
-  pclass.def(py::init( [](py::array_t<double> vecs, py::array_t<double> pypos, std::vector<br::ind_t> typ, const br::Symmetry& sym){
+void declare_lattice_mat_basis_sym_init(py::class_<T> &pclass){
+  pclass.def(py::init( [](const py::array_t<double>& vecs, py::array_t<double> pypos, std::vector<br::ind_t> typ, const br::Symmetry& sym){
     py::buffer_info info = vecs.request();
     if (info.ndim !=2 || info.shape[0] != 3 || info.shape[1] != 3)
       throw std::runtime_error("Basis vectors must be a 3x3 array");
     br::Array2<double> latmat = br::py2a2(vecs);
-    br::Array2<double> avpos = br::py2a2(pypos);
+    br::Array2<double> avpos = br::py2a2(std::move(pypos));
     std::vector<std::array<double,3>> pos;
     for (br::ind_t i=0; i<avpos.size(0); ++i){
-      std::array<double,3> one;
+      std::array<double,3> one{{0,0,0}};
       for (br::ind_t j=0; j<3u; ++j) one[j] = avpos.val(i,j);
       pos.push_back(one);
     }
@@ -113,19 +103,13 @@ void declare_lattice_mat_basis_sym_init(py::class_<T,br::Lattice> &pclass){
 }
 
 template<class T>
-void declare_lattice_methods(py::class_<T,br::Lattice> &pclass, const std::string &lenunit) {
+void declare_lattice_methods(py::class_<T> &pclass, const std::string &lenunit) {
   using namespace brille;
-  std::string hnum = "Hall Number";
-  int hnumdef = 1;
   std::string hstr = "IT Name | Hall Symbol | Seitz notation symmetry";
   std::string hstrdef = "P_1";
-    declare_lattice_scl_init(pclass,lenunit,hnum,hnumdef);
     declare_lattice_scl_init(pclass,lenunit,hstr,hstrdef);
-    declare_lattice_vec_init(pclass,lenunit,hnum,hnumdef);
     declare_lattice_vec_init(pclass,lenunit,hstr,hstrdef);
-    declare_lattice_mat_init(pclass,hnum,hnumdef);
     declare_lattice_mat_init(pclass,hstr,hstrdef);
-    declare_lattice_mat_basis_init(pclass,hnum,hnumdef);
     declare_lattice_mat_basis_init(pclass,hstr,hstrdef);
     declare_lattice_mat_basis_sym_init(pclass);
     pclass.def_property_readonly("star",&T::star,R"pbdoc(
@@ -144,24 +128,16 @@ void declare_lattice_methods(py::class_<T,br::Lattice> &pclass, const std::strin
     and has unit cell volume :math:`V* = 2\pi/V`
 
     )pbdoc");
-    pclass.def_property_readonly("xyz_transform",[](T &d){
-      auto result = py::array_t<double, py::array::c_style>({3,3});
-      py::buffer_info bi = result.request();
-      size_t c = static_cast<size_t>(bi.strides[0]/sizeof(double));
-      size_t r = static_cast<size_t>(bi.strides[1]/sizeof(double));
-      d.get_xyz_transform( (double *) bi.ptr, c, r);
-      return result;
+    pclass.def_property_readonly("real_space_vectors",[](T &d){
+      auto xyz = d.to_xyz();
+      return py::array_t<double>({3,3}, {1, 3}, transpose(xyz.data(LengthUnit::angstrom)));
     });
-    pclass.def_property_readonly("lattice_matrix",[](T &d){
-      auto result = py::array_t<double, py::array::c_style>({3,3});
-      py::buffer_info bi = result.request();
-      size_t c = static_cast<size_t>(bi.strides[0]/sizeof(double));
-      size_t r = static_cast<size_t>(bi.strides[1]/sizeof(double));
-      d.get_lattice_matrix( (double *) bi.ptr, c, r);
-      return result;
+    pclass.def_property_readonly("reciprocal_space_vectors",[](T &d){
+      auto xyz = d.to_xyz();
+      return py::array_t<double>({3,3}, {1, 3}, transpose(xyz.data(LengthUnit::inverse_angstrom)));
     });
-    pclass.def("isstar",(bool (T::*)(const Direct&    ) const) &T::isstar);
-    pclass.def("isstar",(bool (T::*)(const Reciprocal&) const) &T::isstar);
+    pclass.def("isstar",(bool (T::*)(const T&) const) &T::is_same);
+    pclass.def("issame",(bool (T::*)(const T&) const) &T::is_same);
     pclass.def_property_readonly("primitive",&T::primitive,R"pbdoc(
     Return a primitive (non-centred) lattice equivalent to this one
 

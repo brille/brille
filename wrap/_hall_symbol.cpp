@@ -37,7 +37,7 @@ void wrap_hallsymbol(pybind11::module &m){
 
   )pbdoc");
 
-  cls.def(pybind11::init([](std::string symbol){
+  cls.def(pybind11::init([](const std::string & symbol){
     HallSymbol out;
     out.from_ascii(symbol);
     return out;
