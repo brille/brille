@@ -1,4 +1,5 @@
 #include <set>
+#include <map>
 #include "polyhedron_faces.hpp"
 
 using namespace brille;

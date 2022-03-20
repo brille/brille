@@ -30,6 +30,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "phonon.hpp"
 #include "hdf_interface.hpp"
 #include "array_l_.hpp"
+#include "bz_config.hpp"
+#include "approx_float.hpp"
 
 namespace brille {
 
@@ -58,6 +60,7 @@ protected:
   bool is_primitive; //!< A computed flag indicating if the primitive version of a conventional lattice is in use
   bool no_ir_mirroring;
   int approx_tolerance;
+  double float_tolerance;
 public:
     /*! \brief Construct a Brillouin zone object from all properties
      *
@@ -71,9 +74,25 @@ public:
      * @param ip Whether the primitive version of a conventional lattice is used
      * @param nim Whether the irreducible Brillouin zone requires mirroring to get the correct result
      */
-  BrillouinZone(lattice_t in_lat, lattice_t out_lat, poly_t f_poly, poly_t i_poly, const bArray<double>& irn, bool tr, bool hi, bool ip, bool nim, int tol)
-  : _inner(std::move(in_lat)), _outer(std::move(out_lat)), _first(std::move(f_poly)), _irreducible(std::move(i_poly)),
-    ir_wedge_normals(irn), time_reversal(tr), has_inversion(hi), is_primitive(ip), no_ir_mirroring(nim), approx_tolerance(tol) {}
+  BrillouinZone(
+    lattice_t in_lat,
+    lattice_t out_lat,
+    poly_t f_poly,
+    poly_t i_poly,
+    const bArray<double>& irn,
+    bool tr, bool hi, bool ip, bool nim, int tol, double f_tol)
+  : _inner(std::move(in_lat)),
+    _outer(std::move(out_lat)),
+    _first(std::move(f_poly)),
+    _irreducible(std::move(i_poly)),
+    ir_wedge_normals(irn),
+    time_reversal(tr),
+    has_inversion(hi),
+    is_primitive(ip),
+    no_ir_mirroring(nim),
+    approx_tolerance(tol),
+    float_tolerance(f_tol)
+    {}
   /*! \brief Construct a Brillouin zone object
 
   \param lat A `Reciprocal` lattice
@@ -86,36 +105,30 @@ public:
                       irreducible reciprocal space wedge and, therefore, the
                       irreducible Brillouin zone.
   */
-  explicit BrillouinZone(const lattice_t& lat,
-                const bool to_prim=true,
-                const int extent=1,
-                const bool tr=false,
-                const bool wedge_search=true,
-                const int tol=1000,
-                const bool divide_primitive=true
-               ):
-    _inner(to_prim ? lat.primitive() : lat), _outer(lat), time_reversal(tr), approx_tolerance(tol)
+  explicit BrillouinZone(const lattice_t& lat, const BrillouinZoneConfig cfg = BrillouinZoneConfig()):
+    _inner(cfg.primitive() ? lat.primitive() : lat), _outer(lat), time_reversal(cfg.time_reversal()),
+    approx_tolerance(cfg.tolerance()), float_tolerance(cfg.float_tolerance<double>())
   {
     profile_update("Start of BrillouinZone construction");
     is_primitive = !(_inner.is_same(_outer));
     has_inversion = time_reversal || lat.has_space_inversion();
     no_ir_mirroring = true;
     double old_volume = -1.0, new_volume=0.0;
-    int test_extent = extent-1;
+    int test_extent = cfg.divide_extent()-1;
     // initial test_extent based on spacegroup or pointgroup?
     do {
       old_volume = new_volume;
-      this->voro_search(++test_extent, divide_primitive);
+      this->voro_search(++test_extent, cfg.divide_primitive());
       new_volume = _first.volume();
-    } while (!approx::scalar(new_volume, old_volume));
+    } while (!approx_float::scalar(new_volume, old_volume, float_tolerance, float_tolerance, approx_tolerance));
 
-    if (brille::approx::scalar(new_volume, 0.)){
+    if (brille::approx_float::scalar(new_volume, 0., float_tolerance, float_tolerance, approx_tolerance)){
       throw std::runtime_error("failed to produce a non-null first Brillouin zone.");
     }
     // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
     // set the irreducible wedge now as the search will do nothing.
     _irreducible = _first;
-    if (wedge_search){
+    if (cfg.wedge_search()){
       bool success{false};
       if (_outer.is_triclinic()){
         success = !has_inversion || this->wedge_triclinic();
@@ -161,7 +174,7 @@ public:
       if (time_reversal) ps = ps.add_space_inversion();
       auto goal = _first.volume() / static_cast<double>(ps.size());
       auto found = _irreducible.volume();
-      if (brille::approx::scalar(goal, 2.0*found, approx_tolerance)){
+      if (approx_float::scalar(goal, 2.0*found, float_tolerance, float_tolerance, approx_tolerance)){
         info_update("Apply mirroring strategy since ", goal, " ~= 2* ", found);
         /*The current Polyhedron at this->ir_polyhedron has half the anticipated
         volume. We can 'fix' this the easy way by mirroring the Polyhedron and
@@ -187,7 +200,7 @@ public:
         // created a convex polyhedron such that the convex hull of its points
         // gives the same polyhedron back:
         poly_t mvu_convex_hull(min_vert_union->vertices());
-        if (brille::approx::scalar(goal, mvu_convex_hull.volume(), approx_tolerance)){
+        if (approx_float::scalar(goal, mvu_convex_hull.volume(), float_tolerance, float_tolerance, approx_tolerance)){
           // we found a polyhedron with the right volume which is convex!
           // so we can keep this as *the* ir_polyhedron
           _irreducible = mvu_convex_hull;
@@ -197,7 +210,7 @@ public:
       }
       // if found == goal no mirroring is required.
       // if found == goal/2, mirroring is required.
-      no_ir_mirroring = approx::scalar(goal, found, approx_tolerance);
+      no_ir_mirroring = approx_float::scalar(goal, found, float_tolerance, float_tolerance, approx_tolerance);
     }
   }
   /*! \brief Determine the validity of the stored irreducible Brillouin zone polyhedron
@@ -663,6 +676,7 @@ public:
         group.createAttribute("is_primitive", is_primitive);
         group.createAttribute("no_ir_mirroring", no_ir_mirroring);
         group.createAttribute("approx_tolerance", approx_tolerance);
+        group.createAttribute("float_tolerance", float_tolerance);
         return ok;
     }
     // Input from HDF5 file/object
@@ -677,12 +691,14 @@ public:
         auto ir_w = bArray<double>::from_hdf(group, "ir_wedge_normals");
         bool tr, hi, ip, nim;
         int tol;
+        double f_tol;
         group.getAttribute("time_reversal").read(tr);
         group.getAttribute("has_inversion").read(hi);
         group.getAttribute("is_primitive").read(ip);
         group.getAttribute("no_ir_mirroring").read(nim);
         group.getAttribute("approx_tolerance").read(tol);
-        return {lat, olat, poly, ir_p, ir_w, tr, hi, ip, nim, tol};
+        group.getAttribute("float_tolerance").read(f_tol);
+        return {lat, olat, poly, ir_p, ir_w, tr, hi, ip, nim, tol, f_tol};
     }
     [[nodiscard]] bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
         HighFive::File file(filename, perm);
@@ -704,6 +720,7 @@ public:
         if (_irreducible != other._irreducible) return true;
         if (ir_wedge_normals != other.ir_wedge_normals) return true;
         if (approx_tolerance != other.approx_tolerance) return true;
+        if (float_tolerance != other.float_tolerance) return true;
         return false;
     }
     bool operator==(const BrillouinZone& other) const {return !this->operator!=(other);}

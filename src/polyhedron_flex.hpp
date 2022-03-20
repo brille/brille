@@ -6,6 +6,7 @@
 #include "lattice_dual.hpp"
 #include "array_l_.hpp"
 #include "polyhedron_faces.hpp"
+#include "approx_float.hpp"
 
 namespace brille::polyhedron{
   template<class T, template<class> class A>
@@ -67,27 +68,29 @@ namespace brille::polyhedron{
 
     [[nodiscard]] Poly<T,A> convex_hull() const {return Poly(_vertices);}
 
-//    template<class R, template<class> class B> std::enable_if_t<isArray<R,B>, bool>
-      bool
-      operator!=(const Poly<T,A>& that) const{
+    bool is_not_approx(const Poly<T,A>& that, const T Ttol=T(0), const int tol=1) const {
       bool vertices_permuted{false};
       if (_vertices != that._vertices){
-        vertices_permuted = _vertices.is_permutation(that._vertices);
+        vertices_permuted = _vertices.is_permutation(that._vertices, Ttol, Ttol, tol);
         if (!vertices_permuted) return true;
       }
       if (vertices_permuted) {
-        auto permutation = _vertices.permutation_vector(that._vertices);
-        auto permuted = that._faces.permute(permutation);
-        return _faces != permuted;
+        auto permutation = _vertices.permutation_vector(that._vertices, Ttol, Ttol, tol);
+        // auto permuted = that._faces.permute(permutation); // the permutation found permutes *our* vertices to theirs
+        auto permuted = _faces.permute(permutation); // so we need to permute our face indices, not theirs
+        return permuted != that._faces;
       }
       return _faces != that._faces;
     }
+    bool is_approx(const Poly<T,A>& that, const T Ttol=T(0), const int tol=1) const {return !is_not_approx(that, Ttol, tol);}
 //    template<class R, template<class> class B> std::enable_if_t<isArray<R,B>, bool>
-      bool operator==(const Poly<T,A>& that) const {return !this->operator!=(that);}
+    bool operator!=(const Poly<T,A>& that) const{ return is_not_approx(that);}
+//    template<class R, template<class> class B> std::enable_if_t<isArray<R,B>, bool>
+    bool operator==(const Poly<T,A>& that) const {return is_approx(that);}
 
 //    template<class R, template<class> class B> std::enable_if_t<isArray<R,B>, Poly<T,A>>
-      Poly<T,A>
-      operator+(const Poly<T,A>& that) const{
+    Poly<T,A>
+    operator+(const Poly<T,A>& that) const{
       // combine vertices:
       auto vertices = cat(0, _vertices, that._vertices);
       // combine faces
@@ -195,22 +198,22 @@ namespace brille::polyhedron{
 
     //FIXME
     template<class R, template<class> class B>
-    [[nodiscard]] std::enable_if_t<isArray<R,B>, bool> intersects(const Poly<R,B>& that, const int tol=1) const
+    [[nodiscard]] std::enable_if_t<isArray<R,B>, bool> intersects(const Poly<R,B>& that, const R Rtol=R(0), const int tol=1) const
     {
-      auto overlap = this->intersection(that);
-      if (!approx::scalar(overlap.volume(), 0., tol)){
-        info_update("this:\nP(",this->python_string(),")\nthat:\nP(",that.python_string(),")");
-        info_update("overlap:\nP(",overlap.python_string(),")");
-        overlap = this->intersection(that);
-        throw std::runtime_error(std::to_string(overlap.volume()));
+      auto overlap = this->intersection(that, Rtol, tol);
+      if (!approx_float::scalar(overlap.volume() / (this->volume() + that.volume()), R(0), Rtol, Rtol, tol)){
+//        info_update("this:\nP(",this->python_string(),")\nthat:\nP(",that.python_string(),")");
+//        info_update("overlap:\nP(",overlap.python_string(),")");
+//        overlap = this->intersection(that, Rtol, tol); // placed here to allow easier bad-state access to intersection
+//        throw std::runtime_error("Overlap volume should be zero but is " + my_to_string(overlap.volume()));
         return true;
       }
       return false;
     }
     template<class R, template<class> class B>
-    [[nodiscard]] std::enable_if_t<isArray<R,B>, Poly<T,A>> intersection(const Poly<R,B>& that) const{
+    [[nodiscard]] std::enable_if_t<isArray<R,B>, Poly<T,A>> intersection(const Poly<R,B>& that, const R Rtol=R(0), const int tol=1) const{
       auto [a, b, c] = that.planes();
-      return this->cut(a, b, c);
+      return this->cut(a, b, c, Rtol, tol);
     }
     template<class R, template<class> class B>
     [[nodiscard]] std::enable_if_t<isArray<R,B>, Poly<T,A>> divide(const B<R>& a, const B<R>& b, const B<R>& c) const{
@@ -232,14 +235,14 @@ namespace brille::polyhedron{
 
     template<class R, template<class> class B>
     [[nodiscard]] std::enable_if_t<isArray<R,B>, Poly<T,A>>
-    one_cut(const B<R>& a, const B<R>& b, const B<R>& c, const int tol=1) const {
-      auto [v, f] = _faces.one_cut(_vertices, a, b, c, tol);
+    one_cut(const B<R>& a, const B<R>& b, const B<R>& c, const R Rtol=R(0), const int tol=1) const {
+      auto [v, f] = _faces.one_cut(_vertices, a, b, c, Rtol, tol);
       return {v, f};
     }
     template<class R, template<class> class B>
     [[nodiscard]] std::enable_if_t<isArray<R,B>, Poly<T,A>>
-    cut(const B<R>& a, const B<R>& b, const B<R>& c, const int tol=1) const {
-      auto [v, f] = _faces.cut(_vertices, a, b, c, tol);
+    cut(const B<R>& a, const B<R>& b, const B<R>& c, const R Rtol=R(0), const int tol=1) const {
+      auto [v, f] = _faces.cut(_vertices, a, b, c, Rtol, tol);
 //      verbose_update("Cut produced vertices\n", v.to_string(), "and faces\n", f.python_string());
       return {v, f};
     }

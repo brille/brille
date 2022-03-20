@@ -29,8 +29,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <vector>
 #include <complex>
 #include <chrono>
-#define VERBOSE_DEBUG
-#define DEBUG // comment-out for no debugging output
+//#define VERBOSE_DEBUG
+//#define DEBUG // comment-out for no debugging output
 
 #define PRINTING_PRECISION 16
 namespace brille {

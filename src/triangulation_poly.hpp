@@ -114,9 +114,13 @@ triangulate(const T max_volume, const bool addGamma, const A<T>& points, const F
       position.val(i,j) = tgo.pointlist[3*i+j];
   debug_update("Copy generated tetgen indices to SimpleTet object");
   Array2<ind_t> tetrahedra(tgo.numberoftetrahedra, 4u);
-  for (ind_t i=0; i<tetrahedra.size(0); ++i)
-    for (ind_t j=0; j<4u; ++j)
-      tetrahedra.val(i,j) = static_cast<ind_t>(tgo.tetrahedronlist[i*tgo.numberofcorners+j]);
+  for (ind_t i=0; i<tetrahedra.size(0); ++i) {
+    for (ind_t j = 0; j < 4u; ++j) {
+      // tetgen returns vertex order different than I expect, so we can swap any two indices
+      // or permute their order by one
+      tetrahedra.val(i, (j + 1) % 4) = static_cast<ind_t>(tgo.tetrahedronlist[i * tgo.numberofcorners + j]);
+    }
+  }
 
   return std::make_tuple(position, tetrahedra);
 }
@@ -201,8 +205,11 @@ public:
   }
 protected:
   void correct_tetrahedra_vertex_ordering(){
-    for (ind_t i=0; i<this->number_of_tetrahedra(); ++i)
-      if (std::signbit(this->volume(i))) tetrahedra_.swap(i, 0, 1);
+    for (ind_t i=0; i<this->number_of_tetrahedra(); ++i) {
+      if (std::signbit(this->volume(i))) {
+        tetrahedra_.swap(i, 0, 1);
+      }
+    }
   }
 };
 

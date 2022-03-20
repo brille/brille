@@ -169,8 +169,14 @@ namespace brille {
       // The CubeNode object contains the indices into `vertices` necessary to find
       // the 8 corners of the cube. Those indices should be ordered
       // (000) (100) (110) (010) (101) (001) (011) (111)
-      // so that vertex_indices[i] and vertex_indices[7-i] are connected by a body diagonal
-      return abs(vertices.view(vertex_indices[0])-vertices.view(vertex_indices[7])).prod(1)[0];
+//      // so that vertex_indices[i] and vertex_indices[7-i] are connected by a body diagonal
+//      return abs(vertices.view(vertex_indices[0])-vertices.view(vertex_indices[7])).prod(1)[0];
+      // If the vertex coordinates are not absolut units, the body diagonal is not necessarily the node volume
+      auto a = vertices.view(vertex_indices[1]);
+      auto b = vertices.view(vertex_indices[0]);
+      auto c = vertices.view(vertex_indices[3]);
+      auto d = vertices.view(vertex_indices[5]);
+      return pseudo_orient3d(a, b, c, d)[0];
     }
 #ifdef USE_HIGHFIVE
     //! Write to an HDF file
@@ -309,13 +315,13 @@ namespace brille {
     //! Return the total triangulated volume of the PolyNode
     template<class T, template<class> class A>
     [[nodiscard]]
-    std::enable_if_t<isArray<T,A>, bool>
+    std::enable_if_t<isArray<T,A>, T>
     volume(const A<T>&) const {
       return std::accumulate(vol_t.begin(), vol_t.end(), 0.);
     }
   private:
     template<template<class> class A>
-    std::enable_if_t<isBareArray<double,A>, double>
+    std::enable_if_t<isArray<double,A>, double>
     tetrahedra_contains(
       const ind_t t,
       const A<double>& v,
@@ -328,21 +334,22 @@ namespace brille {
         if (away < 0.) return away;
       }
       double vol6 = vol_t[t]*6.0;
-      w[0] = orient3d( x.ptr(0),           v.ptr(vi_t[t][1u]), v.ptr(vi_t[t][2u]), v.ptr(vi_t[t][3u]) )/vol6;
-      w[1] = orient3d( v.ptr(vi_t[t][0u]), x.ptr(0),           v.ptr(vi_t[t][2u]), v.ptr(vi_t[t][3u]) )/vol6;
-      w[2] = orient3d( v.ptr(vi_t[t][0u]), v.ptr(vi_t[t][1u]), x.ptr(0),           v.ptr(vi_t[t][3u]) )/vol6;
-      w[3] = orient3d( v.ptr(vi_t[t][0u]), v.ptr(vi_t[t][1u]), v.ptr(vi_t[t][2u]), x.ptr(0)           )/vol6;
+      // use pseudo_orient3d which is lattice-aware
+      w[0] = pseudo_orient3d(x, v.view(vi_t[t][1u]), v.view(vi_t[t][2u]), v.view(vi_t[t][3u]))[0]/vol6;
+      w[1] = pseudo_orient3d(v.view(vi_t[t][0u]), x, v.view(vi_t[t][2u]), v.view(vi_t[t][3u]))[0]/vol6;
+      w[2] = pseudo_orient3d(v.view(vi_t[t][0u]), v.view(vi_t[t][1u]), x, v.view(vi_t[t][3u]))[0]/vol6;
+      w[3] = pseudo_orient3d(v.view(vi_t[t][0u]), v.view(vi_t[t][1u]), v.view(vi_t[t][2u]), x)[0]/vol6;
       if (std::any_of(w.begin(), w.end(), [](double z){return z < 0. && !brille::approx::scalar(z, 0.);}))
         return *std::min_element(w.begin(), w.end());
       return 0.;
     }
-    template<class T, template<class> class A>
-    [[nodiscard]] std::enable_if_t<isLatVec<T,A>, T>
-    tetrahedra_contains(const ind_t t, const A<T>& v, const A<T>& x, std::array<double,4>& w, const bool allow_shortcut=true) const {
-      // FIXME replace orient3d with a lattice-aware volume calculator
-      //    Then the two methods here could be combined and copying v avoided
-      return this->tetrahedra_contains(t, v.xyz(), x.xyz(), w, allow_shortcut);
-    }
+//    template<class T, template<class> class A>
+//    [[nodiscard]] std::enable_if_t<isLatVec<T,A>, T>
+//    tetrahedra_contains(const ind_t t, const A<T>& v, const A<T>& x, std::array<double,4>& w, const bool allow_shortcut=true) const {
+//      // FIXME replace orient3d with a lattice-aware volume calculator
+//      //    Then the two methods here could be combined and copying v avoided
+//      return this->tetrahedra_contains(t, v.xyz(), x.xyz(), w, allow_shortcut);
+//    }
     template<template<class> class A>
     [[nodiscard]] std::enable_if_t<isBareArray<double,A>, double>
     tetrahedra_might_contain(

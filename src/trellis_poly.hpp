@@ -34,6 +34,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "trellis_node.hpp"
 #include "polyhedron_flex.hpp"
 #include "triangulation_poly.hpp"
+#include "approx_float.hpp"
+
 namespace brille::polytrellis {
 
 /*
@@ -436,8 +438,10 @@ public:
   //! Find the total volume of all trellis nodes
   [[nodiscard]] double total_node_volume() const {
     double vol{0.};
-    for (ind_t i=0; i<nodes_.size(); ++i)
-      vol += nodes_.volume(vertices_, i);
+    for (ind_t i=0; i<nodes_.size(); ++i) {
+      auto v = nodes_.volume(vertices_, i);
+      vol += v;
+    }
     return vol;
   }
 private:

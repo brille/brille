@@ -18,27 +18,27 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 using namespace brille;
 using namespace brille::lattice;
 
-bArray<bool> keep_if(const LVec<double>& normals, const LVec<double>& points, const int tol){
+bArray<bool> keep_if(const LVec<double>& normals, const LVec<double>& points, const double ftol, const int tol){
   // determine whether we should keep points based on the provided normals.
   // We want to only keep those points in the positive half-space for any one
   // normal, but if all normals contribute to reduce the remaining points to
   // lie in a single plane we instead want to keep all points.
   std::vector<size_t> nop(normals.size(0), 0); // number of not-on-plane points
   for (ind_t i=0; i<normals.size(0); ++i)
-    nop[i] = dot(normals.view(i), points).is(brille::cmp::gt,0., tol).count();
+    nop[i] = dot(normals.view(i), points).is(brille::cmp::gt, 0., ftol, tol).count();
   // If there are no planes with 0 off-plane points, divide the space
   bArray<bool> keep(points.size(0), 1u, true);
   if (std::find(nop.begin(),nop.end(),0u)==nop.end())
     for (ind_t i=0; i<points.size(0); ++i)
-      keep[i] = dot(normals, points.view(i)).all(brille::cmp::ge,0., tol);
+      keep[i] = dot(normals, points.view(i)).all(brille::cmp::ge, 0., ftol, tol);
   return keep;
 }
 
-bool have_volume(const bArray<double> & p, const int tol){
+bool have_volume(const bArray<double> & p, const double ftol, const int tol){
   double origin[3]{0,0,0};
   double total{0};
   for (ind_t i=0; i<p.size(0) - 2; ++i) total += std::abs(orient3d(origin, p.ptr(i), p.ptr(i+1), p.ptr(i+2)));
-  return !approx::scalar(total, 0., tol);
+  return !approx_float::scalar(total, 0., ftol, ftol, tol);
 }
 
 bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool special_mirrors, const bool sort_by_length, const bool sort_one_sym){
@@ -62,7 +62,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   // Get and combine the characteristic points of the first Brillouin zone:
   // The face centres, face corners, and mid-face-edge points.
   auto special = cat(0, this->get_points(), this->get_vertices(), this->get_half_edges());
-  info_update("First Bz\n", _first.python_string(), "with special points\n,np.array(", get_xyz(special).to_string(), ")");
+//  info_update("First Bz\n", _first.python_string(), "with special points\n,np.array(", get_xyz(special).to_string(), ")");
 
   std::vector<size_t> perm(ps.size());
   std::iota(perm.begin(), perm.end(), 0u); // 0u, 1u, 2u,...
@@ -134,9 +134,9 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       // reciprocal space vector.
       nrm.set(0, cross(reis.view(e1).star(), eis.view(e2)));
       nrm /= norm(nrm);
-      if (norm(cross(eis, nrm)).is(brille::cmp::eq, 0., approx_tolerance).count() == 1){
+      if (norm(cross(eis, nrm)).is(brille::cmp::eq, 0., float_tolerance, approx_tolerance).count() == 1){
         // keep any special points beyond the bounding plane
-        keep = dot(nrm, special).is(brille::cmp::ge, 0., approx_tolerance);
+        keep = dot(nrm, special).is(brille::cmp::ge, 0., float_tolerance, approx_tolerance);
 //        debug_update("Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n",special.to_string(),keep.to_string());
         debug_update("1 Keeping special points with",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
         special = special.extract(keep);
@@ -146,7 +146,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       }
     }
     // Stationary axis along real space basis vector
-    is_nth_ei = norm(cross(reis, vec)).is(brille::cmp::eq, 0., approx_tolerance).first();
+    is_nth_ei = norm(cross(reis, vec)).is(brille::cmp::eq, 0., float_tolerance, approx_tolerance).first();
     if (sym_unused[i] && is_nth_ei < 2){
       debug_update("2-fold axis ",i," is ei No. ",is_nth_ei);
       switch (is_nth_ei){
@@ -156,7 +156,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       }
       nrm /= norm(nrm);
       // keep any special points beyond the bounding plane
-      keep = dot(nrm, special).is(brille::cmp::ge, 0., approx_tolerance);
+      keep = dot(nrm, special).is(brille::cmp::ge, 0., float_tolerance, approx_tolerance);
       debug_update("Keeping special (LVec) points p, with (LVec)",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
       special = special.extract(keep);
       debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
@@ -169,15 +169,15 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
     vec.set(0, ps.axis(i)); // the mirror plane normal is in the direct lattice
     nrm.set(0, vec.star()); // and we want the normal in the reciprocal lattice
     nrm /= norm(nrm);
-    keep = dot(nrm, special).is(brille::cmp::ge, 0., approx_tolerance);
+    keep = dot(nrm, special).is(brille::cmp::ge, 0., float_tolerance, approx_tolerance);
     // we need at least three points (plus Γ) to define a polyhedron
     // If we are not keeping three points, check if applying the mirror plane
     // pointing the other way works for us:
-    if (keep.count() < 3 || !have_volume(special.extract(keep), approx_tolerance)){
+    if (keep.count() < 3 || !have_volume(special.extract(keep), float_tolerance, approx_tolerance)){
       nrm = -1*nrm; // - change nrm since we save it for later
-      keep = dot(nrm, special).is(brille::cmp::ge, 0., approx_tolerance);
+      keep = dot(nrm, special).is(brille::cmp::ge, 0., float_tolerance, approx_tolerance);
     }
-    if (keep.count() > 2 && have_volume(special.extract(keep), approx_tolerance)){
+    if (keep.count() > 2 && have_volume(special.extract(keep), float_tolerance, approx_tolerance)){
       debug_update("3 Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
       special = special.extract(keep);
       debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
@@ -307,7 +307,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
                 // find both cross products, remembering that we want normals
                 // pointing *into* the wedge.
                 nrm.resize(2);
-                if ( dot(pt1, cross(vec.star(), pt0)).all(brille::cmp::lt,0., approx_tolerance) ){
+                if ( dot(pt1, cross(vec.star(), pt0)).all(brille::cmp::lt, 0., float_tolerance, approx_tolerance) ){
                   // the rotation is left handed, so swap the special points
                   nrm.set(0, cross(vec.star(), pt1));
                   nrm.set(1, cross(pt0, vec.star()));
@@ -324,11 +324,11 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
                 nrm /= norm(nrm);
                 // make sure we don't remove all points out of the plane containing
                 // the rotation axis and the two special points
-                if (dot(nrm, special).is(brille::cmp::gt,0., approx_tolerance).count() == 0)
+                if (dot(nrm, special).is(brille::cmp::gt, 0., float_tolerance, approx_tolerance).count() == 0)
                   nrm *= -1; // switch the cross product
               }
               // check to make sure that using these normals do not remove all but a plane of points
-              keep = keep_if(nrm, special, approx_tolerance);
+              keep = keep_if(nrm, special, float_tolerance, approx_tolerance);
               keep_count = keep.count();
               // We need at least three points (plus Γ) to define a polyhedron.
               // Also skip the extraction if we are keeping all points
@@ -351,7 +351,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
     auto [ca, cb, cc] = plane_points_from_normal(-1.0 * cn, 0.0 * cn);
     debug_update("Now cut the first Brillouin zone by normal(s)\n", get_xyz(-1.0 * cn).to_string());
     debug_update("With on-plane points,\n",get_xyz(ca).to_string(),get_xyz(cb).to_string(),get_xyz(cc).to_string());
-    _irreducible = _first.cut(ca, cb, cc);
+    _irreducible = _first.cut(ca, cb, cc, float_tolerance, approx_tolerance);
   } else {
     info_update("No cutting normals in wedge search");
   }
@@ -393,7 +393,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       for (ind_t i=0; i<bz_n.size(0); ++i){
         auto [a, b, c] = plane_points_from_normal(bz_n.view(i), gamma);
         auto div = _irreducible.one_cut(a, b, c);
-        if (brille::approx::scalar(div.volume(), goal_volume)){
+        if (approx_float::scalar(div.volume(), goal_volume)){ // FIXME Add tolerances?
           // set div to be the ir_polyhedron
           _irreducible = div;
           // add the new normal to wedge normals list
@@ -404,7 +404,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
           break;
         }
       }
-      if (brille::approx::scalar(_irreducible.volume(), ir_volume)){
+      if (approx_float::scalar(_irreducible.volume(), ir_volume)){ // FIXME Add tolerances?
         debug_update("Polyhedron volume still double expected.");
         bool proceed=true;
         // check for other dividing planes :/
@@ -413,7 +413,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
         for (ind_t j=i+1; proceed && j<bz_n.size(0); ++j){
           auto [a, b, c] = plane_points_from_normal(bz_n.cross(i, j), gamma);
           auto div = _irreducible.one_cut(a, b, c);
-          if (brille::approx::scalar(div.volume(), goal_volume)){
+          if (approx_float::scalar(div.volume(), goal_volume)){ // FIXME Add tolerances?
             _irreducible = div;
             wg_n.append(0u, -bz_n.cross(i,j));
             this->set_ir_wedge_normals(wg_n);

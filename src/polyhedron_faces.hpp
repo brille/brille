@@ -9,6 +9,7 @@
 #include "array_.hpp"
 #include "array_l_.hpp"
 #include "geometry.hpp"
+#include "approx_float.hpp"
 
 namespace brille::polyhedron{
   template<class T, template<class> class A> std::enable_if_t<isBareArray<T,A>, A<T>>
@@ -273,13 +274,14 @@ namespace brille::polyhedron{
 //      return out;
 //  }
     template<class T, class R, template<class> class A, template<class> class B>
-    [[nodiscard]] std::enable_if_t<isBareArray<T,A> && isBareArray<R,B>, std::vector<bool>>
+    [[nodiscard]] std::enable_if_t<isArray<T,A> && isArray<R,B>, std::vector<bool>>
     contains(const A<T>& v, const B<R>& x) const {
       std::vector<std::atomic<int>> tmp(x.size(0));
       A<T> pa, pb, pc;
       std::tie(pa, pb, pc) = this->planes(v);
       const auto x_size = utils::u2s<long long>(x.size(0));
-#pragma omp parallel for default(none) shared(tmp, pa, pb, pc, x, x_size) schedule(dynamic)
+      // making this parallel *also* makes it significantly slower!?
+//#pragma omp parallel for default(none) shared(tmp, pa, pb, pc, x, x_size) schedule(dynamic)
       for (long long i = 0; i < x_size; ++i) {
         tmp[i] = point_inside_all_planes(pa, pb, pc, x.view(i)) ? 1 : 0;
       }
@@ -289,12 +291,13 @@ namespace brille::polyhedron{
       return out;
     }
 
-    template<class T, class R, template<class> class A, template<class> class B>
-    [[nodiscard]] std::enable_if_t <isLatVec<T,A> && isLatVec<R,B>, std::vector<bool>>
-    contains(const A<T>& v, const B<R>& x) const {
-      assert(x.same_lattice(v) || x.star_lattice(v));
-      return this->contains(v.xyz(), x.xyz());
-    }
+      /* point_inside_all_planes is now lattice-aware through pseudo_orient3d, no need to split its definition */
+//    template<class T, class R, template<class> class A, template<class> class B>
+//    [[nodiscard]] std::enable_if_t <isLatVec<T,A> && isLatVec<R,B>, std::vector<bool>>
+//    contains(const A<T>& v, const B<R>& x) const {
+//      assert(x.same_lattice(v) || x.star_lattice(v));
+//      return this->contains(v.xyz(), x.xyz());
+//    }
 
 
     template<class T, class R, template<class> class A, template<class> class B>
@@ -312,7 +315,7 @@ namespace brille::polyhedron{
         for (const auto & vertex: face){
           o3d.push_back(orient3d(x.ptr(0), y.ptr(0), z.ptr(0), w.ptr(vertex)));
         }
-        auto all_zero = std::all_of(o3d.begin(), o3d.end(), [](const auto & q){return approx::scalar(q, 0.);});
+        auto all_zero = std::all_of(o3d.begin(), o3d.end(), [](const auto & q){return approx_float::scalar(q, 0.);});
         if (all_zero) {
           all_zero = dot(three_point_normal(v, face[0], face[1], face[2]), three_point_normal(a, b, c)).all(cmp::gt, 0.);
         }
@@ -363,7 +366,7 @@ namespace brille::polyhedron{
 
     template<class T, class R, template<class> class A, template<class> class B>
     [[nodiscard]] std::enable_if_t <isArray<T,A> &&  isArray<R,B>, std::tuple<A<T>, Faces>>
-    one_cut(const A<T>& vin, const B<R>& a, const B<R>& b, const B<R>& c, const int tol=1) const {
+    one_cut(const A<T>& vin, const B<R>& a, const B<R>& b, const B<R>& c, const R Rtol=R(0), const int tol=1) const {
       assert(a.size(0) == b.size(0) && a.size(0) == c.size(0) && a.size(0) == 1);
       verbose_update("plane passing through\nnp.array(\n", get_xyz(cat(0, a, b, c)).to_string(),")\n",
                      "(rlu) np.array(\n", cat(0, a, b, c).to_string(),")\n",
@@ -376,7 +379,7 @@ namespace brille::polyhedron{
 //      verbose_update("keep ", keep, " of vertices\n", vin.to_string());
       if (std::find(keep.begin(), keep.end(), false) == keep.end()) return std::make_tuple(vin, *this);
       if (std::find(keep.begin(), keep.end(), true) == keep.end()) return std::make_tuple(vin, Faces());
-      verbose_update("keeping vertices ", keep);
+      verbose_update("keeping vertices ", keep, " of ", vin.to_string());
       auto edges_per_face = this->edges_per_face();
       auto cut_edges = keep_to_cut_edge_list(keep, edges_per_face);
       auto intersections = valid_edge_plane_intersections(a, b, c, vin, cut_edges);
@@ -386,7 +389,7 @@ namespace brille::polyhedron{
       auto f = this->faces(); // ditto
       auto pre_v_count = v.size(0);
       for (auto [first, second, edge, at]: intersections){
-        auto index = v.first(cmp::eq, at, tol); // == v.size(0) if not found)
+        auto index = v.first(cmp::eq, at, Rtol, Rtol, tol); // == v.size(0) if not found)
         if (index < keep.size()) {
           verbose_update("Edge ", my_to_string(edge), " intersection ", at.to_string(0), "which is pre-existing vertex ", index, ": ", v.view(index).to_string(0));
           // ensure existing vertices which are 'cut' because they're on the plane are retained
@@ -431,7 +434,7 @@ namespace brille::polyhedron{
       std::tie(v, f) = remove_points_and_update_face_indexing(keep, v, f, false);
       // it's possible that some faces have extraneous edge points if rounding errors produced a 'new'
       // vertex partially along an existing edge
-      f = remove_middle_colinear_points(v, f, tol);
+      f = remove_middle_colinear_points_from_faces(v, f, Rtol, tol);
 
       verbose_update("np.array(", get_xyz(v).to_string(), ")\n,", f);
 
@@ -445,7 +448,7 @@ namespace brille::polyhedron{
 
     template<class T, class R, template<class> class A, template<class> class B>
     [[nodiscard]] std::enable_if_t <isArray<T,A> && isArray<R,B>, std::tuple<A<T>, Faces>>
-    cut(const A<T>& v, const B<R>&a, const B<R>&b, const B<R>&c, const int tol=1) const {
+    cut(const A<T>& v, const B<R>&a, const B<R>&b, const B<R>&c, const R Rtol=R(0), const int tol=1) const {
       // this is, by far, the worst possible implementation of this algorithm
       assert(a.ndim()==2 && b.ndim()==2 && c.ndim() == 2);
       assert(a.size(1)==3 && b.size(1)==3 && c.size(1) == 3);
@@ -454,8 +457,8 @@ namespace brille::polyhedron{
       Faces of(*this);
       for (ind_t i=0; i < a.size(0); ++i){
         verbose_update("Start of cut ", i, " of ", a.size(0), "\nnp.array(", get_xyz(ov).to_string(),"),", of.python_string());
-        std::tie(ov, of) = of.one_cut(ov, a.view(i), b.view(i), c.view(i), tol);
-        if (approx::scalar(of.volume(ov), 0.)) break;
+        std::tie(ov, of) = of.one_cut(ov, a.view(i), b.view(i), c.view(i), Rtol, tol);
+        if (approx_float::scalar(of.volume(ov), R(0), Rtol, Rtol, tol)) break;
 //        verbose_update("After cut ", i, "\nnp.array(", ov.to_string(),"),", of.python_string());
       }
       return std::make_tuple(ov, of);

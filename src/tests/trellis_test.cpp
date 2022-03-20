@@ -29,8 +29,8 @@ bool write_read_test(const BrillouinZoneTrellis3<T,R,S>& source, const std::stri
   return (source == sink);
 }
 #else
-template<class T, class R>
-bool write_read_test(const BrillouinZoneTrellis3<T,R>&, const std::string&){
+template<class T, class R, class S>
+bool write_read_test(const BrillouinZoneTrellis3<T,R,S>&, const std::string&){
   return true;
 }
 #endif
@@ -51,15 +51,28 @@ TEST_CASE("BrillouinZoneTrellis3 vertex accessors","[trellis][accessors]"){
   auto lat = Direct<double>({10.75, 10.75, 10.75},
                             {half_pi, half_pi, half_pi}, spg);
   BrillouinZone bz(lat);
-  double max_volume = 0.002;
+  double max_volume{bz.get_ir_polyhedron().volume()/30}; // previous maximum, 0.002, gave ~8 intersecting nodes
   BrillouinZoneTrellis3<double,double,double> bzt(bz, max_volume);
 
-  SECTION("get_xyz"){auto verts = bzt.get_xyz(); REQUIRE(verts.size(0) > 0u);}
-  SECTION("get_hkl"){auto verts = bzt.get_hkl(); REQUIRE(verts.size(0) > 0u);}
-  SECTION("get_outer_xyz"){auto verts = bzt.get_outer_xyz(); REQUIRE(verts.size(0) > 0u);}
-  SECTION("get_outer_hkl"){auto verts = bzt.get_outer_hkl(); REQUIRE(verts.size(0) > 0u);}
-  SECTION("get_inner_xyz"){auto verts = bzt.get_inner_xyz(); REQUIRE(verts.size(0) > 0u);}
-  SECTION("get_inner_hkl"){auto verts = bzt.get_inner_hkl(); REQUIRE(verts.size(0) > 0u);}
+  // there should be trellis vertices of some sort:
+  auto all_hkl = bzt.get_hkl();
+  auto all_xyz = bzt.get_xyz();
+  REQUIRE(all_hkl.size(0) == all_xyz.size(0));
+  REQUIRE(all_hkl.size(0) > 0);
+
+  // there should be triangulated polygon vertices:
+  auto out_hkl = bzt.get_outer_hkl();
+  auto out_xyz = bzt.get_outer_xyz();
+  REQUIRE(out_hkl.size(0) == out_xyz.size(0));
+  REQUIRE(out_hkl.size(0) > 0);
+
+  // there *probably* should be non-triangulated cubic vertices
+  // there's no definite relationship between the sizes of the three types of vectors
+  // since one vertex can be used for both triangulated and non-triangulated nodes
+  auto in_hkl = bzt.get_inner_hkl();
+  auto in_xyz = bzt.get_inner_xyz();
+  REQUIRE(in_hkl.size(0) == in_xyz.size(0));
+  REQUIRE(in_hkl.size(0) > 0);
 }
 
 TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
@@ -304,6 +317,14 @@ TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trell
   // fail due to one or more missing vertices in a triangulated cube
   REQUIRE_NOTHROW(BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, 0.001));
   BrillouinZoneTrellis3<double,std::complex<double>,double> bzt(bz, 0.001);
+
+  auto fbz = bz.get_polyhedron();
+  auto irp = bz.get_ir_polyhedron();
+  auto verts = bzt.get_xyz();
+  info_update("First Bz\n", fbz.python_string(), "\nIrreducible Bz\n", irp.python_string());
+  info_update("Triangulated points\nnp.array(", verts.to_string(), ")");
+  info_update("Triangulated tetrahedra\n", bzt.get_vertices_per_tetrahedron());
+
 
   // The total volume of all of the nodes should be the same as the irreducible
   // Brillouin zone polyhedron volume if the nodes fully fill the polyhedron.

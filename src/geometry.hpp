@@ -116,7 +116,7 @@ namespace brille {
      *       their multiplicities must match.
      */
     template<class T, template<class> class A>
-    std::enable_if_t<isBareArray<T,A>, std::vector<T>>
+    std::enable_if_t<isArray<T,A>, std::vector<T>>
     pseudo_orient3d(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
       assert(a.ndim() == 2u && b.ndim() == 2u && c.ndim() == 2u && d.ndim() == 2u);
       assert(a.size(1u) == 3u && b.size(1u) == 3u && c.size(1u) == 3u && d.size(1u) == 3u);
@@ -127,24 +127,6 @@ namespace brille {
       std::vector<T> out;
       out.reserve(broadcaster.size());
       for (auto [outerSub, aSub, dSub]: broadcaster){
-//        const auto & ax{a[aSub]};
-//        const auto & bx{b[aSub]};
-//        const auto & cx{c[aSub]};
-//        const auto & dx{d[dSub]};
-//        aSub[1] = 1u;
-//        dSub[1] = 1u;
-//        const auto & ay{a[aSub]};
-//        const auto & by{b[aSub]};
-//        const auto & cy{c[aSub]};
-//        const auto & dy{d[dSub]};
-//        aSub[1] = 2u;
-//        dSub[2] = 2u;
-//        const auto & az{a[aSub]};
-//        const auto & bz{b[aSub]};
-//        const auto & cz{c[aSub]};
-//        const auto & dz{d[dSub]};
-//        auto pred = predicate3d(ax, ay, az, bx, by, bz, cx, cy, cz, dx, dy, dz);
-
         const auto ar{a.view(aSub[0])};
         const auto br{b.view(aSub[0])};
         const auto cr{c.view(aSub[0])};
@@ -154,12 +136,12 @@ namespace brille {
       }
       return out;
     }
-    template<class T, template<class> class A>
-    std::enable_if_t<isLatVec<T,A>, std::vector<T>>
-    pseudo_orient3d(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
-      assert(a.same_lattice(b) && a.same_lattice(c) && d.same_lattice(d));
-      return pseudo_orient3d(a.xyz(), b.xyz(), c.xyz(), d.xyz());
-    }
+//    template<class T, template<class> class A>
+//    std::enable_if_t<isLatVec<T,A>, std::vector<T>>
+//    pseudo_orient3d(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
+//      assert(a.same_lattice(b) && a.same_lattice(c) && d.same_lattice(d));
+//      return pseudo_orient3d(a.xyz(), b.xyz(), c.xyz(), d.xyz());
+//    }
 
 //  template<class T, template<class> class A>
 //  std::enable_if_t<isBareArray<T,A>, std::tuple<A<T>, A<T>>>
@@ -202,7 +184,7 @@ namespace brille {
     auto n_norm = norm(n); // this *should* be all 1, but maybe it's not
     auto nn = n / n_norm;
     auto a_dot_n = dot(a, nn) * nn;
-    auto is_n = a_dot_n.row_is(brille::cmp::eq, a);
+    auto is_n = a_dot_n.row_is(brille::cmp::eq, a); // FIXME add tolerances
     if (is_n.any()) {
       for (ind_t i = 0; i < a.size(0); ++i)
         if (is_n.val(i)) {
@@ -438,16 +420,10 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isBareArray<T,A>, bool>
+  std::enable_if_t<isArray<T,A>, bool>
   point_inside_all_planes(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& x){
       auto o3d = pseudo_orient3d(a, b, c, x);
       auto v = std::min_element(o3d.begin(), o3d.end());
-//      if (*v < 0 && *v > -1e-10){
-//        std::vector<T> below;
-//        std::copy_if(o3d.begin(), o3d.end(), std::back_inserter(below), [](const T& z){return z < 0;});
-//        std::transform(below.begin(), below.end(), below.begin(), [](const T& z){return z * 1e10;});
-//        info_update("The point ", x.to_string(), "has negative parallelepiped volumes ", below, "e10");
-//      }
       return *v > 0 || approx::scalar(*v, 0.);
   }
 
@@ -470,7 +446,7 @@ namespace brille {
   }
   POINT_IN_PLANE(point_inside_plane, std::vector<bool>)
   POINT_IN_PLANE(point_inside_planes, std::vector<bool>)
-  POINT_IN_PLANE(point_inside_all_planes, bool)
+//  POINT_IN_PLANE(point_inside_all_planes, bool) // point_inside_all_planes now uses pseudo_orient3d which is lattice aware
 
   #undef POINT_IN_PLANE
 
@@ -636,6 +612,11 @@ namespace brille {
     return v.view(edge.first) + (dot(plane_n, a - v.view(edge.first)) * line_u) / denominator;
   }
 
+  /*! \brief Find the intersection points along known-intersected edges
+   *
+   * The edges structure should contain only those vertex-index pairs which are on opposite sides of the plane
+   * defined by (a, b, c).
+   * */
   template<class T, template<class> class A, class I>
   std::enable_if_t<isArray<T,A>, std::vector<std::tuple<size_t, size_t, std::pair<I,I>, A<T>>>>
   valid_edge_plane_intersections(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& v, const std::vector<std::tuple<size_t, size_t, std::pair<I,I>>>& edges){
@@ -646,16 +627,28 @@ namespace brille {
       auto denominator =  dot(plane_n, line_u);
       if (denominator.abs().sum() == 0) continue;
       auto factor = (dot(plane_n, a - v.view(edge.first)) / denominator).sum();
-      if (factor < T(0) && approx::scalar(factor, T(0))){
+//      if (factor < T(0) && approx::scalar(factor, T(0), tol)){
+//        out.emplace_back(first, second, edge, v.view(edge.first));
+//        continue;
+//      }
+//      if (factor > T(1) && approx::scalar(factor, T(1), tol)){
+//        out.emplace_back(first, second, edge, v.view(edge.second));
+//        continue;
+//      }
+//      if (factor < T(0) || factor > T(1)) {
+//        // calculate the other way around?
+//        auto factor_b = (dot(plane_n, (a+b+c)/3 - v.view(edge.first)) / denominator).sum();
+//        auto factor_c = (dot(plane_n, c - v.view(edge.first)) / denominator).sum();
+//        info_update("The factor ", factor, " is outside the valid range (0,1) for edge ", my_to_string(edge));
+//        info_update("The other factors are ", factor_b, factor_c);
+//        continue;
+//      }
+      if (factor < T(0)){
         out.emplace_back(first, second, edge, v.view(edge.first));
         continue;
       }
-      if (factor > T(1) && approx::scalar(factor, T(1))){
+      if (factor > T(1)){
         out.emplace_back(first, second, edge, v.view(edge.second));
-        continue;
-      }
-      if (factor < T(0) || factor > T(1)) {
-        info_update("The factor ", factor, " is outside the valid range for edge ", my_to_string(edge));
         continue;
       }
       auto at = v.view(edge.first) + factor * line_u;
@@ -812,7 +805,7 @@ namespace brille {
       auto prev = points.view(sorted[i]) - points.view(sorted[j]);
       j = (sorted.size() + i + 1) % sorted.size();
       auto next = points.view(sorted[j]) - points.view(sorted[i]);
-      if (dot(normal, cross(prev, next)).all(cmp::gt, 0.)){
+      if (dot(normal, cross(prev, next)).all(cmp::gt, 0.)){ // FIXME add tolerance?
         // left turn; we keep this point
         ++i;
       } else{
@@ -927,7 +920,7 @@ namespace brille {
 
   template<class T, template<class> class A>
   std::enable_if_t<isArray<T,A>, std::vector<ind_t>>
-  remove_middle_colinear_points(const A<T>& points, const std::vector<ind_t>& face, const int tol){
+  remove_middle_colinear_points_from_one_face(const A<T>& points, const std::vector<ind_t>& face, const T Ttol, const int tol){
     std::vector<ind_t> updated;
     updated.reserve(face.size());
     updated.push_back(face[0]);
@@ -936,17 +929,18 @@ namespace brille {
       auto a = points.view(face[(i-1) % s]);
       auto b = points.view(face[i]);
       auto c = points.view(face[(i+1) % s]);
-      if (!cross(b-a, c-b).all(cmp::eq, 0., tol)) updated.push_back(face[i]);
+      // switched from !cross(,).all(cmp::eq, 0.) to take advantage of short-cutting in any/all
+      if (cross(b-a, c-b).any(cmp::neq, 0., Ttol, tol)) updated.push_back(face[i]);
     }
     return updated;
   }
   template<class T, template<class> class A>
   std::enable_if_t<isArray<T,A>, std::vector<std::vector<ind_t>>>
-  remove_middle_colinear_points(const A<T>& points, const std::vector<std::vector<ind_t>>& faces, const int tol){
+  remove_middle_colinear_points_from_faces(const A<T>& points, const std::vector<std::vector<ind_t>>& faces, const T Ttol, const int tol){
     std::vector<std::vector<ind_t>> updated;
     updated.reserve(faces.size());
     for (const auto & face : faces){
-      auto one = remove_middle_colinear_points(points, face, tol);
+      auto one = remove_middle_colinear_points_from_one_face(points, face, Ttol, tol);
       if (one.size() > 2) updated.push_back(one);
     }
 //    verbose_update("After removing colinear face points\n", updated);
@@ -973,7 +967,7 @@ namespace brille {
           if (!(keep[face[0]] && keep[face[1]] && keep[face[2]])) {
             auto old_normal = three_point_normal(points, face);
             auto new_normal = three_point_normal(kept, one);
-            if (dot(old_normal, new_normal).all(cmp::le, 0.)) {
+            if (dot(old_normal, new_normal).all(cmp::le, 0.)) { // FIXME add tolerance?
               std::swap(one[1], one[2]);
             }
           }
@@ -997,17 +991,17 @@ namespace brille {
     // copy the faces which are ok to a new vector of vectors
     auto loop = [no, has](const auto & source){
       if (source.size() < 1) return std::make_tuple(false, source);
-      verbose_update("De-dangling loop for ", source);
+//      verbose_update("De-dangling loop for ", source);
       // count how many times each vertex appears in the faces lists
       std::vector<I> co(no);
       std::iota(co.begin(), co.end(), 0u);
-      verbose_update("vertices ", co);
+//      verbose_update("vertices ", co);
       std::transform(co.begin(), co.end(), co.begin(), [source, has](const I i){
         I c{0};
         for (const auto & f : source) if (has(f, i)) ++c;
         return c;
       });
-      verbose_update("  counts ", co);
+//      verbose_update("  counts ", co);
       // for each face, remove any points which appear on less than three faces
       // and then remove faces with less than three vertices
       auto checked_face = [co](const auto & f){
@@ -1044,7 +1038,7 @@ namespace brille {
     // actually run the good-face reduction until all faces are good (or gone)
     auto [again, out] = loop(faces);
     while (again) std::tie(again, out) = loop(out);
-    verbose_update("De-dangled faces:\n", out);
+//    verbose_update("De-dangled faces:\n", out);
     return out;
   }
 

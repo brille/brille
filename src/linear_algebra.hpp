@@ -98,8 +98,7 @@ namespace brille::linear_algebra {
   }
 
   template<class T, size_t N> std::array<T, N> mat_inverse(const std::array<T,N>& A){
-    auto M = static_cast<size_t>(std::sqrt(N));
-    assert(N == M * M);
+    assert(N == static_cast<size_t>(std::sqrt(N)) * static_cast<size_t>(std::sqrt(N)));
     std::array<T,N> inv; inv.fill(0);
     utils::matrix_inverse(inv.data(), A.data());
     return inv;

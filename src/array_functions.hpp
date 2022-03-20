@@ -195,7 +195,7 @@ ARRAY_LATVEC_BINARY_OP(/)
     auto lat = a.lattice();
     auto lu = a.type() == LengthUnit::angstrom ? LengthUnit::inverse_angstrom : LengthUnit::angstrom;
     auto cross_star = L<S>(lu, lat, oarray);
-    cross_star *= static_cast<S>(lat.volume(lu)/S(2)/brille::math::pi);
+    cross_star *= static_cast<S>(lat.volume(a.type())/brille::math::two_pi);
     return cross_star.star();
   }
 #else
@@ -523,7 +523,7 @@ template<class T, template<class> class A>
 }
 
 template<class T, template<class> class A>
-std::enable_if_t<isBareArray<T,A>, bArray<T>>
+std::enable_if_t<isArray<T,A>, bArray<T>>
 triple_product(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
   auto std_out = pseudo_orient3d(a, b, c, d);
   return bArray<T>::from_std(std_out);
@@ -533,11 +533,11 @@ triple_product(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
 //  return out;
 }
 
-template<class T, template<class> class A>
-std::enable_if_t<isLatVec<T,A>, bArray<T>>
-triple_product(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
-  return dot(d - a, cross(c - a, b - a));
-}
+//template<class T, template<class> class A>
+//std::enable_if_t<isLatVec<T,A>, bArray<T>>
+//triple_product(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& d){
+//  return dot(d - a, cross(c - a, b - a));
+//}
 template<class T, class I, template<class> class A, template<class> class B>
 std::enable_if_t<(isArray<T,A> && isBareArray<I,B> && std::is_integral_v<I>), bArray<T>>
 triple_product(const A<T>& v, const B<I>& i){

@@ -82,7 +82,7 @@ bool BrillouinZone::check_ir_polyhedron(){
   ps = ps.higher(1);
   for (size_t i=0; i < ps.size(); ++i) {
     auto rotated = _irreducible.apply(ps, i);
-    if (_irreducible.intersects(rotated /*, approx_tolerance*/)){
+    if (_irreducible.intersects(rotated, float_tolerance, approx_tolerance)){
       info_update("_irreducible\n", _irreducible.python_string(),"\nintersects\n",rotated.python_string());
       debug_update("The trial irreducible polyhedron intersects itself.");
       return false;
@@ -211,7 +211,7 @@ void BrillouinZone::voro_search(const int extent, const bool divide_primitive){
   auto box = polyhedron::bounding_box(1.0 * tau);
 //  verbose_update("bounding box\n", box.python_string());
 //  throw std::runtime_error("time to halt is now!");
-  _first = box.cut(plane_a, plane_b, plane_c, approx_tolerance);
+  _first = box.cut(plane_a, plane_b, plane_c, float_tolerance, approx_tolerance);
   if (divide_primitive){
     auto vertices = transform_from_primitive(_outer, _first.vertices());
     _first = polyhedron::Poly(vertices, _first.faces());

@@ -83,15 +83,17 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
     auto equals = all_points.row_is(brille::cmp::eq, vertex);
     auto no = equals.count();
     if (no) {
-      if (no>1) throw std::runtime_error("Too many matches to vertex");
+      if (no>1)
+        throw std::runtime_error("Too many matches to vertex");
       add_to_maps(equals.first(), map); // modifies map_index & n_kept too
       return false;
     }
     equals = extra_points.row_is(brille::cmp::eq, vertex);
-    no = equals.count();
+    no = equals.count(n_extra); // only count set points (protect against matching an uninitialized extra_points entry)
     if (no) {
-      if (no>1) throw std::runtime_error("Too many extra matches to vertex");
-      map.push_back(n_points + equals.first());
+      if (no>1)
+        throw std::runtime_error("Too many extra matches to vertex");
+      map.push_back(n_points + equals.first(n_extra));
       return false;
     }
     if (extra_points.size(0) < n_extra + 1) extra_points.resize(2 * n_extra);
@@ -112,7 +114,14 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
 //      node_is_cube[i] = this_node_poly.volume() == intersection.volume() &&
 //                        !this_node_poly.contains(Gamma)[0];
 //    }
-    node_is_cube[i] = !always_triangulate && this_node_poly.volume() == intersection.volume() && !this_node_poly.contains(Gamma)[0];
+    auto test0 = !always_triangulate;
+    /* FIXME A less-strict comparison might be useful but, at present, causes not-in-trellis errors */
+    // auto test1 = approx_float::scalar(this_node_poly.volume(), intersection.volume());
+    auto test1 = this_node_poly.volume() == intersection.volume();
+    auto test2 = !this_node_poly.contains(Gamma)[0];
+    verbose_update_if(test1 && !test2, "Node would be cubic but contains Gamma");
+    verbose_update_if(test1, "Node is cubic because ", my_to_string(this_node_poly.volume() - intersection.volume()), " is zero");
+    node_is_cube[i] = test0 && test1 && test2;
     if (node_is_cube[i]) {
       verbose_update("Node ", i, " is a cube");
       auto indexes = this_node_faces.indexes();
@@ -142,8 +151,8 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
               "Maybe the Gamma point is one of the extra intersections?");
           auto extra_points_equals_gamma =
               extra_points.row_is(brille::cmp::eq, Gamma);
-          if (extra_points_equals_gamma.count() == 1) {
-            gamma_at = extra_points_equals_gamma.first() + n_points;
+          if (extra_points_equals_gamma.count(n_extra /*count only the added points*/) == 1) {
+            gamma_at = extra_points_equals_gamma.first(n_extra) + n_points;
             gamma_found = true;
           }
         }

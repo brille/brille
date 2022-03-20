@@ -439,19 +439,19 @@ public:
   T sum() const;
   T prod() const;
   template<class R, size_t Nel>
-  bool match(ind_t i, ind_t j, const std::array<R,Nel>& rot, int order=1, int tol=1) const;
-  bool match(ind_t i, ind_t j, ops op=ops::plus, T val=T{0}, int tol=1) const;
-  bool all(cmp expr, T val, int tol=1) const;
-  bool any(cmp expr, T val, int tol=1) const;
-  ind_t first(cmp expr, T val, int tol=1) const;
-  ind_t last(cmp expr, T val, int tol=1) const;
-  ind_t count(cmp expr, T val, int tol=1) const;
-  template<class R> ind_t first(cmp expr, const Array2<R>& val, int tol=1) const;
-  template<class R> ind_t last(cmp expr, const Array2<R>& val, int tol=1) const;
-  template<class R> ind_t count(cmp expr, const Array2<R>& val, int tol=1) const;
-  template<class R> std::vector<ind_t> find(cmp expr, const Array2<R>& val, int tol=1) const;
-  Array2<bool> is(cmp expr, T val, int tol=1) const;
-  std::vector<ind_t> find(cmp expr, T val, int tol=1) const;
+  bool match(ind_t i, ind_t j, const std::array<R,Nel>& rot, int order=1, T Ttol=T(0), int tol=1) const;
+  bool match(ind_t i, ind_t j, ops op=ops::plus, T val=T{0}, T Ttol=T(0), int tol=1) const;
+  bool all(cmp expr, T val, T Ttol=T(0), int tol=1) const;
+  bool any(cmp expr, T val, T Ttol=T(0), int tol=1) const;
+  ind_t first(cmp expr, T val, T Ttol=T(0), int tol=1) const;
+  ind_t last(cmp expr, T val, T Ttol=T(0), int tol=1) const;
+  ind_t count(cmp expr, T val, T Ttol=T(0), int tol=1) const;
+  template<class R> ind_t first(cmp expr, const Array2<R>& val, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
+  template<class R> ind_t last(cmp expr, const Array2<R>& val, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
+  template<class R> ind_t count(cmp expr, const Array2<R>& val, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
+  template<class R> std::vector<ind_t> find(cmp expr, const Array2<R>& val, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
+  Array2<bool> is(cmp expr, T val, T Ttol=T(0), int tol=1) const;
+  std::vector<ind_t> find(cmp expr, T val, T Ttol=T(0), int tol=1) const;
   /*!\brief Determine the per-element truth-value of this Array2 compared with provided data
 
   \param expr The comparison to be performed
@@ -464,7 +464,7 @@ public:
    le
         to the shape of this Array2.
   */
-  template<class R> Array2<bool> is(cmp expr, const Array2<R>& that, int tol=1) const;
+  template<class R> Array2<bool> is(cmp expr, const Array2<R>& that, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
   /*!\brief Determine the per-row truth-value of this Array2 compared with provided data
 
   \param expr The comparison to be performed
@@ -474,8 +474,8 @@ public:
   \return The per-row truth value of the provided comparison between the stored
           and provided data.
   */
-  template<class R> std::vector<bool> row_is(cmp expr, const std::vector<R>& row, int tol=1) const;
-  template<class R> Array2<bool> row_is(cmp expr, const Array2<R> & that, int tol=1) const;
+  template<class R> std::vector<bool> row_is(cmp expr, const std::vector<R>& row, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
+  template<class R> Array2<bool> row_is(cmp expr, const Array2<R> & rows, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
   /*!\brief Determine the element truth-value of this Array2 compared with provided data
 
   \param expr The comparison to be performed
@@ -485,12 +485,12 @@ public:
   \return The per-element truth value of the provided comparison between the
           stored and provided data.
   */
-  template<class R> std::vector<bool> each_is(cmp expr, const std::vector<R>& vals, int tol=1) const;
-  template<class R> bool is(const Array2<R>& that, int tol=1) const;
+  template<class R> std::vector<bool> each_is(cmp expr, const std::vector<R>& vals, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
+  template<class R> bool is(const Array2<R>& that, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
   template<class R> bool operator==(const Array2<R>& that) const {return this->is(that);}
-  [[nodiscard]] std::vector<bool> is_unique(int tol=1) const;
-  [[nodiscard]] std::vector<ind_t> unique_idx(int tol=1) const;
-  Array2<T> unique(int tol=1) const;
+  [[nodiscard]] std::vector<bool> is_unique(T Ttol=T(0), int tol=1) const;
+  [[nodiscard]] std::vector<ind_t> unique_idx(T Ttol=T(0), int tol=1) const;
+  Array2<T> unique(T Ttol=T(0), int tol=1) const;
   Array2<T>  operator-() const;
   Array2<T>& operator +=(const T&);
   Array2<T>& operator -=(const T&);
@@ -527,8 +527,8 @@ public:
   Array2<T> contiguous_row_ordered_copy() const;
 
   Array2<T> abs() const;
-  template<class R> bool is_permutation(const Array2<R>& other, int tol=1) const;
-  template<class R> std::vector<ind_t> permutation_vector(const Array2<R>& other, int tol=1) const;
+  template<class R> bool is_permutation(const Array2<R>& other, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
+  template<class R> std::vector<ind_t> permutation_vector(const Array2<R>& other, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
   //
 #if USE_HIGHFIVE
   // Read in from a file
