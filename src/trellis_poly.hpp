@@ -35,6 +35,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "polyhedron_flex.hpp"
 #include "triangulation_poly.hpp"
 #include "approx_float.hpp"
+#include "approx_config.hpp"
 
 namespace brille::polytrellis {
 
@@ -143,7 +144,11 @@ public:
                             PolyhedronTrellis are CubeNode (true) or PolyNode
                             (false) objects
   */
-  PolyTrellis(const polyhedron::Poly<VertexComponents,VertexType>& polyhedron, double max_volume, bool always_triangulate=false);
+  PolyTrellis(const polyhedron::Poly<VertexComponents,VertexType>& polyhedron,
+              double max_volume,
+              bool always_triangulate=false,
+              approx_float::ApproxConfig cfg = approx_float::ApproxConfig()
+              );
   //! Explicit empty constructor
   explicit PolyTrellis(): vertices_(0,3) {}
   //! Return the number of trellis intersections

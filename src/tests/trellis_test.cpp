@@ -434,3 +434,78 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
     REQUIRE_NOTHROW(bzt.ir_interpolate_at(Q, nthread));
   }
 }
+
+
+TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
+  std::array<double,9> row_vectors{
+    1.7797736800000001, 1.027552813333333, 6.219738366666666,
+   -1.7797736800000001, 1.027552813333333, 6.219738366666666,
+    0.0,               -2.055105626666667, 6.219738366666666
+  };
+  std::vector<std::array<double,3>> atom_positions {
+      {0.89401258, 0.89401259, 0.89401258}, // O
+      {0.10598742, 0.10598741, 0.10598742}, // O
+      {0.5, 0.5, 0.5}, // Ca
+      {0.0, 0.99999999, 0.0} // Hg
+  };
+  std::vector<ind_t> atom_types{2,2,0,1};
+
+  std::vector<std::array<int,9>> rotations {
+    { 1, 0, 0,   0, 1, 0,   0, 0, 1},
+    {-1, 0, 0,   0,-1, 0,   0, 0,-1},
+    { 0, 0, 1,   1, 0, 0,   0, 1, 0},
+    { 0, 0,-1,  -1, 0, 0,   0,-1, 0},
+    { 0, 1, 0,   0, 0, 1,   1, 0, 0},
+    { 0,-1, 0,   0, 0,-1,  -1, 0, 0},
+    { 0, 0,-1,   0,-1, 0,  -1, 0, 0},
+    { 0, 0, 1,   0, 1, 0,   1, 0, 0},
+    { 0,-1, 0,  -1, 0, 0,   0, 0,-1},
+    { 0, 1, 0,   1, 0, 0,   0, 0, 1},
+    {-1, 0, 0,   0, 0,-1,   0,-1, 0},
+    { 1, 0, 0,   0, 0, 1,   0, 1, 0}
+  };
+  std::vector<std::array<double,3>> translations {
+    {0.,0.,0.},
+    {0.,0.,0.},
+    {0.,0.,0.},
+    {0.,0.,0.},
+    {0.,0.,0.},
+    {0.,0.,0.},
+    {0.,0.,0.},
+    {0.,0.,0.},
+    {0.,0.,0.},
+    {0.,0.,0.},
+    {0.,0.,0.},
+    {0.,0.,0.}
+  };
+  std::vector<Motion<int,double>> motions;
+  for (size_t i=0; i<rotations.size(); ++i) motions.emplace_back(rotations[i], translations[i]);
+  auto sym = Symmetry(motions);
+  auto bas = Basis(atom_positions, atom_types);
+  auto lat = Direct<double>(row_vectors, MatrixVectors::row, sym, bas);
+
+  auto bz = BrillouinZone(lat);
+  auto goal_node_volume = bz.get_ir_polyhedron().volume() / static_cast<double>(1000);
+
+  auto cfg = approx_float::ApproxConfig(1000, -12);
+
+  auto bzt = BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, goal_node_volume, false, cfg);
+
+  auto n_modes = static_cast<ind_t>(3u * atom_types.size());
+  std::vector<ind_t> val_shape{bzt.get_hkl().size(0), n_modes, 1u};
+  Array<double> values(val_shape, 1.0);
+  std::vector<ind_t> vec_shape{bzt.get_hkl().size(0), n_modes, n_modes};
+  Array<std::complex<double>> vectors(vec_shape, std::complex<double>(1.0));
+
+  std::array<ind_t,3> val_elements{{1, 0, 0}};
+  RotatesLike rl{RotatesLike::Gamma};
+  Interpolator<double> val(values, val_elements, rl);
+  std::array<ind_t,3> vec_elements{{0, n_modes, 0}};
+  Interpolator<std::complex<double>> vec(vectors, vec_elements, rl);
+  bzt.replace_data(val, vec);
+
+  std::vector<std::array<double,3>> std_qpts {{0.05, 0.05, 0.05}};
+  auto qpts = LQVec<double>(lat, bArray<double>::from_std(std_qpts));
+
+  REQUIRE_NOTHROW(bzt.ir_interpolate_at(qpts, 1));
+}

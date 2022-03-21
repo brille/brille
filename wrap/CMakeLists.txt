@@ -1,5 +1,6 @@
 set(BRILLE_PYTHON_MODULE_SOURCES
   "${BRILLE_PYTHON_MODULE}.cpp" # this needs to be first
+  _basis.cpp
   _bravais.cpp
   _bz.cpp
   _debug.cpp

@@ -103,6 +103,15 @@ void wrap_lattice(py::module &m){
   }),"basis_vectors"_a, "symmetry"_a, "real_space"_a=true, "row_vectors"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& vectors,
+       const Symmetry& sym,
+       const Basis& bas,
+       const bool dir,
+       const bool row) {
+    auto mat = np2sa<double,9>(vectors);
+    return Lattice<double>(mat, row ? MatrixVectors::row : MatrixVectors::column, sym, bas, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
+  }),"basis_vectors"_a, "symmetry"_a, "basis"_a, "real_space"_a=true, "row_vectors"_a=true);
+  cls.def(py::init(
+    [](const py::array_t<double>& vectors,
        const std::string& sym,
        const bool dir,
        const bool row) {

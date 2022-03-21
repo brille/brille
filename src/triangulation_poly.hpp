@@ -28,7 +28,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 namespace brille::polyhedron {
 
 template<class T, template<class> class A>
-std::enable_if_t<isBareArray<T,A>, std::tuple<A<T>, Array2<ind_t>>>
+std::enable_if_t<isBareArray<T,A>, std::tuple<int, A<T>, Array2<ind_t>>>
 triangulate(const T max_volume, const bool addGamma, const A<T>& points, const Faces& faces){
   const auto& f{faces.faces()};
   debug_update("Triangulate vertices and facets\n",points.to_string(),",\n", f);
@@ -37,13 +37,11 @@ triangulate(const T max_volume, const bool addGamma, const A<T>& points, const F
   tgb.plc = 1; // we will always tetrahedralize a piecewise linear complex
   if (max_volume > 0){
     tgb.quality = 1; // we will (almost) always improve the tetrahedral mesh
-                     // tgb.neighout = 1; // we *need* the neighbour information to be stored into tgo.
-                     // // tgb.mindihedral = 20.; // degrees, avoid very accute edges
     tgb.fixedvolume = 1;
     tgb.maxvolume = max_volume;
-    // } else{
-    //   tgb.varvolume = 1;
   }
+  // if max_volume < 0, force the number of Steiner points to be zero?
+  // this would make triangulating un-triangulatable regions break, probably.
 #ifdef VERBOSE_MESHING
   tgb.verbose = 10000;
 #else
@@ -121,14 +119,15 @@ triangulate(const T max_volume, const bool addGamma, const A<T>& points, const F
       tetrahedra.val(i, (j + 1) % 4) = static_cast<ind_t>(tgo.tetrahedronlist[i * tgo.numberofcorners + j]);
     }
   }
-
-  return std::make_tuple(position, tetrahedra);
+  auto extra = tgo.numberofpoints - tgi.numberofpoints;
+  if (addGamma && !gammaPresent) extra -= 1; // we know about Gamma already
+  return std::make_tuple(extra, position, tetrahedra);
 }
 template<class T, template<class> class A>
-std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, Array2<ind_t>>>
+std::enable_if_t<isLatVec<T,A>, std::tuple<int, A<T>, Array2<ind_t>>>
 triangulate(const T max_volume, const bool addGamma, const A<T>& points, const Faces& faces){
-  auto [v, t] = triangulate(max_volume, addGamma, points.xyz(), faces);
-  return std::make_tuple(from_xyz_like(points, v), t);
+  auto [n, v, t] = triangulate(max_volume, addGamma, points.xyz(), faces);
+  return std::make_tuple(n, from_xyz_like(points, v), t);
 }
 
 /*! \brief A class to handle interaction with `TetGen`
@@ -141,6 +140,7 @@ tetrahedra indexing is collected before freeing the TetGet structure.
 */
 template<class T, template<class> class A>
 class LQPolyTet{
+  int extra_;
   A<T> points_;   /*!< The triangulated vertex positions */ // (nVertices, 3)
   bArray<ind_t> tetrahedra_; /*!< The vertices in each of the triangulated tetrahedra */ // (nTetrahedra, 4)
 public:
@@ -154,10 +154,12 @@ public:
   */
   explicit LQPolyTet(const Poly<T,A>& poly, const bool addGamma=false, const T max_volume=-1)
   {
-    std::tie(points_, tetrahedra_) = triangulate(max_volume, addGamma, poly.vertices(), poly.faces());
+    std::tie(extra_, points_, tetrahedra_) = triangulate(max_volume, addGamma, poly.vertices(), poly.faces());
     // ensure that all tetrahedra have positive (orient3d) volume
     this->correct_tetrahedra_vertex_ordering();
   }
+  [[nodiscard]] bool any() const {return extra_ > 0;}
+  [[nodiscard]] int count() const {return extra_;}
   //! Return the volume of the indexed tetrahedron
   T volume(const ind_t tet) const {
     return triple_product(points_, tetrahedra_.view(tet)).sum() / T(6);

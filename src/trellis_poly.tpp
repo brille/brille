@@ -19,9 +19,14 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #endif
 
 template<class T, class R, class S, template<class> class A>
-PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const double max_volume, const bool always_triangulate)
+PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly,
+                                  const double max_volume,
+                                  const bool always_triangulate,
+                                  const approx_float::ApproxConfig cfg)
 : boundary_(poly.faces()), vertices_(poly.vertices())
 {
+  S s_tol = cfg.tol<S>();
+  int d_tol = cfg.digit();
   profile_update("Start of PolyTrellis construction");
   assert(poly.face_count() > 3 && poly.volume() > 0);
   // find the extents of the polyhedron
@@ -66,7 +71,7 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
   ind_t gamma_at;
   bool gamma_found;
   {
-    auto equals = all_points.row_is(brille::cmp::eq, Gamma);
+    auto equals = all_points.row_is(brille::cmp::eq, Gamma, s_tol, s_tol, d_tol);
     gamma_found = equals.count() == 1;
     gamma_at = gamma_found ? equals.first() : n_points + 1;
   }
@@ -80,7 +85,7 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
   };
 
   auto add_vertex = [&](const auto & vertex, std::vector<ind_t> & map){
-    auto equals = all_points.row_is(brille::cmp::eq, vertex);
+    auto equals = all_points.row_is(brille::cmp::eq, vertex, s_tol, s_tol, d_tol);
     auto no = equals.count();
     if (no) {
       if (no>1)
@@ -88,7 +93,7 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
       add_to_maps(equals.first(), map); // modifies map_index & n_kept too
       return false;
     }
-    equals = extra_points.row_is(brille::cmp::eq, vertex);
+    equals = extra_points.row_is(brille::cmp::eq, vertex, s_tol, s_tol, d_tol);
     no = equals.count(n_extra); // only count set points (protect against matching an uninitialized extra_points entry)
     if (no) {
       if (no>1)
@@ -109,7 +114,7 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
     // this limits all_points to have the knots *first*
     auto this_node_poly = polyhedron::Poly(all_points, this_node_faces);
 //    verbose_update("Look for intersection of\n", poly.python_string(), " and node\n", this_node_poly.python_string());
-    auto intersection = poly.intersection(this_node_poly);
+    auto intersection = poly.intersection(this_node_poly, s_tol, d_tol);
 //    if (!always_triangulate) {
 //      node_is_cube[i] = this_node_poly.volume() == intersection.volume() &&
 //                        !this_node_poly.contains(Gamma)[0];
@@ -143,14 +148,14 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
     if (std::count(gamma_in.begin(), gamma_in.end(), true)) {
         verbose_update("Intersection contains the Gamma point");
         auto int_vertices_are_gamma =
-            intersection.vertices().row_is(brille::cmp::eq, Gamma);
+            intersection.vertices().row_is(brille::cmp::eq, Gamma, s_tol, s_tol, d_tol);
         auto no = int_vertices_are_gamma.count();
         verbose_update(no == 0, "Gamma point not a vertex of the Intersection");
         if (!gamma_found) {
           verbose_update(
               "Maybe the Gamma point is one of the extra intersections?");
           auto extra_points_equals_gamma =
-              extra_points.row_is(brille::cmp::eq, Gamma);
+              extra_points.row_is(brille::cmp::eq, Gamma, s_tol, s_tol, d_tol);
           if (extra_points_equals_gamma.count(n_extra /*count only the added points*/) == 1) {
             gamma_at = extra_points_equals_gamma.first(n_extra) + n_points;
             gamma_found = true;
@@ -224,14 +229,14 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
         if (tri_cut.get_vertices().size(0)<4)
           throw std::runtime_error("Error determining cut cube triangulation");
       }
-
+      int added_in_triangulation = tri_cut.any() ? tri_cut.count() : 0;
       // make sure we can match-up the triangulated polyhedron vertices to the
       // known ones:
       std::vector<ind_t> local_map;
       const auto& triverts{tri_cut.get_vertices()};
       for (ind_t j=0; j<triverts.size(0); ++j){
         const auto trij{triverts.view(j)};
-        auto known = node_verts.row_is(brille::cmp::eq, trij);
+        auto known = node_verts.row_is(brille::cmp::eq, trij, s_tol, s_tol, d_tol);
         auto no = known.count();
         if (no){
           if (no > 1){
@@ -242,14 +247,26 @@ PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly, const doubl
           }
           local_map.push_back(poly_vert_idx[known.first()]);
         } else {
-          auto punt = vertices_.row_is(brille::cmp::eq, trij);
-          if (punt.count() < 1){
-            info_update("For node ", i, ":");
-            info_update("No match of ", trij.to_string(0), " to known vertices");
-            info_update(node_verts.to_string(), "or extra points\n", extra_points.to_string());
-            throw std::runtime_error("No match to triangulated vertex");
+          auto punt = vertices_.row_is(brille::cmp::eq, trij, s_tol, s_tol, d_tol);
+          if (punt.count() < 1 && added_in_triangulation > 0){
+            // we've *ADDED* a new point to the triangulation, so we need to
+            // add it to all points as well. hopefully this doesn't happen often
+            local_map.push_back(vertices_.size(0));
+            vertices_ = cat(0, vertices_, trij);
+            --added_in_triangulation;
+          } else {
+            if (punt.count() < 1) {
+              info_update("For node ", i, ":");
+              info_update("No match of ", get_xyz(trij).to_string(0),
+                          " to known vertices");
+              info_update(get_xyz(node_verts).to_string(), "or all points\n",
+                          get_xyz(vertices_).to_string());
+              //            info_update("or vertices_\n",
+              //            vertices_.to_string());
+              throw std::runtime_error("No match to triangulated vertex");
+            }
+            local_map.push_back(punt.first());
           }
-          local_map.push_back(punt.first());
         }
 
       }

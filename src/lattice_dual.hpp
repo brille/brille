@@ -86,6 +86,12 @@ private:
   PointSymmetry _point;
   Basis _basis;
 public:
+  /*! \brief Default lattice construction
+   *
+   *   Constructs a primitive cubic lattice axis-aligned with the reference
+   *   Cartesian frame and with 1 Å basis vector lengths and, therefore, 2π Å⁻¹
+   *   dual-basis vector lengths.
+   * */
   explicit Lattice()
     : _real_vectors({{1, 0, 0, 0, 1, 0, 0, 0, 1}}),
       _reciprocal_vectors({{math::two_pi, 0, 0, 0, math::two_pi, 0, 0, 0, math::two_pi}}),
@@ -95,6 +101,18 @@ public:
       _space({Motion<int, double>()}), _point(), _basis()
     {}
 
+  /*! \brief Fully specified construction
+   * @note Intended (mostly) to be used by the static HDF from_file reader
+   *
+   * @param v Real space flattened column-basis-vector matrix in Å
+   * @param r Reciprocal space flattened column-basis-vector matrix in Å⁻¹
+   * @param m Real space flattened metric in Å²
+   * @param rm Reciprocal space flattened metric in Å⁻²
+   * @param b Centring information (extraneous, since its in the Symmetry too)
+   * @param s Real space lattice symmetry operations
+   * @param p Real space point symmetry operations
+   * @param a Real space lattice atom basis
+   */
   Lattice(matrix_t v, matrix_t r, matrix_t m, matrix_t rm, Bravais b, Symmetry s, PointSymmetry p, Basis a)
       : _real_vectors{std::move(v)},
         _reciprocal_vectors{std::move(r)},
@@ -102,15 +120,30 @@ public:
         _reciprocal_metric{std::move(rm)},
         _bravais(b), _space(std::move(s)), _point(std::move(p)), _basis(std::move(a))
   {}
-//
-  Lattice(const vector_t & lengths, const vector_t & angles, const Symmetry s, const LengthUnit lu, const AngleUnit au=AngleUnit::not_provided)
+  /*! \brief Lattice parameters and Symmetry constructor
+   *
+   * @param lengths Basis vector lengths in units given by `lu`
+   * @param angles Inter-basis-vector angles in units given by `au`
+   * @param s The Symmetry operation of the real space lattice
+   * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
+   * @param au Indicates if the angles are expressed in units of degrees, radians, or fractions of pi-radians
+   */
+  Lattice(const vector_t & lengths, const vector_t & angles, const Symmetry & s, const LengthUnit lu, const AngleUnit au=AngleUnit::not_provided)
   {
     set_vectors(lengths, angles, lu, au);
     set_metrics();
     spacegroup_symmetry(s);
+    _bravais = _space.getcentring();
     set_point_symmetry();
   }
-  Lattice(const matrix_t & vectors, const MatrixVectors mv, const Symmetry s, const LengthUnit lu)
+  /*! \brief Lattice basis vectors and Symmetry constructor
+   *
+   * @param vectors A flattened row-ordered 3x3 matrix of the basis vectors
+   * @param mv Indicates if the pre-flattened matrix was row- or column-vectors
+   * @param s The Symmetry operation of the real space lattice
+   * @param lu Indicates if the vectors are that of the real or reciprocal space
+   */
+  Lattice(const matrix_t & vectors, const MatrixVectors mv, const Symmetry & s, const LengthUnit lu)
   {
     set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu);
     set_metrics();
@@ -118,6 +151,31 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
   }
+  /*! \brief Lattice basis vectors, Symmetry, and Basis construction
+   *
+   * @param vectors A flattened row-ordered 3x3 matrix of the basis vectors
+   * @param mv Indicates if the pre-flattened matrix was row- or column-vectors
+   * @param s Real space symmetry operations
+   * @param b Real space lattice atom basis
+   * @param lu Indicates if the vectors are of the real or reciprocal basis
+   */
+  Lattice(const matrix_t & vectors, const MatrixVectors mv, const Symmetry & s, Basis b, const LengthUnit lu): _basis(std::move(b))
+  {
+    set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu);
+    set_metrics();
+    spacegroup_symmetry(s);
+    _bravais = _space.getcentring();
+    set_point_symmetry();
+  }
+  /*! \brief Lattice parameters and Hermann-Maunguin spacegroup information constructor
+   *
+   * @param lengths Basis vector lengths in units given by `lu`
+   * @param angles Inter-basis-vector angles in units given by `au`
+   * @param s short or long Hermann-Mauguin group name, as used in the International Tables of Crystallography
+   * @param c Hermann-Mauguin centering/axis 'choice', only required if non-default
+   * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
+   * @param au Indicates if the angles are expressed in units of degrees, radians, or fractions of pi-radians
+   */
   Lattice(const vector_t & lengths, const vector_t & angles, const std::string& s, const std::string& c, const LengthUnit lu, const AngleUnit au=AngleUnit::not_provided)
   {
     set_vectors(lengths, angles, lu, au);
@@ -126,6 +184,14 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
   }
+  /*! \brief Lattice parameters and string-encoded spacegroup information constructor
+   *
+   *@param lengths Basis vector lengths in units given by `lu`
+  * @param angles Inter-basis-vector angles in units given by `au`
+  * @param s Hall symbol, CIF xyz operations, or International Table group name
+  * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
+  * @param au Indicates if the angles are expressed in units of degrees, radians, or fractions of pi-radians
+   */
   Lattice(const vector_t & lengths, const vector_t & angles, const std::string& s, const LengthUnit lu, const AngleUnit au=AngleUnit::not_provided)
   {
     set_vectors(lengths, angles, lu, au);
@@ -134,6 +200,14 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
   }
+  /*! \brief Lattice basis vectors and Hermann-Maunguin spacegroup information constructor
+   *
+   * @param vectors A flattened row-ordered 3x3 matrix of the basis vectors
+   * @param mv Indicates if the pre-flattened matrix was row- or column-vectors
+   * @param s short or long Hermann-Mauguin group name, as used in the International Tables of Crystallography
+   * @param c Hermann-Mauguin centering/axis 'choice', only required if non-default
+   * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
+   */
   Lattice(const matrix_t & vectors, const MatrixVectors mv, const std::string& s, const std::string& c, const LengthUnit lu)
   {
     set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu);
@@ -142,6 +216,13 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
   }
+  /*! \brief Lattice basis vectors and string-encoded spacegroup information constructor
+   *
+   * @param vectors A flattened row-ordered 3x3 matrix of the basis vectors
+   * @param mv Indicates if the pre-flattened matrix was row- or column-vectors
+   * @param s Hall symbol, CIF xyz operations, or International Table group name
+   * @param lu Indicates if the vectors are of the real or reciprocal basis
+   */
   Lattice(const matrix_t & vectors, const MatrixVectors mv, const std::string& s, const LengthUnit lu)
   {
     set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu);
@@ -150,6 +231,7 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
   }
+
 
 private:
   void set_vectors(const vector_t& v, const vector_t& a, LengthUnit lu, AngleUnit angle_unit){

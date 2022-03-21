@@ -400,6 +400,7 @@ namespace brille::polyhedron{
           // intersect it at *their* intersection point, which was a pre-existing vertex
           info_update("Duplicate intersection point for edge ", my_to_string(edge), " of");
           info_update("np.array(\n", get_xyz(v).to_string(), "),\n", f);
+          info_update("intersection ", get_xyz(at).to_string(0), " matches at index ", index);
           throw std::logic_error("This was supposedly impossible");
         }
         if (index == v.size(0)) {
