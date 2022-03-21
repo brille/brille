@@ -82,7 +82,7 @@ void wrap_lattice(py::module &m){
     auto len = np2sa<double,3>(lengths);
     auto ang = np2sa<double,3>(angles);
     return Lattice<double>(len, ang, sym, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
-  }),"basis_vector_lengths"_a, "basis_vector_angles"_a, "symmetry_information"_a, "real_space"_a=true);
+  }),"basis_vector_lengths"_a, "basis_vector_angles"_a, "symmetry_information"_a="P 1", "real_space"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& lengths,
        const py::array_t<double>& angles,
@@ -108,7 +108,7 @@ void wrap_lattice(py::module &m){
        const bool row) {
     auto mat = np2sa<double,9>(vectors);
     return Lattice<double>(mat, row ? MatrixVectors::row : MatrixVectors::column, sym, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
-  }),"basis_vectors"_a, "symmetry_information"_a, "real_space"_a=true, "row_vectors"_a=true);
+  }),"basis_vectors"_a, "symmetry_information"_a="P 1", "real_space"_a=true, "row_vectors"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& vectors,
        const std::string& n,
@@ -197,5 +197,6 @@ void wrap_lattice(py::module &m){
   )pbdoc");
 
   cls.def("__eq__",[](const Lattice<double>& a, const Lattice<double>&b){return a == b;});
-  cls.def("__repr__",&Lattice<double>::to_string);
+  cls.def("__repr__",[](const Lattice<double>& l) {return l.to_verbose_string(AngleUnit::degree);});
+  cls.def("str",&Lattice<double>::to_string);
 }

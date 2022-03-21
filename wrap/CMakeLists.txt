@@ -3,6 +3,7 @@ set(BRILLE_PYTHON_MODULE_SOURCES
   _bravais.cpp
   _bz.cpp
   _debug.cpp
+  _enums.cpp
   _hall_symbol.cpp
   _interpolator.cpp
   _lattice.cpp

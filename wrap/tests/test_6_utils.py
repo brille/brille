@@ -12,27 +12,22 @@ if br_mod != br_py:
 
 def get_latvec(lens, angs):
     # Calculates the lattice vectors after the convention of self.spglib
-    xhat = np.array([1, 0, 0]);
-    yhat = np.array([np.cos(angs[2]), np.sin(angs[2]), 0]);
-    vol = np.sqrt(1 - np.sum(np.cos(angs)**2) + 2*np.prod(np.cos(angs)));
-    zhat = np.array([np.cos(angs[1]), \
-                     (np.cos(angs[0]) - np.cos(angs[1])*np.cos(angs[2]))/np.sin(angs[2]), \
-                     vol / np.sin(angs[2])]);
-    return np.array([lens[0]*xhat, lens[1]*yhat, lens[2]*zhat]);
+    xhat = np.array([1, 0, 0])
+    yhat = np.array([np.cos(angs[2]), np.sin(angs[2]), 0])
+    vol = np.sqrt(1 - np.sum(np.cos(angs)**2) + 2*np.prod(np.cos(angs)))
+    zhat = np.array([np.cos(angs[1]),
+                     (np.cos(angs[0]) - np.cos(angs[1])*np.cos(angs[2]))/np.sin(angs[2]),
+                     vol / np.sin(angs[2])])
+    return np.array([lens[0]*xhat, lens[1]*yhat, lens[2]*zhat])
 
 
 class UtilsTestBZ (unittest.TestCase):
     # Tests create_bz routines
-    a = 4.0
-    b = 4.0
-    c = 5.0
-    alpha = np.pi / 2
-    beta = np.pi / 2
-    gamma = 2 * np.pi / 3
+    a, b, c, alpha, beta, gamma = 4.0, 4.0, 5.0, np.pi/2, np.pi/2, 2*np.pi/3
     spg = 'P 6'
 
     def check_lattice(self, bz, vals=None):
-        lattice = bz.lattice.star
+        lattice = bz.lattice
         if not vals:
             vals = [self.a, self.b, self.c, self.alpha, self.beta, self.gamma]
         self.assertAlmostEqual(lattice.a, vals[0])

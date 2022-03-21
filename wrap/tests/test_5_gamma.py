@@ -35,6 +35,7 @@ def fetchLoad(loader, fetchfile, **kwds):
         open(out_path, 'wb').write(r.content)
         return loader(out_path, **kwds)
 
+
 def getLoad(loader, file, **kwds):
     """Load a binary file
 
@@ -66,18 +67,18 @@ def getLoad(loader, file, **kwds):
         return fetchLoad(loader, file, **kwds)
 
 
-class GammaTest (unittest.TestCase):
+class GammaTest(unittest.TestCase):
     def test_nacl(self):
         # load numpy arrays from the compressed binary pack
-        nacl = getLoad(np.load,'test_5_gamma.npz')
+        nacl = getLoad(np.load, 'test_5_gamma.npz')
         # construct the NaCl direct lattice
         basis_vec = nacl['basis_vectors']
         atom_pos = nacl['atom_positions']
         atom_idx = nacl['atom_index']
-        dlat = s.Direct(basis_vec, atom_pos, atom_idx, 'P1')
-        dlat.spacegroup = s.Symmetry(nacl['spacegroup_mat'],nacl['spacegroup_vec'])
+        lat = s.Lattice(basis_vec, atom_pos, atom_idx, 'P1')  # FIXME this construction method has been removed
+        lat.spacegroup = s.Symmetry(nacl['spacegroup_mat'], nacl['spacegroup_vec'])
         # use it to construct an irreducible Brillouin zone
-        bz = s.BrillouinZone(dlat.star)
+        bz = s.BrillouinZone(lat)
         # and use that to produce a hybrid interpolation grid
         # with parameters stored in the binary pack
         max_volume = float(nacl['grid_max_volume'])
@@ -99,28 +100,28 @@ class GammaTest (unittest.TestCase):
         q_ir = grid.rlu[4:5]
         # find all symmetry equivalent q within the first Brillouin zone by
         # applying each pointgroup operator to q_ir to find q_nu = R^T_nu q_ir
-        q_nu = np.einsum('xji,aj->xi', dlat.pointgroup.W, q_ir)
-        
+        q_nu = np.einsum('xji,aj->xi', lat.pointgroup.W, q_ir)
+
         # The std::sort algorithm does not provide the same pointgroup sorting
         # on all systems, but there should be a permutation mapping:
-        perm = np.array([np.squeeze(np.argwhere(np.all(np.isclose(q_nu,x),axis=1))) for x in nacl['q_nu']])
+        perm = np.array([np.squeeze(np.argwhere(np.all(np.isclose(q_nu, x), axis=1))) for x in nacl['q_nu']])
         # The permutation must be complete and unique
         self.assertTrue(np.unique(perm).size == q_nu.shape[0])
         # And the permuted q_nu must match the stored q_nu
         q_nu = q_nu[perm]
-        self.assertTrue(np.allclose(q_nu, nacl['q_nu']))      
-        
+        self.assertTrue(np.allclose(q_nu, nacl['q_nu']))
+
         # Use the grid to interpolate at each q_nu:
         br_val, br_vec = grid.ir_interpolate_at(q_nu)
         br_val = np.squeeze(br_val)
-        
+
         # verify that q_ir does not have degeneracies:
         self.assertFalse(np.any(np.isclose(np.diff(br_val, axis=1), 0.)))
         # and that the 'interpolated' eigenvalues are identical for all q_nu
         self.assertTrue(np.allclose(np.diff(br_val, axis=0), 0.))
         # plus that the interpolated eigenvalues match the store Euphonic eigenvalues
         self.assertTrue(np.allclose(br_val, nacl['euphonic_values']))
-        
+
         # convert the eigenvalues into the same cartesian coordinate system
         # used by Euphonic
         br_vec = np.einsum('ba,ijkb->ijka', basis_vec, br_vec)
@@ -128,7 +129,7 @@ class GammaTest (unittest.TestCase):
         eu_vec = nacl['euphonic_vectors']
         # The 'interpolated' eigenvectors and the Euphonic eigenvectors should
         # only be equivalent up to an overall phase factor, so find it:
-        antiphase = np.exp(-1J*np.angle(np.einsum('qmij,qmij->qm', np.conj(eu_vec), br_vec)))
+        antiphase = np.exp(-1J * np.angle(np.einsum('qmij,qmij->qm', np.conj(eu_vec), br_vec)))
         # and remove the phase from the interpolated eigenvectors
         br_vec = np.einsum('ab,abij->abij', antiphase, br_vec)
         # now all eigenvectors must match
@@ -136,6 +137,7 @@ class GammaTest (unittest.TestCase):
 
         # as an extra check we *could* verfiy that the output of brille is
         # unchanged, but we don't care about changes in overall phase factor
+
 
 if __name__ == '__main__':
     unittest.main()

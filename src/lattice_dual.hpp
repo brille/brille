@@ -262,7 +262,7 @@ public:
   template<class I>
   [[nodiscard]] std::enable_if_t<std::is_integral_v<I>, vector_t>
   vector(LengthUnit lu, I i) const {
-    assert(0u <= i && i <= 3u);
+    assert(I(0) <= i && i <= I(3));
     switch (lu) {
     case LengthUnit::angstrom:
       return {_real_vectors[i], _real_vectors[i + 3], _real_vectors[i + 6]};

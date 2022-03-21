@@ -17,11 +17,16 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <pybind11/pybind11.h>
 #include "_polyhedron.hpp"
 void wrap_polyhedron(pybind11::module &m){
-  py::class_<brille::polyhedron::Poly<double,brille::bArray>> bare(m);
+  using namespace brille;
+  using namespace brille::lattice;
+  using namespace brille::polyhedron;
+  namespace py = pybind11;
+
+  py::class_<Poly<double,bArray>> bare(m, "Polyhedron");
   define_polyhedron_inits<double>(bare);
   define_polyhedron<double>(bare);
 
-  py::class_<brille::polyhedron::Poly<double,brille::lattice::LVec>> lvec(m);
+  py::class_<Poly<double,LVec>> lvec(m, "LPolyhedron");
   define_polyhedron<double>(lvec);
   define_polyhedron_lvec<double>(lvec);
 }
