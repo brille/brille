@@ -32,6 +32,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "array_l_.hpp"
 #include "bz_config.hpp"
 #include "approx_float.hpp"
+#include "approx_config.hpp"
 
 namespace brille {
 
@@ -106,19 +107,43 @@ public:
                       irreducible Brillouin zone.
   */
   explicit BrillouinZone(const lattice_t& lat, const BrillouinZoneConfig cfg = BrillouinZoneConfig()):
-    _inner(cfg.primitive() ? lat.primitive() : lat), _outer(lat), time_reversal(cfg.time_reversal()),
-    approx_tolerance(cfg.tolerance()), float_tolerance(cfg.float_tolerance<double>())
+    _inner(cfg.primitive() ? lat.primitive() : lat), _outer(lat), time_reversal(cfg.time_reversal())
   {
-    profile_update("Start of BrillouinZone construction");
     is_primitive = !(_inner.is_same(_outer));
     has_inversion = time_reversal || lat.has_space_inversion();
     no_ir_mirroring = true;
+    // the approximate configuration can not be a default function parameter
+    // if we want to pick-up runtime changes in the namespace object
+    approx_tolerance = approx_float::config.digit();
+    float_tolerance = approx_float::config.reciprocal<double>();
+    this->construct(cfg.divide_extent() - 1, cfg.divide_primitive(), cfg.wedge_search());
+  }
+  BrillouinZone(const lattice_t& lat, const BrillouinZoneConfig cfg, const approx_float::Config ac):
+  _inner(cfg.primitive() ? lat.primitive() : lat), _outer(lat), time_reversal(cfg.time_reversal()),
+   approx_tolerance(ac.digit()), float_tolerance(ac.reciprocal<double>())
+  {
+    is_primitive = !(_inner.is_same(_outer));
+    has_inversion = time_reversal || lat.has_space_inversion();
+    no_ir_mirroring = true;
+    this->construct(cfg.divide_extent() - 1, cfg.divide_primitive(), cfg.wedge_search());
+  }
+  BrillouinZone(const lattice_t& lat, const approx_float::Config ac, const BrillouinZoneConfig cfg = BrillouinZoneConfig()):
+  _inner(cfg.primitive() ? lat.primitive() : lat), _outer(lat), time_reversal(cfg.time_reversal()),
+  approx_tolerance(ac.digit()), float_tolerance(ac.reciprocal<double>())
+  {
+    is_primitive = !(_inner.is_same(_outer));
+    has_inversion = time_reversal || lat.has_space_inversion();
+    no_ir_mirroring = true;
+    this->construct(cfg.divide_extent() - 1, cfg.divide_primitive(), cfg.wedge_search());
+  }
+
+  void construct(int test_extent, bool divide_primitive, bool wedge_search){
+    profile_update("Start of BrillouinZone construction");
     double old_volume = -1.0, new_volume=0.0;
-    int test_extent = cfg.divide_extent()-1;
     // initial test_extent based on spacegroup or pointgroup?
     do {
       old_volume = new_volume;
-      this->voro_search(++test_extent, cfg.divide_primitive());
+      this->voro_search(++test_extent, divide_primitive);
       new_volume = _first.volume();
     } while (!approx_float::scalar(new_volume, old_volume, float_tolerance, float_tolerance, approx_tolerance));
 
@@ -128,20 +153,20 @@ public:
     // in case we've been asked to perform a wedge search for, e.g., P1 or P-1,
     // set the irreducible wedge now as the search will do nothing.
     _irreducible = _first;
-    if (cfg.wedge_search()){
+    if (wedge_search){
       bool success{false};
       if (_outer.is_triclinic()){
         success = !has_inversion || this->wedge_triclinic();
       } else {
         success = this->wedge_brute_force()
-               || this->wedge_brute_force(false,false) // no special 2-fold or mirror handling
-               || this->wedge_brute_force(false,true) // no special 2-fold handling (but special mirror handling)
-               || this->wedge_brute_force(true, false) // no special mirror handling (maybe not useful)
-               || this->wedge_brute_force(true, true, false) // last ditch effort, handle non order(2) operations in decreasing order
-               || this->wedge_brute_force(true, false, true, false)
-               ;
-               // other combinations of special_2_folds, special_mirrors,
-               // and sort_by_length are possible but not necessarily useful.
+                  || this->wedge_brute_force(false,false) // no special 2-fold or mirror handling
+                  || this->wedge_brute_force(false,true) // no special 2-fold handling (but special mirror handling)
+                  || this->wedge_brute_force(true, false) // no special mirror handling (maybe not useful)
+                  || this->wedge_brute_force(true, true, false) // last ditch effort, handle non order(2) operations in decreasing order
+                  || this->wedge_brute_force(true, false, true, false)
+            ;
+        // other combinations of special_2_folds, special_mirrors,
+        // and sort_by_length are possible but not necessarily useful.
       }
       if (!success) {
         info_update("First Brillouin zone\n", _first.python_string(), "\nand 'irreducible' Brillouin zone\n",_irreducible.python_string());

@@ -158,7 +158,10 @@ public:
     // and might need the Phonon Gamma table
     GammaTable pgt{GammaTable()};
     if (RotatesLike::Gamma == this->data().vectors().rotateslike()){
-      pgt.construct(bz_.get_lattice(), bz_.add_time_reversal());
+      auto cfg = this->approx_config();
+      auto s_tol = cfg.template direct<double>();
+      auto n_tol = cfg.digit();
+      pgt.construct(bz_.get_lattice(), bz_.add_time_reversal(), s_tol, n_tol);
     }
     // make data-sharing Array2 objects for the rotation functions
     brille::Array2<T> vals2(vals);

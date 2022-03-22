@@ -401,6 +401,10 @@ namespace brille::polyhedron{
           info_update("Duplicate intersection point for edge ", my_to_string(edge), " of");
           info_update("np.array(\n", get_xyz(v).to_string(), "),\n", f);
           info_update("intersection ", get_xyz(at).to_string(0), " matches at index ", index);
+          info_update("or in rlu: np.array(\n", v.to_string(), "),\n", f);
+          info_update("intersection ", at.to_string(0), " matches at index ", index, "but there were only ", pre_v_count, " vertices before the cut");
+          info_update("new face thus far: ", new_face);
+          info_update("comparison tolerance ", Rtol, " digits ", tol);
           throw std::logic_error("This was supposedly impossible");
         }
         if (index == v.size(0)) {

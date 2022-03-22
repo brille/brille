@@ -110,7 +110,7 @@ public:
   GammaTable(const lattice_t& dlat, const int time_reversal=0): lattice_(dlat) {
     this->construct(dlat, time_reversal);
   }
-  bool construct(const lattice_t& dlat, const int time_reversal=0){
+  bool construct(const lattice_t& dlat, const int time_reversal=0, double e_tol=0., int n_tol=1){
     lattice_ = dlat;
     auto ps = dlat.pointgroup_symmetry();
     auto spgsym = dlat.spacegroup_symmetry();
@@ -142,7 +142,7 @@ public:
       bool found;
       ind_t l;
       auto motion = spgsym.getm(point2space_[r]);
-      std::tie(found,l) = bs.equivalent_after_operation(k, motion);
+      std::tie(found,l) = bs.equivalent_after_operation(k, motion, e_tol, n_tol);
       if (!found){
         info_update(bs.to_string(),"\ndoes not have an equivalent atom to ",k," for symmetry operation\n",motion.getr(),"+",motion.gett());
         throw std::runtime_error("All atoms in the basis *must* be mapped to an equivalent atom for *all* symmetry operations");
@@ -154,8 +154,8 @@ public:
       // check if this vector is in vectors_
       // look for an equal vector within the first count vectors_ -- return its index, or count if none match
       // count >= 1, so view is fine:
-      ind_t v = norm(vectors_.view(0,count) - vec).is(brille::cmp::eq, 0.).first();
-      // store the vector if its not already present
+      ind_t v = norm(vectors_.view(0,count) - vec).is(brille::cmp::eq, 0., e_tol, n_tol).first();
+      // store the vector if it is not already present
       if (count == v) vectors_.set(count++, vec);
       ind_t key = this->calc_key(k, r);
       l_mapping[key] = l;

@@ -79,8 +79,8 @@ namespace brille::approx_float{
   std::tuple<bool,bool,T,R,T,R> tols(const T Ttol, const R Rtol, const int tol=1){
     T Trel = std::numeric_limits<T>::epsilon(); // zero for integer-type T
     R Rrel = std::numeric_limits<R>::epsilon(); // zero for integer-type R
-    T Tabs = T(5)/1000000000000000; // 0 or 5e-15
-    R Rabs = R(5)/1000000000000000; // 0 or 5e-15
+    T Tabs = T(1)/1000000000000000; // 0 or 1e-15
+    R Rabs = R(1)/1000000000000000; // 0 or 1e-15
     bool TorRisInteger = Trel*Rrel==0 || std::is_convertible<T,R>::value;
     bool TisFloatingPt = Trel > 0;
     Trel *= static_cast<T>(tol)*static_cast<T>(TOL_MULT);
@@ -89,7 +89,7 @@ namespace brille::approx_float{
     if (Rtol > Rrel) Rrel = Rtol;
     if (Ttol > Tabs) Tabs = Ttol;
     if (Rtol > Rabs) Rabs = Rtol;
-//      info_update_if(tol > 1, "tol=", tol, " gives Trel=", Trel, " Rrel=", Rrel);
+//    info_update_if(Ttol > 0 || Rtol > 0, "Ttol=", Ttol, " Rtol=", Rtol," tol=", tol, " gives Trel=", Trel, " Rrel=", Rrel, " Tabs=", Tabs, " Rabs=", Rabs);
     return std::make_tuple(TorRisInteger, TisFloatingPt, Trel, Rrel, Tabs, Rabs);
   }
 

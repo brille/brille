@@ -20,6 +20,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "_common_grid.hpp"
 #include "trellis.hpp"
 #include "bz_trellis.hpp"
+#include "approx_config.hpp"
 
 #ifndef WRAP_BRILLE_TRELLIS_HPP_
 #define WRAP_BRILLE_TRELLIS_HPP_
@@ -35,6 +36,7 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());
   // Initializer (BrillouinZone, maximum node volume fraction, always_triangulate)
   cls.def(py::init<BrillouinZone,double,bool>(), "bz_"_a, "node_volume_fraction"_a=0.1, "always_triangulate"_a=false);
+  cls.def(py::init<BrillouinZone,double,bool,approx_float::Config>(), "bz_"_a, "node_volume_fraction"_a, "always_triangulate"_a, "approx_config"_a);
 
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
 

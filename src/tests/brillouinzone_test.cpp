@@ -58,10 +58,10 @@ TEST_CASE("Primitive Hexagonal BrillouinZone instantiation","[bz_]"){
 TEST_CASE("Rhombohedral Brillouin zone","[bz_]"){
   auto lat = Direct<double>({math::two_pi, math::two_pi, math::pi}, {90,90,120}, "-R 3");
   verbose_update(lat.to_verbose_string());
+  auto ac = approx_float::Config().digit(10000); // 2e-8?
   auto cfg = BrillouinZoneConfig();
-  cfg.tolerance(10000);
   cfg.divide_primitive(false); // can we leave this as true?
-  BrillouinZone bz(lat, cfg);
+  BrillouinZone bz(lat, cfg, ac);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -220,9 +220,8 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 alt","[bz_][materialsproject]")
   //
   auto lat = Direct<double>(lens, angs, hall_symbol);
   verbose_update(lat.to_verbose_string());
-  auto cfg = BrillouinZoneConfig();
-  cfg.tolerance(10000);
-  BrillouinZone bz(lat, cfg);
+  auto ac = approx_float::Config().digit(10000);
+  BrillouinZone bz(lat, ac);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -244,9 +243,8 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 imprecise failure","[bz_][mater
   std::string hall_symbol = "-R 3";
   //
   auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
-  auto cfg = BrillouinZoneConfig();
-  cfg.tolerance(10000);
-  REQUIRE_THROWS_AS(BrillouinZone(lat, cfg), std::runtime_error);
+  auto ac = approx_float::Config().digit(10000);
+  REQUIRE_THROWS_AS(BrillouinZone(lat, ac), std::runtime_error);
 }
 
 TEST_CASE("Irreducible Brillouin zone for mp-147","[bz_][materialsproject]"){
@@ -261,9 +259,8 @@ TEST_CASE("Irreducible Brillouin zone for mp-147","[bz_][materialsproject]"){
   std::string hall_symbol = "-R 3";
   //
   auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
-  auto cfg = BrillouinZoneConfig();
-  cfg.tolerance(10000); // increase the equivalency sloppiness from 1000 to 10000 * epsilon
-  BrillouinZone bz(lat, cfg);
+  auto ac = approx_float::Config().digit(10000); // increase the equivalency sloppiness from 1000 to 10000 * epsilon
+  BrillouinZone bz(lat, ac);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -339,9 +336,8 @@ TEST_CASE("Irreducible Brillouin zone for mp-917 atl","[bz_][materialsproject]")
   std::string hall_symbol = "-C 2y";
   //
   auto lat = Direct<double>(len, ang, hall_symbol);
-  auto cfg = BrillouinZoneConfig();
-  cfg.tolerance(10000); // increase the equivalency sloppiness from 1000 to 10000 * epsilon
-  BrillouinZone bz(lat, cfg);
+  auto ac = approx_float::Config().digit(10000);
+  BrillouinZone bz(lat, ac);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();

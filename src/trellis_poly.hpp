@@ -114,12 +114,14 @@ public:
   using vert_t = VertexType<VertexComponents>;
   using nodes_t = NodeContainer;
   using knots_t = std::array<std::vector<double>, 3u>;
+  using approx_t = approx_float::Config;
 protected:
   boundary_t boundary_; //!< the Polyhedron bounding the domain of the PolyhedronTrellis
   data_t data_;         //!< data for interpolation stored for each indexed vertex of the PolyhedronTrellis
   vert_t vertices_;     //!< the indexed vertices of the PolyhedronTrellis
   nodes_t nodes_;       //!< the nodes of the trellis, indexing the vertices of the PolyhedronTrellis
   knots_t knots_;       //!< The coordinates of the trellis intersections
+  approx_t approx_;     //!< Approximate comparisons configuration
 public:
   bool operator!=(const class_t& other) const {
     if (boundary_ != other.boundary_) return true;
@@ -132,8 +134,8 @@ public:
   /*!\brief Construct a PolyhedronTrellis from all required information
    *
    * */
-  PolyTrellis(boundary_t p, const data_t& d, const vert_t& v, nodes_t n, knots_t b)
-      : boundary_(std::move(p)), data_(d), vertices_(v), nodes_(std::move(n)), knots_(std::move(b)) {}
+  PolyTrellis(boundary_t p, const data_t& d, const vert_t& v, nodes_t n, knots_t b, approx_t cfg)
+      : boundary_(std::move(p)), data_(d), vertices_(v), nodes_(std::move(n)), knots_(std::move(b)), approx_(cfg) {}
   //
   /*! \brief Construct from a bounding Polyhedron
 
@@ -146,9 +148,24 @@ public:
   */
   PolyTrellis(const polyhedron::Poly<VertexComponents,VertexType>& polyhedron,
               double max_volume,
-              bool always_triangulate=false,
-              approx_float::ApproxConfig cfg = approx_float::ApproxConfig()
-              );
+              bool always_triangulate=false
+  ): boundary_(polyhedron.faces()), vertices_(polyhedron.vertices()){
+    // the approximate configuration can not be a default function parameter
+    // if we want to pick-up runtime changes in the namespace object
+    this->construct(polyhedron, max_volume, always_triangulate, approx_float::config);
+  }
+  PolyTrellis(const polyhedron::Poly<VertexComponents,VertexType>& polyhedron,
+              double max_volume,
+              bool always_triangulate,
+              approx_t cfg
+  ): boundary_(polyhedron.faces()), vertices_(polyhedron.vertices())
+  {
+    this->construct(polyhedron, max_volume, always_triangulate, cfg);
+  }
+  void construct(const polyhedron::Poly<VertexComponents,VertexType>& poly,
+                 double max_volume,
+                 bool always_triangulate,
+                 approx_t cfg);
   //! Explicit empty constructor
   explicit PolyTrellis(): vertices_(0,3) {}
   //! Return the number of trellis intersections
@@ -449,6 +466,7 @@ public:
     }
     return vol;
   }
+  [[nodiscard]] approx_t approx_config() const {return approx_;}
 private:
   [[nodiscard]] bool subscript_ok_and_not_null(const std::array<ind_t,3>& sub) const {
     return this->subscript_ok(sub) && !nodes_.is_null(this->sub2idx(sub));
@@ -598,6 +616,7 @@ public:
     ok &= vertices_.to_hdf(group, "vertices");
     ok &= nodes_.to_hdf(group, "container");
     ok &= lists_to_hdf(knots_, group, "knots");
+    ok &= approx_.to_hdf(group, "approx");
     return ok;
   }
   template<class HF>
@@ -613,7 +632,8 @@ public:
     knots_t b;
     for (size_t i=0; i<3u; ++i) b[i] = bl[i];
     //      return {p, d, v, n, b};
-    return PolyTrellis(p, d, v, n, b);
+    auto cfg = approx_t::from_hdf(group, "approx");
+    return PolyTrellis(p, d, v, n, b, cfg);
   }
   bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
     HighFive::File file(filename, perm);

@@ -443,6 +443,11 @@ TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
     0.0,               -2.055105626666667, 6.219738366666666
   };
   std::vector<std::array<double,3>> atom_positions {
+      // Symmetries below require all atoms have positions (x, x, x)
+      // but Oxygen and Mercury atoms differ in 1e-8 digits for y compared
+      // to x and z. We need a tolerance worse than twice the difference to
+      // match since we will need to match y with (1-y) which has a difference
+      // of twice the difference
       {0.89401258, 0.89401259, 0.89401258}, // O
       {0.10598742, 0.10598741, 0.10598742}, // O
       {0.5, 0.5, 0.5}, // Ca
@@ -487,9 +492,14 @@ TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
   auto bz = BrillouinZone(lat);
   auto goal_node_volume = bz.get_ir_polyhedron().volume() / static_cast<double>(1000);
 
-  auto cfg = approx_float::ApproxConfig(1000, -12);
-
+  // create a local configuration
+  auto cfg = approx_float::Config().direct(2.1e-8).reciprocal(5e-10);
   auto bzt = BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, goal_node_volume, false, cfg);
+
+//  // or modify the global one, which annoyingly has to be done in two steps
+//  approx_float::config.direct(2.1e-8);
+//  approx_float::config.reciprocal(5e-10);
+//  auto bzt = BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, goal_node_volume, false);
 
   auto n_modes = static_cast<ind_t>(3u * atom_types.size());
   std::vector<ind_t> val_shape{bzt.get_hkl().size(0), n_modes, 1u};
@@ -498,10 +508,9 @@ TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
   Array<std::complex<double>> vectors(vec_shape, std::complex<double>(1.0));
 
   std::array<ind_t,3> val_elements{{1, 0, 0}};
-  RotatesLike rl{RotatesLike::Gamma};
-  Interpolator<double> val(values, val_elements, rl);
+  Interpolator<double> val(values, val_elements, RotatesLike::Real);
   std::array<ind_t,3> vec_elements{{0, n_modes, 0}};
-  Interpolator<std::complex<double>> vec(vectors, vec_elements, rl);
+  Interpolator<std::complex<double>> vec(vectors, vec_elements, RotatesLike::Gamma);
   bzt.replace_data(val, vec);
 
   std::vector<std::array<double,3>> std_qpts {{0.05, 0.05, 0.05}};

@@ -159,9 +159,7 @@ void wrap_brillouinzone(py::module & m){
     const int search_length,
     const bool time_reversal_symmetry,
     const bool wedge_search,
-    const bool divide_primitive,
-    const int relative_tolerance,
-    const int absolute_tolerance_power
+    const bool divide_primitive
     ){
     auto cfg = BrillouinZoneConfig();
     cfg.primitive(use_primitive);
@@ -169,8 +167,6 @@ void wrap_brillouinzone(py::module & m){
     cfg.divide_primitive(divide_primitive);
     cfg.time_reversal(time_reversal_symmetry);
     cfg.wedge_search(wedge_search);
-    if (relative_tolerance) cfg.tolerance(relative_tolerance);
-    if (absolute_tolerance_power) cfg.power(absolute_tolerance_power);
     return BrillouinZone(lat, cfg);
   }),
   "lattice"_a,
@@ -178,9 +174,32 @@ void wrap_brillouinzone(py::module & m){
   "search_length"_a=1,
   "time_reversal_symmetry"_a=false,
   "wedge_search"_a=true,
-  "divide_primitive"_a=true,
-  "relative_tolerance"_a=0,
-  "absolute_tolerance_power"_a=0
+  "divide_primitive"_a=true
+  );
+  cls.def(py::init([](
+              const lattice::Lattice<double> & lat,
+              const approx_float::Config ac,
+              const bool use_primitive,
+              const int search_length,
+              const bool time_reversal_symmetry,
+              const bool wedge_search,
+              const bool divide_primitive
+          ){
+            auto cfg = BrillouinZoneConfig();
+            cfg.primitive(use_primitive);
+            cfg.divide_extent(search_length);
+            cfg.divide_primitive(divide_primitive);
+            cfg.time_reversal(time_reversal_symmetry);
+            cfg.wedge_search(wedge_search);
+            return BrillouinZone(lat, cfg, ac);
+          }),
+          "lattice"_a,
+          "approx_config"_a,
+          "use_primitive"_a=true,
+          "search_length"_a=1,
+          "time_reversal_symmetry"_a=false,
+          "wedge_search"_a=true,
+          "divide_primitive"_a=true
   );
 
   // return the internal Lattice object

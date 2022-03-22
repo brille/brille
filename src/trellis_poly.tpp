@@ -19,14 +19,15 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #endif
 
 template<class T, class R, class S, template<class> class A>
-PolyTrellis<T,R,S,A>::PolyTrellis(const polyhedron::Poly<S,A>& poly,
+void PolyTrellis<T,R,S,A>::construct(const polyhedron::Poly<S,A>& poly,
                                   const double max_volume,
                                   const bool always_triangulate,
-                                  const approx_float::ApproxConfig cfg)
-: boundary_(poly.faces()), vertices_(poly.vertices())
+                                  const approx_t cfg)
 {
-  S s_tol = cfg.tol<S>();
+  approx_ = cfg;
+  S s_tol = cfg.reciprocal<S>();
   int d_tol = cfg.digit();
+//  info_update("Using tolerance ", s_tol, " and digits ", d_tol);
   profile_update("Start of PolyTrellis construction");
   assert(poly.face_count() > 3 && poly.volume() > 0);
   // find the extents of the polyhedron

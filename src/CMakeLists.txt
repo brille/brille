@@ -19,6 +19,7 @@ message(STATUS "Using interpreter: ${Python3_EXECUTABLE}")
 
 #set(CXX_SOURCES
 list(APPEND CXX_SOURCES
+  approx_config.cpp
   bravais.cpp
   bz.cpp
   bz_move.cpp
