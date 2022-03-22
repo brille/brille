@@ -74,8 +74,8 @@ def plot(*args, **kwds):
         exception is raised.
     """
     bz_types = (brille.BrillouinZone,
-                brille.BZMeshQdc   , brille.BZMeshQcc   , brille.BZMeshQdd,
-                brille.BZNestQdc   , brille.BZNestQcc   , brille.BZNestQdd,
+                #brille.BZMeshQdc   , brille.BZMeshQcc   , brille.BZMeshQdd,
+                #brille.BZNestQdc   , brille.BZNestQcc   , brille.BZNestQdd,
                 brille.BZTrellisQdc, brille.BZTrellisQcc, brille.BZTrellisQdd)
     if len(args) == 1:
         if isinstance(args[0], bz_types):
@@ -231,8 +231,8 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=True,
     """
     # pylint: disable=no-member
     axs = _check_axes(axs)
-    types_with_points = (brille.BZMeshQdc, brille.BZMeshQcc, brille.BZMeshQdd,
-                         brille.BZNestQdc, brille.BZNestQcc, brille.BZNestQdd,
+    types_with_points = (#brille.BZMeshQdc, brille.BZMeshQcc, brille.BZMeshQdd,
+                         #brille.BZNestQdc, brille.BZNestQcc, brille.BZNestQdd,
                          brille.BZTrellisQdc, brille.BZTrellisQcc,
                          brille.BZTrellisQdd)
     if isinstance(bz, types_with_points):
