@@ -105,23 +105,21 @@ public:
            parameter is set to true, the subsequent interpolation call may raise
            an error or access unassigned memory and will produce garbage output.
   */
-  template<class R>
+  template<class R, class... Args>
   std::tuple<brille::Array<T>,brille::Array<S>>
-  ir_interpolate_at(const LQVec<R>& x, const int nthreads, const bool no_move=false) const {
+  ir_interpolate_at(const LQVec<R>& x, const bool no_move=false, Args... args) const {
     LQVec<R> ir_q(x.get_lattice(), x.size(0));
     LQVec<int> tau(x.get_lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
     if (no_move){
       ir_q = x;
-    } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rot, invrot, nthreads)){
+    } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rot, invrot, args...)){
       std::string msg;
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
     // perform the interpolation within the irreducible Brillouin zone
-    auto [vals, vecs] = (nthreads > 1)
-        ? this->SuperClass::parallel_interpolate_at(ir_q.get_xyz(), nthreads)
-        : this->SuperClass::interpolate_at(ir_q.get_xyz());
+    auto [vals, vecs] = this->SuperClass::parallel_interpolate_at(ir_q.get_xyz(), args...)
     // we always need the pointgroup operations to 'rotate'
     PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();
     // and might need the Phonon Gamma table
@@ -132,8 +130,8 @@ public:
     brille::Array2<T> vals2(vals);
     brille::Array2<S> vecs2(vecs);
     // actually perform the rotation to Q
-    this->data().values() .rotate_in_place(vals2, ir_q, pgt, psym, rot, invrot, nthreads);
-    this->data().vectors().rotate_in_place(vecs2, ir_q, pgt, psym, rot, invrot, nthreads);
+    this->data().values() .rotate_in_place(vals2, ir_q, pgt, psym, rot, invrot, args...);
+    this->data().vectors().rotate_in_place(vecs2, ir_q, pgt, psym, rot, invrot, args...);
     // we're done so bundle the output
     return std::make_tuple(vals, vecs);
   }

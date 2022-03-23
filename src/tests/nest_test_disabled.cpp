@@ -66,7 +66,7 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
     Q.set(i, rli*Qmap.view(i%nQmap) + (1-rli)*Qmap.view((i+1)%nQmap) );
   }
 
-  auto [intres, dummy] =  bzn.ir_interpolate_at(Q,1);
+  auto [intres, dummy] =  bzn.ir_interpolate_at(Q, false, 1);
   auto QinvA = Q.get_xyz();
   // QinvA is (at present) a brille::Array2<double> and so can not be reshaped
   // to 3D (maybe introducing conversion routines is a good idea?)
@@ -123,7 +123,7 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   // If 0.5 is rounded to 1 this simple test *will* fail since bz.moveinto rounds
   // the components of Q to try and find an equivalent q and tau.
 
-  auto [intres, dummy] = bzn.ir_interpolate_at(Q, 1 /*thread*/);
+  auto [intres, dummy] = bzn.ir_interpolate_at(Q, false, 1 /*thread*/);
 
   auto QinvA = Q.get_xyz();
   // QinvA is (at present) a brille::Array2<double> and so can not be reshaped

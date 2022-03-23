@@ -386,7 +386,7 @@ public:
                        const PointSymmetry& ps,
                        const std::vector<size_t>& r,
                        const std::vector<size_t>& invr,
-                       const int nth) const {
+                       const int nth=0) const {
     switch (rotlike_){
       case RotatesLike::Real:       return this->rip_real(x,ps,r,invr,nth);
       case RotatesLike::Axial:      return this->rip_axial(x,ps,r,invr,nth);

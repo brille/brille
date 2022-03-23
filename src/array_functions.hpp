@@ -27,6 +27,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "utilities.hpp"
 #include "enums.hpp"
 #include "array_.hpp"
+#include "lattice_dual.hpp"
 //#include "geometry.hpp"
 
 namespace brille {

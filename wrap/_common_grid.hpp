@@ -251,7 +251,7 @@ void def_grid_ir_interpolate(py::class_<Grid<T,R,S>>& cls){
     // perform the interpolation and rotate and vectors/tensors afterwards
     const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
-    auto [val, vec] = cobj.ir_interpolate_at(qv, nthreads, no_move);
+    auto [val, vec] = cobj.ir_interpolate_at(qv, no_move, nthreads);
     profile_update("  End of 'ir_interpolate_at' operation");
     return std::make_tuple(brille::a2py(val), brille::a2py(vec));
   },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false,
@@ -381,7 +381,7 @@ void def_grid_interpolate(py::class_<Grid<T,R,S>>& cls){
     // perform the interpolation and rotate and vectors/tensors afterwards
     const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
-    auto [val, vec] = cobj.interpolate_at(qv, nthreads, no_move);
+    auto [val, vec] = cobj.interpolate_at(qv, no_move, nthreads);
     profile_update("  End of 'interpolate_at' operation");
     return std::make_tuple(brille::a2py(val), brille::a2py(vec));
   },"Q"_a,"useparallel"_a=false,"threads"_a=-1,"do_not_move_points"_a=false,

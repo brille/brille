@@ -144,6 +144,7 @@ class LQPolyTet{
   A<T> points_;   /*!< The triangulated vertex positions */ // (nVertices, 3)
   bArray<ind_t> tetrahedra_; /*!< The vertices in each of the triangulated tetrahedra */ // (nTetrahedra, 4)
 public:
+  explicit LQPolyTet() = default;
   /*! \brief Triangulate a convex polyhedron
 
   \param poly       the Polyhedron to triangulate

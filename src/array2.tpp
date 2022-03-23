@@ -38,6 +38,11 @@ Array2<T> Array2<T>::view(const ind_t i, const ind_t j) const {
     osize[0] = j-i;
     return Array2<T>(_data, _num, oshft, _own, _ref, osize, _stride, false);
   }
+  if (i==j) {
+    shape_t shape{_shape};
+    shape[0] = 0;
+    return Array2<T>(shape);
+  }
   throw std::runtime_error("Array2 view indexing error");
 }
 

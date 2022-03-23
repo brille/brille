@@ -452,6 +452,19 @@ namespace brille {
     explicit NodeContainer() = default;
     NodeContainer(nodes_t&& n, cubes_t&& c, polys_t&& p)
         : nodes_(std::move(n)), cube_nodes_(std::move(c)), poly_nodes_(std::move(p)) {}
+    NodeContainer(const std::vector<NodeType>& types) {
+      nodes_.reserve(types.size());
+      ind_t n_cube{0}, n_poly{0}, null_idx{(std::numeric_limits<ind_t>::max)()};
+      for (const auto & x: types){
+        switch (x) {
+        case NodeType::cube: nodes_.emplace_back(x, n_cube++); break;
+        case NodeType::poly: nodes_.emplace_back(x, n_poly++); break;
+        default: nodes_.emplace_back(x, null_idx);
+        }
+      }
+      cube_nodes_.resize(n_cube);
+      poly_nodes_.resize(n_poly);
+    }
     bool operator!=(const NodeContainer& other) const {
       if (nodes_ != other.nodes_) return true;
       if (cube_nodes_ != other.cube_nodes_) return true;
@@ -488,6 +501,23 @@ namespace brille {
     //! Push a NullNode onto the back of the container
     void push_back(const NullNode&){
       nodes_.emplace_back(NodeType::null, (std::numeric_limits<ind_t>::max)());
+    }
+    void set(const NodeType& t, const ind_t i, CubeNode&& n){
+      assert(NodeType::cube == t);
+      assert(i < nodes_.size());
+      assert(nodes_[i].first == t);
+      assert(nodes_[i].second < cube_nodes_.size());
+      cube_nodes_[nodes_[i].second] = std::move(n);
+    }
+    void set(const NodeType& t, const ind_t i, PolyNode&& n){
+      assert(NodeType::poly == t);
+      assert(i < nodes_.size());
+      assert(nodes_[i].first == t);
+      assert(nodes_[i].second < poly_nodes_.size());
+      poly_nodes_[nodes_[i].second] = std::move(n);
+    }
+    void set(const NodeType& t, const ind_t, NullNode){
+      assert(NodeType::null == t);
     }
     //! Return the NodeType of the indexed node
     [[nodiscard]] NodeType type(const ind_t i) const {

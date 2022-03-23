@@ -36,11 +36,11 @@ namespace brille {
   the PolyhedronTrellis.
   */
 template<class T, class R, class S>
-class BrillouinZoneTrellis3: public polytrellis::PolyTrellis<T,R,S,Array2>{
+class BrillouinZoneTrellis3: public polytrellis::PolyTrellis<T,R,S,lattice::LVec>{
   using child_t = BrillouinZoneTrellis3<T,R,S>;
-  using super_t = polytrellis::PolyTrellis<T,R,S,Array2>;
-  template<class V> using lv_t = lattice::LVec<V>;
-  template<class V> using bv_t = Array2<V>;
+  using super_t = polytrellis::PolyTrellis<T,R,S,lattice::LVec>;
+  template<class V> using VectorClass = lattice::LVec<V>;
+  using vector_t = VectorClass<S>;
   BrillouinZone bz_;
 public:
   BrillouinZoneTrellis3(const super_t & pt, BrillouinZone bz): super_t(pt), bz_(std::move(bz)) {}
@@ -51,40 +51,22 @@ public:
   \param bz the `BrillouinZone` used to define the boundaries of the `Mesh3`
   \param args the construction arguments for `PolyhedronTrellis`
   */
-//  template<typename... A>
-//  explicit BrillouinZoneTrellis3(const BrillouinZone& bz, A... args): super_t(bz.get_ir_polyhedron(), args...), bz_(bz) {}
   template<typename... A>
-  explicit BrillouinZoneTrellis3(const BrillouinZone& bz, A... args):
-    super_t(typename super_t::poly_t(bz.get_ir_polyhedron().vertices().xyz(), bz.get_ir_polyhedron().faces()), args...),
-    bz_(bz) {}
+  explicit BrillouinZoneTrellis3(const BrillouinZone& bz, A... args): super_t(bz.get_ir_polyhedron(), args...), bz_(bz) {}
   //! get the BrillouinZone object
   [[nodiscard]] BrillouinZone get_brillouinzone() const {return this->bz_;}
   //! get the vertices of the trellis in absolute units
-  [[nodiscard]] bv_t<S> get_xyz() const {return this->vertices();}
+  [[nodiscard]] bArray<S> get_xyz() const {return this->vertices().xyz();}
   //! get the vertices of the inner (cubic) nodes in absolute units
-  [[nodiscard]] bv_t<S> get_inner_xyz() const {return this->cube_vertices(); }
+  [[nodiscard]] bArray<S> get_inner_xyz() const {return this->cube_vertices().xyz(); }
   //! get the vertices of the outer (polyhedron) nodes in absolute units
-  [[nodiscard]] bv_t<S> get_outer_xyz() const {return this->poly_vertices(); }
+  [[nodiscard]] bArray<S> get_outer_xyz() const {return this->poly_vertices().xyz(); }
   //! get the vertices of the trellis in relative lattice units
-  [[nodiscard]] bv_t<S> get_hkl() const { return from_xyz_like(LengthUnit::inverse_angstrom, bz_.get_lattice(), this->vertices()).hkl();}
+  [[nodiscard]] bArray<S> get_hkl() const { return this->vertices().hkl();}
   //! get the vertices of the inner (cubic) nodes in relative lattice units
-  [[nodiscard]] bv_t<S> get_inner_hkl() const {return from_xyz_like(LengthUnit::inverse_angstrom, bz_.get_lattice(), this->cube_vertices()).hkl(); }
+  [[nodiscard]] bArray<S> get_inner_hkl() const {return this->cube_vertices().hkl(); }
   //! get the vertices of the outer (polyhedron) nodes in relative lattice units
-  [[nodiscard]] bv_t<S> get_outer_hkl() const {return from_xyz_like(LengthUnit::inverse_angstrom, bz_.get_lattice(), this->poly_vertices()).hkl(); }
-
-//  //! get the vertices of the trellis in absolute units
-//  [[nodiscard]] bArray<S> get_xyz() const {return this->vertices().xyz();}
-//  //! get the vertices of the inner (cubic) nodes in absolute units
-//  [[nodiscard]] bArray<S> get_inner_xyz() const {return this->cube_vertices().xyz(); }
-//  //! get the vertices of the outer (polyhedron) nodes in absolute units
-//  [[nodiscard]] bArray<S> get_outer_xyz() const {return this->poly_vertices().xyz(); }
-//  //! get the vertices of the trellis in relative lattice units
-//  [[nodiscard]] bArray<S> get_hkl() const { return this->vertices().hkl();}
-//  //! get the vertices of the inner (cubic) nodes in relative lattice units
-//  [[nodiscard]] bArray<S> get_inner_hkl() const {return this->cube_vertices().hkl();; }
-//  //! get the vertices of the outer (polyhedron) nodes in relative lattice units
-//  [[nodiscard]] bArray<S> get_outer_hkl() const {return this->poly_vertices().hkl();}
-
+  [[nodiscard]] bArray<S> get_outer_hkl() const {return this->poly_vertices().hkl(); }
   //! get the indices forming the faces of the tetrahedra
   [[nodiscard]] std::vector<std::array<brille::ind_t,4>> get_vertices_per_tetrahedron() const {return this->vertices_per_tetrahedron();}
 
@@ -108,24 +90,24 @@ public:
            parameter is set to true, the subsequent interpolation call may raise
            an error or access unassigned memory and will produce garbage output.
   */
-  template<class... Args>
   std::tuple<brille::Array<T>,brille::Array<R>>
-  interpolate_at(const lv_t<S> & x, const bool no_move=false, Args... args) const {
+  interpolate_at(const vector_t& x, const int nth, const bool no_move=false) const {
     profile_update("Start BrillouinZoneTrellis3::interpolate_at");
-    lv_t<S> q(x.type(), x.lattice(), x.size(0));
-    lv_t<int> tau(x.type(), x.lattice(), x.size(0));
+    vector_t q(x.type(), x.lattice(), x.size(0));
+    VectorClass<int> tau(x.type(), x.lattice(), x.size(0));
     if (no_move){
       // Special mode for testing where no specified points are moved
       // IT IS IMPERATIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
       // POLYHEDRON otherwise the interpolation will fail or give garbage back.
       q = x;
-    } else if (!bz_.moveinto(x, q, tau, args...)){
+    } else if (!bz_.moveinto(x, q, tau, nth)){
       std::string msg;
       msg = "Moving all points into the first Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
-    return this->super_t::interpolate_at(brille::get_xyz(q), args...);
-//    return this->super_t::interpolate_at(q, args...);
+    if (nth < 2)
+      return this->super_t::interpolate_at(q);
+    return this->super_t::interpolate_at(q, nth);
   }
 
   /*! \brief Interpolate at an equivalent irreducible reciprocal lattice point
@@ -150,26 +132,26 @@ public:
            parameter is set to true, the subsequent interpolation call may raise
            an error or access unassigned memory and will produce garbage output.
   */
-  template<class... Args>
   std::tuple<brille::Array<T>,brille::Array<R>>
-  ir_interpolate_at(const lv_t<S> & x, const bool no_move=false, Args... args) const {
+  ir_interpolate_at(const vector_t& x, const int nth, const bool no_move=false) const {
     verbose_update("BZTrellisQ::ir_interpolate_at called with ",nth," threads");
     profile_update("Start BrillouinZoneTrellis3::ir_interpolate_at");
-    lv_t<S> ir_q(x.type(), x.lattice(), x.size(0));
-    lv_t<int> tau(x.type(), x.lattice(), x.size(0));
+    VectorClass<S> ir_q(x.type(), x.lattice(), x.size(0));
+    VectorClass<int> tau(x.type(), x.lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
     if (no_move){
       // Special mode for testing where no specified points are moved
       // IT IS IMPERATIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
       // POLYHEDRON otherwise the interpolation will fail or give garbage back.
       ir_q = x;
-    } else if (!bz_.ir_moveinto(x, ir_q, tau, rot, invrot, args...)){
+    } else if (!bz_.ir_moveinto(x, ir_q, tau, rot, invrot, nth)){
       std::string msg;
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
-    auto [vals, vecs] = this->super_t::interpolate_at(brille::get_xyz(ir_q), args...);
-//    auto [vals, vecs] = this->super_t::interpolate_at(ir_q, args...);
+    auto [vals, vecs] = (nth>1)
+        ? this->super_t::interpolate_at(ir_q, nth)
+        : this->super_t::interpolate_at(ir_q);
     profile_update("Apply rotations/permutations to interpolated results");
     // we always need the pointgroup operations to 'rotate'
     PointSymmetry psym = bz_.get_pointgroup_symmetry();
@@ -185,8 +167,8 @@ public:
     brille::Array2<T> vals2(vals);
     brille::Array2<R> vecs2(vecs);
     // actually perform the rotation to Q
-    this->data().values() .rotate_in_place(vals2, ir_q, pgt, psym, rot, invrot, args...);
-    this->data().vectors().rotate_in_place(vecs2, ir_q, pgt, psym, rot, invrot, args...);
+    this->data().values() .rotate_in_place(vals2, ir_q, pgt, psym, rot, invrot, nth);
+    this->data().vectors().rotate_in_place(vecs2, ir_q, pgt, psym, rot, invrot, nth);
     // we're done so bundle the output
     profile_update("  End BrillouinZoneTrellis3::ir_interpolate_at");
     return std::make_tuple(vals, vecs);

@@ -446,7 +446,7 @@ public:
     default: throw std::runtime_error("Not implemented");
     }
   }
-  [[nodiscard]] matrix_t from_xyz(LengthUnit lu){
+  [[nodiscard]] matrix_t from_xyz(LengthUnit lu) const {
     /* Similarly to `to_xyz` we make use of the relationships e⃗ = A x⃗ and e⃗ = B q⃗ to enable finding x⃗ or q⃗ from e⃗.
      * Inverting A or B and multiplying from the left we find,  x⃗ = A⁻¹ e⃗   and   q⃗ = B⁻¹ e⃗.
      * However, we can avoid taking the inversion of A or B since we remember that the two sets of basis vectors
