@@ -16,7 +16,7 @@ void BrillouinZone::_moveinto_prim(const LVec<double>& Q, LVec<double>& q, LVec<
   q.resize(Q.size(0));
   tau.resize(Q.size(0));
   auto snQ = utils::u2s<long long, ind_t>(Q.size(0));
-// #pragma omp parallel for default(none) shared(Q, tau, q, pa, pb, pc, points, normals, taus, tau_lens, snQ, max_count) schedule(dynamic)
+#pragma omp parallel for default(none) shared(Q, tau, q, pa, pb, pc, normals, taus, tau_lens, snQ, max_count) schedule(dynamic)
   for (long long si=0; si<snQ; si++){
     auto i = utils::s2u<ind_t, long long>(si);
     auto tau_i = Q.view(i).round();
@@ -26,23 +26,15 @@ void BrillouinZone::_moveinto_prim(const LVec<double>& Q, LVec<double>& q, LVec<
     while (count++ < max_count && !point_inside_all_planes(pa, pb, pc, q_i)){
       auto qi_dot_normals = dot(q_i , normals);
       auto N_hkl = (qi_dot_normals/ tau_lens).round().to_std();
-      auto q_i_d_n = qi_dot_normals.to_std();
       if (std::any_of(N_hkl.begin(), N_hkl.end(), [](int a){return a > 0;})){
         int max_nm{0};
         ind_t max_at{0};
         for (ind_t j=0; j<N_hkl.size(); ++j) {
-          if (qi_dot_normals[j] != q_i_d_n[j]) {
-            info_update("Why is ", qi_dot_normals[j], " different from ",
-                        q_i_d_n[j]);
-          }
           // protect against oscillating by ±τ
           if (N_hkl[j] > 0 && N_hkl[j] >= max_nm &&
               (0 == max_nm ||
                (norm(taus.view(j) + last_shift).all(brille::cmp::gt, 0.) &&
                 qi_dot_normals[j] > qi_dot_normals[max_at]))
-              //              (0 == max_nm ||
-              //              (norm(taus.view(j)+last_shift).all(brille::cmp::gt,
-              //              0.) && q_i_d_n[j] > q_i_d_n[max_at]))
           ) {
             max_nm = N_hkl[max_at = j];
           }
@@ -82,46 +74,6 @@ bool BrillouinZone::moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int>& 
   auto pb = transform_to_primitive(_outer, b);
   auto pc = transform_to_primitive(_outer, c);
 
-//
-//  // the face centre points and normals in the primitive lattice:
-//  auto points = this->get_primitive_points();
-//  auto normals = this->get_primitive_normals();
-//  normals = normals/norm(normals); // ensure they're normalised
-//  auto taus = (2.0*points).round();
-//  auto taulen = norm(taus);
-//  size_t max_count = taus.size(0);
-//  // ensure that qsl and tausl can hold each qi and taui
-//  qsl.resize(Qsl.size(0));
-//  tausl.resize(Qsl.size(0));
-//  auto snQ = utils::u2s<long long, ind_t>(Qsl.size(0));
-//#pragma omp parallel for default(none) shared(Qsl, tausl, qsl, points, normals, taus, taulen, snQ, max_count) schedule(dynamic)
-//  for (long long si=0; si<snQ; si++){
-//    auto i = utils::s2u<ind_t, long long>(si);
-//    auto taui = Qsl.view(i).round();
-//    auto qi = Qsl.view(i) - taui;
-//    auto last_shift = taui;
-//    size_t count{0};
-//    // FIXME insert tolerance here
-//    while (count++ < max_count && dot(normals, qi-points).any(brille::cmp::gt,0.)){
-//      auto qi_dot_normals = dot(qi , normals);
-//      auto Nhkl = (qi_dot_normals/taulen).round().to_std();
-//      auto qidn = qi_dot_normals.to_std();
-//      if (std::any_of(Nhkl.begin(), Nhkl.end(), [](int a){return a > 0;})){
-//        int maxnm{0};
-//        ind_t maxat{0};
-//        for (ind_t j=0; j<Nhkl.size(); ++j)
-//          // protect against oscillating by ±τ
-//          if (Nhkl[j]>0 && Nhkl[j]>=maxnm && (0==maxnm || (norm(taus.view(j)+last_shift).all(brille::cmp::gt, 0.) && qidn[j]>qidn[maxat]))){
-//            maxnm = Nhkl[maxat=j];
-//          }
-//        qi -= taus.view(maxat) * static_cast<double>(maxnm); // ensure we subtract LVec<double>
-//        taui += taus.view(maxat) * maxnm; // but add LVec<int>
-//        last_shift = taus.view(maxat) * maxnm;
-//      }
-//    }
-//    qsl.set(i, qi);
-//    tausl.set(i, taui);
-//  }
   this->_moveinto_prim(Qsl, qsl, tausl, pa, pb, pc);
   if (transform_needed){ // then we need to transform back q and tau
     q   = transform_from_primitive(_outer,qsl);
@@ -129,17 +81,6 @@ bool BrillouinZone::moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int>& 
   }
   auto allinside = this->isinside(q);
   if (std::count(allinside.begin(), allinside.end(), false) > 0){
-
-//    info_update("inside Q:\nnp.array(", Q.extract(allinside).to_string(), ")");
-//    info_update("inside tau:\nnp.array(", tau.extract(allinside).to_string(), ")");
-//    info_update("inside q\nnp.array(", q.extract(allinside).to_string(), ")");
-//    info_update("inside Qsl:\nnp.array(", Qsl.extract(allinside).to_string(), ")");
-//    info_update("inside tausl:\nnp.array(", tausl.extract(allinside).to_string(), ")");
-//    info_update("inside qsl\nnp.array(", qsl.extract(allinside).to_string(), ")");
-//    for (ind_t i=0; i<Q.size(0); ++i) if (!allinside[i]){
-//      info_update("Q  =",Q.to_string(i)  ," tau  =",tau.to_string(i)  ," q  =",q.to_string(i));
-//      info_update("Qsl=",Qsl.to_string(i)," tausl=",tausl.to_string(i)," qsl=",qsl.to_string(i),"\n");
-//    }
     std::transform(allinside.begin(), allinside.end(), allinside.begin(), [](const auto & x){return !x;});
     info_update(Q.extract(allinside).size(0), " of ", Q.size(0), " still outside?");
     info_update("outside Q:\nnp.array(\n", Q.extract(allinside).to_string(), ")");

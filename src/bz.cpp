@@ -74,16 +74,16 @@ bool BrillouinZone::check_ir_polyhedron(){
 
   auto volume_goal = _first.volume() / static_cast<double>(ps.size());
   if (!brille::approx::scalar(_irreducible.volume(), volume_goal, 1000)){ // setting tol=100 moves the relative difference allowed to ~2e-9
-    info_update("The current 'irreducible' polyhedron has the wrong volume since ",
+    debug_update("The current 'irreducible' polyhedron has the wrong volume since ",
         _irreducible.volume()," != ",volume_goal);
-    info_update(std::abs(_irreducible.volume() - volume_goal) / (_irreducible.volume() + volume_goal));
+    debug_update(std::abs(_irreducible.volume() - volume_goal) / (_irreducible.volume() + volume_goal));
     return false;
   }
   ps = ps.higher(1);
   for (size_t i=0; i < ps.size(); ++i) {
     auto rotated = _irreducible.apply(ps, i);
     if (_irreducible.intersects(rotated, float_tolerance, approx_tolerance)){
-      info_update("_irreducible\n", _irreducible.python_string(),"\nintersects\n",rotated.python_string());
+      debug_update("_irreducible\n", _irreducible.python_string(),"\nintersects\n",rotated.python_string());
       debug_update("The trial irreducible polyhedron intersects itself.");
       return false;
     }

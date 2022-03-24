@@ -536,10 +536,10 @@ public:
 };
 
 //! Triangulate a single layer of the TetTri hierarchy
-template <typename T>
+template <typename T, typename I>
 TetTriLayer
 triangulate_one_layer(const bArray<T>& verts,
-                     const std::vector<std::vector<int>>& vpf,
+                     const std::vector<std::vector<I>>& vpf,
                      const double max_cell_size=-1.0,
                      const int max_mesh_points=-1)
 {
@@ -596,7 +596,7 @@ triangulate_one_layer(const bArray<T>& verts,
     tgi.facetlist[i].polygonlist[0].vertexlist = nullptr;
     tgi.facetlist[i].polygonlist[0].vertexlist = new int[tgi.facetlist[i].polygonlist[0].numberofvertices];
     for (ind_t j=0; j<vpf[i].size(); ++j)
-      tgi.facetlist[i].polygonlist[0].vertexlist[j] = vpf[i][j];
+      tgi.facetlist[i].polygonlist[0].vertexlist[j] = static_cast<int>(vpf[i][j]);
   }
   // The input is now filled with the piecewise linear complex information.
   // so we can call tetrahedralize:
@@ -618,10 +618,10 @@ triangulate_one_layer(const bArray<T>& verts,
 }
 
 //! Triangulate all layers of the TetTri hierarchy
-template <typename T>
+template <typename T, typename I>
 TetTri
 triangulate(const bArray<T>& verts,
-            const std::vector<std::vector<int>>& vpf,
+            const std::vector<std::vector<I>>& vpf,
             const double max_cell_size=-1.0,
             const int layer_count=5,
             const int max_mesh_points=-1)

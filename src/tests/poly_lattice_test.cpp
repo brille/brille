@@ -18,7 +18,7 @@ TEST_CASE("Lattice Polyhedron","[polyhedron][lattice]") {
   auto fbz = bz.get_polyhedron();
   auto fbz_xyz = Poly(fbz.vertices().xyz(), fbz.faces());
 
-  info_update(fbz.python_string());
+  debug_update(fbz.python_string());
 
   REQUIRE(fbz_xyz.volume() == Approx(volume));
   REQUIRE(fbz.volume() == Approx(volume));

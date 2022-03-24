@@ -77,7 +77,7 @@ triangulate(const T max_volume, const bool addGamma, const A<T>& points, const F
     tgi.facetlist[i].polygonlist[0].numberofvertices = static_cast<int>(f[i].size());
     tgi.facetlist[i].polygonlist[0].vertexlist = new int[tgi.facetlist[i].polygonlist[0].numberofvertices];
     for (size_t j=0; j<f[i].size(); ++j)
-      tgi.facetlist[i].polygonlist[0].vertexlist[j] = f[i][j];
+      tgi.facetlist[i].polygonlist[0].vertexlist[j] = static_cast<int>(f[i][j]);
   }
   // The input is now filled with the piecewise linear complex information.
   // so we can call tetrahedralize:

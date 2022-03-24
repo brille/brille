@@ -108,13 +108,13 @@ public:
            parameter is set to true, the subsequent interpolation call may raise
            an error or access unassigned memory and will produce garbage output.
   */
-  template<class... Args>
+  template<class... Args, bool NO_MOVE=false>
   std::tuple<brille::Array<T>,brille::Array<R>>
-  interpolate_at(const lv_t<S> & x, const bool no_move=false, Args... args) const {
+  interpolate_at(const lv_t<S> & x, Args... args) const {
     profile_update("Start BrillouinZoneTrellis3::interpolate_at");
     lv_t<S> q(x.type(), x.lattice(), x.size(0));
     lv_t<int> tau(x.type(), x.lattice(), x.size(0));
-    if (no_move){
+    if constexpr (NO_MOVE){
       // Special mode for testing where no specified points are moved
       // IT IS IMPERATIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
       // POLYHEDRON otherwise the interpolation will fail or give garbage back.
@@ -150,15 +150,15 @@ public:
            parameter is set to true, the subsequent interpolation call may raise
            an error or access unassigned memory and will produce garbage output.
   */
-  template<class... Args>
+  template<class... Args, bool NO_MOVE=false>
   std::tuple<brille::Array<T>,brille::Array<R>>
-  ir_interpolate_at(const lv_t<S> & x, const bool no_move=false, Args... args) const {
+  ir_interpolate_at(const lv_t<S> & x, Args... args) const {
     verbose_update("BZTrellisQ::ir_interpolate_at called with ",nth," threads");
     profile_update("Start BrillouinZoneTrellis3::ir_interpolate_at");
     lv_t<S> ir_q(x.type(), x.lattice(), x.size(0));
     lv_t<int> tau(x.type(), x.lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
-    if (no_move){
+    if constexpr (NO_MOVE){
       // Special mode for testing where no specified points are moved
       // IT IS IMPERATIVE THAT THE PROVIDED POINTS ARE *INSIDE* THE IRREDUCIBLE
       // POLYHEDRON otherwise the interpolation will fail or give garbage back.

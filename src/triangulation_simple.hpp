@@ -33,8 +33,11 @@ triangulation parameters.
 Following the `TetGen` `tetrahedralize` call, the resulting vertices and
 tetrahedra indexing is collected before freeing the TetGet structure.
 */
+template<class T, template<class> class A>
 class SimpleTet{
-  bArray<double> vertex_positions;        /*!< The triangulated vertex positions */ // (nVertices, 3)
+  using vert_t = A<T>;
+  using poly_t = polyhedron::Poly<T,A>;
+  vert_t vertex_positions;        /*!< The triangulated vertex positions */ // (nVertices, 3)
   bArray<ind_t> vertices_per_tetrahedron; /*!< The vertices in each of the triangulated tetrahedra */ // (nTetrahedra, 4)
 public:
   //! Explicit empty constructor
@@ -49,11 +52,11 @@ public:
   \param addGamma   If true the point (0,0,0) will be ensured to exist in the
                     triangulated vertrices
   */
-  explicit SimpleTet(const Polyhedron& poly, const double max_volume=-1, const bool addGamma=false)
+  explicit SimpleTet(const poly_t& poly, const double max_volume=-1, const bool addGamma=false)
   : vertex_positions(0u,3u), vertices_per_tetrahedron(0u,4u)
   {
-    const auto& verts{poly.get_vertices()};
-    const auto& vpf{poly.get_vertices_per_face()};
+    const auto& verts{poly.vertices()};
+    const auto& vpf{poly.faces().faces()};
     debug_update("Create SimpleTet from vertices, and facets\n",verts.to_string(),",\n", vpf);
     // create the tetgenbehavior object which contains all options/switches for tetrahedralize
     debug_update("Creating `tetgenbehavior` object");
@@ -110,7 +113,7 @@ public:
       tgi.facetlist[i].polygonlist[0].numberofvertices = static_cast<int>(vpf[i].size());
       tgi.facetlist[i].polygonlist[0].vertexlist = new int[tgi.facetlist[i].polygonlist[0].numberofvertices];
       for (size_t j=0; j<vpf[i].size(); ++j)
-        tgi.facetlist[i].polygonlist[0].vertexlist[j] = vpf[i][j];
+        tgi.facetlist[i].polygonlist[0].vertexlist[j] = static_cast<int>(vpf[i][j]);
     }
     // The input is now filled with the piecewise linear complex information.
     // so we can call tetrahedralize:
@@ -152,7 +155,7 @@ public:
     this->correct_tetrahedra_vertex_ordering();
   }
   //! Return the volume of the indexed tetrahedron
-  double volume(const ind_t tet) const {
+  [[nodiscard]] double volume(const ind_t tet) const {
     double v;
     const ind_t* i = vertices_per_tetrahedron.ptr(tet);
     v = orient3d(
@@ -163,7 +166,7 @@ public:
     return v;
   }
   //! Return the volume of the largest tetrahedron
-  double maximum_volume(void) const {
+  [[nodiscard]] double maximum_volume() const {
     double vol{0}, maxvol{0};
     for (ind_t i=0; i<this->number_of_tetrahedra(); ++i){
       vol = this->volume(i);
@@ -172,17 +175,17 @@ public:
     return maxvol;
   }
   //! Return the number of triangulated vertices
-  ind_t number_of_vertices(void) const {return vertex_positions.size(0);}
+  [[nodiscard]] ind_t number_of_vertices() const {return vertex_positions.size(0);}
   //! Return the number of triangulated tetrahedra
-  ind_t number_of_tetrahedra(void) const {return vertices_per_tetrahedron.size(0);}
+  [[nodiscard]] ind_t number_of_tetrahedra() const {return vertices_per_tetrahedron.size(0);}
   //! Return a constant reference to the triangulated vertices
-  const bArray<double>& get_vertices(void) const {return vertex_positions;}
+  [[nodiscard]] const vert_t& get_vertices() const {return vertex_positions;}
   //! Return a constant reference to the triangulated vertices
-  const bArray<double>& get_vertex_positions(void) const {return vertex_positions;}
+  [[nodiscard]] const vert_t& get_vertex_positions() const {return vertex_positions;}
   //! Return a constant reference to the triangulated tetrahedra vertex indices
-  const bArray<ind_t>& get_vertices_per_tetrahedron(void) const {return vertices_per_tetrahedron;}
+  [[nodiscard]] const bArray<ind_t>& get_vertices_per_tetrahedron() const {return vertices_per_tetrahedron;}
   //! Convert the tetrahedra vertex indices to a nested standard container
-  std::vector<std::array<ind_t,4>> std_vertices_per_tetrahedron(void) const {
+  [[nodiscard]] std::vector<std::array<ind_t,4>> std_vertices_per_tetrahedron() const {
     std::vector<std::array<ind_t,4>> stdvpt;
     for (ind_t i=0; i<this->number_of_tetrahedra(); ++i){
       const ind_t* v = vertices_per_tetrahedron.ptr(i);
@@ -200,10 +203,10 @@ public:
   \param tet the index of the tetrahedron within all triangulated tetrahedra
   \returns the three elements of the circumsphere centre and its radius
   */
-  std::array<double,4> circumsphere_info(const ind_t tet) const {
+  [[nodiscard]] std::array<double,4> circumsphere_info(const ind_t tet) const {
     if (tet < vertices_per_tetrahedron.size(0)){
       const ind_t* i = vertices_per_tetrahedron.ptr(tet);
-      std::array<double,4> centre_radius;
+      std::array<double,4> centre_radius{0,0,0,0};
       tetgenmesh tgm; // to get access to circumsphere
       tgm.circumsphere(
         vertex_positions.ptr(i[0]), vertex_positions.ptr(i[1]),
@@ -218,7 +221,7 @@ public:
     throw std::out_of_range(msg);
   }
 protected:
-  void correct_tetrahedra_vertex_ordering(void){
+  void correct_tetrahedra_vertex_ordering(){
     for (ind_t i=0; i<this->number_of_tetrahedra(); ++i)
     if (std::signbit(this->volume(i))) // the volume of tetrahedra i is negative
     vertices_per_tetrahedron.swap(i, 0,1); // swap two vertices to switch sign
@@ -226,4 +229,4 @@ protected:
 };
 
 } // end namespace brille
-#endif // _TRIANGULATION_H_
+#endif // BRILLE_TRIANGULATION_SIMPLE_HPP_

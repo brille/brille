@@ -42,16 +42,16 @@ TEST_CASE("P4 Cubic BrillouinZone instantiation","[bz_]"){
       {90., 90., 90.} ,"P 2 2");
   BrillouinZone bz(lat);
   REQUIRE(write_read_test(bz, "primitive_cubic"));
-  info_update("First Brillouin zone\n", bz.get_polyhedron().python_string());
-  info_update("Irreducible Brillouin zone\n", bz.get_ir_polyhedron().python_string());
+  debug_update("First Brillouin zone\n", bz.get_polyhedron().python_string());
+  debug_update("Irreducible Brillouin zone\n", bz.get_ir_polyhedron().python_string());
 }
 
 
 TEST_CASE("Primitive Hexagonal BrillouinZone instantiation","[bz_]"){
   auto lat = Direct<double>({3., 3., 3.}, {90., 90., 120.}, "P 1");
   BrillouinZone bz(lat);
-  info_update("First Brillouin zone\n", bz.get_polyhedron().python_string());
-  info_update("Irreducible Brillouin zone\n", bz.get_ir_polyhedron().python_string());
+  debug_update("First Brillouin zone\n", bz.get_polyhedron().python_string());
+  debug_update("Irreducible Brillouin zone\n", bz.get_ir_polyhedron().python_string());
   REQUIRE(write_read_test(bz, "primitive_hexagonal"));
 }
 

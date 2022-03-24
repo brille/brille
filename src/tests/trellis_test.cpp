@@ -121,7 +121,7 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   brille::Array<double> antres(antshp);
   for (auto i: antres.subItr()) antres[i] = QinvA.val(i[0],i[2]);
 
-  auto [intres, dummy] = bzt.ir_interpolate_at(Q, false, 1 /*thread*/);
+  auto [intres, dummy] = bzt.ir_interpolate_at(Q, 1 /*thread*/);
 
   auto diff = intres - antres;
   // info_update("\nInterpolation results Expected results:\n",antres.to_string(intres));
@@ -179,7 +179,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
     bool again = true;
     timer.tic();
     while (again && timer.elapsed()<10000){
-      std::tie(intvals, intvecs) = bzt.ir_interpolate_at(Q, false, threads);
+      std::tie(intvals, intvecs) = bzt.ir_interpolate_at(Q, threads);
       timer.toc();
       again = timer.jitter()/timer.average() > 0.002;
     }
@@ -225,7 +225,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   int threads = omp_get_max_threads();
   auto timer = Stopwatch<>();
   timer.tic();
-  auto [vals_intres, vecs_intres] = bzt.ir_interpolate_at(Q, false, threads);
+  auto [vals_intres, vecs_intres] = bzt.ir_interpolate_at(Q, threads);
   timer.toc();
   info_update("Interpolation of ",nQ," points performed by ",threads, " threads in ",timer.average(),"+/-",timer.jitter()," msec");
 }
@@ -363,7 +363,7 @@ TEST_CASE("PolyNode inclusion rounding error","[trellis][quartz][polynode][61]")
     auto delta = std::pow(10., i);
     std::vector<std::array<double,3>> values{{-0.1+delta, -0.1, 0.}};
     auto q = LQVec<double>(quartz, bArray<double>::from_std(values));
-    REQUIRE_NOTHROW(quartz_bzt.ir_interpolate_at(q, false, 1));
+    REQUIRE_NOTHROW(quartz_bzt.ir_interpolate_at(q, 1));
   }
 }
 
@@ -431,7 +431,7 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
     verbose_update("ir_moveinto ",nthread," threads");
     REQUIRE_NOTHROW(bz.ir_moveinto(Q, q, tau, r, invr, nthread));
     verbose_update("ir_interpolate_at ",nthread," threads");
-    REQUIRE_NOTHROW(bzt.ir_interpolate_at(Q, false, nthread));
+    REQUIRE_NOTHROW(bzt.ir_interpolate_at(Q, nthread));
   }
 }
 
@@ -516,5 +516,5 @@ TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
   std::vector<std::array<double,3>> std_qpts {{0.05, 0.05, 0.05}};
   auto qpts = LQVec<double>(lat, bArray<double>::from_std(std_qpts));
 
-  REQUIRE_NOTHROW(bzt.ir_interpolate_at(qpts, false, 1));
+  REQUIRE_NOTHROW(bzt.ir_interpolate_at(qpts, 1));
 }

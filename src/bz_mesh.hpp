@@ -33,14 +33,17 @@ The symmetries of the Brillouin zone can then be used to interpolate at any
 point in reciprocal space by finding an equivalent point within the triangulated
 domain.
 */
-template<class T, class S>
-class BrillouinZoneMesh3: public Mesh3<T,S>{
-  using SuperClass = Mesh3<T,S>;
+template<class T, class S, class V>
+class BrillouinZoneMesh3: public Mesh3<T,S,V,Array2>{
+  using class_t = BrillouinZoneMesh3<T,S,V>;
+  using base_t = Mesh3<T,S,V,Array2>;
+  template<class A> using lv_t = lattice::LVec<A>;
+  template<class A> using bv_t = Array2<A>;
 protected:
-  BrillouinZone brillouinzone;
+  BrillouinZone bz_;
 public:
-  BrillouinZoneMesh3(const SuperClass& pt, BrillouinZone bz): SuperClass(pt), brillouinzone(std::move(bz)) {}
-  BrillouinZoneMesh3(SuperClass&& pt, BrillouinZone&& bz): SuperClass(std::move(pt)), brillouinzone(std::move(bz)) {}
+  BrillouinZoneMesh3(const base_t& pt, BrillouinZone bz): base_t(pt), bz_(std::move(bz)) {}
+  BrillouinZoneMesh3(base_t&& pt, BrillouinZone&& bz): base_t(std::move(pt)), bz_(std::move(bz)) {}
   /* Construct using a maximum tetrahedron volume -- makes a tetrahedron mesh
       instead of a orthogonal grid.
       @param bz The BrillouinZone object
@@ -61,26 +64,13 @@ public:
   */
   template<typename... A>
   explicit BrillouinZoneMesh3(const BrillouinZone& bz, A... args):
-    SuperClass(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), args...),
-    brillouinzone(bz) {}
+    base_t(bz.get_ir_vertices().xyz(), bz.get_ir_vertices_per_face(), args...),
+    bz_(bz) {}
   //! \brief Return the BrillouinZone object
-  [[nodiscard]] BrillouinZone get_brillouinzone() const {return this->brillouinzone;}
+  [[nodiscard]] BrillouinZone get_bz_() const {return this->bz_;}
   //! Return the mesh vertices in relative lattice units
-  [[nodiscard]] bArray<double> get_mesh_hkl() const {
-    auto xyz = this->get_mesh_xyz();
-    double toxyz[9], fromxyz[9];
-    const BrillouinZone bz = this->get_brillouinzone();
-    bz.get_lattice().get_xyz_transform(toxyz);
-    if (!brille::utils::matrix_inverse(fromxyz,toxyz)) throw std::runtime_error("transform matrix toxyz has zero determinant");
-    auto shape = xyz.shape();
-    bArray<double> hkl(shape);
-    std::vector<double> tmp(3);
-    for (ind_t i=0; i<shape[0]; ++i){
-      auto vxyz = xyz.view(i).to_std();
-      brille::utils::multiply_matrix_vector<double,double,double,3>(tmp.data(), fromxyz, vxyz.data());
-      hkl.set(i, tmp);
-    }
-    return hkl;
+  [[nodiscard]] bv_t<V> get_mesh_hkl() const {
+    return from_xyz_like(LengthUnit::inverse_angstrom, bz_.get_lattice(), this->get_mesh_xyz()).hkl();
   }
 
   /*! \brief Interpolate at an equivalent irreducible reciprocal lattice point
@@ -105,27 +95,30 @@ public:
            parameter is set to true, the subsequent interpolation call may raise
            an error or access unassigned memory and will produce garbage output.
   */
-  template<class R, class... Args>
+  template<class R, class... Args, bool NO_MOVE=false>
   std::tuple<brille::Array<T>,brille::Array<S>>
-  ir_interpolate_at(const LQVec<R>& x, const bool no_move=false, Args... args) const {
-    LQVec<R> ir_q(x.get_lattice(), x.size(0));
-    LQVec<int> tau(x.get_lattice(), x.size(0));
+  ir_interpolate_at(const lv_t<R>& x, Args... args) const {
+    lv_t<R> ir_q(x.get_lattice(), x.size(0));
+    lv_t<int> tau(x.get_lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
-    if (no_move){
+    if constexpr (NO_MOVE){
       ir_q = x;
-    } else if (!brillouinzone.ir_moveinto(x, ir_q, tau, rot, invrot, args...)){
+    } else if (!bz_.ir_moveinto(x, ir_q, tau, rot, invrot, args...)){
       std::string msg;
       msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
     // perform the interpolation within the irreducible Brillouin zone
-    auto [vals, vecs] = this->SuperClass::parallel_interpolate_at(ir_q.get_xyz(), args...)
+    auto [vals, vecs] = this->base_t::interpolate_at(ir_q.get_xyz(), args...);
     // we always need the pointgroup operations to 'rotate'
-    PointSymmetry psym = brillouinzone.get_pointgroup_symmetry();
+    PointSymmetry psym = bz_.get_pointgroup_symmetry();
     // and might need the Phonon Gamma table
     GammaTable pgt{GammaTable()};
     if (RotatesLike::Gamma == this->data().vectors().rotateslike()){
-      pgt.construct(brillouinzone.get_lattice().star(), brillouinzone.add_time_reversal());
+      auto cfg = this->approx_config();
+      auto s_tol = cfg.template direct<double>();
+      auto n_tol = cfg.digit();
+      pgt.construct(bz_.get_lattice(), bz_.add_time_reversal(), s_tol, n_tol);
     }
     brille::Array2<T> vals2(vals);
     brille::Array2<S> vecs2(vecs);
@@ -142,16 +135,16 @@ public:
     to_hdf(HF& obj, const std::string& entry) const{
         auto group = overwrite_group(obj, entry);
         bool ok{true};
-        ok &= SuperClass::to_hdf(group, "mesh");
-        ok &= brillouinzone.to_hdf(group, "bz_");
+        ok &= base_t::to_hdf(group, "mesh");
+        ok &= bz_.to_hdf(group, "bz_");
         return ok;
     }
     // Input from HDF5 file/object
     template<class HF>
-    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, BrillouinZoneMesh3<T,S>>
+    static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, class_t>
     from_hdf(HF& obj, const std::string& entry){
         auto group = obj.getGroup(entry);
-        auto mesh = SuperClass::from_hdf(group, "mesh");
+        auto mesh = base_t::from_hdf(group, "mesh");
         auto bz = BrillouinZone::from_hdf(group, "bz_");
         return {mesh, bz};
     }
@@ -160,9 +153,9 @@ public:
         HighFive::File file(filename, perm);
         return this->to_hdf(file, entry);
     }
-    static BrillouinZoneMesh3<T,S> from_hdf(const std::string& filename, const std::string& entry){
+    static class_t from_hdf(const std::string& filename, const std::string& entry){
         HighFive::File file(filename, HighFive::File::ReadOnly);
-        return BrillouinZoneMesh3<T,S>::from_hdf(file, entry);
+        return class_t::from_hdf(file, entry);
     }
 #endif //USE_HIGHFIVE
 };
