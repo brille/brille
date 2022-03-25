@@ -14,11 +14,13 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
-//#include <pybind11/pybind11.h>
-//#include "_nest.hpp"
-//
-//void wrap_nest(pybind11::module & m){
-//  declare_bznestq<double,double>(m,"dd");
-//  declare_bznestq<double,std::complex<double>>(m,"dc");
-//  declare_bznestq<std::complex<double>,std::complex<double>>(m,"cc");
-//}
+#include <pybind11/pybind11.h>
+#include "_nest.hpp"
+
+void wrap_nest(pybind11::module & m){
+  using D = double;
+  using C = std::complex<double>;
+  declare_bznestq<D,D,D>(m,"dd");
+  declare_bznestq<D,C,D>(m,"dc");
+  declare_bznestq<C,C,D>(m,"cc");
+}

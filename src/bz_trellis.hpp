@@ -108,7 +108,7 @@ public:
            parameter is set to true, the subsequent interpolation call may raise
            an error or access unassigned memory and will produce garbage output.
   */
-  template<class... Args, bool NO_MOVE=false>
+  template<bool NO_MOVE=false, class... Args>
   std::tuple<brille::Array<T>,brille::Array<R>>
   interpolate_at(const lv_t<S> & x, Args... args) const {
     profile_update("Start BrillouinZoneTrellis3::interpolate_at");
@@ -150,10 +150,9 @@ public:
            parameter is set to true, the subsequent interpolation call may raise
            an error or access unassigned memory and will produce garbage output.
   */
-  template<class... Args, bool NO_MOVE=false>
+  template<bool NO_MOVE=false, class... Args>
   std::tuple<brille::Array<T>,brille::Array<R>>
   ir_interpolate_at(const lv_t<S> & x, Args... args) const {
-    verbose_update("BZTrellisQ::ir_interpolate_at called with ",nth," threads");
     profile_update("Start BrillouinZoneTrellis3::ir_interpolate_at");
     lv_t<S> ir_q(x.type(), x.lattice(), x.size(0));
     lv_t<int> tau(x.type(), x.lattice(), x.size(0));

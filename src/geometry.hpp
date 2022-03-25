@@ -672,7 +672,8 @@ namespace brille {
       bool positive{true}, negative{true};
       for (ind_t r=0; (positive || negative) && r < no; ++r){
         if (r == i || r == j || r == k) continue;
-        auto d = orient3d(points.ptr(i), points.ptr(j), points.ptr(k), points.ptr(r));
+        auto d = pseudo_orient3d(points.view(i), points.view(j), points.view(k), points.view(r))[0];
+//        auto d = orient3d(points.ptr(i), points.ptr(j), points.ptr(k), points.ptr(r));
         positive &= d >= 0;
         negative &= d <= 0;
       }
@@ -703,30 +704,50 @@ namespace brille {
     return std::make_tuple(from_xyz_like(points, a), from_xyz_like(points, b), from_xyz_like(points, c));
   }
 
+//  template<class T, template<class> class A>
+//  std::enable_if_t<isBareArray<T, A>, std::vector<std::vector<ind_t>>>
+//  find_planes_containing_point(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& points){
+//    std::vector<std::vector<ind_t>> result;
+//    result.reserve(points.size(0));
+//    for (ind_t i=0; i < points.size(0); ++i){
+//      const auto d{points.ptr(i)};
+//      std::vector<ind_t> plane;
+//      plane.reserve(a.size(0));
+//      for (ind_t j=0; j < a.size(0); ++j){
+//        if (orient3d(a.ptr(j), b.ptr(j), c.ptr(j), d) == 0) plane.push_back(j);
+//      }
+//      result.push_back(plane);
+//    }
+//    return result;
+//  }
+//
+//  template<class T, template<class> class A>
+//  std::enable_if_t<isLatVec<T,A>, std::vector<std::vector<ind_t>>>
+//  find_planes_containing_point(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& points){
+//    // if they're all in the same lattice, can we act directly on (hkl)?
+//    // No. But maybe we can only worry about the co-angles and ignore the basis vector lengths?
+//    return find_planes_containing_point(a.xyz(), b.xyz(), c.xyz(), points.xyz());
+//  }
   template<class T, template<class> class A>
-  std::enable_if_t<isBareArray<T, A>, std::vector<std::vector<ind_t>>>
+  std::enable_if_t<isArray<T, A>, std::vector<std::vector<ind_t>>>
   find_planes_containing_point(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& points){
     std::vector<std::vector<ind_t>> result;
     result.reserve(points.size(0));
     for (ind_t i=0; i < points.size(0); ++i){
-      const auto d{points.ptr(i)};
+      const auto d{points.view(i)};
       std::vector<ind_t> plane;
       plane.reserve(a.size(0));
-      for (ind_t j=0; j < a.size(0); ++j){
-        if (orient3d(a.ptr(j), b.ptr(j), c.ptr(j), d) == 0) plane.push_back(j);
+      auto vol = pseudo_orient3d(a, b, c, d);
+      for (ind_t j=0; j < vol.size(); ++j) {
+        if (approx_float::scalar(vol[j], 0.)) { // FIXME add tolerances
+          plane.push_back(j);
+        }
       }
       result.push_back(plane);
     }
     return result;
   }
 
-  template<class T, template<class> class A>
-  std::enable_if_t<isLatVec<T,A>, std::vector<std::vector<ind_t>>>
-  find_planes_containing_point(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& points){
-    // if they're all in the same lattice, can we act directly on (hkl)?
-    // No. But maybe we can only worry about the co-angles and ignore the basis vector lengths?
-    return find_planes_containing_point(a.xyz(), b.xyz(), c.xyz(), points.xyz());
-  }
 
   template<class T, template<class> class A>
   std::enable_if_t<isBareArray<T,A>, std::vector<ind_t>>

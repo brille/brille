@@ -502,22 +502,19 @@ namespace brille {
     void push_back(const NullNode&){
       nodes_.emplace_back(NodeType::null, (std::numeric_limits<ind_t>::max)());
     }
-    void set(const NodeType& t, const ind_t i, CubeNode&& n){
-      assert(NodeType::cube == t);
+    void set(const ind_t i, CubeNode&& n){
       assert(i < nodes_.size());
-      assert(nodes_[i].first == t);
+      assert(nodes_[i].first == NodeType::cube);
       assert(nodes_[i].second < cube_nodes_.size());
       cube_nodes_[nodes_[i].second] = std::move(n);
     }
-    void set(const NodeType& t, const ind_t i, PolyNode&& n){
-      assert(NodeType::poly == t);
+    void set(const ind_t i, PolyNode&& n){
       assert(i < nodes_.size());
-      assert(nodes_[i].first == t);
+      assert(nodes_[i].first == NodeType::poly);
       assert(nodes_[i].second < poly_nodes_.size());
       poly_nodes_[nodes_[i].second] = std::move(n);
     }
-    void set(const NodeType& t, const ind_t, NullNode){
-      assert(NodeType::null == t);
+    void set(const ind_t, NullNode){
     }
     //! Return the NodeType of the indexed node
     [[nodiscard]] NodeType type(const ind_t i) const {

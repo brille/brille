@@ -95,6 +95,7 @@ public:
     this->data_ = other.data_;
     return *this;
   }
+  [[nodiscard]] approx_t approx_config() const {return approx_;}
   //! Return the number of mesh vertices
   [[nodiscard]] ind_t size() const { return this->mesh.number_of_vertices(); }
   //! Return the number of mesh vertices
@@ -199,6 +200,7 @@ public:
     bool ok{true};
     ok &= mesh.to_hdf(group, "triangulation");
     ok &= data_.to_hdf(group, "data");
+    ok &= approx_.to_hdf(group,"approx");
     return ok;
   }
   // Input from HDF5 file/object
@@ -208,7 +210,8 @@ public:
     auto group = obj.getGroup(entry);
     auto m = mesh_t::from_hdf(group, "triangulation");
     auto d = data_t::from_hdf(group, "data");
-    return class_t(m, d);
+    auto a = approx_t::from_hdf(group, "approx");
+    return class_t(m, d, a);
   }
 #endif // USE_HIGHFIVE
 

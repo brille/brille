@@ -67,7 +67,7 @@ public:
     base_t(bz.get_ir_vertices().xyz(), bz.get_ir_vertices_per_face(), args...),
     bz_(bz) {}
   //! \brief Return the BrillouinZone object
-  [[nodiscard]] BrillouinZone get_bz_() const {return this->bz_;}
+  [[nodiscard]] BrillouinZone get_brillouinzone() const {return this->bz_;}
   //! Return the mesh vertices in relative lattice units
   [[nodiscard]] bv_t<V> get_mesh_hkl() const {
     return from_xyz_like(LengthUnit::inverse_angstrom, bz_.get_lattice(), this->get_mesh_xyz()).hkl();
@@ -95,11 +95,11 @@ public:
            parameter is set to true, the subsequent interpolation call may raise
            an error or access unassigned memory and will produce garbage output.
   */
-  template<class R, class... Args, bool NO_MOVE=false>
+  template<bool NO_MOVE=false, class... Args>
   std::tuple<brille::Array<T>,brille::Array<S>>
-  ir_interpolate_at(const lv_t<R>& x, Args... args) const {
-    lv_t<R> ir_q(x.get_lattice(), x.size(0));
-    lv_t<int> tau(x.get_lattice(), x.size(0));
+  ir_interpolate_at(const lv_t<V>& x, Args... args) const {
+    lv_t<V> ir_q(x.type(), x.lattice(), x.size(0));
+    lv_t<int> tau(x.type(), x.lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
     if constexpr (NO_MOVE){
       ir_q = x;
@@ -109,7 +109,7 @@ public:
       throw std::runtime_error(msg);
     }
     // perform the interpolation within the irreducible Brillouin zone
-    auto [vals, vecs] = this->base_t::interpolate_at(ir_q.get_xyz(), args...);
+    auto [vals, vecs] = this->base_t::interpolate_at(brille::get_xyz(ir_q), args...);
     // we always need the pointgroup operations to 'rotate'
     PointSymmetry psym = bz_.get_pointgroup_symmetry();
     // and might need the Phonon Gamma table

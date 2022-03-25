@@ -165,27 +165,30 @@ public:
         success = !has_inversion || this->wedge_triclinic();
       } else {
         success =
-            this->wedge_brute_force() ||
-            this->wedge_brute_force(
-                false, false) // no special 2-fold or mirror handling
-            || this->wedge_brute_force(false,
-                                       true) // no special 2-fold handling (but
-                                             // special mirror handling)
-            || this->wedge_brute_force(
-                   true, false) // no special mirror handling (maybe not useful)
-            || this->wedge_brute_force(
-                   true, true, false) // last ditch effort, handle non order(2)
-                                      // operations in decreasing order
+            this->wedge_brute_force()
+            // no special 2-fold or mirror handling
+            || this->wedge_brute_force(false, false)
+            // no special 2-fold handling (but special mirror handling)
+            || this->wedge_brute_force(false, true)
+            // no special mirror handling (maybe not useful)
+            || this->wedge_brute_force(true, false)
+            // handle non order(2) operations in decreasing order
+            || this->wedge_brute_force(true, true, false)
             || this->wedge_brute_force(true, false, true, false);
         // other combinations of special_2_folds, special_mirrors,
         // and sort_by_length are possible but not necessarily useful.
       }
       if (!success) {
-        info_update("First Brillouin zone\n", _first.python_string(),
-                    "\nand 'irreducible' Brillouin zone\n",
-                    _irreducible.python_string());
-        throw std::runtime_error(
-            "Failed to find an irreducible Brillouin zone.");
+//        info_update("First Brillouin zone\n", _first.python_string(),
+//                    "\nand 'irreducible' Brillouin zone\n",
+//                    _irreducible.python_string());
+        std::string msg = "Failed to find an irreducible Brillouin zone.";
+        msg += "First Brillouin zone\n" + _first.python_string();
+        msg += "Last tried candidate\n" + _irreducible.python_string();
+        msg += " Consider increasing tolerances from ";
+        msg += my_to_string(float_tolerance);
+        msg += " and " + std::to_string(approx_tolerance);
+        throw std::runtime_error(msg);
       }
     }
     profile_update("  End of BrillouinZone construction");

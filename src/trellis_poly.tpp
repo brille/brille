@@ -476,7 +476,7 @@ PolyTrellis<T,R,S,A>::part_two(
       // we already ensured we don't need to worry about Γ if node_is_cube is true
       std::array<ind_t,8> cube_vert_idx;
       for (size_t j=0; j<8u; ++j) cube_vert_idx[j] = node_index_map[i][j];
-      nodes_.set(node_type[i], i, CubeNode(cube_vert_idx));
+      nodes_.set(i, CubeNode(cube_vert_idx));
     }
     break;
     case NodeType::poly:
@@ -496,7 +496,7 @@ PolyTrellis<T,R,S,A>::part_two(
       polyhedron::LQPolyTet<S,A> tri_cut{};
 #pragma omp critical
       {
-      // thi uses TetGen, which is not thread safe :/
+      // this uses TetGen, which is not thread safe :/
       // which kills any parallelisation speed-ups
       tri_cut = polyhedron::LQPolyTet(this_node, contains_Gamma);
       if (tri_cut.get_vertices().size(0)<4){
@@ -558,7 +558,7 @@ PolyTrellis<T,R,S,A>::part_two(
       if (idx_per_tet.size()<1){
         throw std::runtime_error("Triangulated node is actually Null!");
       }
-      nodes_.set(node_type[i], i, PolyNode(idx_per_tet, cci_per_tet, vol_per_tet));
+      nodes_.set(i, PolyNode(idx_per_tet, cci_per_tet, vol_per_tet));
     }
     break;
     default:

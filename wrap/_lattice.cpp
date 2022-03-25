@@ -129,9 +129,12 @@ void wrap_lattice(py::module &m){
   }),"basis_vectors"_a, "HM_name"_a, "HM_choice"_a, "real_space"_a=true, "row_vectors"_a=true);
 
   // accessors
-  cls.def_property_readonly("real_vectors", &Lattice<double>::real_basis_vectors);
-  cls.def_property_readonly("reciprocal_vectors", &Lattice<double>::real_basis_vectors);
-
+  cls.def_property_readonly("real_vectors",[](const Lattice<double>& lat){
+       return sa2np<int>({3,3}, lat.real_basis_vectors());
+     });
+  cls.def_property_readonly("reciprocal_vectors",[](const Lattice<double>& lat){
+    return sa2np<int>({3,3}, lat.reciprocal_basis_vectors());
+  });
   cls.def_property_readonly("a",     [](const Lattice<double>& lat){return lat.length(LengthUnit::angstrom, 0);});
   cls.def_property_readonly("b",     [](const Lattice<double>& lat){return lat.length(LengthUnit::angstrom, 1);});
   cls.def_property_readonly("c",     [](const Lattice<double>& lat){return lat.length(LengthUnit::angstrom, 2);});
@@ -164,7 +167,7 @@ void wrap_lattice(py::module &m){
   //cls.def_property_readonly("basis",&Lattice::get_basis);
 
   cls.def("get_covariant_metric_tensor",[](Lattice<double> &l){
-    return py::array_t<double>({3,3},{1,3},l.metric(LengthUnit::angstrom).data());
+    return sa2np<int>({3,3}, l.metric(LengthUnit::angstrom)); // copies data :/
   },R"pbdoc(
   Calculate the covariant metric tensor of the lattice
 
@@ -185,8 +188,7 @@ void wrap_lattice(py::module &m){
   )pbdoc");
 
   cls.def("get_contravariant_metric_tensor",[](Lattice<double> &l){
-    auto m = l.metric(LengthUnit::angstrom);
-    return py::array_t<double>({3,3},{1,3},linear_algebra::mat_inverse(m).data());
+    return sa2np<int>({3,3}, linear_algebra::mat_inverse(l.metric(LengthUnit::angstrom)));
   },R"pbdoc(
   Calculate the contravariant metric tensor of the lattice
 

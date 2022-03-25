@@ -674,6 +674,7 @@ std::tuple<bool, I> all_present(const std::vector<std::vector<I>> & lists) {
 template<class I>
 std::vector<std::vector<I>> invert_lists(const std::vector<std::vector<I>> & lists){
   auto [ok, maximum] = all_present(lists);
+  info_update_if(!ok, "list to be inverted missing element(s):\n", lists);
   assert(ok);
   std::vector<std::vector<I>> inverted;
   inverted.reserve(maximum);

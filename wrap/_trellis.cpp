@@ -17,7 +17,9 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <pybind11/pybind11.h>
 #include "_trellis.hpp"
 void wrap_trellis(pybind11::module & m){
-  declare_bztrellisq<double,double,double>(m,"dd");
-  declare_bztrellisq<double,std::complex<double>,double>(m,"dc");
-  declare_bztrellisq<std::complex<double>,std::complex<double>,double>(m,"cc");
+  using D = double;
+  using C = std::complex<double>;
+  declare_bztrellisq<D,D,D>(m,"dd");
+  declare_bztrellisq<D,C,D>(m,"dc");
+  declare_bztrellisq<C,C,D>(m,"cc");
 }

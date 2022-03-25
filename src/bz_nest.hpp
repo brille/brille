@@ -53,7 +53,7 @@ public:
     base_t({bz.get_ir_polyhedron().vertices().xyz(), bz.get_ir_polyhedron().faces()}, args...),
     bz_(bz) {}
   //! get the BrillouinZone object
-  BrillouinZone get_bz_(void) const {return this->bz_;}
+  BrillouinZone get_brillouinzone(void) const {return this->bz_;}
   //! get the vertices of the leaf vertices in inverse Angstrom
   bv_t<A> get_xyz(void) const {return this->vertices();}
   //! get the vertices of all vertices in absolute units
@@ -87,10 +87,10 @@ public:
            parameter is set to true, the subsequent interpolation call may raise
            an error or access unassigned memory and will produce garbage output.
   */
-  template<class R, class... Args, bool NO_MOVE=false>
+  template<bool NO_MOVE=false, class... Args>
   std::tuple<brille::Array<T>,brille::Array<S>>
-  ir_interpolate_at(const lv_t<R>& x, Args... args) const {
-    lv_t<R> ir_q(x.type(), x.lattice(), x.size(0));
+  ir_interpolate_at(const lv_t<A>& x, Args... args) const {
+    lv_t<A> ir_q(x.type(), x.lattice(), x.size(0));
     lv_t<int> tau(x.type(), x.lattice(), x.size(0));
     std::vector<size_t> rot(x.size(0),0u), invrot(x.size(0),0u);
     if constexpr (NO_MOVE){

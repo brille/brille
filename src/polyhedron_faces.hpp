@@ -53,18 +53,29 @@ namespace brille::polyhedron{
       auto unique_vertices = vertices.extract(unique);
       auto[a, b, c] = find_convex_hull_planes(unique_vertices);
       auto fpv = find_planes_containing_point(a, b, c, unique_vertices);
-      _faces = polygon_faces(a, b, c, fpv, unique_vertices);
-      if (polygon_face_vertex_purge(unique_vertices, _faces)) {
-        debug_update("Some vertices purged. Now vertices\nnp.array(\n", unique_vertices.to_string(), "),\n", _faces);
-        // the _faces vectors point into the smaller unique_vertices, so we
-        // need to find *an* equivalent vertex in vertices for each retained
-        // vertex in unique_vertices
-        std::vector<ind_t> map(unique_vertices.size(0), vertices.size(0));
-        for (ind_t i=0; i<unique_vertices.size(0); ++i){
-          map[i] = vertices.first(cmp::eq, unique_vertices.view(i));
+      auto max = std::transform_reduce(fpv.begin(), fpv.end(), 0u, [](const auto & x, const auto & y){return x > y ? x : y;}, [](const auto & z){return z.size();});
+      if (max > 2u) {
+        _faces = polygon_faces(a, b, c, fpv, unique_vertices);
+        if (polygon_face_vertex_purge(unique_vertices, _faces)) {
+          debug_update("Some vertices purged. Now vertices\nnp.array(\n",
+                       unique_vertices.to_string(), "),\n", _faces);
+          // the _faces vectors point into the smaller unique_vertices, so we
+          // need to find *an* equivalent vertex in vertices for each retained
+          // vertex in unique_vertices
+          std::vector<ind_t> map(unique_vertices.size(0), vertices.size(0));
+          for (ind_t i = 0; i < unique_vertices.size(0); ++i) {
+            map[i] = vertices.first(cmp::eq, unique_vertices.view(i));
+          }
+          for (auto &face : _faces)
+            for (auto &idx : face)
+              idx = map[idx];
+          debug_update("Face indexes updated to point into\nnp.array(\n",
+                       vertices.to_string(), "),\n", _faces);
         }
-        for (auto & face: _faces) for (auto & idx: face) idx = map[idx];
-        debug_update("Face indexes updated to point into\nnp.array(\n",vertices.to_string(),"),\n",_faces);
+      } else {
+        info_update("The vertices \n", unique_vertices.to_string(), " are bounded by planes ",
+                    "\na:\n", a.to_string(), "\nb:\n", b.to_string(), "\nc:\n", c.to_string(),
+                    "but none are on three or more of the planes?!\n", fpv);
       }
     }
     template<class T, template<class> class A>
@@ -398,14 +409,22 @@ namespace brille::polyhedron{
         if (pre_v_count <= index && index < v.size(0)) {
           // this should be impossible, since two edges which intersect a plane at the same point *must*
           // intersect it at *their* intersection point, which was a pre-existing vertex
-          info_update("Duplicate intersection point for edge ", my_to_string(edge), " of");
-          info_update("np.array(\n", get_xyz(v).to_string(), "),\n", f);
-          info_update("intersection ", get_xyz(at).to_string(0), " matches at index ", index);
-          info_update("or in rlu: np.array(\n", v.to_string(), "),\n", f);
-          info_update("intersection ", at.to_string(0), " matches at index ", index, "but there were only ", pre_v_count, " vertices before the cut");
-          info_update("new face thus far: ", new_face);
-          info_update("comparison tolerance ", Rtol, " digits ", tol);
-          throw std::logic_error("This was supposedly impossible");
+          std::string msg =  "Duplicate intersection point for edge ";
+          msg += my_to_string(edge) + " of\nnp.array(\n";
+          msg += get_xyz(v).to_string() +  "),\n" +  my_to_string(f) + "\n";
+          msg += "intersection " + get_xyz(at).to_string(0);
+          msg += " matches at index " + std::to_string(index);
+          msg += "\n\nor in rlu:\nnp.array(\n" + v.to_string() + "),\n";
+          msg += my_to_string(f) + "\n";
+          msg += "intersection " + at.to_string(0) + " matches at index " + std::to_string(index);
+          msg += "but there were only " + std::to_string(pre_v_count);
+          msg += " vertices before the cut";
+//          info_update(msg);
+//          info_update("new face thus far: ", new_face);
+//          info_update("comparison tolerance ", Rtol, " digits ", tol);
+          msg += "\n\nconsider increasing tolerances from ";
+          msg += my_to_string(Rtol) + " and " + std::to_string(tol);
+          throw std::logic_error(msg);
         }
         if (index == v.size(0)) {
           verbose_update("Edge ", my_to_string(edge), " intersection ", at.to_string(0), "which is a new vertex at ", index);

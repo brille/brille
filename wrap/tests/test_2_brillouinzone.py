@@ -171,7 +171,7 @@ class BrillouinZone(unittest.TestCase):
         X, Y, Z = np.meshgrid(x, x, 0)
         Q = np.stack((X.flatten(), Y.flatten(), Z.flatten()), axis=-1)
         Qin = bz.isinside(Q)
-        B = lat.reciprocal_space_vectors
+        B = lat.reciprocal_vectors
         X = np.stack([np.matmul(B, v) for v in Q[Qin, :]])
         # plot_2d_points(X)
 
@@ -246,7 +246,7 @@ class BrillouinZone(unittest.TestCase):
                 ang = lambda: np.pi / 3 * (1 + np.random.rand())
                 a, b, c, al, be, ga = 5, 10, 15, ang(), ang(), ang()
 
-            lat = s.Lattice([a, b, c], [al, be, ga], spacegroup)
+            lat = s.Lattice([a, b, c], [al, be, ga], spacegroup.hall_symbol)
 
             # print("Hall ", i, " ", dlat)
             # print(spacegroup,pointgroup)
@@ -267,7 +267,7 @@ class BrillouinZone(unittest.TestCase):
                 errored_spg.append(spacegroup)
                 errored_ptg.append(pointgroup)
                 errored_lat.append(lat)
-                errored_arg.append(err.args)
+                errored_arg.append(err.args[0])
 
         if failed > 0:
             print("\nFailed to find irreducible Brillouin zone for", failed, "out of", tested, "(max 530) Hall groups")

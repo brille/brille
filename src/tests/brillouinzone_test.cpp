@@ -371,7 +371,7 @@ TEST_CASE("No irreducible Brillouin zone for inconsistent parameters and symmetr
   double a{3.5}, c{12.9}, alpha{90}, gamma{120};
   std::string spacegroup = "P 4";
   auto lat = Direct<double>({a,a,c}, {alpha,alpha,gamma}, spacegroup);
-  REQUIRE_THROWS_WITH( BrillouinZone(lat), "Failed to find an irreducible Brillouin zone.");
+  REQUIRE_THROWS( BrillouinZone(lat));
 }
 
 TEST_CASE("Nb irreducible Brillouin Zone", "[bz_]"){

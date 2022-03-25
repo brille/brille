@@ -42,7 +42,7 @@ bool have_volume(const bArray<double> & p, const double ftol, const int tol){
 }
 
 bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool special_mirrors, const bool sort_by_length, const bool sort_one_sym){
-//  const int approx_tolerance{1000};
+  debug_update("Starting from first Brillouin zone\n", _first.python_string());
   std::string pmsg = "BrillouinZone::wedge_brute_force(";
   if (special_2_folds) pmsg += "2-folds";
   if (special_2_folds && special_mirrors) pmsg += ",";
@@ -137,8 +137,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       if (norm(cross(eis, nrm)).is(brille::cmp::eq, 0., float_tolerance, approx_tolerance).count() == 1){
         // keep any special points beyond the bounding plane
         keep = dot(nrm, special).is(brille::cmp::ge, 0., float_tolerance, approx_tolerance);
-//        debug_update("Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n",special.to_string(),keep.to_string());
-        debug_update("1 Keeping special points with",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
+        verbose_update("1 Keeping special points with",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
         special = special.extract(keep);
         debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
         sym_unused[i] = false;
@@ -157,7 +156,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       nrm /= norm(nrm);
       // keep any special points beyond the bounding plane
       keep = dot(nrm, special).is(brille::cmp::ge, 0., float_tolerance, approx_tolerance);
-      debug_update("Keeping special (LVec) points p, with (LVec)",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
+      verbose_update("Keeping special (LVec) points p, with (LVec)",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
       special = special.extract(keep);
       debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
       sym_unused[i] = false;
@@ -178,7 +177,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       keep = dot(nrm, special).is(brille::cmp::ge, 0., float_tolerance, approx_tolerance);
     }
     if (keep.count() > 2 && have_volume(special.extract(keep), float_tolerance, approx_tolerance)){
-      debug_update("3 Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
+      verbose_update("3 Keeping special points with ",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
       special = special.extract(keep);
       debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
       sym_unused[i] = false;
@@ -204,7 +203,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
         one_type.push_back(k);
         unfound[k] = false;
       }
-      debug_update("Point equivalent to ",j," for symmetry ",i,":",one_type);
+      verbose_update("Point equivalent to ",j," for symmetry ",i,":",one_type);
       // sort the equivalent points by their relative order for this operation
       // such that Rⁱj ≡ type_order[i]
       type_order.clear();
@@ -333,7 +332,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
               // We need at least three points (plus Γ) to define a polyhedron.
               // Also skip the extraction if we are keeping all points
               if (keep_count > 2 && keep_count < keep.size(0)){
-                debug_update("Keeping special points (keep, h, k, l):\n",cat(1, 1.0 * keep, special).to_string());
+                verbose_update("Keeping special points (keep, h, k, l):\n",cat(1, 1.0 * keep, special).to_string());
                 special = special.extract(keep);
                 debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
                 sym_unused[i]=false;
