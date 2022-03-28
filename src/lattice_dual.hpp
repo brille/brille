@@ -328,6 +328,15 @@ public:
   [[nodiscard]] PointSymmetry pointgroup_symmetry() const {return _point;}
   [[nodiscard]] Basis basis() const {return _basis;}
 
+  [[nodiscard]] matrix_t vectors(const LengthUnit lu) const {
+    switch (lu){
+      case LengthUnit::angstrom: return _real_vectors;
+      case LengthUnit::inverse_angstrom: return _reciprocal_vectors;
+      default:
+        throw std::logic_error("Not implemented length unit");
+    }
+  }
+
   [[nodiscard]] matrix_t metric(const LengthUnit lu) const {
     switch(lu){
       case LengthUnit::angstrom: return _real_metric;
@@ -504,6 +513,9 @@ public:
       // matrix Aₚ from the standard basis column-vector matrix Aₛ by
       // Aₚ = Aₛ P.
       // The PrimitiveTransform object contains 6*P (so that it's integer valued)
+//      auto P6 = P.get_6P();
+//      std::array<T, 9> tP;
+//      std::transform(P6.begin(), P6.end(), tP.begin(), [](const auto & x){return static_cast<T>(x)/T(6);});
       auto pv = linear_algebra::mul_mat_mat(_real_vectors, P.get_6P());
       for (auto & x: pv) x /= T(6);
       // calculating the new metric tensor could be done from _real_vectors, but

@@ -48,17 +48,19 @@ namespace brille::polyhedron{
 //    template<class T, template<class> class A, std::enable_if_t<isArray<T,A>>* = nullptr> // this worked before moving isArray into brille::lattice::
 //    template<class T, template<class> class A, std::enable_if_t<isArray<T,A>>* = nullptr> // doesn't work
     template<class T, template<class> class A> // hopefully doesn't capture anything non-brille::Array based
-    explicit Faces(const A<T> & vertices){
-      auto unique = vertices.is_unique();
+    explicit Faces(const A<T> & vertices, const T Ttol=T(0), const int tol=1){
+      debug_update("Find convex hull of points\n", get_xyz(vertices).to_string());
+      auto unique = vertices.is_unique(Ttol, tol);
       auto unique_vertices = vertices.extract(unique);
-      auto[a, b, c] = find_convex_hull_planes(unique_vertices);
-      auto fpv = find_planes_containing_point(a, b, c, unique_vertices);
+      auto[a, b, c] = find_convex_hull_planes(unique_vertices, Ttol, tol);
+      auto fpv = find_planes_containing_point(a, b, c, unique_vertices, Ttol, tol);
       auto max = std::transform_reduce(fpv.begin(), fpv.end(), 0u, [](const auto & x, const auto & y){return x > y ? x : y;}, [](const auto & z){return z.size();});
       if (max > 2u) {
         _faces = polygon_faces(a, b, c, fpv, unique_vertices);
+        debug_update("First-pass faces:\n", _faces);
         if (polygon_face_vertex_purge(unique_vertices, _faces)) {
           debug_update("Some vertices purged. Now vertices\nnp.array(\n",
-                       unique_vertices.to_string(), "),\n", _faces);
+                       get_xyz(unique_vertices).to_string(), "),\n", _faces);
           // the _faces vectors point into the smaller unique_vertices, so we
           // need to find *an* equivalent vertex in vertices for each retained
           // vertex in unique_vertices
@@ -84,7 +86,7 @@ namespace brille::polyhedron{
       std::tie(v, _faces) = remove_duplicate_points_and_update_face_indexing(v, _faces);
       _faces = polygon_faces(_faces, v);
       if (polygon_face_vertex_purge(v, _faces)){
-        debug_update("Some vertices purged. Now vertices\nnp.array(\n", v.to_string(), "),\n", _faces);
+        debug_update("Some vertices purged. Now vertices\nnp.array(\n", get_xyz(v).to_string(), "),\n", _faces);
         // the _faces vectors point into the smaller unique_vertices, so we
         // need to find *an* equivalent vertex in vertices for each retained
         // vertex in v
@@ -379,7 +381,7 @@ namespace brille::polyhedron{
     [[nodiscard]] std::enable_if_t <isArray<T,A> &&  isArray<R,B>, std::tuple<A<T>, Faces>>
     one_cut(const A<T>& vin, const B<R>& a, const B<R>& b, const B<R>& c, const R Rtol=R(0), const int tol=1) const {
       assert(a.size(0) == b.size(0) && a.size(0) == c.size(0) && a.size(0) == 1);
-      verbose_update("plane passing through\nnp.array(\n", get_xyz(cat(0, a, b, c)).to_string(),")\n",
+      debug_update("plane passing through\nnp.array(\n", get_xyz(cat(0, a, b, c)).to_string(),")\n",
                      "(rlu) np.array(\n", cat(0, a, b, c).to_string(),")\n",
                      "with (rlu) normal ",three_point_normal(a,b,c).to_string());
 
@@ -390,7 +392,7 @@ namespace brille::polyhedron{
 //      verbose_update("keep ", keep, " of vertices\n", vin.to_string());
       if (std::find(keep.begin(), keep.end(), false) == keep.end()) return std::make_tuple(vin, *this);
       if (std::find(keep.begin(), keep.end(), true) == keep.end()) return std::make_tuple(vin, Faces());
-      verbose_update("keeping vertices ", keep, " of ", vin.to_string());
+      debug_update("keeping vertices ", keep, " of ", vin.to_string());
       auto edges_per_face = this->edges_per_face();
       auto cut_edges = keep_to_cut_edge_list(keep, edges_per_face);
       auto intersections = valid_edge_plane_intersections(a, b, c, vin, cut_edges);
@@ -402,7 +404,7 @@ namespace brille::polyhedron{
       for (auto [first, second, edge, at]: intersections){
         auto index = v.first(cmp::eq, at, Rtol, Rtol, tol); // == v.size(0) if not found)
         if (index < keep.size()) {
-          verbose_update("Edge ", my_to_string(edge), " intersection ", at.to_string(0), "which is pre-existing vertex ", index, ": ", v.view(index).to_string(0));
+          debug_update("Edge ", my_to_string(edge), " intersection ", at.to_string(0), " which is pre-existing vertex ", index, ": ", v.view(index).to_string(0));
           // ensure existing vertices which are 'cut' because they're on the plane are retained
           keep[index] = true;
         }
@@ -411,7 +413,7 @@ namespace brille::polyhedron{
           // intersect it at *their* intersection point, which was a pre-existing vertex
           std::string msg =  "Duplicate intersection point for edge ";
           msg += my_to_string(edge) + " of\nnp.array(\n";
-          msg += get_xyz(v).to_string() +  "),\n" +  my_to_string(f) + "\n";
+          msg += get_xyz(v).to_string() +  "),\n" +  lists_to_string(f) + "\n";
           msg += "intersection " + get_xyz(at).to_string(0);
           msg += " matches at index " + std::to_string(index);
           msg += "\n\nor in rlu:\nnp.array(\n" + v.to_string() + "),\n";
@@ -427,7 +429,7 @@ namespace brille::polyhedron{
           throw std::logic_error(msg);
         }
         if (index == v.size(0)) {
-          verbose_update("Edge ", my_to_string(edge), " intersection ", at.to_string(0), "which is a new vertex at ", index);
+//          debug_update("Edge ", my_to_string(edge), " intersection ", at.to_string(0), " which is a new vertex at ", index);
           v.append(0, at);
           ++vertex_count;
         }
@@ -436,7 +438,7 @@ namespace brille::polyhedron{
         utils::add_if_missing(new_face, index);
 
       }
-      verbose_update("new face: ", new_face);
+//      debug_update("new face: ", new_face);
       verbose_update_if(new_face.size()," with vertices \n", v.extract(new_face).to_string());
       // add the new face to the list of faces, if it is not present in the *input* faces
       // this might need to be more complex, we want to avoid doubling a face *or* partial face, but new_face has different indexing than the original
@@ -449,9 +451,9 @@ namespace brille::polyhedron{
       if (std::find(keep.begin(), keep.end(), false) == keep.end()) return std::make_tuple(vin, *this);
       // extend to cover the newly found vertices
       for (ind_t z=0; z<vertex_count; ++z) keep.push_back(true);
-      verbose_update("keeping vertices ", keep);
+//      debug_update("keeping vertices ", keep);
 
-      verbose_update("np.array(", get_xyz(v).to_string(), ")\n,", f);
+//      debug_update("np.array(", get_xyz(v).to_string(), ")\n,", f);
 
       // we *should* not sort faces again since we sorted the new face and inserted
       // any new vertices in the right spot already.
@@ -460,7 +462,7 @@ namespace brille::polyhedron{
       // vertex partially along an existing edge
       f = remove_middle_colinear_points_from_faces(v, f, Rtol, tol);
 
-      verbose_update("np.array(", get_xyz(v).to_string(), ")\n,", f);
+//      debug_update("np.array(", get_xyz(v).to_string(), ")\n,", f);
 
       // remove any faces without three vertices
       f.erase(std::remove_if(f.begin(), f.end(), [](const auto & face){return unique(face).size() < 3;}), f.end());
@@ -479,11 +481,11 @@ namespace brille::polyhedron{
       assert(a.size(0) == b.size(0) && b.size(0) == c.size(0));
       auto ov = (T(1) * v).decouple();
       Faces of(*this);
+      debug_update("Start cutting with ", a.size(0), " planes\nnp.array(", get_xyz(ov).to_string(),"),", of.python_string());
       for (ind_t i=0; i < a.size(0); ++i){
-        verbose_update("Start of cut ", i, " of ", a.size(0), "\nnp.array(", get_xyz(ov).to_string(),"),", of.python_string());
         std::tie(ov, of) = of.one_cut(ov, a.view(i), b.view(i), c.view(i), Rtol, tol);
         if (approx_float::scalar(of.volume(ov), R(0), Rtol, Rtol, tol)) break;
-//        verbose_update("After cut ", i, "\nnp.array(", ov.to_string(),"),", of.python_string());
+        debug_update("After cut ", i, "\nnp.array(", get_xyz(ov).to_string(),"),", of.python_string());
       }
       return std::make_tuple(ov, of);
     }

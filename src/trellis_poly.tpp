@@ -474,8 +474,17 @@ PolyTrellis<T,R,S,A>::part_two(
     case NodeType::cube:
     {
       // we already ensured we don't need to worry about Γ if node_is_cube is true
-      std::array<ind_t,8> cube_vert_idx;
-      for (size_t j=0; j<8u; ++j) cube_vert_idx[j] = node_index_map[i][j];
+      std::array<ind_t,8> fvi;
+      for (size_t j=0; j<8u; ++j) fvi[j] = node_index_map[i][j];
+      // FIXME trellis_node_faces and CubeNode do not agree on vertex ordering!
+      // CubeNode requires: [0,0,0], [1,0,0], [1,1,0], [0,1,0], [1,0,1], [0,0,1], [0,1,1], [1,1,1]
+      //     faces assumes: [0,0,0], [0,1,0], [0,1,1], [0,0,1], [1,0,0], [1,1,0], [1,1,1], [1,0,1]
+      // The Faces object has its vertices ordered to form a valid cube polyhedron via
+      //    [3,0,4,7], [3,2,1,0], [0,1,5,4], [3,7,6,2], [7,4,5,6], [2,6,5,1]
+      // and then the unique indexes are extracted in order [3,0,4,7,2,1,5,6] before being mapped into node_index_map
+      // In the CubeNode vertex order indexing scheme this is [5,0,1,4,6,3,2,7] which requires the permutation
+      // [1,2,6,5,3,0,4,7] to put the vertices in the 'correct' order:
+      std::array<ind_t,8> cube_vert_idx{{fvi[1], fvi[2], fvi[6], fvi[5], fvi[3], fvi[0], fvi[4], fvi[7]}};
       nodes_.set(i, CubeNode(cube_vert_idx));
     }
     break;

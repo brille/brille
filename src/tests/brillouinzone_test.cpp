@@ -385,3 +385,98 @@ TEST_CASE("Nb irreducible Brillouin Zone", "[bz_]"){
   auto mult = bz.get_pointgroup_symmetry().size();
   REQUIRE(irbz.volume() == Approx(fbz.volume() / mult));
 }
+
+
+TEST_CASE("From python tests of all Hall symbols","[bz_]"){
+  auto run_test = [](const std::string & hall) {
+    auto lat = Direct<double>({5, 10, 15}, {90, 90, 90}, hall);
+    BrillouinZone bz(lat);
+    auto fbz = bz.get_polyhedron();
+    auto irbz = bz.get_ir_polyhedron();
+    auto mult = bz.get_pointgroup_symmetry().size();
+    REQUIRE(irbz.volume() == Approx(fbz.volume() / mult));
+  };
+  // too-precise tolerances cause Convex Hull errors when the IR wedge is doubled
+  // due to two sets of three on-face points giving normals (x, y, +ε) and (x, y, -ε)
+  //
+  SECTION("I 2 2"){run_test("I 2 2");}
+  // lack of tolerance control in Poly::operator+ means we can identify co-planar faces
+  // but can not do anything about it. This *could* be improved at some point?
+  SECTION("C 2c 2"){run_test("C 2c 2");}
+  SECTION("C 2 2"){run_test("C 2 2");}
+  SECTION("F 2 2"){run_test("F 2 2");}
+}
+
+TEST_CASE("Primitive trigonal from python test of all Hall symbols", "[bz_]"){
+  auto run_test = [](const std::string & hall) {
+    auto lat = Direct<double>({5, 5, 5}, {60, 60, 60}, hall);
+    BrillouinZone bz(lat);
+    auto fbz = bz.get_polyhedron();
+    auto irbz = bz.get_ir_polyhedron();
+    auto mult = bz.get_pointgroup_symmetry().size();
+    REQUIRE(irbz.volume() == Approx(fbz.volume() / mult));
+  };
+  // Failed previously due to attempting to use to points co-linear with the stationary axis to define
+  // the wedge planes, which should have given 0/0 errors but did not due to rounding errors.
+  // Now a check is made that the points are not parallel to the stationary axis
+  SECTION("Hall -P 3*"){run_test("-P 3*");}
+  // All wedge-finding attempts used the 2-fold axes first which produced bad results due to [UNKNOWN REASON]
+  // compared to before. (Sorting instabilities caused by changes in the compiled binary? :-/)
+  // Two new attempts are made after the other 1-6 have failed which turn off the special handling of 2-fold axes
+  // *and* sort the operations so that 3+-fold operators are handled first.
+  SECTION("Hall P 3* 2"){run_test("P 3* 2");}
+}
+
+TEST_CASE("Monoclinic from python test of all Hall symbols", "[bz_]"){
+  auto run_test = [](const std::string & hall) {
+    auto lat = Direct<double>({5, 10.0000000000000003, 5}, {90, 106.163894819260035, 90}, hall);
+    BrillouinZone bz(lat);
+    auto fbz = bz.get_polyhedron();
+    auto irbz = bz.get_ir_polyhedron();
+    auto mult = bz.get_pointgroup_symmetry().size();
+    REQUIRE(irbz.volume() == Approx(fbz.volume() / mult));
+  };
+  SECTION("Hall -C 2yc"){run_test("-C 2yc");}
+
+}
+
+
+TEST_CASE("Rhombohedral from python test of all Hall symbols", "[bz_]"){
+  auto run_test = [](const std::string & hall) {
+    auto lat = Direct<double>({5, 5, 10}, {90, 90, 120}, hall);
+    BrillouinZone bz(lat);
+    auto fbz = bz.get_polyhedron();
+    auto irbz = bz.get_ir_polyhedron();
+    auto mult = bz.get_pointgroup_symmetry().size();
+    REQUIRE(irbz.volume() == Approx(fbz.volume() / mult));
+  };
+  SECTION("Hall -R 3"){run_test("-R 3");}
+}
+
+
+TEST_CASE("Aflow lattices from python test", "[bz_][aflow]"){
+  auto run_test = [](const std::array<double,3>& len,
+                     const std::array<double,3>& ang,
+                     const std::string & hall,
+                     const double tol=1e-10
+                     ){
+    auto lat = Direct(len, ang, hall);
+    info_update(lat.to_verbose_string());
+    info_update(lat.real_basis_vectors());
+    info_update(lat.reciprocal_basis_vectors());
+    auto ac = approx_float::Config(1000, 1e-10, tol);
+    BrillouinZone bz(lat, ac);
+    auto fbz = bz.get_polyhedron();
+    auto irb = bz.get_ir_polyhedron();
+    auto mlt = bz.get_pointgroup_symmetry().size();
+    REQUIRE(irb.volume() == Approx(fbz.volume() / mlt));
+  };
+  // 579 of 582 passed the python tests, these three did not
+  /* This R 3 lattice requires very lax tolerances -- because the primitive lattice is nearly cubic!*/
+  SECTION("Hall R 3"){run_test({6.885854708699999, 6.885854708699999, 8.4334670046}, {90, 90, 120}, "R 3", 1e-9);}
+  // replace c by sqrt(3)/sqrt(2) * a
+//  SECTION("Hall R 3"){run_test({6.885854708699999, 6.885854708699999, 8.433415239627948}, {90, 90, 120}, "R 3", 1e-9);}
+  /* These body-centered cubic lattices require more-thorough Convex hull creation */
+  SECTION("Hall I -4 2 3, 1"){run_test({8.866400000000002, 8.866400000000002, 8.866400000000002}, {90, 90, 90}, "I -4 2 3");}
+  SECTION("Hall I -4 2 3, 2"){run_test({8.911, 8.911, 8.911}, {90, 90, 90}, "I -4 2 3");}
+}

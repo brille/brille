@@ -85,6 +85,11 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   }
   ps.permute(perm); // ps now sorted
 
+  debug_update("Sorted symmetry operations:");
+  for (size_t i=0; i<ps.size(); ++i){
+    debug_update(ps.get(i), " ", ps.axis(i), " ", ps.isometry(i));
+  }
+
   bArray<bool> keep;
 
   // Keep track of *which* normals go into determining the irreducible wedge:
@@ -113,9 +118,10 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
   if (special_2_folds) for (size_t i=0; i<ps.size(); ++i) if (ps.isometry(i)==2){
     vec.set(0, ps.axis(i));
     // First check if this stationary axis is along a reciprocal space vector
-    is_nth_ei = norm(cross(eis, vec.star())).is(brille::cmp::eq, 0., approx_tolerance).first();
+    is_nth_ei = norm(cross(eis, vec.star())).is(brille::cmp::eq, 0., float_tolerance, approx_tolerance).first();
     if (is_nth_ei < 9 /* This is less than great practice */){
       debug_update("2-fold axis ",i," is ei* No. ",is_nth_ei);
+      debug_update(ps.get(i)," along ",ps.axis(i), " is ", vec.star(),"  == ", eis.to_string(is_nth_ei));
       ind_t e1, e2;
       switch (is_nth_ei){
         case 0: /* (100)⋆ */ e1=2; e2=0; /* n = (001)×(100)⋆ */ break;
@@ -134,7 +140,8 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       // reciprocal space vector.
       nrm.set(0, cross(reis.view(e1).star(), eis.view(e2)));
       nrm /= norm(nrm);
-      if (norm(cross(eis, nrm)).is(brille::cmp::eq, 0., float_tolerance, approx_tolerance).count() == 1){
+      auto n_count = norm(cross(eis, nrm)).is(brille::cmp::eq, 0., float_tolerance, approx_tolerance).count();
+      if (n_count == 1){
         // keep any special points beyond the bounding plane
         keep = dot(nrm, special).is(brille::cmp::ge, 0., float_tolerance, approx_tolerance);
         verbose_update("1 Keeping special points with",nrm.to_string(0)," dot p >= 0:\n",cat(1, special ,1.0 * keep).to_string());
@@ -142,6 +149,8 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
         debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
         sym_unused[i] = false;
         cutting_normals.set(n_cut++, nrm);
+      } else {
+        debug_update("can not be used here since there are ", n_count, " matches to its normal, ",nrm.to_string(0)," in eis");
       }
     }
     // Stationary axis along real space basis vector
@@ -198,12 +207,14 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       one_type.clear();
       one_type.push_back(j);
       unfound[j] = false;
-      for (ind_t k=j+1; k<special.size(0); ++k)
-      if (unfound[k] && special.match(k, j, transpose(ps.get(i)), -ps.order(i))){ // -order checks all possible rotations
-        one_type.push_back(k);
-        unfound[k] = false;
+      for (ind_t k=j+1; k<special.size(0); ++k) {
+        if (unfound[k] && special.match(k, j, transpose(ps.get(i)), -ps.order(i), float_tolerance,
+                                        approx_tolerance)) { // -order checks all possible rotations
+          one_type.push_back(k);
+          unfound[k] = false;
+        }
       }
-      verbose_update("Point equivalent to ",j," for symmetry ",i,":",one_type);
+      debug_update("Points equivalent to ",j," for symmetry ",i,":",one_type);
       // sort the equivalent points by their relative order for this operation
       // such that Rⁱj ≡ type_order[i]
       type_order.clear();
@@ -211,7 +222,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       type_unfound.clear(); type_unfound.insert(type_unfound.begin(), one_type.size(), true);
       for (int o=0; o<ps.order(i); ++o)
       for (ind_t k=0; k<one_type.size(); ++k) if (type_unfound[k]){
-        if (special.match(one_type[k], j, transpose(ps.get(i)), o)){
+        if (special.match(one_type[k], j, transpose(ps.get(i)), o, float_tolerance, approx_tolerance)){
         // if (special.match(one_type[k], j, transpose(ps.get_proper(i)), o)){
           type_order[o] = one_type[k];
           type_unfound[k] = false;
@@ -231,6 +242,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
         }
       );
     }
+    debug_update("one_sym planes:\nnp.array(",get_xyz(special).to_string(),"),",one_sym);
     size_t keep_count;
 //    LVec<double> pt0(_outer, 1u), pt1(_outer, 1u);
 //    for (size_t s=0; s<one_sym.size(); ++s) if (sym_unused[i]/*always true?*/){
@@ -288,60 +300,73 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
 //        }
 //      }
 //    }
-    for (auto & s : one_sym) if (sym_unused[i]/*always true?*/){
+    for (auto & s : one_sym) {
+      if (sym_unused[i]/*always true?*/) {
         // we need at least two equivalent points, ideally there will be the same number as the order
-        if (s.size() > static_cast<size_t>(std::count(s.begin(), s.end(), special.size(0))+1)){
+        if (s.size() > static_cast<size_t>(std::count(s.begin(), s.end(), special.size(0)) + 1)) {
           type_order = s;
-          debug_update("Highest-multiplicity distinct point type:",s);
+          debug_update("Highest-multiplicity distinct point type:", s);
           // grab the rotation stationary axis
           vec.set(0, ps.axis(i));
-          for (size_t j=0, k=1; j<s.size(); ++j, k=(j+1)%s.size())
-            if (sym_unused[i] && s[j]<special.size(0) && s[k]<special.size(0)){
-              if (ps.order(i)>2){
+          auto qvec = vec.star();
+          auto not_parallel = [&](const LVec<double> &x) {
+            return dot(x, qvec).abs().is(brille::cmp::neq, norm(x) * norm(qvec), float_tolerance, float_tolerance,
+                                         approx_tolerance).all();
+          };
+          for (size_t j = 0, k = 1; j < s.size(); ++j, k = (j + 1) % s.size()) {
+            if (sym_unused[i] && s[j] < special.size(0) && s[k] < special.size(0)) {
+              bool non_parallel = true;
+              if (ps.order(i) > 2) {
                 // hold the two special points in their own LVec<double> (!not <int>!)
                 const auto pt0{special.view(s[j])};
                 const auto pt1{special.view(s[k])};
+                non_parallel = not_parallel(pt0) && not_parallel(pt1);
                 // we have two plane normals to worry about:
-                debug_update("Stationary vector",vec.to_string(0)," and special points",pt0.to_string(0)," and",pt1.to_string(0));
+                debug_update("Stationary reciprocal vector", qvec.to_string(0), " and special points", pt0.to_string(0),
+                             " and", pt1.to_string(0));
                 // find both cross products, remembering that we want normals
                 // pointing *into* the wedge.
                 nrm.resize(2);
-                if ( dot(pt1, cross(vec.star(), pt0)).all(brille::cmp::lt, 0., float_tolerance, approx_tolerance) ){
+                if (dot(pt1, cross(qvec, pt0)).all(brille::cmp::lt, 0., float_tolerance, approx_tolerance)) {
                   // the rotation is left handed, so swap the special points
-                  nrm.set(0, cross(vec.star(), pt1));
-                  nrm.set(1, cross(pt0, vec.star()));
+                  nrm.set(0, cross(qvec, pt1));
+                  nrm.set(1, cross(pt0, qvec));
                 } else {
-                  nrm.set(0, cross(vec.star(), pt0));
-                  nrm.set(1, cross(pt1, vec.star()));
+                  nrm.set(0, cross(qvec, pt0));
+                  nrm.set(1, cross(pt1, qvec));
                 }
-                nrm /= norm(nrm);
                 debug_update("give normals:", nrm.to_string(0), " and", nrm.to_string(1));
                 // now check that all special points are inside of the wedge defined by the normals
               } else {
+                non_parallel = not_parallel(special.view(s[j]));
                 // order == 2, so only one normal to worry about:
-                nrm = cross(vec.star(), special.view(s[j]));
-                nrm /= norm(nrm);
+                nrm = cross(qvec, special.view(s[j]));
                 // make sure we don't remove all points out of the plane containing
                 // the rotation axis and the two special points
                 if (dot(nrm, special).is(brille::cmp::gt, 0., float_tolerance, approx_tolerance).count() == 0)
                   nrm *= -1; // switch the cross product
               }
-              // check to make sure that using these normals do not remove all but a plane of points
-              keep = keep_if(nrm, special, float_tolerance, approx_tolerance);
-              keep_count = keep.count();
-              // We need at least three points (plus Γ) to define a polyhedron.
-              // Also skip the extraction if we are keeping all points
-              if (keep_count > 2 && keep_count < keep.size(0)){
-                verbose_update("Keeping special points (keep, h, k, l):\n",cat(1, 1.0 * keep, special).to_string());
-                special = special.extract(keep);
-                debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
-                sym_unused[i]=false;
-                for (ind_t nc=0; nc<nrm.size(0); ++nc)
-                  cutting_normals.set(n_cut++, nrm.view(nc));
+              if (non_parallel) {
+                nrm /= norm(nrm);
+                // check to make sure that using these normals do not remove all but a plane of points
+                keep = keep_if(nrm, special, float_tolerance, approx_tolerance);
+                keep_count = keep.count();
+                // We need at least three points (plus Γ) to define a polyhedron.
+                // Also skip the extraction if we are keeping all points
+                if (keep_count > 2 && keep_count < keep.size(0)) {
+                  verbose_update("Keeping special points (keep, h, k, l):\n", cat(1, 1.0 * keep, special).to_string());
+                  special = special.extract(keep);
+                  debug_update("Retained special points\nnp.array(", get_xyz(special).to_string(), ")");
+                  sym_unused[i] = false;
+                  for (ind_t nc = 0; nc < nrm.size(0); ++nc)
+                    cutting_normals.set(n_cut++, nrm.view(nc));
+                }
               }
             }
+          }
         }
       }
+    }
   }
 
   // debug_update("Remaining special points\n", special.to_string());
@@ -391,8 +416,8 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
       auto gamma = bz_n.view(0) * 0.;
       for (ind_t i=0; i<bz_n.size(0); ++i){
         auto [a, b, c] = plane_points_from_normal(bz_n.view(i), gamma);
-        auto div = _irreducible.one_cut(a, b, c);
-        if (approx_float::scalar(div.volume(), goal_volume)){ // FIXME Add tolerances?
+        auto div = _irreducible.one_cut(a, b, c, float_tolerance, approx_tolerance);
+        if (approx_float::scalar(div.volume(), goal_volume, float_tolerance, float_tolerance, approx_tolerance)){
           // set div to be the ir_polyhedron
           _irreducible = div;
           // add the new normal to wedge normals list
@@ -403,7 +428,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
           break;
         }
       }
-      if (approx_float::scalar(_irreducible.volume(), ir_volume)){ // FIXME Add tolerances?
+      if (approx_float::scalar(_irreducible.volume(), ir_volume, float_tolerance, float_tolerance, approx_tolerance)){
         debug_update("Polyhedron volume still double expected.");
         bool proceed=true;
         // check for other dividing planes :/
@@ -411,8 +436,8 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
         for (ind_t i=0; proceed && i<bz_n.size(0)-1; ++i)
         for (ind_t j=i+1; proceed && j<bz_n.size(0); ++j){
           auto [a, b, c] = plane_points_from_normal(bz_n.cross(i, j), gamma);
-          auto div = _irreducible.one_cut(a, b, c);
-          if (approx_float::scalar(div.volume(), goal_volume)){ // FIXME Add tolerances?
+          auto div = _irreducible.one_cut(a, b, c, float_tolerance, approx_tolerance);
+          if (approx_float::scalar(div.volume(), goal_volume, float_tolerance, float_tolerance, approx_tolerance)){
             _irreducible = div;
             wg_n.append(0u, -bz_n.cross(i,j));
             this->set_ir_wedge_normals(wg_n);

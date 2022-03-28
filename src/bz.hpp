@@ -160,6 +160,7 @@ public:
     // set the irreducible wedge now as the search will do nothing.
     _irreducible = _first;
     if (wedge_search) {
+      info_update("Starting wedge search from ", _first.python_string());
       bool success{false};
       if (_outer.is_triclinic()) {
         success = !has_inversion || this->wedge_triclinic();
@@ -174,7 +175,11 @@ public:
             || this->wedge_brute_force(true, false)
             // handle non order(2) operations in decreasing order
             || this->wedge_brute_force(true, true, false)
-            || this->wedge_brute_force(true, false, true, false);
+            || this->wedge_brute_force(true, false, true, false)
+            // do not handle 2-folds or mirrors first; start with highest-order (non-inverting) operation
+            || this->wedge_brute_force(false, false, false)
+            // also do not sort list of equivalent remaining points when identifying the order>2 wedges
+            || this->wedge_brute_force(false, false, false, false);
         // other combinations of special_2_folds, special_mirrors,
         // and sort_by_length are possible but not necessarily useful.
       }
@@ -220,7 +225,7 @@ public:
       auto found = _irreducible.volume();
       if (approx_float::scalar(goal, 2.0 * found, float_tolerance,
                                float_tolerance, approx_tolerance)) {
-        info_update("Apply mirroring strategy since ", goal, " ~= 2* ", found);
+        debug_update("Apply mirroring strategy since ", goal, " ~= 2* ", found);
         /*The current Polyhedron at this->ir_polyhedron has half the anticipated
         volume. We can 'fix' this the easy way by mirroring the Polyhedron and
         gluing it onto the current version; the resultant polyhedron will come
@@ -245,7 +250,7 @@ public:
         // share an edge. Until this is fixed cross our fingers and hope that we
         // created a convex polyhedron such that the convex hull of its points
         // gives the same polyhedron back:
-        poly_t mvu_convex_hull(min_vert_union->vertices());
+        poly_t mvu_convex_hull(min_vert_union->vertices(), float_tolerance, approx_tolerance);
         if (approx_float::scalar(goal, mvu_convex_hull.volume(),
                                  float_tolerance, float_tolerance,
                                  approx_tolerance)) {

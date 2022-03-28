@@ -72,11 +72,10 @@ class GammaTest(unittest.TestCase):
         # load numpy arrays from the compressed binary pack
         nacl = getLoad(np.load, 'test_5_gamma.npz')
         # construct the NaCl direct lattice
-        basis_vec = nacl['basis_vectors']
-        atom_pos = nacl['atom_positions']
-        atom_idx = nacl['atom_index']
-        lat = s.Lattice(basis_vec, atom_pos, atom_idx, 'P1')  # FIXME this construction method has been removed
-        lat.spacegroup = s.Symmetry(nacl['spacegroup_mat'], nacl['spacegroup_vec'])
+        bas = s.Basis(nacl['atom_positions'], nacl['atom_index']);
+        sym = s.Symmetry(nacl['spacegroup_mat'], nacl['spacegroup_vec'])
+        lat = s.Lattice(nacl['basis_vectors'], sym, bas)
+
         # use it to construct an irreducible Brillouin zone
         bz = s.BrillouinZone(lat)
         # and use that to produce a hybrid interpolation grid
@@ -87,17 +86,20 @@ class GammaTest(unittest.TestCase):
 
         # verify the stored grid points to ensure we have the same irreducible
         # wedge and grid
-        self.assertTrue(np.allclose(grid.rlu, nacl['grid_rlu']))
+        # Though the points could be permuted:
+        perm = np.hstack([np.argwhere(np.all(np.isclose(nacl['grid_rlu'], x), axis=1)) for x in grid.rlu]).flatten()
+        self.assertTrue(np.allclose(nacl['grid_rlu'][perm], grid.rlu))
+
         # insert the Euphonic-derived eigenvalues and eigenvectors for the grid
         # points, which are used in the interpolation
         grid.fill(
-            nacl['grid_values'], nacl['grid_values_elements'], nacl['grid_values_weights'],
-            nacl['grid_vectors'], nacl['grid_vectors_elements'], nacl['grid_vectors_weights'],
+            nacl['grid_values'][perm], nacl['grid_values_elements'], nacl['grid_values_weights'],
+            nacl['grid_vectors'][perm], nacl['grid_vectors_elements'], nacl['grid_vectors_weights'],
             bool(nacl['grid_sort']))
 
         # the fourth grid point is inside of the irreducible volume, which
         # ensures we avoid degeneracies
-        q_ir = grid.rlu[4:5]
+        q_ir = nacl['grid_rlu'][4:5]
         # find all symmetry equivalent q within the first Brillouin zone by
         # applying each pointgroup operator to q_ir to find q_nu = R^T_nu q_ir
         q_nu = np.einsum('xji,aj->xi', lat.pointgroup.W, q_ir)
@@ -124,7 +126,7 @@ class GammaTest(unittest.TestCase):
 
         # convert the eigenvalues into the same cartesian coordinate system
         # used by Euphonic
-        br_vec = np.einsum('ba,ijkb->ijka', basis_vec, br_vec)
+        br_vec = np.einsum('ba,ijkb->ijka', nacl['basis_vectors'], br_vec)
         # load the Euphonic calculated eigenvectors
         eu_vec = nacl['euphonic_vectors']
         # The 'interpolated' eigenvectors and the Euphonic eigenvectors should

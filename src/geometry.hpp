@@ -143,44 +143,10 @@ namespace brille {
 //      return pseudo_orient3d(a.xyz(), b.xyz(), c.xyz(), d.xyz());
 //    }
 
-//  template<class T, template<class> class A>
-//  std::enable_if_t<isBareArray<T,A>, std::tuple<A<T>, A<T>>>
-//  plane_points_from_normal(const A<T> & n, const A<T> & p) {
-//    A<T> a(n.shape(), T(1)), b;
-//    auto n_norm = norm(n); // this *should* be all 1, but maybe it's not
-//    auto nn = n / n_norm;
-//    auto a_dot_n = dot(a, nn) * nn;
-//    auto is_n = a_dot_n.row_is(brille::cmp::eq, nn * norm(a));
-//    if (is_n.any()) {
-//      for (ind_t i = 0; i < a.size(0); ++i)
-//        if (is_n.val(i)) {
-//          // set to (2, 0, 1) so that subtracting (1, 1, 1) gives (1, -1, 0)
-//          a[{i, 0}] = T(2);
-//          a[{i, 1}] = T(0);
-//          for (ind_t j = 2; j < a.size(1); ++j) a[{i, j}] = T(1);
-//        }
-//    }
-//    a -= a_dot_n;
-//    a /= norm(a);
-//    b = cross(nn, a);  // so that the points (p, a, b) define a plane with normal n
-//    // the returned a and b should have the property (x - p) . n == 0
-//    return std::make_tuple(a + p, b + p);
-//  }
-//
-//  template<class T, template<class> class A>
-//  std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, A<T>>>
-//  plane_points_from_normal(const A<T> & n, const A<T> & p) {
-//    assert(n.same_lattice(p));
-//    auto [b, c] = plane_points_from_normal(n.xyz(), p.xyz());
-//    return std::make_tuple(A<T>::from_invA(p.lattice(), b), A<T>::from_invA(p.lattice(), c));
-//  }
-
   template<class T, template<class> class A>
-  std::enable_if_t<isArray<T,A>, std::tuple<A<T>, A<T>, A<T>>>
+  std::enable_if_t<isBareArray<T,A>, std::tuple<A<T>, A<T>, A<T>>>
   plane_points_from_normal(const A<T> & n, const A<T> & p) {
-    verbose_update("Find planes from, normals\n", n.to_string(), "points\n", p.to_string());
-    auto a = T(1) + T(0) * n;
-    auto b = T(0) * n;
+    A<T> a(n.shape(), T(1)), b;
     auto n_norm = norm(n); // this *should* be all 1, but maybe it's not
     auto nn = n / n_norm;
     auto a_dot_n = dot(a, nn) * nn;
@@ -197,63 +163,45 @@ namespace brille {
     a -= a_dot_n;
     a /= norm(a);
     b = cross(nn, a);  // so that the points (p, a, b) define a plane with normal n
-    // the returned a and b should have the property (x - p) . n == 0
+    // the returned a, b, c should have the property (x - p) . n == 0
     return std::make_tuple(p, a + p, b + p);
   }
 
-//  template<class T, template<class> class A>
-//  std::enable_if_t<isBareArray<T,A>, std::tuple<A<T>, A<T>, A<T>>>
-//  plane_points_from_normal(const A<T>& n, const A<T>& p){
-//    A<T> xhat({1u, 3u}, T(0)), yhat({1u, 3u}, T(0)), zhat({1u, 3u}, T(0));
-//    xhat[{0u, 0u}] = T(1);
-//    yhat[{0u, 1u}] = T(1);
-//    zhat[{0u, 2u}] = T(1);
-//    auto a = T(0) * p;
-//    auto b = T(0) * p;
-//    auto c = T(0) * p;
-//    for (ind_t i=0; i < n.size(0); ++i){
-//      auto nx = dot(xhat, n.view(i)).sum();
-//      auto ny = dot(yhat, n.view(i)).sum();
-//      auto nz = dot(zhat, n.view(i)).sum();
-//      auto np = dot(p.view(i), n.view(i)).sum();
-//      a[{i, 0u}] = nx ? np / nx : T(1);
-//      b[{i, 1u}] = ny ? np / ny : T(1);
-//      c[{i, 2u}] = nz ? np / nz : T(1);
-//      if (!nx && !ny && !nz) throw std::logic_error("Zero-length normal vectors not allowed");
-//      if (!nx && ny && nz) a.set(i, a.view(i) + b.view(i));
-//      if (nx && !ny && nz) b.set(i, b.view(i) + c.view(i));
-//      if (nx && ny && !nz) c.set(i, c.view(i) + a.view(i));
-//      if (!nx && !ny && nz) {
-//        a.set(i, a.view(i) + c.view(i));
-//        b.set(i, b.view(i) + c.view(i));
-//      }
-//      if (!nx && ny && !nz) {
-//        a.set(i, a.view(i) + b.view(i));
-//        c.set(i, c.view(i) + b.view(i));
-//      }
-//      if (nx && !ny && !nz) {
-//        b.set(i, b.view(i) + a.view(i));
-//        c.set(i, c.view(i) + a.view(i));
-//      }
-//      if (dot(three_point_normal(a.view(i), b.view(i), c.view(i)), n.view(i)).sum() < 0){
-//        auto t = T(1) * b.view(i);
-//        b.set(i, c.view(i));
-//        c.set(i, t.view(0));
-//      }
-//    }
-//    return std::make_tuple(a, b, c);
-//  }
+  template<class T, template<class> class A>
+  std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, A<T>, A<T>>>
+  plane_points_from_normal(const A<T> & n, const A<T> & p) {
+    assert(n.same_lattice(p));
+    auto [a_xyz, b_xyz, c_xyz] = plane_points_from_normal(n.xyz(), p.xyz());
+    return std::make_tuple(from_xyz_like(p, a_xyz), from_xyz_like(p, b_xyz), from_xyz_like(p, c_xyz));
+  }
 
+  /* This function must be specialised for lattice and non-lattice vectors since
+   * the coordinates of a lattice vector are likely-not orthogonal!
+   * */
 //  template<class T, template<class> class A>
-//  std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, A<T>, A<T>>>
-//  plane_points_from_normal(const A<T>& n, const A<T>& p){
-//    auto nxyz = n.xyz();
-//    auto pxyz = p.xyz();
-//    auto [a, b, c] = plane_points_from_normal(nxyz, pxyz);
-//    auto al = A<T>::from_invA(n.lattice(), a);
-//    auto bl = A<T>::from_invA(n.lattice(), b);
-//    auto cl = A<T>::from_invA(n.lattice(), c);
-//    return std::make_tuple(al, bl, cl);
+//  std::enable_if_t<isArray<T,A>, std::tuple<A<T>, A<T>, A<T>>>
+//  plane_points_from_normal(const A<T> & n, const A<T> & p) {
+//    verbose_update("Find planes from, normals\n", n.to_string(), "points\n", p.to_string());
+//    auto a = T(1) + T(0) * n;
+//    auto b = T(0) * n;
+//    auto n_norm = norm(n); // this *should* be all 1, but maybe it's not
+//    auto nn = n / n_norm;
+//    auto a_dot_n = dot(a, nn) * nn;
+//    auto is_n = a_dot_n.row_is(brille::cmp::eq, a); // FIXME add tolerances
+//    if (is_n.any()) {
+//      for (ind_t i = 0; i < a.size(0); ++i)
+//        if (is_n.val(i)) {
+//          // set to (2, 0, 1) so that subtracting (1, 1, 1) gives (1, -1, 0)
+//          a[{i, 0}] = T(2);
+//          a[{i, 1}] = T(0);
+//          for (ind_t j = 2; j < a.size(1); ++j) a[{i, j}] = T(1);
+//        }
+//    }
+//    a -= a_dot_n;
+//    a /= norm(a);
+//    b = cross(nn, a);  // so that the points (p, a, b) define a plane with normal n
+//    // the returned a and b should have the property (x - p) . n == 0
+//    return std::make_tuple(p, a + p, b + p);
 //  }
 
 
@@ -659,7 +607,7 @@ namespace brille {
 
   template<class T, template<class> class A>
   std::enable_if_t<isBareArray<T, A>, std::tuple<Array2<T>, Array2<T>, Array2<T>>>
-  find_convex_hull_planes(const A<T>& points){
+  find_convex_hull_planes(const A<T>& points, const T Ttol=T(0), const int tol=1){
     if (points.size(0) < 4)
       throw std::runtime_error("Not enough points to form a Convex Hull");
     auto bc = utils::binomial_coefficient(points.size(0), 3u);
@@ -693,14 +641,16 @@ namespace brille {
     a.resize(count);
     b.resize(count);
     c.resize(count);
-    auto u = n.is_unique();
+    auto u = n.is_unique(Ttol, tol);
+    verbose_update("Found 3-point bounding planes with normals\n", n.to_string());
+    verbose_update("Of which the unique normals are\n", n.extract(u).to_string());
     return std::make_tuple(a.extract(u), b.extract(u), c.extract(u));
   }
 
   template<class T, template<class> class A>
   std::enable_if_t<isLatVec<T,A>, std::tuple<A<T>, A<T>, A<T>>>
-  find_convex_hull_planes(const A<T>& points){
-    auto [a, b, c] = find_convex_hull_planes(points.xyz());
+  find_convex_hull_planes(const A<T>& points, const T Ttol=T(0), const int tol=1){
+    auto [a, b, c] = find_convex_hull_planes(points.xyz(), Ttol, tol);
     return std::make_tuple(from_xyz_like(points, a), from_xyz_like(points, b), from_xyz_like(points, c));
   }
 
@@ -730,7 +680,7 @@ namespace brille {
 //  }
   template<class T, template<class> class A>
   std::enable_if_t<isArray<T, A>, std::vector<std::vector<ind_t>>>
-  find_planes_containing_point(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& points){
+  find_planes_containing_point(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& points, const T Ttol=T(0), const int tol=1){
     std::vector<std::vector<ind_t>> result;
     result.reserve(points.size(0));
     for (ind_t i=0; i < points.size(0); ++i){
@@ -739,7 +689,7 @@ namespace brille {
       plane.reserve(a.size(0));
       auto vol = pseudo_orient3d(a, b, c, d);
       for (ind_t j=0; j < vol.size(); ++j) {
-        if (approx_float::scalar(vol[j], 0.)) { // FIXME add tolerances
+        if (approx_float::scalar(vol[j], T(0), Ttol, Ttol, tol)) {
           plane.push_back(j);
         }
       }

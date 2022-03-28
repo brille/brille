@@ -20,8 +20,13 @@ namespace brille::polyhedron{
   public:
     explicit Poly(): _vertices(), _faces() {}
     // Convex Hull constructors
-    explicit Poly(const vertex_t & vertices) : _vertices(vertices), _faces(vertices) {}
-    explicit Poly(vertex_t && vertices) : _vertices(vertices),  _faces(vertices) {}
+    explicit Poly(const vertex_t & vertices, T Ttol=T(0), int tol=1): _vertices(vertices), _faces(vertices, Ttol, tol) {
+      // This might be a bad idea, since we've been given a constant reference and might not want to make a copy
+      this->finish_convex_hull(Ttol, tol);
+    }
+    explicit Poly(vertex_t && vertices, T Ttol=T(0), int tol=1) : _vertices(vertices),  _faces(vertices, Ttol, tol) {
+      this->finish_convex_hull(Ttol, tol);
+    }
     // Unverified constructors
     Poly(const vertex_t & vertices, faces_t faces) : _vertices(vertices), _faces(std::move(faces)) {}
     Poly(vertex_t && vertices, faces_t && faces) : _vertices(vertices), _faces(std::move(faces)) {}
@@ -123,13 +128,14 @@ namespace brille::polyhedron{
             c = 0;
             // if neither are kept, this leaves behind a parting line. maybe we can handle this later?
           }
-          if (c > 2) {
-            info_update("With the vertices\nnp.array(\n", vertices.to_string(), "),\n", faces, "\n the faces ", a, " and ", b, " are coplanar");
-            std::string msg = "The faces " + std::to_string(i) + " and " + std::to_string(j);
-            msg += " contain " + std::to_string(c) + " common vertex indexes, which indicates that they are coplanar!";
-            throw std::runtime_error(msg);
-            // If this gets thrown we should really think about handling this
-          }
+//          if (c > 2) {
+//            info_update("With the vertices\nnp.array(\n", vertices.to_string(), "),\n", faces, "\n the faces ", a, " and ", b, " are coplanar");
+//            std::string msg = "The faces " + std::to_string(i) + " and " + std::to_string(j);
+//            msg += " contain " + std::to_string(c) + " common vertex indexes, which indicates that they are coplanar!";
+//            /* FIXME Handling this probably requires approximate vertex equivalency which can't be passed in with
+//             * operator+. Instead, rely on the Convex Hull operator to do its thing :/ */
+////            throw std::runtime_error(msg);
+//          }
         }
       }
       if (std::find(needed.begin(), needed.end(), false) != needed.end()){
@@ -273,6 +279,32 @@ namespace brille::polyhedron{
     [[nodiscard]] std::string python_string() const {
       return "np.array("+get_xyz(_vertices).to_string()+"),"+_faces.python_string();
     }
+  private:
+    void finish_convex_hull(const T, const int) {
+      // check for unused vertices and remove them
+      auto present = _faces.indexes(); // unordered list of _vertices indexes present/used
+      std::sort(present.begin(), present.end());
+      //
+      std::vector<ind_t> indexes(_vertices.size(0));
+      std::iota(indexes.begin(), indexes.end(), 0u);
+      // if all vertex indexes are in present, there's nothing to do
+      if (std::includes(present.begin(), present.end(), indexes.begin(), indexes.end())) return;
+
+      // make a map from old to new indexes, and an extraction list
+      std::vector<bool> keep(indexes.size(), false);
+      std::fill(indexes.begin(), indexes.end(), indexes.size());
+      ind_t kept{0};
+      for (const auto & x: present){
+        indexes[x] = kept++;
+        keep[indexes[x]] = true;
+      }
+      // update faces vectors
+      auto faces = _faces.faces();
+      for (auto & face: faces) for (auto & x: face) x = indexes[x];
+      _faces = Faces(faces);
+      // and extract the used vertices
+      _vertices = _vertices.extract(keep);
+    }
   };
 
   template<class T, template<class> class A>
@@ -298,5 +330,6 @@ namespace brille::polyhedron{
 //    verbose_update("which should match \n", hkl.xyz().to_string());
     return {hkl, faces};
   }
+
 }
 #endif

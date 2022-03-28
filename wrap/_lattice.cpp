@@ -130,8 +130,8 @@ void wrap_lattice(py::module &m){
 
   // accessors
   cls.def_property_readonly("real_vectors",[](const Lattice<double>& lat){
-       return sa2np<int>({3,3}, lat.real_basis_vectors());
-     });
+    return sa2np<int>({3,3}, lat.real_basis_vectors());
+  });
   cls.def_property_readonly("reciprocal_vectors",[](const Lattice<double>& lat){
     return sa2np<int>({3,3}, lat.reciprocal_basis_vectors());
   });
@@ -206,6 +206,19 @@ void wrap_lattice(py::module &m){
             \end{pmatrix}^{-1}
 
   )pbdoc");
+
+  cls.def("vectors",[](Lattice<double>&l, LengthUnit lu){
+    return sa2np<int>({3,3}, l.vectors(lu));
+  });
+  cls.def("vector",[](Lattice<double>&l, LengthUnit lu, const int index){
+    return sa2np<int>({3}, l.vector(lu, index));
+  });
+//  cls.def("angles",[](Lattice<double>&l, LengthUnit lu, AngleUnit au){
+//    return sa2np<int>({3}, l.angles(lu, au));
+//  });
+  cls.def("metric",[](Lattice<double>&l, LengthUnit lu){
+    return sa2np<int>({3,3}, l.metric(lu));
+  });
 
   cls.def("__eq__",[](const Lattice<double>& a, const Lattice<double>&b){return a == b;});
   cls.def("__repr__",[](const Lattice<double>& l) {return l.to_verbose_string(AngleUnit::degree);});

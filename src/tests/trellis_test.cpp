@@ -376,7 +376,6 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
   std::vector<int> strides{3*sizeof(double), sizeof(double)};
   std::array<double,3> len{7.583912824346341, 7.583912824346341, 7.583912824346341};
   std::array<double,3> ang{60,60,60};
-//  Direct dlat(latmat.data(), strides, "P_1"); // not P₁ but it *is* primitive
   auto lat = Direct<double>(len, ang, "P 1");
   // the generators are: 4-fold [1 -1 1], 2-fold [-1 1 1], 3-fold [1 1 -3], -𝟙
   // row-ordered generator matrices
@@ -399,8 +398,8 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
   lat.spacegroup_symmetry(sym.generate());
 
   BrillouinZone bz(lat);
-  info_update("First Brillouin zone\n", bz.get_polyhedron().python_string());
-  info_update("Irreducible Brillouin zone\n", bz.get_ir_polyhedron().python_string());
+//  info_update("First Brillouin zone\n", bz.get_polyhedron().python_string());
+//  info_update("Irreducible Brillouin zone\n", bz.get_ir_polyhedron().python_string());
 
   auto max_volume = bz.get_ir_polyhedron().volume()/20.;
   BrillouinZoneTrellis3<double, double, double> bzt(bz, max_volume);
@@ -411,7 +410,7 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
   Interpolator<double> val(zeros, elements, rl);
   bzt.replace_data(val, val);
 
-  int n{500};
+  int n{5000};
   std::vector<std::array<double,3>> values;
   values.reserve(n);
   auto frac = [n](double from, double to, int j){
@@ -426,13 +425,17 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
   auto tau = LQVec<int>(lat, Q.shape());
   std::vector<size_t> r, invr;
 
-  for (int i=0; i<4; ++i){
-    auto nthread = std::pow(2, i);
-    verbose_update("ir_moveinto ",nthread," threads");
-    REQUIRE_NOTHROW(bz.ir_moveinto(Q, q, tau, r, invr, nthread));
-    verbose_update("ir_interpolate_at ",nthread," threads");
+  auto run = [&](const int nthread){
+//    REQUIRE_NOTHROW(bz.ir_moveinto(Q, q, tau, r, invr, nthread));
     REQUIRE_NOTHROW(bzt.ir_interpolate_at(Q, nthread));
+  };
+  SECTION("No OpenMP"){
+    REQUIRE_NOTHROW(bzt.ir_interpolate_at(Q));
   }
+  SECTION("1 thread") {run(1);}
+  SECTION("2 thread") {run(2);}
+  SECTION("4 thread") {run(4);}
+  SECTION("8 thread") {run(8);}
 }
 
 

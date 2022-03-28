@@ -74,7 +74,7 @@ bool BrillouinZone::check_ir_polyhedron(){
 
   auto volume_goal = _first.volume() / static_cast<double>(ps.size());
   if (!brille::approx::scalar(_irreducible.volume(), volume_goal, 1000)){ // setting tol=100 moves the relative difference allowed to ~2e-9
-    debug_update("The current 'irreducible' polyhedron has the wrong volume since ",
+    debug_update("The current 'irreducible' polyhedron,\n",_irreducible.python_string(),"\nhas the wrong volume since ",
         _irreducible.volume()," != ",volume_goal);
     debug_update(std::abs(_irreducible.volume() - volume_goal) / (_irreducible.volume() + volume_goal));
     return false;
