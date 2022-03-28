@@ -243,7 +243,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 imprecise failure","[bz_][mater
   std::string hall_symbol = "-R 3";
   //
   auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
-  auto ac = approx_float::Config().digit(10000);
+  auto ac = approx_float::Config().reciprocal(1e-11);
   REQUIRE_THROWS_AS(BrillouinZone(lat, ac), std::runtime_error);
 }
 
@@ -320,7 +320,8 @@ TEST_CASE("Irreducible Brillouin zone for mp-7041","[bz_][materialsproject]"){
   std::string hall_symbol = "-R 3 2\"";
   //
   auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
-  BrillouinZone bz(lat);
+  auto ac = approx_float::Config().reciprocal(1e-10);
+  BrillouinZone bz(lat, ac);
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
@@ -460,12 +461,12 @@ TEST_CASE("Aflow lattices from python test", "[bz_][aflow]"){
                      const std::string & hall
                      ){
     auto lat = Direct(len, ang, hall);
-    info_update(lat.to_verbose_string());
-    info_update(lat.real_basis_vectors());
-    info_update(lat.reciprocal_basis_vectors());
+//    info_update(lat.to_verbose_string());
+//    info_update(lat.real_basis_vectors());
+//    info_update(lat.reciprocal_basis_vectors());
     BrillouinZone bz(lat);
     auto fbz = bz.get_polyhedron();
-    info_update(fbz.python_string());
+//    info_update(fbz.python_string());
     auto irb = bz.get_ir_polyhedron();
     auto mlt = bz.get_pointgroup_symmetry().size();
     REQUIRE(irb.volume() == Approx(fbz.volume() / mlt));
@@ -479,7 +480,8 @@ TEST_CASE("Aflow lattices from python test", "[bz_][aflow]"){
   /* These body-centered cubic lattices require more-thorough Convex hull creation */
   SECTION("Hall I -4 2 3, 1"){run_test({8.866400000000002, 8.866400000000002, 8.866400000000002}, {90, 90, 90}, "I -4 2 3");}
   SECTION("Hall I -4 2 3, 2"){run_test({8.911, 8.911, 8.911}, {90, 90, 90}, "I -4 2 3");}
-  /* These face-centred tetragonal/orthorhombic systems need lowered tolerances? */
+  /* These face-centred tetragonal/orthorhombic systems exposed more problems with Convex Hull creation
+   * including colinear points being used to define a hull bounding plane.*/
   SECTION("Hall F 2 2 2, 1"){run_test({6.479306892400001, 9.056209633700002, 10.0259106652}, {90, 90, 90}, "F 2 2 2");}
   SECTION("Hall F 2 2 2, 2"){run_test({5.540029163200001, 5.487028884200001, 5.195027347099999}, {90, 90, 90}, "F 2 2 2");}
 }

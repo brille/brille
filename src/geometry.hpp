@@ -144,6 +144,45 @@ namespace brille {
 //    }
 
   template<class T, template<class> class A>
+  std::enable_if_t<isArray<T,A>, std::vector<bool>>
+  pseudo_colinear(const A<T>& a, const A<T>& b, const A<T>& c, const T Ttol=T(0), const int tol=1){
+    auto predicate = [](const T& ax, const T& ay, const T& bx, const T& by, const T& cx, const T& cy){
+      // possibly replace this with the floating-point predicate?
+      return (ax - cx) * (by - cy) - (ay - cy) * (bx - cx);
+    };
+    assert(a.ndim() == 2u && b.ndim() == 2u && c.ndim() == 2u);
+    assert(a.size(1u) == 3u && b.size(1u) == 3u && c.size(1u) == 3u);
+    assert(b.size(0u) == a.size(0u));
+    // the BroadcastIt2 will raise an error if a & c are incompatible
+    std::array<ind_t,2> ash{{a.size(0u), 1u}}, csh{{c.size(0u), 1u}};
+    auto broadcaster = BroadcastIt2(ash, csh);
+    std::vector<bool> out;
+    out.reserve(broadcaster.size());
+    for (auto [outerSub, aSub, cSub]: broadcaster){
+      bool col{true};
+      for (ind_t i=0; i<3u; ++i) {
+        for (ind_t j = i + 1; j < 3u; ++j) {
+          aSub[1] = i;
+          cSub[1] = i;
+          const auto &a1{a[aSub]};
+          const auto &b1{b[aSub]};
+          const auto &c1{c[cSub]};
+          aSub[1] = j;
+          cSub[1] = j;
+          const auto &a2{a[aSub]};
+          const auto &b2{b[aSub]};
+          const auto &c2{c[cSub]};
+          col &= approx_float::scalar(predicate(a1, a2, b1, b2, c1, c2),
+                                           T(0), Ttol, Ttol, tol);
+        }
+        if (!col) break;
+      }
+      out.push_back(col);
+    }
+    return out;
+  }
+
+  template<class T, template<class> class A>
   std::enable_if_t<isBareArray<T,A>, std::tuple<A<T>, A<T>, A<T>>>
   plane_points_from_normal(const A<T> & n, const A<T> & p) {
     A<T> a(n.shape(), T(1)), b;
@@ -617,6 +656,9 @@ namespace brille {
     A<T> n(ibc, 3u), a(ibc, 3u), b(ibc, 3u), c(ibc, 3u);
     ind_t count{0}, no{points.size(0)};
     for (ind_t i=0; i < no-2; ++i) for (ind_t j=i+1; j < no-1; ++j) for (ind_t k=j+1; k<no; ++k) {
+      if (pseudo_colinear(points.view(i), points.view(j), points.view(k), Ttol, tol)[0]) {
+        continue;
+      }
       bool positive{true}, negative{true};
       for (ind_t r=0; (positive || negative) && r < no; ++r){
         if (r == i || r == j || r == k) continue;
@@ -862,20 +904,30 @@ namespace brille {
 
   template<class T, template<class> class A>
   std::enable_if_t<isArray<T,A>, std::tuple<A<T>, std::vector<std::vector<ind_t>>>>
-  remove_duplicate_points_and_update_face_indexing(const A<T>& points, const std::vector<std::vector<ind_t>> faces){
-    auto are_unique = points.is_unique();
+  remove_duplicate_points_and_update_face_indexing(const A<T>& points, const std::vector<std::vector<ind_t>> faces, const T Ttol=T(0), const int tol=1){
+    auto are_unique = points.is_unique(Ttol, tol);
     if(std::find(are_unique.begin(), are_unique.end(), false) != are_unique.end()){
-      std::vector<ind_t> index;
-      ind_t count{0}, no{points.size(0)};
-      index.reserve(no);
-      for (const auto & b: are_unique) index.push_back(b ? count++ : no);
-      for (ind_t i=0; i < no; ++i) {
-        if (index[i] >= no) {
-          for (ind_t j = 0; j < no; ++j) {
-            if (i != j && index[j] < no && points.match(i, j)) index[i] = index[j];
-          }
-        }
+//      std::vector<ind_t> index;
+//      ind_t count{0}, no{points.size(0)};
+//      index.reserve(no);
+//      auto op = ops::plus;
+//      T add{0};
+//      for (const auto & b: are_unique) index.push_back(b ? count++ : no);
+//      for (ind_t i=0; i < no; ++i) {
+//        if (index[i] >= no) {
+//          for (ind_t j = 0; j < no; ++j) {
+//            if (i != j && index[j] < no && points.match(i, j, op, add, Ttol, tol)) index[i] = index[j];
+//          }
+//        }
+//      }
+      // find unique *existing* indexes
+      auto index = points.unique_idx(Ttol, tol);
+      // and update them to point into reduced, only unique, vertices
+      ind_t cnt{0};
+      for (ind_t j=0; j < points.size(0); ++j){
+        index[j] = are_unique[j] ? cnt++ : index[index[j]];
       }
+
       std::vector<std::vector<ind_t>> new_faces;
       new_faces.reserve(faces.size());
       for (auto & face: faces){

@@ -74,11 +74,12 @@ namespace brille::polyhedron{
           debug_update("Face indexes updated to point into\nnp.array(\n",
                        vertices.to_string(), "),\n", _faces);
         }
-      } else {
-        info_update("The vertices \n", unique_vertices.to_string(), " are bounded by planes ",
-                    "\na:\n", a.to_string(), "\nb:\n", b.to_string(), "\nc:\n", c.to_string(),
-                    "but none are on three or more of the planes?!\n", fpv);
       }
+//      else {
+//        info_update("The vertices \n", unique_vertices.to_string(), " are bounded by planes ",
+//                    "\na:\n", a.to_string(), "\nb:\n", b.to_string(), "\nc:\n", c.to_string(),
+//                    "but none are on three or more of the planes?!\n", fpv);
+//      }
     }
     template<class T, template<class> class A>
     Faces(faces_t faces, const A<T> & vertices): _faces(std::move(faces)) {

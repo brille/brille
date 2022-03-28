@@ -179,8 +179,10 @@ template<typename T>
 [[nodiscard]] std::string list_to_string(const std::vector<T>& v){
   std::string s{"["};
   for (const auto & x: v) s += my_to_string(x) + ", ";
-  s.pop_back();
-  s.pop_back();
+  if (v.size()) {
+    s.pop_back();
+    s.pop_back();
+  }
   return s + "]";
 }
 template<typename T, size_t N>

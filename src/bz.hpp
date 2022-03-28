@@ -232,32 +232,26 @@ public:
         to a point at (0,0,0) and will not be convex. Instead, try to be clever
         and look for a convex combination of the found polyhedron and its
         mirror with one of the pointgroup operations applied:*/
-        std::vector<poly_t> all_unions;
+        std::vector<poly_t> valid;
         auto mirrored = _irreducible.mirror();
         for (ind_t i = 0; i < ps.size(); ++i) {
-          all_unions.push_back(_irreducible + mirrored.apply(ps, i));
+          auto u = _irreducible.combine(mirrored.apply(ps, i), float_tolerance, approx_tolerance);
+          verbose_update("Mirror union with volume ",u.volume(),":\n", u.python_string());
+          // Polyhedron::combine needs to be fixed. As of now it does not look
+          // for extraneous faces (like internal faces which are coplanar and
+          // pointing in opposite directions) or coplanar external faces which
+          // share an edge. Until this is fixed cross our fingers and hope that we
+          // created a convex polyhedron such that the convex hull of its points
+          // gives the same polyhedron back:
+          auto c = poly_t(u.vertices(), float_tolerance, approx_tolerance);
+          verbose_update("Produces a convex hull with volume ", c.volume(), ":\n", c.python_string());
+          if (approx_float::scalar(c.volume(), goal, float_tolerance, float_tolerance, approx_tolerance)){
+            valid.push_back(c);
+          }
         }
-        // The combination of a polyhedron and its rotated inverse which has
-        // the least number of vertices is (hopefully) convex.
-        auto min_vert_union =
-            std::min_element(all_unions.begin(), all_unions.end(),
-                             [](const auto &a, const auto &b) {
-                               return a.vertex_count() < b.vertex_count();
-                             });
-        // Polyhedron::operator+() needs to be fixed. As of now it does not look
-        // for extraneous faces (like internal faces which are coplanar and
-        // pointing in opposite directions) or coplanar external faces which
-        // share an edge. Until this is fixed cross our fingers and hope that we
-        // created a convex polyhedron such that the convex hull of its points
-        // gives the same polyhedron back:
-        poly_t mvu_convex_hull(min_vert_union->vertices(), float_tolerance, approx_tolerance);
-        if (approx_float::scalar(goal, mvu_convex_hull.volume(),
-                                 float_tolerance, float_tolerance,
-                                 approx_tolerance)) {
-          // we found a polyhedron with the right volume which is convex!
-          // so we can keep this as *the* ir_polyhedron
-          _irreducible = mvu_convex_hull;
-          // and we need to update the found volume for the check below
+        // any polyhedra in `valid` should be equally-good, so take the first one
+        if (!valid.empty()) {
+          _irreducible = valid.front();
           found = goal;
         }
       }

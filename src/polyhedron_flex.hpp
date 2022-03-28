@@ -95,13 +95,15 @@ namespace brille::polyhedron{
 
 //    template<class R, template<class> class B> std::enable_if_t<isArray<R,B>, Poly<T,A>>
     Poly<T,A>
-    operator+(const Poly<T,A>& that) const{
+    operator+(const Poly<T,A>& that) const {return this->combine(that);}
+
+    Poly<T,A> combine(const Poly<T,A>& that, const T Ttol=T(0), const int tol=1) const {
       // combine vertices:
       auto vertices = cat(0, _vertices, that._vertices);
       // combine faces
       auto faces = _faces.combine(that._faces, _vertices.size(0)).faces();
       // check for duplicate vertices
-      std::tie(vertices, faces) = remove_duplicate_points_and_update_face_indexing(vertices, faces);
+      std::tie(vertices, faces) = remove_duplicate_points_and_update_face_indexing(vertices, faces, Ttol, tol);
 
       // check for overlapping faces
       /* such a check is hard, so we'll take a shortcut which is hopefully good enough:
@@ -128,20 +130,12 @@ namespace brille::polyhedron{
             c = 0;
             // if neither are kept, this leaves behind a parting line. maybe we can handle this later?
           }
-//          if (c > 2) {
-//            info_update("With the vertices\nnp.array(\n", vertices.to_string(), "),\n", faces, "\n the faces ", a, " and ", b, " are coplanar");
-//            std::string msg = "The faces " + std::to_string(i) + " and " + std::to_string(j);
-//            msg += " contain " + std::to_string(c) + " common vertex indexes, which indicates that they are coplanar!";
-//            /* FIXME Handling this probably requires approximate vertex equivalency which can't be passed in with
-//             * operator+. Instead, rely on the Convex Hull operator to do its thing :/ */
-////            throw std::runtime_error(msg);
-//          }
         }
       }
       if (std::find(needed.begin(), needed.end(), false) != needed.end()){
         for (ind_t i=0; i<faces.size(); ++i) if (!needed[i]) faces[i].clear();
-        auto last = std::remove_if(faces.begin(), faces.end(), [](const auto & x){return x.size() < 1;});
-        faces.erase(last);
+        auto past = std::remove_if(faces.begin(), faces.end(), [](const auto& x){return x.empty();});
+        faces.erase(past, faces.end()); // erase from past-last-good *to end*
         // figure out how to remove the unused vertices ...
 //        std::remove_if();
       }
@@ -296,7 +290,7 @@ namespace brille::polyhedron{
       ind_t kept{0};
       for (const auto & x: present){
         indexes[x] = kept++;
-        keep[indexes[x]] = true;
+        keep[x] = true;
       }
       // update faces vectors
       auto faces = _faces.faces();

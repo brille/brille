@@ -289,8 +289,6 @@ TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trell
   std::array<double,9> latmat {7.583912824349999, 1.8412792137035698e-32, 0.,
                               3.791956412170034, 3.791956412170034, 5.362636186024768,
                               3.791956412170034,-3.791956412170034, 5.362636186024768};
-  //
-  auto lat = Direct<double>(latmat, MatrixVectors::row, "P 1", ""); // not P₁ but it *is* primitive
   // the generators are: 4-fold [1 -1 1], 2-fold [-1 1 1], 3-fold [1 1 -3], -𝟙
   // row-ordered generator matrices
   std::vector<std::array<int,9>> W {
@@ -310,9 +308,10 @@ TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trell
   for (size_t i=0; i<W.size(); ++i) mots.push_back(Motion<int,double>(W[i], w[i]));
   Symmetry sym(mots);
   //
-  lat.spacegroup_symmetry(sym.generate());
+  auto lat = Direct<double>(latmat, MatrixVectors::row, sym);
   //
-  BrillouinZone bz(lat);
+  auto ac = approx_float::Config(1000, 1e-10, 2e-12);
+  BrillouinZone bz(lat, ac);
   // If the tolerance used in determine_tols is too small the following will
   // fail due to one or more missing vertices in a triangulated cube
   REQUIRE_NOTHROW(BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, 0.001));
