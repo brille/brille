@@ -457,26 +457,58 @@ TEST_CASE("Rhombohedral from python test of all Hall symbols", "[bz_]"){
 TEST_CASE("Aflow lattices from python test", "[bz_][aflow]"){
   auto run_test = [](const std::array<double,3>& len,
                      const std::array<double,3>& ang,
-                     const std::string & hall,
-                     const double tol=1e-10
+                     const std::string & hall
                      ){
     auto lat = Direct(len, ang, hall);
     info_update(lat.to_verbose_string());
     info_update(lat.real_basis_vectors());
     info_update(lat.reciprocal_basis_vectors());
-    auto ac = approx_float::Config(1000, 1e-10, tol);
-    BrillouinZone bz(lat, ac);
+    BrillouinZone bz(lat);
     auto fbz = bz.get_polyhedron();
+    info_update(fbz.python_string());
     auto irb = bz.get_ir_polyhedron();
     auto mlt = bz.get_pointgroup_symmetry().size();
     REQUIRE(irb.volume() == Approx(fbz.volume() / mlt));
   };
   // 579 of 582 passed the python tests, these three did not
-  /* This R 3 lattice requires very lax tolerances -- because the primitive lattice is nearly cubic!*/
-  SECTION("Hall R 3"){run_test({6.885854708699999, 6.885854708699999, 8.4334670046}, {90, 90, 120}, "R 3", 1e-9);}
-  // replace c by sqrt(3)/sqrt(2) * a
-//  SECTION("Hall R 3"){run_test({6.885854708699999, 6.885854708699999, 8.433415239627948}, {90, 90, 120}, "R 3", 1e-9);}
+  /* This R 3 (rhombohedrally-centred hexagonal) lattice has a primitive cell which is very nearly cubic
+   * As a result the tolerances must be very small to capture all 24 vertices of the first Brillouin zone
+   * */
+  // One can replace c by sqrt(3)/sqrt(2) * a to make the primitive cell Cubic
+  SECTION("Hall R 3"){run_test({6.885854708699999, 6.885854708699999, 8.4334670046}, {90, 90, 120}, "R 3");}
   /* These body-centered cubic lattices require more-thorough Convex hull creation */
   SECTION("Hall I -4 2 3, 1"){run_test({8.866400000000002, 8.866400000000002, 8.866400000000002}, {90, 90, 90}, "I -4 2 3");}
   SECTION("Hall I -4 2 3, 2"){run_test({8.911, 8.911, 8.911}, {90, 90, 90}, "I -4 2 3");}
+  /* These face-centred tetragonal/orthorhombic systems need lowered tolerances? */
+  SECTION("Hall F 2 2 2, 1"){run_test({6.479306892400001, 9.056209633700002, 10.0259106652}, {90, 90, 90}, "F 2 2 2");}
+  SECTION("Hall F 2 2 2, 2"){run_test({5.540029163200001, 5.487028884200001, 5.195027347099999}, {90, 90, 90}, "F 2 2 2");}
+}
+
+TEST_CASE("Find limiting tolerance", "[.][bz_][aflow]"){
+  auto lat = Direct<double>({6.885854708699999, 6.885854708699999, 8.4334670046}, {90, 90, 120}, "R 3");
+  auto run_test = [&](const double tol=1e-10){
+    auto ac = approx_float::Config(1000, 1e-10, tol);
+    ind_t n{0};
+    try {
+      BrillouinZone bz(lat, ac);
+      auto fbz = bz.get_polyhedron();
+      n = fbz.vertices().size(0);
+      info_update(tol, " : ", n);
+    } catch (const std::runtime_error & ex) {
+      n = 0;
+    } catch (...) {
+      n = 1;
+    }
+    return n;
+  };
+  std::vector<double> powers{-15,-14,-13,-12,-11};
+  std::vector<ind_t> counts;
+  for (auto p: powers){
+    p = std::pow(10., p);
+    counts.push_back(run_test(p));
+  }
+  for (ind_t i=0; i<powers.size(); ++i){
+    info_update("10^", powers[i], " : ", counts[i]);
+  }
+
 }

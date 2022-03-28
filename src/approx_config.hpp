@@ -14,7 +14,7 @@ private:
   double reciprocal_;
 
 public:
-  Config(): digit_{1000}, direct_{1e-10}, reciprocal_{1e-10} {}
+  Config(): digit_{1000}, direct_{1e-12}, reciprocal_{1e-12} {}
   Config(int dig, double dir, double rec): digit_{dig}, direct_{dir}, reciprocal_{rec} {}
 
   // getters

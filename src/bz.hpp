@@ -160,7 +160,7 @@ public:
     // set the irreducible wedge now as the search will do nothing.
     _irreducible = _first;
     if (wedge_search) {
-      info_update("Starting wedge search from ", _first.python_string());
+      debug_update("Starting wedge search from ", _first.python_string());
       bool success{false};
       if (_outer.is_triclinic()) {
         success = !has_inversion || this->wedge_triclinic();
