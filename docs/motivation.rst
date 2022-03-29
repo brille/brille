@@ -52,27 +52,21 @@ which there are :math:`230` distinct combinations in three dimensions.
 All crystalline materials have a structure characterised by one of the
 Space groups.
 
-Direct lattices
----------------
+
+Dual lattices
+-------------------
 
 While the specific example of a :py:class:`~brille._brille.Lattice` given above
 was described in terms of a physical lattice, Lattices are not limited to any
-one space. To remove any ambiguity, throughout :py:mod:`brille` Lattices
-which describe the positions of atoms in real space and their properties are
-referred to as :py:class:`~brille._brille.Direct` lattices.
-
-Reciprocal lattices
--------------------
-
-For every Lattice there exists a dual lattice which is, effectively, its
-inverse. While a Direct lattice describes atom positions, its dual lattice
+one space. For every Lattice there exists a dual lattice which is, effectively, its
+inverse. While a direct lattice describes atom positions, its dual lattice
 describes the relative orientations of *planes* of atoms.
 Constructing such a dual lattice is straightforward following references easily
 found elsewhere, but importantly where a lattice can be described by the lengths
 of its basis vectors, the basis vectors of its dual lattice have units of
 inverse, or reciprocal, length.
-For this reason the dual lattice of a Direct lattice is referred to here as a
-:py:class:`~brille._brille.Reciprocal` lattice.
+The :py:class:`~brille._brille.Lattice` class combines both the real space direct
+lattice and its reciprocal space dual lattice into a single object.
 
 
 
