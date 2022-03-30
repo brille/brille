@@ -217,18 +217,18 @@ else:
     else:
         print("\tSymmetry group equivalency does not imply same-ordered motions")
 
-# Now construct a real space Direct lattice a few ways:
+# Now construct the lattice a few ways:
 # -F 4 3 2 is a cubic system, so all lattice basis vector lengths are the same
-lat_parameters_hall_symbol = brille.Direct((1, 1, 1), (90, 90, 90), '-F 4 3 2')
+lat_parameters_hall_symbol = brille.Lattice((1, 1, 1), (90, 90, 90), '-F 4 3 2')
 # we can also provide explicit basis vectors as a matrix
-# a possible pitfall: brille does not store the orientation of the basis vectors
+# a possible pitfall: brille stores the orientation of the basis vectors
 bv = lambda t: np.array([[np.cos(t), 0, np.sin(t)],[0, 1, 0], [-np.sin(t), 0, np.cos(t)]])
-lat_basis_hall_symbol = brille.Direct(bv(np.random.rand()*np.pi), '-F 4 3 2')
+lat_basis_hall_symbol = brille.Lattice(bv(np.random.rand()*np.pi), '-F 4 3 2')
 
 if lat_basis_hall_symbol != lat_parameters_hall_symbol:
     print('Something has gone wrong creating the Direct lattices')
 
-p1_cube = brille.Direct((1, 1, 1), (90, 90, 90))
+p1_cube = brille.Latice((1, 1, 1), (90, 90, 90))
 # another potential pitfall, lattice equivalency does not consider spacegroups
 if lat_basis_hall_symbol == p1_cube:
     print('brille Lattice equivalency ignores the Spacegroup information')
@@ -236,8 +236,7 @@ if lat_basis_hall_symbol.spacegroup != p1_cube.spacegroup:
     print('\tSo explicit checks of the spacegroup may be necessary')
 
 for sym in (explicit_sym, explicit_gen, hall_sym, hall_gen):
-    lat = brille.Direct((1, 1, 1), (90, 90, 90))
-    # Specifying the spacegroup from Symmetry can not be done at construction
-    lat.spacegroup = sym  # but ensures the full group is generated
+    # Specifying the spacegroup from Symmetry can be done at construction, and generates the full group
+    lat = brille.Lattice((1, 1, 1), (90, 90, 90), sym)
     if lat_basis_hall_symbol.spacegroup != lat.spacegroup:
         print('Something wrong with Lattice spacegroup assignment')
