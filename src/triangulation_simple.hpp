@@ -97,7 +97,7 @@ public:
       for (ind_t i=0; i<verts.size(0); ++i){
         bool isGamma{true};
         for (ind_t j=0; j<numel; ++j)
-          isGamma &= brille::approx::scalar(tgi.pointlist[i*numel+j], 0.);
+          isGamma &= brille::approx_float::scalar(tgi.pointlist[i*numel+j], 0.);
         if (isGamma) for (ind_t j=0; j<numel; ++j) tgi.pointlist[i*numel+j] = 0.;
 	      gammaPresent |= isGamma;
       }

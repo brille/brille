@@ -5,27 +5,14 @@
     \brief A class holding a hybrid grid of cuboid and triangulated tetrahedral
            cells and data for interpolation
 */
-// #include <vector>
-// #include <array>
 #include <queue>
-// #include <tuple>
-// #include <mutex>
 #include <condition_variable>
 #include <atomic>
-// #include <algorithm>
 #include <functional>
 #include <utility>
-// #include <omp.h>
 #include "enums.hpp"
-// #include "array.hpp"
-// #include "array2.hpp"
-#include "polyhedron.hpp"
-// #include "utilities.hpp"
-// #include "debug.hpp"
 #include "triangulation_simple.hpp"
 #include "interpolatordual.hpp"
-// #include "permutation.hpp"
-// #include "approx.hpp"
 #include "hdf_interface.hpp"
 namespace brille {
 
@@ -290,7 +277,7 @@ namespace brille {
       for (ind_t i=0; i<vi_t.size(); ++i){
         most_neg[i] = tetrahedra_contains(i, vertices, x, w);
         if (most_neg[i] >= 0.){
-          for (int j=0; j<4; ++j) if (!brille::approx::scalar(w[j], 0.))
+          for (int j=0; j<4; ++j) if (!brille::approx_float::scalar(w[j], 0.))
             iw.emplace_back(static_cast<I>(vi_t[i][j]), w[j]);
           return true;
         }
@@ -306,7 +293,7 @@ namespace brille {
         if (val > 0.){
           throw std::runtime_error("This shouldn't be possible");
         }
-        for (int j=0; j<4; ++j) if (!brille::approx::scalar(w[j], 0.))
+        for (int j=0; j<4; ++j) if (!brille::approx_float::scalar(w[j], 0.))
           iw.emplace_back(static_cast<I>(vi_t[i][j]), w[j]);
         return true;
       }
@@ -339,7 +326,7 @@ namespace brille {
       w[1] = pseudo_orient3d(v.view(vi_t[t][0u]), x, v.view(vi_t[t][2u]), v.view(vi_t[t][3u]))[0]/vol6;
       w[2] = pseudo_orient3d(v.view(vi_t[t][0u]), v.view(vi_t[t][1u]), x, v.view(vi_t[t][3u]))[0]/vol6;
       w[3] = pseudo_orient3d(v.view(vi_t[t][0u]), v.view(vi_t[t][1u]), v.view(vi_t[t][2u]), x)[0]/vol6;
-      if (std::any_of(w.begin(), w.end(), [](double z){return z < 0. && !brille::approx::scalar(z, 0.);}))
+      if (std::any_of(w.begin(), w.end(), [](double z){return z < 0. && !brille::approx_float::scalar(z, 0.);}))
         return *std::min_element(w.begin(), w.end());
       return 0.;
     }
@@ -365,8 +352,8 @@ namespace brille {
       double d2{0}, r2 = ci_t[t][3]*ci_t[t][3];
       for (double i : v) d2 += i*i;
       // if the squared distance is no greater than the squared radius, x might be inside the tetrahedra
-      //return d2 < r2 || brille::approx::scalar(d2, r2);
-      return d2 < r2 || brille::approx::scalar(d2, r2) ? 0. : -d2;
+      //return d2 < r2 || brille::approx_float::scalar(d2, r2);
+      return d2 < r2 || brille::approx_float::scalar(d2, r2) ? 0. : -d2;
     }
     template<class T, template<class> class A>
     [[nodiscard]] std::enable_if_t<isLatVec<T,A>, T>

@@ -49,11 +49,11 @@ namespace brille::approx_float{
   // 10000 is too big for Monoclinic system (5.7224, 5.70957, 4.13651),(90,90.498,90),'C -2y'
   // but setting it any lower (9000 tried) causes other test lattices, namely,
   // (7.189, 4.407, 5.069) (90,90.04,90) '-C 2y' to throw a runtime error
-  #if defined(_MSC_VER) || defined(__MINW32__)
-  const int TOL_MULT=20000;
-  #else
-  const int TOL_MULT=10000;
-  #endif
+    #if defined(_MSC_VER) || defined(__MINW32__)
+    const int TOL_MULT=20000;
+    #else
+    const int TOL_MULT=10000;
+    #endif
   #endif
 
   /* isfpT | isfpR | which? | why?
@@ -79,8 +79,14 @@ namespace brille::approx_float{
   std::tuple<bool,bool,T,R,T,R> tols(const T Ttol, const R Rtol, const int tol=1){
     T Trel = std::numeric_limits<T>::epsilon(); // zero for integer-type T
     R Rrel = std::numeric_limits<R>::epsilon(); // zero for integer-type R
-    T Tabs = T(1)/1000000000000000; // 0 or 1e-15
-    R Rabs = R(1)/1000000000000000; // 0 or 1e-15
+    /* 10¹⁵ is fine for a double (but not float ... )     *
+     * clang reports that integer 10¹⁵ becomes 999999986991104 if not wrapped
+     * with the type-declaration T or R
+     * We stick with 5×10⁻¹⁵ to avoid having to chase down where 1×10⁻¹⁵ was
+     * too small.
+     * */
+    T Tabs = T(5)/T(1000000000000000);
+    R Rabs = R(5)/R(1000000000000000);
     bool TorRisInteger = Trel*Rrel==0 || std::is_convertible<T,R>::value;
     bool TisFloatingPt = Trel > 0;
     Trel *= static_cast<T>(tol)*static_cast<T>(TOL_MULT);
@@ -116,11 +122,11 @@ namespace brille::approx_float{
 
     You must determine `useT`, `Trel`, `Rrel`, `Tabs` and `Rabs` before you
     can use this overloaded function. You may note that those are the exact
-    outputs of `brille::approx::tols`.
+    outputs of `brille::approx_float::tols`.
     If you intend to compare many values of the same type, e.g., the elements
     of two arrays, it may be advantageous to use this function directly;
     otherwise you can save yourself a bit of headache by using the wrapper
-    `brille::approx::scalar`.
+    `brille::approx_float::scalar`.
 
     \see scalar, tols
     */

@@ -66,8 +66,8 @@ TEST_CASE("Verify Lattice property correctness","[latticedual]"){
     // to_xyz(angstrom) == A && to_xyz(inverse_angstrom) == B
     auto A1 = lat.to_xyz(LengthUnit::angstrom);
     auto B1 = lat.to_xyz(LengthUnit::inverse_angstrom);
-    REQUIRE(approx::equal(A, A1));
-    REQUIRE(approx::equal(B, B1));
+    REQUIRE(approx_float::equal(A, A1));
+    REQUIRE(approx_float::equal(B, B1));
 
     // verify that we provide mutually inverse to and from cartesian coordinate matrices
     auto to_from_check = [&](LengthUnit lu){
@@ -84,7 +84,7 @@ TEST_CASE("Verify Lattice property correctness","[latticedual]"){
     auto invG = lat.metric(LengthUnit::inverse_angstrom);
     auto GinvG = mul_mat_mat(G, invG);
     for (auto & x: GinvG) x /= two_pi * two_pi;
-    REQUIRE(approx::equal(I, GinvG)); // switch to brille::approx to overcome inaccuracies from inversion?
+    REQUIRE(approx_float::equal(I, GinvG)); // switch to brille::approx to overcome inaccuracies from inversion?
   };
   //
   SECTION("Rhombohedral"){

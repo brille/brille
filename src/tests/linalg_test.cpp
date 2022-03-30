@@ -1,10 +1,11 @@
 #include <catch2/catch.hpp>
 #include "utilities.hpp"
-#include "approx.hpp"
+#include "approx_float.hpp"
 
 
 using namespace brille;
 using namespace brille::utils;
+using namespace brille::approx_float;
 
 TEST_CASE("trace","[linalg]"){
   int mat[9] = {1,2,3, 4,5,6, 7,8,9};
@@ -33,10 +34,10 @@ TEST_CASE("approx","[approx]"){
   for (int i = 1; i < 16; ++i) d[i] = double(1) / double(i + 1);
   f[0] = 1e-15f; // this is smaller than the absolute tolerance in brille::approx ¯\_(ツ)_/¯
   d[0] = 1e-15;
-  SECTION("brille::approx::scalar"){ for (int i=0; i<16; i++) REQUIRE( brille::approx::scalar(f[i],d[i]) ); }
-  SECTION("brille::approx::array"){  REQUIRE( brille::approx::array<float,double,2,8>(f,d) ); }
-  SECTION("brille::approx::matrix"){ REQUIRE( brille::approx::matrix<float,double,4>(f,d) ); }
-  SECTION("brille::approx::vector"){ REQUIRE( brille::approx::vector<float,double,16>(f,d) ); }
+  SECTION("brille::approx_float::scalar"){ for (int i=0; i<16; i++) REQUIRE( scalar(f[i],d[i]) ); }
+  SECTION("brille::approx_float::array"){  REQUIRE( array<float,double,2,8>(f,d) ); }
+  SECTION("brille::approx_float::matrix"){ REQUIRE( matrix<float,double,4>(f,d) ); }
+  SECTION("brille::approx_float::vector"){ REQUIRE( vector<float,double,16>(f,d) ); }
 }
 
 TEST_CASE("array multiplication","[linalg]"){
@@ -116,7 +117,7 @@ TEST_CASE("determinant and inverse of matrices","[linalg]"){
   double invM[9], expected_invM[9] = {1,1,-1, 0,1,0, 0,-1,1};
   REQUIRE( matrix_determinant<double>(M) == Approx(1) );
   REQUIRE( matrix_inverse<double>(invM, M) ); // require that the inverse exists
-  REQUIRE( brille::approx::matrix<double,double,3>(invM, expected_invM) ); // and that the result is correct
+  REQUIRE( matrix<double,double,3>(invM, expected_invM) ); // and that the result is correct
 }
 
 TEST_CASE("similar matrix","[linalg]"){
@@ -124,7 +125,7 @@ TEST_CASE("similar matrix","[linalg]"){
   double M[9] = {1,0,1, 0,1,0, 0,1,1};
   double S[9], expected[9] = {-2,-1,-2,4,11,10,3,6,6};
   REQUIRE( similar_matrix(S,A,M) );
-  REQUIRE( brille::approx::matrix<double,double,3>(S,expected) );
+  REQUIRE( matrix<double,double,3>(S,expected) );
 }
 
 TEST_CASE("array transpose","[linalg]"){
@@ -159,7 +160,7 @@ TEST_CASE("matrix metric","[linalg]"){
   double B[9] = {10,-2,14,5,-3,8,-18,0,4};
   double Bm[9], expected[9]={449,-35,108,-35,13,-52,108,-52,276};
   matrix_metric<double,3>(Bm,B);
-  REQUIRE( brille::approx::matrix<double,double,3>(Bm,expected) );
+  REQUIRE( matrix<double,double,3>(Bm,expected) );
 }
 TEST_CASE("vector norm squared","[linalg]"){
   double v[3] = {1,-2,3};
@@ -170,15 +171,15 @@ TEST_CASE("vector cross products","[linalg]"){
   double cross[3];
   SECTION("(100)×(010)"){
     vector_cross<double,double,double,3>(cross,v1,v2);
-    REQUIRE( brille::approx::vector<double,double,3>(cross,v3) );
+    REQUIRE( vector<double,double,3>(cross,v3) );
   }
   SECTION("(010)×(001)"){
     vector_cross<double,double,double,3>(cross,v2,v3);
-    REQUIRE( brille::approx::vector<double,double,3>(cross,v1) );
+    REQUIRE( vector<double,double,3>(cross,v1) );
   }
   SECTION("(001)×(100)"){
     vector_cross<double,double,double,3>(cross,v3,v1);
-    REQUIRE( brille::approx::vector<double,double,3>(cross,v2) );
+    REQUIRE( vector<double,double,3>(cross,v2) );
   }
 }
 TEST_CASE("vector dot products","[linalg]"){

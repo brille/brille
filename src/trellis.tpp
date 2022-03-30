@@ -128,7 +128,7 @@ PolyhedronTrellis<T,R>::PolyhedronTrellis(const Polyhedron& poly, const double m
       node_is_null[i] = this_node.get_vertices().size(0) < 4u;/**/
       if (!node_is_null[i]){
         double this_node_volume = this_node.get_volume();
-        node_is_null[i] = this_node_volume < 0. || brille::approx::scalar(this_node_volume, 0.);
+        node_is_null[i] = this_node_volume < 0. || brille::approx_float::scalar(this_node_volume, 0.);
       }
       // find which of the vertices of the this_node polyhedron are intersection
       // vertices as well.

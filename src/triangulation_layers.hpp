@@ -30,9 +30,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 // #include <algorithm>
 #include "array_.hpp" // defines bArray
 #include "tetgen.h"
-// #include "debug.hpp"
-#include "polyhedron.hpp"
-// #include "approx.hpp"
+#include "polyhedron_flex.hpp"
 namespace brille {
 
 /*! \brief A single triangulated layer of the hierarchy for Mesh3
@@ -43,36 +41,40 @@ face-sharing neighbours.
 The circumsphere centre of each tetrahedra and its radius are also stored.
 */
 class TetTriLayer{
+  using vert_t = bArray<double>;
+  using poly_t = polyhedron::Poly<double, bArray>;
+  using tetr_t = bArray<ind_t>;
+  using tidx_t = std::vector<std::vector<ind_t>>;
   ind_t nVertices;
   ind_t nTetrahedra;
-  bArray<double> vertex_positions; // (nVertices, 3)
-  bArray<ind_t> vertices_per_tetrahedron; // (nTetrahedra, 4)
-  std::vector<std::vector<ind_t>> tetrahedra_per_vertex; // (nVertices,)(1+,)
-  std::vector<std::vector<ind_t>> neighbours_per_tetrahedron; // (nTetrahedra,)(1+,)
-  bArray<double> circum_centres; // (nTetrahedra, 3);
+  vert_t vertex_positions; // (nVertices, 3)
+  tetr_t vertices_per_tetrahedron; // (nTetrahedra, 4)
+  tidx_t tetrahedra_per_vertex; // (nVertices,)(1+,)
+  tidx_t neighbours_per_tetrahedron; // (nTetrahedra,)(1+,)
+  vert_t circum_centres; // (nTetrahedra, 3);
   std::vector<double> circum_radii; // (nTetrahedra,)
 public:
   [[nodiscard]] ind_t number_of_vertices() const {return nVertices;}
   [[nodiscard]] ind_t number_of_tetrahedra() const {return nTetrahedra;}
-  [[nodiscard]] const bArray<double>& get_vertex_positions() const {return vertex_positions;}
-  [[nodiscard]] const bArray<ind_t>& get_vertices_per_tetrahedron() const {return vertices_per_tetrahedron;}
-  [[nodiscard]] const bArray<double>& get_circum_centres() const {return circum_centres;}
+  [[nodiscard]] const vert_t& get_vertex_positions() const {return vertex_positions;}
+  [[nodiscard]] const tetr_t& get_vertices_per_tetrahedron() const {return vertices_per_tetrahedron;}
+  [[nodiscard]] const vert_t& get_circum_centres() const {return circum_centres;}
   [[nodiscard]] const std::vector<double>& get_circum_radii() const {return circum_radii;}
-  [[nodiscard]] Polyhedron get_tetrahedron(const ind_t idx) const {
+  [[nodiscard]] poly_t get_tetrahedron(const ind_t idx) const {
     if (nTetrahedra <= idx)
       throw std::out_of_range("The requested tetrahedron does not exist.");
     auto tet = vertices_per_tetrahedron.view(idx);
-    std::vector<std::vector<int>> vpf{{0,1,2},{0,2,3},{1,0,3},{1,3,2}};
-    return {vertex_positions.extract(tet), vpf};
+    std::vector<std::vector<ind_t>> vpf{{0,1,2},{0,2,3},{1,0,3},{1,3,2}};
+    return {vertex_positions.extract(tet), polyhedron::Faces(vpf)};
   }
 
   TetTriLayer(ind_t nV,
               ind_t nT,
-              const bArray<double>& vp,
-              const bArray<ind_t>& vt,
-              std::vector<std::vector<ind_t>> tv,
-              std::vector<std::vector<ind_t>> nt,
-              const bArray<double>& cc,
+              const vert_t& vp,
+              const tetr_t& vt,
+              tidx_t tv,
+              tidx_t nt,
+              const vert_t& cc,
               std::vector<double> cr)
       : nVertices(nV), nTetrahedra(nT),
         vertex_positions(vp), vertices_per_tetrahedron(vt),
@@ -142,7 +144,7 @@ public:
   //   for (ind_t idx: tosearch){
   //     if (this->unsafe_might_contain(idx, x) && this->unsafe_contains(idx, x, ws)){
   //       // unsafe_contains sets the weights in ws
-  //       for (ind_t i=0; i<4u; ++i) if (!brille::approx::scalar(ws[i], 0.)){
+  //       for (ind_t i=0; i<4u; ++i) if (!brille::approx_float::scalar(ws[i], 0.)){
   //         v.push_back(vertices_per_tetrahedron.val(idx,i));
   //         w.push_back(ws[i]);
   //       }
@@ -151,18 +153,18 @@ public:
   //   }
   //   return nTetrahedra;
   // }
-  ind_t locate(const bArray<double>& x, std::vector<std::pair<ind_t,double>>& vw) const {
+  ind_t locate(const vert_t& x, std::vector<std::pair<ind_t,double>>& vw) const {
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("locate requires a single 3-element vector.");
     return unsafe_locate(x, vw);
   }
-  ind_t unsafe_locate(const bArray<double>& x, std::vector<std::pair<ind_t,double>>& vw) const {
+  ind_t unsafe_locate(const vert_t& x, std::vector<std::pair<ind_t,double>>& vw) const {
     // no specified tetrahedra to check against, so check them all
     std::vector<ind_t> tosearch(nTetrahedra);
     std::iota(tosearch.begin(), tosearch.end(), 0u);
     return unsafe_locate(tosearch, x, vw);
   }
-  ind_t locate(const std::vector<ind_t>& tosearch, const bArray<double>& x, std::vector<std::pair<ind_t,double>>& vw) const {
+  ind_t locate(const std::vector<ind_t>& tosearch, const vert_t& x, std::vector<std::pair<ind_t,double>>& vw) const {
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("locate requires a single 3-element vector.");
     if (std::any_of(tosearch.begin(), tosearch.end(), [this](ind_t a){return a>=this->nTetrahedra;}))
@@ -172,13 +174,13 @@ public:
       throw std::runtime_error("The point was not located!");
     return found;
   }
-  ind_t unsafe_locate(const std::vector<ind_t>& tosearch, const bArray<double>& x, std::vector<std::pair<ind_t,double>>& vw) const {
+  ind_t unsafe_locate(const std::vector<ind_t>& tosearch, const vert_t& x, std::vector<std::pair<ind_t,double>>& vw) const {
     std::array<double,4> ws{};
     vw.clear();// make sure w is back to zero-elements
     for (ind_t idx: tosearch){
       if (this->unsafe_might_contain(idx, x) && this->unsafe_contains(idx, x, ws)){
         // unsafe_contains sets the weights in ws
-        for (ind_t i=0; i<4u; ++i) if (!brille::approx::scalar(ws[i], 0.))
+        for (ind_t i=0; i<4u; ++i) if (!brille::approx_float::scalar(ws[i], 0.))
           vw.emplace_back(vertices_per_tetrahedron.val(idx,i), ws[i]);
         return idx;
       }
@@ -220,13 +222,13 @@ public:
     }
     return vs;
   }
-  [[nodiscard]] bool might_contain(const ind_t tet, const bArray<double>& x) const {
+  [[nodiscard]] bool might_contain(const ind_t tet, const vert_t& x) const {
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("x must be a single 3-vector");
     if (tet >= nTetrahedra) return false;
     return this->unsafe_might_contain(tet, x);
   }
-  [[nodiscard]] bool contains(const ind_t tet, const bArray<double>& x) const{
+  [[nodiscard]] bool contains(const ind_t tet, const vert_t& x) const{
     if (x.ndim()!=2u || x.size(0)!=1u || x.size(1)!=3u)
       throw std::runtime_error("x must be a single 3-vector");
     if (tet >= nTetrahedra) return false;
@@ -258,7 +260,7 @@ protected:
   }
   bool unsafe_contains(const ind_t tet, const bArray<double>& x, std::array<double,4>& w) const {
     this->weights(tet, x, w);
-    return std::all_of(w.begin(), w.end(), [](double z){ return (z>0.||brille::approx::scalar(z,0.)); });
+    return std::all_of(w.begin(), w.end(), [](double z){ return (z>0.||brille::approx_float::scalar(z,0.)); });
   }
   void weights(const ind_t tet, const bArray<double>& x, std::array<double,4>& w) const {
     const ind_t* i = vertices_per_tetrahedron.ptr(tet);
@@ -461,7 +463,7 @@ private:
       map[i] = TetSet();
       auto cchi = layers[high].get_circum_centres().view(i);
       // get a Polyhedron object for the ith higher-tetrahedra in case we need it
-      Polyhedron tethi = layers[high].get_tetrahedron(i);
+      auto tethi = layers[high].get_tetrahedron(i);
       std::vector<double> sumrad;
       for (double r: layers[low].get_circum_radii()) sumrad.push_back(layers[high].get_circum_radii()[i]+r);
       // if two circumsphere centers are closer than the sum of their radii

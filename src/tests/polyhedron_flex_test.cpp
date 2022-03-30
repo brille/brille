@@ -12,7 +12,8 @@ static bool lists_match(const std::vector<std::vector<T>>& a, const std::vector<
   if (a.size() != b.size()) return false;
   auto s = a.size();
   for (size_t i=0; i<s; ++i){
-    const auto& ai{a[i]}, bi{b[i]};
+    const auto & ai{a[i]};
+    const auto & bi{b[i]};
     if (ai.size() != bi.size()) return false;
     for (size_t j=0; j<ai.size(); ++j)
       if (static_cast<S>(ai[j]) != static_cast<S>(bi[j])) return false;

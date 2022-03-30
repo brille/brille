@@ -67,8 +67,8 @@ TEST_CASE("Rhombohedral Brillouin zone","[bz_]"){
   auto irp = bz.get_ir_polyhedron();
   REQUIRE(irp.volume() == Approx(fbz.volume()/6));
   REQUIRE(write_read_test(bz, "mp-147"));
-  info_update("First Brillouin zone\n", fbz.python_string());
-  info_update("Irreducible Brillouin zone\n", irp.python_string());
+  debug_update("First Brillouin zone\n", fbz.python_string());
+  debug_update("Irreducible Brillouin zone\n", irp.python_string());
 }
 
 //
@@ -104,8 +104,8 @@ TEST_CASE("Rhombohedral Brillouin zone","[bz_]"){
 //  LQVec<double> Qmqmtau = Q-(q+tau);
 //  for (auto i: Q.subItr()){
 //    REQUIRE(Q[i] == Approx(q[i] + tau[i]));
-//    REQUIRE(brille::approx::scalar(Qmq[i], static_cast<double>(tau[i])));
-//    REQUIRE(brille::approx::scalar(std::abs(Qmqmtau[i]), 0.));
+//    REQUIRE(brille::approx_float::scalar(Qmq[i], static_cast<double>(tau[i])));
+//    REQUIRE(brille::approx_float::scalar(std::abs(Qmqmtau[i]), 0.));
 //  }
 //  REQUIRE(write_read_test(bz, spgr));
 //}
@@ -134,8 +134,8 @@ TEST_CASE("BrillouinZone moveinto","[bz_]"){
     auto Qmqmtau = Q-(q+tau);
     for (auto i: Q.subItr()){
       REQUIRE(Q[i] == Approx(q[i] + tau[i]));
-      REQUIRE(brille::approx::scalar(Qmq[i], static_cast<double>(tau[i])));
-      REQUIRE(brille::approx::scalar(std::abs(Qmqmtau[i]), 0.));
+      REQUIRE(brille::approx_float::scalar(Qmq[i], static_cast<double>(tau[i])));
+      REQUIRE(brille::approx_float::scalar(std::abs(Qmqmtau[i]), 0.));
     }
     REQUIRE(write_read_test(bz, spacegroup));
   };
@@ -211,7 +211,7 @@ TEST_CASE("BrillouinZone moveinto hexagonal extended","[bz_][moveinto][.timing]"
 TEST_CASE("Irreducible Brillouin zone for mp-147 alt","[bz_][materialsproject]"){
   // The spacegroup for elemental Se, from https://www.materialsproject.org/materials/mp-147/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-147.html
-  // If brille::approx::scalar() is too strict this will fail.
+  // If brille::approx_float::scalar() is too strict this will fail.
   //
   std::string hall_symbol = "-R 3";
   // the other version below has slightly-off b vector length
@@ -227,14 +227,14 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 alt","[bz_][materialsproject]")
   auto irp = bz.get_ir_polyhedron();
   REQUIRE(irp.volume() == Approx(fbz.volume()/6));
   REQUIRE(write_read_test(bz, "mp-147"));
-  info_update("First Brillouin zone\n", fbz.python_string());
-  info_update("Irreducible Brillouin zone\n", irp.python_string());
+  debug_update("First Brillouin zone\n", fbz.python_string());
+  debug_update("Irreducible Brillouin zone\n", irp.python_string());
 }
 
 TEST_CASE("Irreducible Brillouin zone for mp-147 imprecise failure","[bz_][materialsproject]"){
   // The spacegroup for elemental Se, from https://www.materialsproject.org/materials/mp-147/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-147.html
-  // If brille::approx::scalar() is too strict this will fail.
+  // If brille::approx_float::scalar() is too strict this will fail.
   std::array<double, 9> lattice_vectors {
     10.699417459999999, 0.000000050000000, 0.000000000000000,
     -5.349708760000000, 9.265967300000000, 0.000000000000000,
@@ -250,7 +250,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 imprecise failure","[bz_][mater
 TEST_CASE("Irreducible Brillouin zone for mp-147","[bz_][materialsproject]"){
   // The spacegroup for elemental Se, from https://www.materialsproject.org/materials/mp-147/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-147.html
-  // If brille::approx::scalar() is too strict this will fail.
+  // If brille::approx_float::scalar() is too strict this will fail.
   std::array<double, 9> lattice_vectors{
       10.699417459999999, 0.000000000000000, 0.000000000000000,
       -5.349708729999997, 9.265967326054772, 0.000000000000000,
@@ -271,7 +271,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147","[bz_][materialsproject]"){
 TEST_CASE("Irreducible Brillouin zone for mp-306","[bz_][materialsproject]"){
   // The spacegroup for B₂O₃, from https://www.materialsproject.org/materials/mp-306/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-306.html
-  // If brille::approx::scalar() is too strict this will fail.
+  // If brille::approx_float::scalar() is too strict this will fail.
   std::array<double, 9> lattice_vectors{
      4.350620350000000, 0.000000000000000, 0.000000000000000,
     -2.175310180000000, 3.767747740000000, 0.000000000000000,
@@ -291,7 +291,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-306","[bz_][materialsproject]"){
 TEST_CASE("Irreducible Brillouin zone for mp-661","[bz_][materialsproject]"){
   // The spacegroup for AlN, from https://www.materialsproject.org/materials/mp-661/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-661.html
-  // If brille::approx::scalar() is too strict this will fail.
+  // If brille::approx_float::scalar() is too strict this will fail.
   std::array<double, 9> lattice_vectors{
      3.113692560000000, 0.000000000000000, 0.000000000000000,
     -1.556846270000000, 2.696536850000000, 0.000000000000000,
@@ -311,7 +311,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-661","[bz_][materialsproject]"){
 TEST_CASE("Irreducible Brillouin zone for mp-7041","[bz_][materialsproject]"){
   // The spacegroup for CaHgO₂, from https://www.materialsproject.org/materials/mp-7041/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-7041.html
-  // If brille::approx::scalar() is too strict this will fail.
+  // If brille::approx_float::scalar() is too strict this will fail.
   std::array<double, 9> lattice_vectors{
       3.559547360, 0.0,         0.0,
      -1.779773680, 3.082658440, 0.0,
@@ -332,7 +332,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-7041","[bz_][materialsproject]"){
 TEST_CASE("Irreducible Brillouin zone for mp-917 atl","[bz_][materialsproject]"){
   // The spacegroup for CaC₂, from https://www.materialsproject.org/materials/mp-917/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-917.html
-  // If brille::approx::scalar() is too strict this will fail.
+  // If brille::approx_float::scalar() is too strict this will fail.
   std::array<double,3> len{7.16797000, 3.84256200, 7.46845574}, ang{90, 106.87385147, 90};
   std::string hall_symbol = "-C 2y";
   //
@@ -344,14 +344,14 @@ TEST_CASE("Irreducible Brillouin zone for mp-917 atl","[bz_][materialsproject]")
   auto irp = bz.get_ir_polyhedron();
   REQUIRE(irp.volume() == Approx(fbz.volume()/4));
   REQUIRE(write_read_test(bz, "mp-917"));
-  info_update("First Brillouin zone\n", fbz.python_string());
-  info_update("Irreducible Brillouin zone\n", irp.python_string());
+  debug_update("First Brillouin zone\n", fbz.python_string());
+  debug_update("Irreducible Brillouin zone\n", irp.python_string());
 }
 
 TEST_CASE("Irreducible Brillouin zone for mp-917","[bz_][materialsproject]"){
   // The spacegroup for CaC₂, from https://www.materialsproject.org/materials/mp-917/
   // via http://phonondb.mtl.kyoto-u.ac.jp/ph20180417/d000/mp-917.html
-  // If brille::approx::scalar() is too strict this will fail.
+  // If brille::approx_float::scalar() is too strict this will fail.
   std::array<double, 9> lattice_vectors{
       7.068488010, 0.0,         0.002640550,
       0.0,         3.774933910, 0.0,
@@ -495,7 +495,6 @@ TEST_CASE("Find limiting tolerance", "[.][bz_][aflow]"){
       BrillouinZone bz(lat, ac);
       auto fbz = bz.get_polyhedron();
       n = fbz.vertices().size(0);
-      info_update(tol, " : ", n);
     } catch (const std::runtime_error & ex) {
       n = 0;
     } catch (...) {
@@ -503,14 +502,14 @@ TEST_CASE("Find limiting tolerance", "[.][bz_][aflow]"){
     }
     return n;
   };
-  std::vector<double> powers{-15,-14,-13,-12,-11};
+  std::vector<double> powers{-15,-14,-13,-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1};
   std::vector<ind_t> counts;
   for (auto p: powers){
     p = std::pow(10., p);
     counts.push_back(run_test(p));
   }
   for (ind_t i=0; i<powers.size(); ++i){
-    info_update("10^", powers[i], " : ", counts[i]);
+    info_update("10^", static_cast<int>(powers[i]), " : ", counts[i]);
   }
 
 }

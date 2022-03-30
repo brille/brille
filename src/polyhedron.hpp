@@ -489,7 +489,7 @@ protected:
         min_idx=static_cast<ind_t>(facet.size())+1;
         for (ind_t k=0; k<facet.size(); ++k)
           if ( std::find(used.begin(),used.end(),k)==used.end() // ensure the point hasn't already been picked
-               && !brille::approx::scalar(angles[k], 0.0) // that its not along the same line
+               && !brille::approx_float::scalar(angles[k], 0.0) // that its not along the same line
                && angles[k] < min_angle // and that it has a smaller winding angle
              ){
             min_idx=k;
@@ -555,7 +555,7 @@ public:
   //! Determine if the intersection of another Polyhedron with this one is non-null
   [[nodiscard]] bool intersects(const Polyhedron& other) const {
     // If two polyhedra intersect one another, their intersection is not null.
-    return !brille::approx::scalar(this->intersection(other).get_volume(), 0.);
+    return !brille::approx_float::scalar(this->intersection(other).get_volume(), 0.);
   }
   //! Return the intersection of another Polyhedron and this one
   [[nodiscard]] Polyhedron intersection(const Polyhedron& other) const {
@@ -588,7 +588,7 @@ public:
       for (const auto & vertex: face){
         o3d.push_back(orient3d(a.ptr(0), b.ptr(0), c.ptr(0), vertices.ptr(vertex)));
       }
-      auto all_zero = std::all_of(o3d.begin(), o3d.end(), [](const auto & x){return approx::scalar(x, 0.);});
+      auto all_zero = std::all_of(o3d.begin(), o3d.end(), [](const auto & x){return approx_float::scalar(x, 0.);});
       if (all_zero){
         all_zero = dot(three_point_normal(vertices, face[0], face[1], face[2]), three_point_normal(a, b, c)).all(cmp::gt, 0.);
       }
@@ -635,7 +635,7 @@ public:
     // auto origin = sum(pv)/static_cast<double>(pv.size(0));
     debug_update("Cut a ",pout.string_repr()," by ",p_a.size(0)," planes");
     for (ind_t i=0; i<p_a.size(0); ++i){
-      if (brille::approx::scalar(pout.get_volume(), 0.)) break; // we can't do anything with an empty polyhedron
+      if (brille::approx_float::scalar(pout.get_volume(), 0.)) break; // we can't do anything with an empty polyhedron
       verbose_update("Cut with a plane passing through ",p_a.to_string(i),", ",p_b.to_string(i),", and ",p_c.to_string(i), " with normal ", three_point_normal(p_a, p_b, p_c).to_string(i));
       auto a_i = p_a.view(i);
       auto b_i = p_b.view(i);

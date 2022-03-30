@@ -50,11 +50,11 @@ floating point equivalency.
 template<class T, class R>
 class Comparer{
 private:
-  bool useT; /*!< from `brille::approx::tols<T,R>` */
-  T relT; /*!< from `brille::approx::tols<T,R>` */
-  R relR; /*!< from `brille::approx::tols<T,R>` */
-  T absT; /*!< from `brille::approx::tols<T,R>` */
-  R absR; /*!< from `brille::approx::tols<T,R>` */
+  bool useT; /*!< from `brille::approx_float::tols<T,R>` */
+  T relT; /*!< from `brille::approx_float::tols<T,R>` */
+  R relR; /*!< from `brille::approx_float::tols<T,R>` */
+  T absT; /*!< from `brille::approx_float::tols<T,R>` */
+  R absR; /*!< from `brille::approx_float::tols<T,R>` */
   std::function<bool(const T&,const R&)> scalar; /*!< comparison function for scalars */
   std::function<bool(const size_t&,const T*,const size_t&,const R*,const size_t&)> vector; /*!< comparison function for strided vectors */
 public:

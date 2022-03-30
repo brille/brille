@@ -411,7 +411,7 @@ namespace brille {
   point_inside_all_planes(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& x){
       auto o3d = pseudo_orient3d(a, b, c, x);
       auto v = std::min_element(o3d.begin(), o3d.end());
-      return *v > 0 || approx::scalar(*v, 0.);
+      return *v > 0 || approx_float::scalar(*v, 0.);
   }
 
   template<class T, class R, template<class> class A, template<class> class B>
@@ -553,7 +553,7 @@ namespace brille {
       auto o3dk = pseudo_orient3d(a, b, c, v.view(k))[0];
       // both on one side, both on the other side, or both *in* the plane all preclude a single intersection
       if ((o3dj < 0 && o3dk < 0) || (o3dj > 0 && o3dk > 0) || (o3dj == 0 && o3dk == 0)) ok = false;
-      if (brille::approx::scalar(o3dj, 0., tol) && brille::approx::scalar(o3dk, 0., tol)) ok = false;
+      if (brille::approx_float::scalar(o3dj, 0., tol) && brille::approx_float::scalar(o3dk, 0., tol)) ok = false;
     }
     A<T> at;
     if (ok) {
@@ -614,11 +614,11 @@ namespace brille {
       auto denominator =  dot(plane_n, line_u);
       if (denominator.abs().sum() == 0) continue;
       auto factor = (dot(plane_n, a - v.view(edge.first)) / denominator).sum();
-//      if (factor < T(0) && approx::scalar(factor, T(0), tol)){
+//      if (factor < T(0) && approx_float::scalar(factor, T(0), tol)){
 //        out.emplace_back(first, second, edge, v.view(edge.first));
 //        continue;
 //      }
-//      if (factor > T(1) && approx::scalar(factor, T(1), tol)){
+//      if (factor > T(1) && approx_float::scalar(factor, T(1), tol)){
 //        out.emplace_back(first, second, edge, v.view(edge.second));
 //        continue;
 //      }
@@ -782,7 +782,7 @@ namespace brille {
 //      auto min_idx = static_cast<ind_t>(pruned.size());
 //      for (ind_t k=0; k < pruned.size(); ++k){
 //        auto unused = std::find(used.begin(), used.end(), k) == used.end();
-//        auto not_zero = !approx::scalar(angles[k], 0.);
+//        auto not_zero = !approx_float::scalar(angles[k], 0.);
 //        if (unused && not_zero && angles[k] < min_angle){
 //          min_idx = k;
 //          min_angle = angles[k];
@@ -894,7 +894,7 @@ namespace brille {
       ind_t count{0};
       std::vector<ind_t> nim;
       nim.reserve(total);
-      for (const auto & b: keep) nim.push_back(b ? count++ : total);
+      for (const auto b: keep) nim.push_back(b ? count++ : total);
       for (auto & face: faces) for (auto & v: face) if (nim[v] < total) v = nim[v];
       points = points.extract(keep);
       return true;
@@ -1074,7 +1074,7 @@ namespace brille {
       I count{0}, no{points.size(0)};
       std::vector<I> map;
       map.reserve(no);
-      for (const auto & b: keep) map.push_back(b ? count++ : no);
+      for (const auto b: keep) map.push_back(b ? count++ : no);
       std::vector<std::vector<I>> updated;
       updated.reserve(faces.size());
       for (const auto & face: faces) {

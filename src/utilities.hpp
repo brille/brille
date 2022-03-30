@@ -22,7 +22,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Various utility functions, mostly linear algebra
 */
 #include <algorithm>
-#include "approx.hpp"
+#include "approx_float.hpp"
 #include "math.hpp"
 
 namespace brille{

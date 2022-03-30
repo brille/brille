@@ -1,7 +1,6 @@
 #ifndef _BRILLE_POLYHEDRON_LATTICE_HPP_
 #define _BRILLE_POLYHEDRON_LATTICE_HPP_
 
-//#include "polyhedron.hpp"
 #include "lattice_dual.hpp"
 
 #include <utility>

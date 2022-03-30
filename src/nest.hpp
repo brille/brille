@@ -36,12 +36,11 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "approx_config.hpp"
 #include "polyhedron_flex.hpp"
 
-// #include "approx.hpp"
 namespace brille {
 
 template<typename T,size_t N>
 static bool none_negative(const std::array<T,N>& x){
-  return !std::any_of(x.begin(), x.end(), [](T z){return z<0 && !brille::approx::scalar(z,0.);});
+  return !std::any_of(x.begin(), x.end(), [](T z){return z<0 && !brille::approx_float::scalar(z,0.);});
 }
 
 /*! \brief A single tetrahedron
@@ -114,7 +113,7 @@ private:
     d[2] = x.val(0,2) - centre_radius[2];
     double d2{0}, r2 = centre_radius[3]*centre_radius[3];
     for (size_t i=0; i<3u; ++i) d2 += d[i]*d[i];
-    return ( d2 < r2 || brille::approx::scalar(d2,r2) );
+    return ( d2 < r2 || brille::approx_float::scalar(d2,r2) );
   }
 };
 
@@ -204,7 +203,7 @@ protected:
     if (this->is_leaf()){
       std::array<ind_t,4> vi = boundary_.vertices();
       std::vector<std::pair<ind_t,double>> iw;
-      for (size_t i=0; i<4u; ++i) if (!brille::approx::scalar(w[i], 0.))
+      for (size_t i=0; i<4u; ++i) if (!brille::approx_float::scalar(w[i], 0.))
         iw.emplace_back(vi[i], w[i]);
       return iw;
     }

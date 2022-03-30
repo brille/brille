@@ -167,10 +167,10 @@ LVec<T> operator ^ (const T& val) {
   return out;
 }
 
-  template<class R>
-  void binary_operation_check(const LVec<R>& b) const{
-    assert(_lattice == b.lattice());
-  }
+//  template<class R>
+//  void binary_operation_check(const LVec<R>& b) const{
+//    assert(_lattice == b.lattice());
+//  }
 
   //! Check whether a second LDVec is approximately the same as this object
   template<class R>

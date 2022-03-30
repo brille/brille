@@ -320,9 +320,9 @@ TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trell
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
   auto verts = bzt.get_xyz();
-  info_update("First Bz\n", fbz.python_string(), "\nIrreducible Bz\n", irp.python_string());
-  info_update("Triangulated points\nnp.array(", verts.to_string(), ")");
-  info_update("Triangulated tetrahedra\n", bzt.get_vertices_per_tetrahedron());
+  debug_update("First Bz\n", fbz.python_string(), "\nIrreducible Bz\n", irp.python_string());
+  debug_update("Triangulated points\nnp.array(", verts.to_string(), ")");
+  debug_update("Triangulated tetrahedra\n", bzt.get_vertices_per_tetrahedron());
 
 
   // The total volume of all of the nodes should be the same as the irreducible

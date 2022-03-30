@@ -25,7 +25,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <utility>
 #include "neighbours.hpp"
 #include "transform.hpp"
-//#include "polyhedron.hpp"
 #include "polyhedron_flex.hpp"
 #include "phonon.hpp"
 #include "hdf_interface.hpp"

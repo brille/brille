@@ -408,7 +408,7 @@ bool BrillouinZone::wedge_brute_force(const bool special_2_folds, const bool spe
     auto goal_volume = _first.volume()/static_cast<double>(full_ps.size());
     auto aaiu = all_axes.is_unique();
     auto cnt = all_axes.unique().size(0);
-    if ((ir_volume > goal_volume && cnt == 1) || brille::approx::scalar(ir_volume, 2.0*goal_volume) ){
+    if ((ir_volume > goal_volume && cnt == 1) || brille::approx_float::scalar(ir_volume, 2.0*goal_volume) ){
       debug_update("Deal with -1 since there is only one stationary axis (or doubled volume for some other reason)");
       auto bz_n = this->get_normals();
       // auto wg_n = this->get_ir_wedge_normals(); // !! This is empty if the thus-far-found volume is wrong

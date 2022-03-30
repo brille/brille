@@ -1230,7 +1230,7 @@ SCALAR_INPLACE_OP(/=)
 template<class T>
 bool broadcast_shape_check(const std::vector<T>& a, const std::vector<T>&b){
   bool ok = a.size() == b.size();
-  ok &= brille::approx::vector(a.size(), a.data(), b.data());
+  ok &= brille::approx_float::vector(a.size(), a.data(), b.data());
   if (!ok){
     std::string msg = "In place broadcasting is not possible for { ";
     for (auto x: a) msg += std::to_string(x) + " ";

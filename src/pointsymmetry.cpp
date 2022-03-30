@@ -21,7 +21,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <iostream>
 #include "pointgroup.hpp"
 #include <algorithm>
-#include "approx.hpp"
+#include "approx_float.hpp"
 using namespace brille;
 /*****************************************************************************\
 | PointSymmetry class Member functions:                                       |
@@ -123,7 +123,7 @@ Matrix<int> PointSymmetry::get_inverse(const size_t i) const {
   // the identity element. Let's look for Rⱼ instead.
   for (size_t j=0; j<this->size(); ++j){
     brille::utils::multiply_matrix_matrix(result.data(), this->R[j].data(), this->R[i].data());
-    if (brille::approx::matrix(3, identity.data(), result.data())) return this->R[j];
+    if (brille::approx_float::matrix(3, identity.data(), result.data())) return this->R[j];
   }
   throw std::runtime_error("Incomplete pointgroup. Missing inverse of operation.");
 }
@@ -135,12 +135,12 @@ size_t PointSymmetry::get_inverse_index(const size_t i) const {
   // the identity element. Let's look for Rⱼ instead.
   for (size_t j=0; j<this->size(); ++j){
     brille::utils::multiply_matrix_matrix(result.data(), this->R[j].data(), this->R[i].data());
-    if (brille::approx::matrix(3, identity.data(), result.data())) return j;
+    if (brille::approx_float::matrix(3, identity.data(), result.data())) return j;
   }
   throw std::runtime_error("Incomplete pointgroup. Missing inverse of operation.");
 }
 size_t PointSymmetry::find_index(const Matrix<int>& a) const {
-  auto iseq = [ap=a.data()](const Matrix<int>& r){ return brille::approx::matrix(3,ap,r.data());};
+  auto iseq = [ap=a.data()](const Matrix<int>& r){ return brille::approx_float::matrix(3,ap,r.data());};
   auto itr = std::find_if(this->R.begin(), this->R.end(), iseq);
   return std::distance(this->R.begin(), itr);
 }
@@ -163,7 +163,7 @@ void PointSymmetry::print(const size_t i) const {
     std::cout << std::endl;
   }
 }
-void PointSymmetry::print(void) const {
+void PointSymmetry::print() const {
   for (size_t i=0; i<this->R.size(); ++i){
     this->print(i);
     std::cout << std::endl;
@@ -222,17 +222,17 @@ void PointSymmetry::permute(const std::vector<size_t>& p){
   }
 }
 
-std::vector<int> PointSymmetry::orders(void) const {
+std::vector<int> PointSymmetry::orders() const {
   std::vector<int> o;
   for (auto r: this->R) o.push_back(rotation_order(r.data()));
   return o;
 }
-std::vector<int> PointSymmetry::isometries(void) const {
+std::vector<int> PointSymmetry::isometries() const {
   std::vector<int> i;
   for (auto r: this->R) i.push_back(isometry_value(r.data()));
   return i;
 }
-Vectors<int> PointSymmetry::axes(void) const {
+Vectors<int> PointSymmetry::axes() const {
   Vectors<int> ax;
   for (auto r: this->R) ax.push_back(brille::rotation_axis_and_perpendicular_vectors(r.data())[0]);
   return ax;
@@ -254,7 +254,7 @@ PointSymmetry PointSymmetry::add_space_inversion() const {
 }
 
 bool PointSymmetry::has(const Matrix<int>& m) const {
-  for (auto r: R) if (brille::approx::matrix(m.data(), r.data())) return true;
+  for (auto r: R) if (brille::approx_float::matrix(m.data(), r.data())) return true;
   return false;
 }
 Matrix<int> PointSymmetry::pop(const size_t i) {
@@ -288,12 +288,12 @@ Vector<int> PointSymmetry::perpendicular_axis(const size_t i) const {
     throw std::out_of_range("The requested symmetry operation is out of range");
   return brille::rotation_axis_and_perpendicular_vectors(this->R[i].data())[1];
 }
-Vectors<int> PointSymmetry::perpendicular_axes(void) const {
+Vectors<int> PointSymmetry::perpendicular_axes() const {
   Vectors<int> ax;
   for (auto r: this->R) ax.push_back(brille::rotation_axis_and_perpendicular_vectors(r.data())[1]);
   return ax;
 }
-PointSymmetry PointSymmetry::generate(void) const {
+PointSymmetry PointSymmetry::generate() const {
   Matrix<int> x, y, E{1,0,0, 0,1,0, 0,0,1}; // E, the identity operation
   PointSymmetry gen;
   gen.add(E); // any generated operations always need the identity operation
@@ -315,7 +315,7 @@ PointSymmetry PointSymmetry::generate(void) const {
   }
   return gen;
 }
-PointSymmetry PointSymmetry::generators(void) const {
+PointSymmetry PointSymmetry::generators() const {
   PointSymmetry listA(this->getall()), listB, listC;
   while (listA.size()){
     // move the first element of A to B
@@ -345,7 +345,7 @@ PointSymmetry PointSymmetry::nfolds(const int min_order) const {
   Vectors<int> unq_axis;
   for (size_t i=0; i<this->size(); ++i){
     bool isunique = true;
-    for (auto j: unq_idx) if (brille::approx::vector(all_axis[j].data(), all_axis[i].data())){
+    for (auto j: unq_idx) if (brille::approx_float::vector(all_axis[j].data(), all_axis[i].data())){
       eqv_idx[i] = j;
       isunique = false;
       break;
@@ -358,11 +358,11 @@ PointSymmetry PointSymmetry::nfolds(const int min_order) const {
   }
   // equal-valued entries of eqv_idx have the same stationary axis
   // but the order of the selected unique rotation may not be what we want
-  for (size_t i=0; i<unq_idx.size(); ++i){
-    size_t idx = unq_idx[i];
+  for (unsigned long & i : unq_idx){
+    size_t idx = i;
     for (size_t j=0; j<this->size(); ++j)
-    if (idx == eqv_idx[j] && this->order(j) > this->order(unq_idx[i]))
-    unq_idx[i] = j;
+    if (idx == eqv_idx[j] && this->order(j) > this->order(i))
+    i = j;
   }
   /* Now each unique index points to a symmetry operation of highest order along
      its unique axis. What is not determined at this point is whether each
@@ -383,9 +383,11 @@ PointSymmetry PointSymmetry::nfolds(const int min_order) const {
 }
 PointSymmetry PointSymmetry::higher(const int min_order) const {
   PointSymmetry out;
-  for (size_t i=0; i<this->size(); ++i)
-  if (this->order(i) > min_order)
-  out.add(this->get(i));
-  out.sort();
+  for (size_t i=0; i<this->size(); ++i) {
+    if (this->order(i) > min_order) {
+      out.add(this->get(i));
+    }
+    out.sort();
+  }
   return out;
 }

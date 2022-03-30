@@ -93,11 +93,11 @@ operations.
             for (int i=0; i<3; ++i) d[i] = T(0.5) - std::abs(d[i] - std::floor(d[i]) - T(0.5));
             // so if the difference vector is ~ ⃗0 or ~ ⃗1 and the matrix parts match
             // then the Motions are equivalent
-            return brille::approx::vector(d.data(), z.data()) && brille::approx::matrix(W.data(), mW.data());
+            return brille::approx_float::vector(d.data(), z.data()) && brille::approx_float::matrix(W.data(), mW.data());
         }
         template<class S>
         bool equal_matrix(const Matrix<S>& m) const {
-            return brille::approx::matrix(W.data(), m.data());
+            return brille::approx_float::matrix(W.data(), m.data());
         }
         // Some compiler documentation (GCC,+?) claims that operator!= will be
         // automatically constructed if operator== is defined. This is apparently not
@@ -106,11 +106,11 @@ operations.
         bool operator!=(const Motion<R,T>& m) const { return !this->operator==(m); }
         [[nodiscard]] bool has_identity_rotation() const {
             Matrix<R> i{{1,0,0, 0,1,0, 0,0,1}};
-            return brille::approx::matrix(W.data(), i.data());
+            return brille::approx_float::matrix(W.data(), i.data());
         }
         [[nodiscard]] bool has_identity_translation() const {
             Vector<T> i{{0,0,0}};
-            return brille::approx::vector(w.data(), i.data());
+            return brille::approx_float::vector(w.data(), i.data());
         }
         size_t from_ascii(const std::string& s, bool cob=false);
         [[nodiscard]] std::string to_ascii() const;
@@ -146,7 +146,7 @@ operations.
                 int num{0}, den{0};
                 for (; num<256; ++num){
                     den = T(num)/v;
-                    if (brille::approx::scalar(v, T(num)/T(den))) break;
+                    if (brille::approx_float::scalar(v, T(num)/T(den))) break;
                 }
                 lout += (num < 256) ? (std::to_string(num) + "/" + std::to_string(den)) : std::to_string(v);
             }

@@ -234,7 +234,7 @@ template<class T> template<class R> [[nodiscard]] std::vector<bool> LQPolyhedron
 }
 
 template<class T> template<class R> [[nodiscard]] bool LQPolyhedron<T>::intersects(const LQPolyhedron<R>& that) const {
-  return !approx::scalar(this->intersection(that).volume(), 0.);
+  return !approx_float::scalar(this->intersection(that).volume(), 0.);
 }
 
 template<class T> template<class R> [[nodiscard]] LQPolyhedron<T> LQPolyhedron<T>::intersection(const LQPolyhedron<R>& that) const {
@@ -267,7 +267,7 @@ template<class T> template<class R> [[nodiscard]] size_t LQPolyhedron<T>::face_i
     for (const auto & vertex: face){
       o3d.push_back(orient3d(ahkl.ptr(0), bhkl.ptr(0), chkl.ptr(0), vhkl.ptr(vertex)));
     }
-    auto all_zero = std::all_of(o3d.begin(), o3d.end(), [](const auto & x){return approx::scalar(x, 0.);});
+    auto all_zero = std::all_of(o3d.begin(), o3d.end(), [](const auto & x){return approx_float::scalar(x, 0.);});
     if (all_zero) {
       all_zero = dot(three_point_normal(_vertices, face[0], face[1], face[2]), three_point_normal(a, b, c)).all(cmp::gt, 0.);
     }
@@ -351,7 +351,7 @@ template<class T> template<class R> LQPolyhedron<T> LQPolyhedron<T>::cut(const L
   LQPolyhedron<T> out(*this);
   for (ind_t i=0; i < a.size(0); ++i){
     out = out.one_cut(a.view(i), b.view(i), c.view(i));
-    if (approx::scalar(out.volume(), 0.)) break;
+    if (approx_float::scalar(out.volume(), 0.)) break;
   }
   return out;
 }

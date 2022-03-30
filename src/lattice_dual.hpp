@@ -408,7 +408,7 @@ public:
     // two lattices are *the* same if their basis vectors are the same
     auto bv = o.real_basis_vectors();
     auto rbv = o.reciprocal_basis_vectors();
-    return approx::equal(bv, _real_vectors) && approx::equal(rbv, _reciprocal_vectors);
+    return approx_float::equal(bv, _real_vectors) && approx_float::equal(rbv, _reciprocal_vectors);
   }
   template<class R>
   [[nodiscard]] bool is_equivalent(const Lattice<R>& o) const {

@@ -28,7 +28,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <functional>
 #include <utility>
 #include <filesystem>
-//#include "polyhedron.hpp"
 #include "interpolatordual.hpp"
 #include "hdf_interface.hpp"
 #include "trellis_node.hpp"
@@ -55,9 +54,9 @@ namespace brille::polytrellis {
 // template<class T, class I>
 // static int on_boundary(const T zero, const T step, const I size, const T x, const I i){
 //   // if x is infinitesimally smaller than zero+step*(i+1)
-//   if (i+1<size && brille::approx::scalar(zero+step*(i+1),x)) return  1;
+//   if (i+1<size && brille::approx_float::scalar(zero+step*(i+1),x)) return  1;
 //   // if x is infinitesimally larger than zero+step*i
-//   if (i  >0    && brille::approx::scalar(zero+step*(i  ),x)) return -1;
+//   if (i  >0    && brille::approx_float::scalar(zero+step*(i  ),x)) return -1;
 //   return 0;
 // }
 template<class T>
@@ -72,8 +71,8 @@ template<class T>
 static int on_boundary(const std::vector<T>& bin_edges, const T x, const size_t i){
   // if (i==0) then above d was *either* 0 or 1, otherwise d = i + 1;
   // if (i==0) we can't go lower in either case, so no problem.
-  if (i+2<bin_edges.size() && brille::approx::scalar(bin_edges[i+1],x)) return  1;
-  if (i  >0                && brille::approx::scalar(bin_edges[i  ],x)) return -1;
+  if (i+2<bin_edges.size() && brille::approx_float::scalar(bin_edges[i+1],x)) return  1;
+  if (i  >0                && brille::approx_float::scalar(bin_edges[i  ],x)) return -1;
   return 0;
 }
 

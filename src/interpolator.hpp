@@ -30,8 +30,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "phonon.hpp"
 #include "permutation.hpp"
 #include "permutation_table.hpp"
-// #include "approx.hpp"
-// #include "utilities.hpp"
 #include "rotates.hpp"
 namespace brille {
 
@@ -555,7 +553,7 @@ private:
     // data_ is always 2D: (N,1), (N,B), or (N,Y)
     for (ind_t offset=1; offset < b_; ++offset)
     for (ind_t i=0, j=offset; j < b_; ++i, ++j)
-    if (brille::approx::vector(s_, data_.ptr(idx, i*s_), data_.ptr(idx, j*s_))) return true;
+    if (brille::approx_float::vector(s_, data_.ptr(idx, i*s_), data_.ptr(idx, j*s_))) return true;
     // no matches
     return false;
   }

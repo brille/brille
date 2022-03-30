@@ -8,11 +8,12 @@
 #include "lattice_dual.hpp"
 #include "array_.hpp"
 #include "transform.hpp"
-#include "approx.hpp"
+#include "approx_float.hpp"
 
 using namespace brille;
 using namespace brille::lattice;
 using namespace brille::math;
+using namespace brille::approx_float;
 
 TEST_CASE("primitive transforms","[transform]"){
   Bravais c{Bravais::_};
@@ -29,7 +30,7 @@ TEST_CASE("primitive transforms","[transform]"){
   int I[9]={6,0,0, 0,6,0, 0,0,6};
   int res[9];
   brille::utils::multiply_matrix_matrix<int,PrimitiveTraits::invP,PrimitiveTraits::sixP,3>(res,invP.data(),sixP.data());
-  REQUIRE( brille::approx::matrix<int, int, 3>(res,I) );
+  REQUIRE( matrix<int, int, 3>(res,I) );
 }
 
 TEST_CASE("primitive vector transforms","[transform]"){

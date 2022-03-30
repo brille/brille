@@ -33,7 +33,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "subscript.hpp"
 #include "utilities.hpp"
 #include "comparisons.hpp"
-// #include "approx.hpp"
 #include "types.hpp"
 #include "array_pre.hpp"
 // #include "array2.hpp"

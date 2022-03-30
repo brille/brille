@@ -82,18 +82,19 @@ class UtilsTestBZ (unittest.TestCase):
         with self.assertRaises(ValueError):
             bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90])
 
-    def test_spacegroup_number(self):
-        # Tests for a spacegroup / Hall number instead of a Hall symbol
-        bz = br_py.utils.create_bz(self.a, self.b, self.c, self.alpha, self.beta, self.gamma, 1)
-        self.check_lattice(bz)
+    # 'Hall number' specification removed in v0.6.0
+    # def test_spacegroup_number(self):
+    #     # Tests for a spacegroup / Hall number instead of a Hall symbol
+    #     bz = br_py.utils.create_bz(self.a, self.b, self.c, self.alpha, self.beta, self.gamma, 1)
+    #     self.check_lattice(bz)
 
     def test_invalid_spacegroups(self):
         # Tests for invalid spacegroups given
         with self.assertRaises(ValueError):
-            # Must be a string or number
+            # Must be a string
             bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], [])
-        with self.assertRaises(RuntimeError):
-            # "Unknown lattice type"
+        with self.assertRaises(ValueError):
+            # Must be a string
             bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], -1)
 
     def test_using_reciprocal(self):

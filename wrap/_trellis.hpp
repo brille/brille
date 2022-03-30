@@ -18,7 +18,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <iostream>
 #include <pybind11/pybind11.h>
 #include "_common_grid.hpp"
-//#include "trellis.hpp"
 #include "bz_trellis.hpp"
 #include "approx_config.hpp"
 
