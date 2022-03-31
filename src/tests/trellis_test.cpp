@@ -6,6 +6,7 @@
 #include "debug.hpp"
 #include "bz_trellis.hpp"
 #include "lattice_dual.hpp"
+#include "process_id.hpp"
 
 using namespace brille;
 using namespace brille::lattice;
@@ -17,15 +18,16 @@ bool write_read_test(const BrillouinZoneTrellis3<T,R,S>& source, const std::stri
   namespace fs = std::filesystem;
   auto temp_dir = fs::temp_directory_path();
   fs::path filepath = temp_dir;
-  filepath /= fs::path(hdf_pid_filename("brille"));
+  filepath /= fs::path(pid_filename("brille",".h5"));
   auto filename = filepath.string();
 
   // write the BrillouinZoneTrellis3 to disk:
-  if(!source.to_hdf(filename, name))
+  if(!source.to_hdf(filename, name)) {
+    fs::remove(filepath);
     throw std::runtime_error("Problem writing to HDF file?");
-
+  }
   auto sink = BrillouinZoneTrellis3<T,R,S>::from_hdf(filename, name);
-
+  fs::remove(filepath);
   return (source == sink);
 }
 #else

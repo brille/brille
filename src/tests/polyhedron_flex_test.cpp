@@ -3,6 +3,7 @@
 
 #include "array_.hpp" // defines bArray<T> as Array2<T> or Array<T>
 #include "polyhedron_flex.hpp"
+#include "process_id.hpp"
 
 using namespace brille;
 using namespace brille::polyhedron;
@@ -188,12 +189,6 @@ TEST_CASE("Small face polyhedron convex hull","[polyhedron][convexhull]"){
 }
 
 TEST_CASE("Polyhedron IO","[polyhedron][io]"){
-    namespace fs=std::filesystem;
-    auto tdir = fs::temp_directory_path();
-    fs::path filepath = tdir;
-    filepath /= fs::path(hdf_pid_filename("brille"));
-
-
     std::vector<std::array<double,3>> va_verts{{1,1,0},{2,0,0},{1,1,1},{0,0,0}};
     auto verts = bArray<double>::from_std(va_verts);
     std::vector<std::vector<int>> vpf{{0,1,3},{0,2,1},{0,3,2},{1,2,3}};
@@ -201,6 +196,10 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
 
 #ifdef USE_HIGHFIVE
     // write the Polyhedron to the file:
+    namespace fs=std::filesystem;
+    auto tdir = fs::temp_directory_path();
+    fs::path filepath = tdir;
+    filepath /= fs::path(pid_filename("brille",".h5"));
     auto filename = filepath.string();
     std::string dataset="/polyhedron";
     std::cout << "Writing to file " << filename << std::endl;

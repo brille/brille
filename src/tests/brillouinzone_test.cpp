@@ -3,6 +3,7 @@
 #include <catch2/catch.hpp>
 #include "bz.hpp"
 #include <filesystem>
+#include "process_id.hpp"
 
 using namespace brille;
 using namespace brille::lattice;
@@ -12,14 +13,16 @@ bool write_read_test(const BrillouinZone& source, const std::string& name){
     namespace fs = std::filesystem;
     auto temp_dir = fs::temp_directory_path();
     fs::path filepath = temp_dir;
-    filepath /= fs::path(hdf_pid_filename("brille"));
+    filepath /= fs::path(pid_filename("brille", ".h5"));
 
     // write the BrillouinZone to disk:
     auto wrote_ok = source.to_hdf(filepath.string(), name);
-    if (!wrote_ok) return false;
-
+    if (!wrote_ok) {
+      fs::remove(filepath);
+      return false;
+    }
     auto sink = BrillouinZone::from_hdf(filepath.string(), name);
-
+    fs::remove(filepath);
     return (source == sink);
 }
 #else

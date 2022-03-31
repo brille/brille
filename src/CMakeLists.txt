@@ -31,6 +31,7 @@ list(APPEND CXX_SOURCES
   polyhedron_faces.cpp
   pointgroup.cpp
   pointsymmetry.cpp
+  process_id.cpp
   spg_database.cpp
   symmetry.cpp
 )

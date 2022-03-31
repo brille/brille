@@ -20,8 +20,6 @@ const std::string LENGTH_ATTR_NAME("length");
 
 namespace brille {
 
-  std::string hdf_pid_filename(std::string base={});
-
   template<class T, class... V>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, T>, HighFive::Group>
   overwrite_group(T& obj, const std::string& entry, V... args){
