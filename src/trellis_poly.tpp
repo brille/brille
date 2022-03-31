@@ -468,8 +468,11 @@ PolyTrellis<T,R,S,A>::part_two(
   nodes_ = NodeContainer(node_type);
   auto count = this->node_count();
   ind_t fatal_errors{0}, errors{0};
-#pragma omp parallel for default(none) shared(poly_stash, node_type, count, node_index_map, n_kept, n_lost, s_tol, d_tol) reduction(+:fatal_errors, errors)
-  for (size_t i=0; i<count; ++i){
+  // TODO find a way around this MSVC OpenMP 2 limitation of signed indexes
+  auto s_count = utils::u2s<long long>(count);
+#pragma omp parallel for default(none) shared(poly_stash, node_type, s_count, node_index_map, n_kept, n_lost, s_tol, d_tol) reduction(+:fatal_errors, errors)
+  for (long long s_i=0; s_i<s_count; ++s_i){
+    auto i = utils::s2u<ind_t>(s_i);
     switch (node_type[i]){
     case NodeType::cube:
     {

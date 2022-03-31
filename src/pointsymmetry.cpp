@@ -358,8 +358,8 @@ PointSymmetry PointSymmetry::nfolds(const int min_order) const {
   }
   // equal-valued entries of eqv_idx have the same stationary axis
   // but the order of the selected unique rotation may not be what we want
-  for (unsigned long & i : unq_idx){
-    size_t idx = i;
+  for (auto & i : unq_idx){
+    auto idx{i};
     for (size_t j=0; j<this->size(); ++j)
     if (idx == eqv_idx[j] && this->order(j) > this->order(i))
     i = j;
