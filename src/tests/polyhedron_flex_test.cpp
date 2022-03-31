@@ -191,7 +191,7 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     namespace fs=std::filesystem;
     auto tdir = fs::temp_directory_path();
     fs::path filepath = tdir;
-    filepath /= fs::path("brille.h5");
+    filepath /= fs::path(hdf_pid_filename("brille"));
 
 
     std::vector<std::array<double,3>> va_verts{{1,1,0},{2,0,0},{1,1,1},{0,0,0}};

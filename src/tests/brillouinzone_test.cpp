@@ -12,7 +12,7 @@ bool write_read_test(const BrillouinZone& source, const std::string& name){
     namespace fs = std::filesystem;
     auto temp_dir = fs::temp_directory_path();
     fs::path filepath = temp_dir;
-    filepath /= fs::path("brille"+std::to_string(processid())+".h5");
+    filepath /= fs::path(hdf_pid_filename("brille"));
 
     // write the BrillouinZone to disk:
     auto wrote_ok = source.to_hdf(filepath.string(), name);

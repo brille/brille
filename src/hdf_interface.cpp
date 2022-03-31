@@ -1,5 +1,19 @@
 #include "hdf_interface.hpp"
 
+#if defined(_MSC_VER) || defined(__MINGW32__)
+#include <process.h>
+std::string brille::hdf_pid_filename(std::string base) {
+ return base + std::to_string(_getpid()) + ".h5";
+}
+#else
+#include <unistd.h>
+std::string brille::hdf_pid_filename(std::string base) {
+  return base + std::to_string(getpid()) + ".h5";
+}
+#endif
+
+
+
 // explicitly define the HighFive create_datatype specialisations rather than
 // using the provided macro HIGHFIVE_REGISTER_TYPE
 namespace HighFive {
