@@ -110,6 +110,8 @@ public:
       tgi.facetmarkerlist[i] = static_cast<int>(i);
       tgi.facetlist[i].numberofpolygons = 1;
       tgi.facetlist[i].polygonlist = new tetgenio::polygon[1];
+      tgi.facetlist[i].numberofholes = 0;
+      tgi.facetlist[i].holelist = nullptr;
       tgi.facetlist[i].polygonlist[0].numberofvertices = static_cast<int>(vpf[i].size());
       tgi.facetlist[i].polygonlist[0].vertexlist = new int[tgi.facetlist[i].polygonlist[0].numberofvertices];
       for (size_t j=0; j<vpf[i].size(); ++j)

@@ -592,13 +592,21 @@ triangulate_one_layer(const bArray<T>& verts,
   tgi.facetmarkerlist = new int[tgi.numberoffacets];
   for (ind_t i=0; i<vpf.size(); ++i){
     tgi.facetmarkerlist[i] = static_cast<int>(i);
-    tgi.facetlist[i].numberofpolygons = 1;
-    tgi.facetlist[i].polygonlist = new tetgenio::polygon[1];
-    tgi.facetlist[i].polygonlist[0].numberofvertices = static_cast<int>(vpf[i].size());
-    tgi.facetlist[i].polygonlist[0].vertexlist = nullptr;
-    tgi.facetlist[i].polygonlist[0].vertexlist = new int[tgi.facetlist[i].polygonlist[0].numberofvertices];
+    // Use a reference to the facet list entry to shorten lines
+    auto & fi{tgi.facetlist[i]};
+    // Every facet is a single polygon, always.
+    fi.numberofpolygons = 1;
+    fi.polygonlist = new tetgenio::polygon[1];
+    // And no holes are allowed -- we're forced to be explicit about the nullptr to make MVSC happy
+    fi.numberofholes = 0;
+    fi.holelist = nullptr;
+    // Use a reference to the only polygon list entry to shorten lines more
+    auto & p0{fi.polygonlist[0]};
+    p0.numberofvertices = static_cast<int>(vpf[i].size());
+    p0.vertexlist = nullptr;
+    p0.vertexlist = new int[p0.numberofvertices];
     for (ind_t j=0; j<vpf[i].size(); ++j)
-      tgi.facetlist[i].polygonlist[0].vertexlist[j] = static_cast<int>(vpf[i][j]);
+      p0.vertexlist[j] = static_cast<int>(vpf[i][j]);
   }
   // The input is now filled with the piecewise linear complex information.
   // so we can call tetrahedralize:
