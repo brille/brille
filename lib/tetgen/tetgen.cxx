@@ -2952,6 +2952,7 @@ char* tetgenio::findnextnumber(char *string)
 //== io_cxx ==================================================================//
 
 
+#ifndef TETLIBRARY
 //== behavior_cxx ============================================================//
 //                                                                            //
 //                                                                            //
@@ -3797,6 +3798,7 @@ bool tetgenbehavior::parse_commandline(int argc, char **argv)
 //                                                                            //
 //                                                                            //
 //== behavior_cxx ============================================================//
+#endif
 
 //== mempool_cxx =============================================================//
 //                                                                            //
@@ -19492,7 +19494,7 @@ int tetgenmesh::add_steinerpt_in_segment(face* misseg, int searchlevel, int& idi
   enum interresult dir;
   REAL P[3], Q[3], tp, tq;
   REAL len, smlen = 0, split = 0, split_q = 0;
-  int success;
+//  int success;
   int i;
 
   startpt = sorg(*misseg);
@@ -19526,10 +19528,10 @@ int tetgenmesh::add_steinerpt_in_segment(face* misseg, int searchlevel, int& idi
 
   if (dir == ACROSSFACE) {
     // A face is intersected with the segment. Try to flip it.
-    success = removefacebyflips(&searchtet, &fc);
+    removefacebyflips(&searchtet, &fc);
   } else if (dir == ACROSSEDGE) {
     // An edge is intersected with the segment. Try to flip it.
-    success = removeedgebyflips(&searchtet, &fc);
+    removeedgebyflips(&searchtet, &fc);
   }
 
   split = 0;
@@ -26110,7 +26112,7 @@ REAL tetgenmesh::get_min_angle_at_ridge_vertex(face* seg)
 void tetgenmesh::create_segment_info_list()
 {
   face min_dihedral_ang_seg;
-  point min_face_ang_vertex;
+  point min_face_ang_vertex{};
   REAL min_dihedral_ang = 360.;
   REAL min_face_ang = 360.;
   
@@ -36494,6 +36496,7 @@ void tetrahedralize(tetgenbehavior *b, tetgenio *in, tetgenio *out,
 }
 
 #ifndef TETLIBRARY
+#ifndef TETLIBRARY
 
 //============================================================================//
 //                                                                            //
@@ -36559,9 +36562,10 @@ void tetrahedralize(char *switches, tetgenio *in, tetgenio *out,
   tetrahedralize(&b, in, out, addin, bgmin);
 
 #endif // not TETLIBRARY
-}
-
 //                                                                            //
+}
+#endif // double not TETLIBRARY
+
 //                                                                            //
 //== main_cxx ================================================================//
 

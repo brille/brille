@@ -726,6 +726,7 @@ public:
   //   (-p or -r) implies the object. 
   enum objecttype {NODES, POLY, OFF, PLY, STL, MEDIT, VTK, MESH, NEU_MESH} object;
 
+#ifndef TETLIBRARY
 
   void syntax();
   void usage();
@@ -735,6 +736,7 @@ public:
   bool parse_commandline(char *switches) {
     return parse_commandline(0, &switches);
   }
+#endif
 
   // Initialize all variables.
   tetgenbehavior()
@@ -1013,22 +1015,20 @@ public:
   public:
     tetrahedron *tet;
     int ver; // Range from 0 to 11.
-    triface() : tet(0), ver(0) {}
-    triface& operator=(const triface& t) {
-      tet = t.tet; ver = t.ver;
-      return *this;
-    }
+    triface() : tet(nullptr), ver(0) {}
+    triface& operator=(const triface& t) = default;
+//    triface& operator=(const triface& t) {
+//      tet = t.tet; ver = t.ver;
+//      return *this;
+//    }
   };
 
   class face {
   public:
     shellface *sh;
     int shver; // Range from 0 to 5.
-    face() : sh(0), shver(0) {}
-    face& operator=(const face& s) {
-      sh = s.sh; shver = s.shver;
-      return *this;
-    }
+    face() : sh(nullptr), shver(0) {}
+    face& operator=(const face& s) = default;
   };
 
 //============================================================================//
