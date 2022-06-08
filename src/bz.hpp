@@ -692,6 +692,7 @@ public:
 #pragma omp parallel for default(none) shared(out, normals, p, c)              \
     schedule(dynamic)
       for (long long i = 0; i < p.size(0); ++i) // separately changed to ind_t
+        //TODO Add tolerance here?
         out[i] = dot(normals, p.view(i)).all(c, 0.);
     }
     return out;
@@ -756,8 +757,7 @@ private:
     brille::cmp c =
         pos || no_ir_mirroring ? brille::cmp::ge : brille::cmp::le_ge;
     auto normals = get_ir_wedge_normals();
-    // FIXME Add tolerance here
-    return normals.size(0) == 0 || dot(normals, p).all(c, T(0));
+    return normals.size(0) == 0 || dot(normals, p).all(c, T(0), float_tolerance, approx_tolerance);
   }
 
   void shrink_and_prune_outside(const size_t cnt, lattice::LVec<double> &vrt,
