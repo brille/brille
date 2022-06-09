@@ -14,9 +14,16 @@ jobs:
         python-version: [ '3.7', '3.8', '3.9', '3.10' ]
         build_type: [Release]
     steps:
+      - uses: conda-incubator/setup-miniconda@v2
+        if: startsWith(matrix.os, 'macos')
+        with:
+          python-version: ${{ matrix.python-version }}
+          activate-environment: anaconda-client-env
+          channels: conda-forge,defaults
+          mamba-version: "*"
       - if: startsWith(matrix.os, 'macos')
         shell: bash
-        run: brew install libomp
+        run: mamba install llvm-openmp==11.1.0
       - uses: actions/setup-python@v2
         with:
           architecture: ${{ matrix.architecture }}
@@ -63,8 +70,14 @@ jobs:
         with:
           architecture: ${{ matrix.architecture }}
           python-version: ${{ matrix.python-version }}
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          activate-environment: anaconda-client-env
+          channels: conda-forge,defaults
+          mamba-version: "*"
       - shell: bash
-        run: brew install libomp
+        run: mamba install llvm-openmp==11.1.0
       - uses: g5t/manymac-action@v0
         with:
           name: "macos-${{matrix.architecture}}-py${{matrix.python-version}}"
