@@ -15,24 +15,27 @@ jobs:
         build_type: [Release]
     steps:
       - uses: conda-incubator/setup-miniconda@v2
-        if: startsWith(matrix.os, 'macos')
         with:
           python-version: ${{ matrix.python-version }}
           activate-environment: anaconda-client-env
           channels: conda-forge,defaults
           mamba-version: "*"
+      - shell: bash
+        run: mamba install hdf5 numpy
       - if: startsWith(matrix.os, 'macos')
         shell: bash
         run: mamba install llvm-openmp==11.1.0
-      - uses: actions/setup-python@v2
-        with:
-          architecture: ${{ matrix.architecture }}
-          python-version: ${{ matrix.python-version }}
-      - name: configure Python
-        shell: bash
-        run: |
-          python -m pip install --upgrade pip numpy
-          echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
+#      - uses: actions/setup-python@v2
+#        with:
+#          architecture: ${{ matrix.architecture }}
+#          python-version: ${{ matrix.python-version }}
+#      - name: configure Python
+#        shell: bash
+#        run: |
+#          python -m pip install --upgrade pip numpy
+#          echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
+      - shell: bash
+        run: echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
       - uses: g5t/make-test-action@v0
         with:
           flags: "-D Python3_EXECUTABLE=${{ env.pythonInterpreter }}"
@@ -48,10 +51,18 @@ jobs:
         architecture: [x64]
         python-version: [ '3.7', '3.8', '3.9', '3.10' ]
     steps:
-      - uses: actions/setup-python@v2
+#      - uses: actions/setup-python@v2
+#        with:
+#          architecture: ${{ matrix.architecture }}
+#          python-version: ${{ matrix.python-version }}
+      - uses: conda-incubator/setup-miniconda@v2
         with:
-          architecture: ${{ matrix.architecture }}
           python-version: ${{ matrix.python-version }}
+          activate-environment: anaconda-client-env
+          channels: conda-forge,defaults
+          mamba-version: "*"
+      - shell: bash
+        run: mamba install hdf5
       - uses: g5t/manywin-action@v0
         with:
           name: "windows-${{matrix.architecture}}-py${{matrix.python-version}}"
@@ -66,10 +77,10 @@ jobs:
         architecture: [x64]
         python-version: [ '3.7', '3.8', '3.9', '3.10' ]
     steps:
-      - uses: actions/setup-python@v2
-        with:
-          architecture: ${{ matrix.architecture }}
-          python-version: ${{ matrix.python-version }}
+#      - uses: actions/setup-python@v2
+#        with:
+#          architecture: ${{ matrix.architecture }}
+#          python-version: ${{ matrix.python-version }}
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
@@ -77,7 +88,7 @@ jobs:
           channels: conda-forge,defaults
           mamba-version: "*"
       - shell: bash
-        run: mamba install llvm-openmp==11.1.0
+        run: mamba install llvm-openmp==11.1.0 hdf5
       - uses: g5t/manymac-action@v0
         with:
           name: "macos-${{matrix.architecture}}-py${{matrix.python-version}}"
@@ -96,18 +107,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-          architecture: ${{ matrix.architecture }}
+#      - name: Setup Python
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: 3.8
+#          architecture: ${{ matrix.architecture }}
 
       - name: Build manylinux python ${{ matrix.python-version }} wheel
-        uses: RalfG/python-wheels-manylinux-build@v0.4.0-manylinux2010_x86_64
+        uses: RalfG/python-wheels-manylinux-build@v0.4.2-manylinux_2_4_x86_64
         with:
           python-versions: ${{ matrix.python-version }}
-          build-requirements: 'cmake'
-          system-packages: ''
+          build-requirements: ''
+          system-packages: 'epel-release'
+          pre-build-command: 'yum install -y hdf5-devel'
           package-path: ''
           pip-wheel-args: '-w ./dist --no-deps'
 
