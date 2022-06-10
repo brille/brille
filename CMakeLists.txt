@@ -33,7 +33,7 @@ set(MINIMUM_CATCH2_VERSION 2.11.3)
 set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
 
 # Optional support of HDF5-based IO
-option(BRILLE_HDF5 "Add HDF5 file-based IO" OFF)
+option(BRILLE_HDF5 "Add HDF5 file-based IO" ON)
 option(REQUIRE_SYSTEM_HIGHFIVE "Never attempt to fetch HighFive" OFF)
 mark_as_advanced(REQUIRE_SYSTEM_HIGHFIVE)
 set(MINIMUM_HIGHFIVE_VERSION 2.3.1)
@@ -61,7 +61,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-set(CMAKE_MACOSX_RPATH 1)
+#set(CMAKE_MACOSX_RPATH 1)
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif(NOT CMAKE_BUILD_TYPE)

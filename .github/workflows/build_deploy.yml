@@ -11,32 +11,42 @@ jobs:
       fail-fast: true
       matrix:
         os: [ macos-10.15, ubuntu-20.04, windows-2019 ]
-        python-version: [ '3.7', '3.8', '3.9', '3.10' ]
+        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
         build_type: [Release]
     steps:
       - uses: conda-incubator/setup-miniconda@v2
-        if: startsWith(matrix.os, 'macos')
         with:
           python-version: ${{ matrix.python-version }}
           activate-environment: anaconda-client-env
           channels: conda-forge,defaults
           mamba-version: "*"
+      - shell: bash -l {0}
+        run: mamba install hdf5 numpy cmake
+      - if: startsWith(matrix.os, 'ubuntu')
+        shell: bash -l {0}
+        run: mamba install gcc gxx
       - if: startsWith(matrix.os, 'macos')
-        shell: bash
+        shell: bash -l {0}
         run: mamba install llvm-openmp==11.1.0
-      - uses: actions/setup-python@v2
+      - shell: bash -l {0}
+        run: echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
         with:
-          architecture: ${{ matrix.architecture }}
-          python-version: ${{ matrix.python-version }}
-      - name: configure Python
-        shell: bash
+          fetch-depth: 0
+      - name: configure
+        shell: bash -l {0}
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.build_type }} -D PYTHON3_EXECUTABLE=${{ env.pythonInterpreter }}
+      - name: Get number of CPU cores
+        uses: SimenB/github-actions-cpu-cores@v1
+        id: cpu-cores
+      - name: build
+        shell: bash -l {0}
+        run: cmake --build build --config ${{ matrix.build_type }} --parallel ${{ steps.cpu-cores.outputs.count }}
+      - name: test
+        shell: bash -l {0}
         run: |
-          python -m pip install --upgrade pip numpy
-          echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
-      - uses: g5t/make-test-action@v0
-        with:
-          flags: "-D Python3_EXECUTABLE=${{ env.pythonInterpreter }}"
-          build: ${{ matrix.build_type }}
+          cd build
+          ctest -C ${{ matrix.build_type }} --output-on-failure
 
   windows:
     runs-on: windows-2019
@@ -46,15 +56,31 @@ jobs:
       fail-fast: true
       matrix:
         architecture: [x64]
-        python-version: [ '3.7', '3.8', '3.9', '3.10' ]
+        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
     steps:
-      - uses: actions/setup-python@v2
+      - uses: conda-incubator/setup-miniconda@v2
         with:
-          architecture: ${{ matrix.architecture }}
           python-version: ${{ matrix.python-version }}
-      - uses: g5t/manywin-action@v0
+          activate-environment: anaconda-client-env
+          channels: conda-forge,defaults
+          mamba-version: "*"
+      - shell: bash -l {0}
+        run: mamba install hdf5 numpy cmake
+      - name: Update python tools
+        shell: bash -l {0}
+        run: python -m pip install --upgrade pip setuptools setuptools_scm wheel delvewheel
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build and fix the wheel
+        shell: bash -l {0}
+        run: |
+          python -m pip wheel --no-deps -w wheelhouse .
+          delvewheel repair -w dist -v wheelhouse/*.whl
+      - uses: actions/upload-artifact@v2
         with:
           name: "windows-${{matrix.architecture}}-py${{matrix.python-version}}"
+          path: dist/*.whl
 
   macos:
     runs-on: macos-10.15
@@ -64,23 +90,35 @@ jobs:
       fail-fast: true
       matrix:
         architecture: [x64]
-        python-version: [ '3.7', '3.8', '3.9', '3.10' ]
+        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
     steps:
-      - uses: actions/setup-python@v2
-        with:
-          architecture: ${{ matrix.architecture }}
-          python-version: ${{ matrix.python-version }}
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
           activate-environment: anaconda-client-env
           channels: conda-forge,defaults
           mamba-version: "*"
-      - shell: bash
-        run: mamba install llvm-openmp==11.1.0
-      - uses: g5t/manymac-action@v0
+      - shell: bash -l {0}
+        run: mamba install llvm-openmp==11.1.0 hdf5 numpy cmake
+      - name: Install rename from brew
+        shell: bash -l {0}
+        run: brew install rename
+      - name: Update python tools
+        shell: bash -l {0}
+        run: python -m pip install --upgrade pip setuptools setuptools_scm wheel delocate
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build and fix the wheel
+        shell: bash -l {0}
+        run: |
+          python -m pip wheel --no-deps -w wheelhouse .
+          DYLD_LIBRARY_PATH="$CONDA_PREFIX/lib" delocate-wheel -w dist -v wheelhouse/*.whl
+          rename -e 's/10_15/10_13/' dist/*.whl
+      - uses: actions/upload-artifact@v2
         with:
           name: "macos-${{matrix.architecture}}-py${{matrix.python-version}}"
+          path: dist/*.whl
 
   manylinux:
     runs-on: ubuntu-latest
@@ -91,23 +129,18 @@ jobs:
       fail-fast: true
       matrix:
         architecture: [x64]
-        python-version: ['cp37-cp37m', 'cp38-cp38', 'cp39-cp39', 'cp310-cp310']
+        python-version: ['cp36-cp36m', 'cp37-cp37m', 'cp38-cp38', 'cp39-cp39', 'cp310-cp310']
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-          architecture: ${{ matrix.architecture }}
-
       - name: Build manylinux python ${{ matrix.python-version }} wheel
-        uses: RalfG/python-wheels-manylinux-build@v0.4.0-manylinux2010_x86_64
+        uses: RalfG/python-wheels-manylinux-build@v0.4.2-manylinux2014_x86_64
         with:
           python-versions: ${{ matrix.python-version }}
-          build-requirements: 'cmake'
-          system-packages: ''
+          build-requirements: ''
+          system-packages: 'devtoolset-11-gcc-c++ hdf5-devel'
+          pre-build-command: 'source scl_source enable devtoolset-11'
           package-path: ''
           pip-wheel-args: '-w ./dist --no-deps'
 
