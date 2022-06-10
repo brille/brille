@@ -21,7 +21,7 @@ jobs:
           channels: conda-forge,defaults
           mamba-version: "*"
       - shell: bash
-        run: mamba install hdf5 numpy
+        run: mamba install hdf5 numpy cmake gcc gxx
       - if: startsWith(matrix.os, 'macos')
         shell: bash
         run: mamba install llvm-openmp==11.1.0
@@ -62,7 +62,7 @@ jobs:
           channels: conda-forge,defaults
           mamba-version: "*"
       - shell: bash
-        run: mamba install hdf5
+        run: mamba install hdf5 numpy cmake
       - uses: g5t/manywin-action@v0
         with:
           name: "windows-${{matrix.architecture}}-py${{matrix.python-version}}"
@@ -88,7 +88,7 @@ jobs:
           channels: conda-forge,defaults
           mamba-version: "*"
       - shell: bash
-        run: mamba install llvm-openmp==11.1.0 hdf5
+        run: mamba install llvm-openmp==11.1.0 hdf5 numpy cmake
       - uses: g5t/manymac-action@v0
         with:
           name: "macos-${{matrix.architecture}}-py${{matrix.python-version}}"
