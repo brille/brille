@@ -30,10 +30,6 @@ jobs:
         run: mamba install llvm-openmp==11.1.0
       - shell: bash -l {0}
         run: echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
-#      - uses: g5t/make-test-action@v0
-#        with:
-#          flags: "-D Python3_EXECUTABLE=${{ env.pythonInterpreter }}"
-#          build: ${{ matrix.build_type }}
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -44,14 +40,10 @@ jobs:
         shell: bash -l {0}
         run: cmake --build build --config ${{ matrix.build_type }}
       - name: test
-        shell: cmake -P {0}
+        shell: bash -l {0}
         run: |
-          include(ProcessorCount)
-          ProcessorCount(N)
-          execute_process(COMMAND ctest -j ${N} -C ${{ matrix.build_type }} --output-on-failure WORKING_DIRECTORY build RESULT_VARIABLE result)
-          if (NOT result EQUAL 0)
-            message(FATAL_ERROR "${{ matrix.build_type }} tests failed")
-          endif()
+          cd build
+          ctest -C ${{ matrix.build_type }} --output-on-failure
 
   windows:
     runs-on: windows-2019
@@ -143,12 +135,12 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build manylinux python ${{ matrix.python-version }} wheel
-        uses: RalfG/python-wheels-manylinux-build@v0.4.2-manylinux_2_28_x86_64
+        uses: RalfG/python-wheels-manylinux-build@v0.4.2-manylinux2014_x86_64
         with:
           python-versions: ${{ matrix.python-version }}
           build-requirements: ''
-          system-packages: 'epel-release'
-          pre-build-command: 'yum install -y hdf5-devel'
+          system-packages: 'devtoolset-11-gcc-c++ hdf5-devel'
+          pre-build-command: 'source scl_source enable devtoolset-11'
           package-path: ''
           pip-wheel-args: '-w ./dist --no-deps'
 
