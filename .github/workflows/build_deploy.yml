@@ -21,25 +21,37 @@ jobs:
           channels: conda-forge,defaults
           mamba-version: "*"
       - shell: bash
-        run: mamba install hdf5 numpy cmake gcc gxx
+        run: mamba install hdf5 numpy cmake
+      - if: startsWith(matrix.os, 'ubuntu')
+        shell: bash
+        run: mamba install gcc gxx
       - if: startsWith(matrix.os, 'macos')
         shell: bash
         run: mamba install llvm-openmp==11.1.0
-#      - uses: actions/setup-python@v2
-#        with:
-#          architecture: ${{ matrix.architecture }}
-#          python-version: ${{ matrix.python-version }}
-#      - name: configure Python
-#        shell: bash
-#        run: |
-#          python -m pip install --upgrade pip numpy
-#          echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
       - shell: bash
         run: echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
-      - uses: g5t/make-test-action@v0
+#      - uses: g5t/make-test-action@v0
+#        with:
+#          flags: "-D Python3_EXECUTABLE=${{ env.pythonInterpreter }}"
+#          build: ${{ matrix.build_type }}
+      - uses: actions/checkout@v2
         with:
-          flags: "-D Python3_EXECUTABLE=${{ env.pythonInterpreter }}"
-          build: ${{ matrix.build_type }}
+          fetch-depth: 0
+      - name: configure
+        shell: bash
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.build_type }} -D PYTHON3_EXECUTABLE=${{ env.pythonInterpreter }}
+      - name: build
+        shell: bash
+        run: cmake --build build --config ${{ matrix.build_type }}
+      - name: test
+        shell: cmake -P {0}
+        run: |
+          include(ProcessorCount)
+          ProcessorCount(N)
+          execute_process(COMMAND ctest -j ${N} -C ${{ matrix.build_type }} --output-on-failure WORKING_DIRECTORY build RESULT_VARIABLE result)
+          if (NOT result EQUAL 0)
+            message(FATAL_ERROR "${{ matrix.build_type }} tests failed")
+          endif()
 
   windows:
     runs-on: windows-2019
@@ -51,10 +63,6 @@ jobs:
         architecture: [x64]
         python-version: [ '3.7', '3.8', '3.9', '3.10' ]
     steps:
-#      - uses: actions/setup-python@v2
-#        with:
-#          architecture: ${{ matrix.architecture }}
-#          python-version: ${{ matrix.python-version }}
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
@@ -63,9 +71,24 @@ jobs:
           mamba-version: "*"
       - shell: bash
         run: mamba install hdf5 numpy cmake
-      - uses: g5t/manywin-action@v0
+#      - uses: g5t/manywin-action@v0
+#        with:
+#          name: "windows-${{matrix.architecture}}-py${{matrix.python-version}}"
+      - name: Update python tools
+        shell: bash
+        run: python -m pip install --upgrade pip setuptools setuptools_scm wheel delvewheel
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build and fix the wheel
+        shell: bash
+        run: |
+          python -m pip wheel --no-deps -w wheelhouse .
+          delvewheel repair -w dist -v wheelhouse/*.whl
+      - uses: actions/upload-artifact@v2
         with:
           name: "windows-${{matrix.architecture}}-py${{matrix.python-version}}"
+          path: dist/*.whl
 
   macos:
     runs-on: macos-10.15
@@ -77,10 +100,6 @@ jobs:
         architecture: [x64]
         python-version: [ '3.7', '3.8', '3.9', '3.10' ]
     steps:
-#      - uses: actions/setup-python@v2
-#        with:
-#          architecture: ${{ matrix.architecture }}
-#          python-version: ${{ matrix.python-version }}
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
@@ -89,9 +108,25 @@ jobs:
           mamba-version: "*"
       - shell: bash
         run: mamba install llvm-openmp==11.1.0 hdf5 numpy cmake
-      - uses: g5t/manymac-action@v0
+      - name: Install rename from brew
+        shell: bash
+        run: brew install rename
+      - name: Update python tools
+        shell: bash
+        run: python -m pip install --upgrade pip setuptools setuptools_scm wheel delocate
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build and fix the wheel
+        shell: bash
+        run: |
+          python -m pip wheel --no-deps -w wheelhouse .
+          delocate-wheel -w dist -v wheelhouse/*.whl
+          rename -e 's/10_15/10_13/' dist/*.whl
+      - uses: actions/upload-artifact@v2
         with:
           name: "macos-${{matrix.architecture}}-py${{matrix.python-version}}"
+          path: dist/*.whl
 
   manylinux:
     runs-on: ubuntu-latest
@@ -107,14 +142,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-#      - name: Setup Python
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: 3.8
-#          architecture: ${{ matrix.architecture }}
-
       - name: Build manylinux python ${{ matrix.python-version }} wheel
-        uses: RalfG/python-wheels-manylinux-build@v0.4.2-manylinux_2_4_x86_64
+        uses: RalfG/python-wheels-manylinux-build@v0.4.2-manylinux_2_28_x86_64
         with:
           python-versions: ${{ matrix.python-version }}
           build-requirements: ''
