@@ -66,9 +66,6 @@ jobs:
           mamba-version: "*"
       - shell: bash -l {0}
         run: mamba install hdf5 numpy cmake
-#      - uses: g5t/manywin-action@v0
-#        with:
-#          name: "windows-${{matrix.architecture}}-py${{matrix.python-version}}"
       - name: Update python tools
         shell: bash -l {0}
         run: python -m pip install --upgrade pip setuptools setuptools_scm wheel delvewheel
@@ -116,7 +113,7 @@ jobs:
         shell: bash -l {0}
         run: |
           python -m pip wheel --no-deps -w wheelhouse .
-          delocate-wheel -w dist -v wheelhouse/*.whl
+          DYLD_LIBRARY_PATH="$CONDA_PREFIX/lib" delocate-wheel -w dist -v wheelhouse/*.whl
           rename -e 's/10_15/10_13/' dist/*.whl
       - uses: actions/upload-artifact@v2
         with:
