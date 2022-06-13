@@ -51,7 +51,7 @@ jobs:
   build_most:
     needs: [test]
     name: Build ${{matrix.ver}} wheel on ${{matrix.os}}
-    runs-on: ${{matirx.os}}
+    runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false
       matrix:
