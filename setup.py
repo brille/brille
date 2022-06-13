@@ -22,10 +22,9 @@ else:
 def get_cmake():
     return CMAKE_BIN
 
-# We want users to be able to specify the use of HDF5 for object IO.
-# But this should not be turned on by default (yet).
-# Enable HDF5 IO by passing `--use-hdf` when calling python setup.py.
-USE_HDF5=False
+# We want users to be able to specify to *not* use HDF5 for object IO.
+# Disable HDF5 IO by passing `--no-hdf` when calling python setup.py.
+USE_HDF5=True
 
 
 def is_vsc():
@@ -84,8 +83,8 @@ class CMakeBuild(build_ext):
         cmake_args += ["-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE"]
         cmake_args += ["-DCMAKE_INSTALL_RPATH={}".format("$ORIGIN")]
 
-        if USE_HDF5:
-          cmake_args += ["-DBRILLE_HDF5=TRUE"]
+        if not USE_HDF5:
+            cmake_args += ["-DBRILLE_HDF5=FALSE"]
 
         if is_vsc():
             cmake_lib_out_dir = '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'
@@ -113,7 +112,7 @@ with open("README.md", "r") as fh:
     LONG_DESCRIPTION = fh.read()
 
 with open("VERSION", "r") as fh:
-	VERSION_NUMBER = fh.readline().strip()
+    VERSION_NUMBER = fh.readline().strip()
 
 KEYWORDARGS = dict(
     name='brille',
@@ -143,11 +142,11 @@ KEYWORDARGS = dict(
 
 try:
     if "--use-hdf5" in sys.argv:
-      USE_HDF5=True
-      sys.argv.remove("--use-hdf5")
+        USE_HDF5 = True
+        sys.argv.remove("--use-hdf5")
     if "--no-hdf5" in sys.argv:
-      USE_HDF5=False
-      sys.argv.remove("--no-hdf5")
+        USE_HDF5 = False
+        sys.argv.remove("--no-hdf5")
     setup(**KEYWORDARGS)
 except CalledProcessError:
     print("Failed to build the extension!")
