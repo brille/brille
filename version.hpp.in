@@ -1,0 +1,18 @@
+#ifndef PROJECT_VERSION_HPP_
+#define PROJECT_VERSION_HPP_
+//! \file
+namespace brille::version{
+    //! `project` git repository revision information at build time
+    auto constexpr git_revision = u8"@GIT_HASH@";
+    //! `project` git repository branch at build time
+    auto constexpr git_branch = u8"@GIT_BRANCH@";
+    //! build date and time in YYYY-MM-DDThh:mm format
+    auto constexpr build_datetime = u8"@GIT_CONFIGURE_TIME@";
+    //! `project` version
+    auto constexpr version_number = u8"@GIT_SAFE_VERSION@";
+    //! hostname of the build machine
+    auto constexpr build_hostname = u8"@GIT_HOSTNAME@";
+    //! version with metadata included
+    auto constexpr meta_version = u8"@GIT_VERSION@";
+}
+#endif
