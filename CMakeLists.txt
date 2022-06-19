@@ -61,7 +61,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-#set(CMAKE_MACOSX_RPATH 1)
+set(CMAKE_MACOSX_RPATH OFF)
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif(NOT CMAKE_BUILD_TYPE)

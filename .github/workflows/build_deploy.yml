@@ -28,6 +28,9 @@ jobs:
       - if: startsWith(matrix.os, 'macos')
         shell: bash -l {0}
         run: mamba install llvm-openmp==11.1.0
+      - name: Update python tools
+        shell: bash -l {0}
+        run: python -m pip install --upgrade pip setuptools setuptools_scm
       - shell: bash -l {0}
         run: echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
       - uses: actions/checkout@v2
@@ -46,7 +49,7 @@ jobs:
         shell: bash -l {0}
         run: |
           cd build
-          ctest -C ${{ matrix.build_type }} --output-on-failure
+          ctest -C ${{ matrix.build_type }} --output-on-failure --parallel ${{ steps.cpu-cores.outputs.count }}
 
   gnu_linux:
     needs: [test]
@@ -55,6 +58,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        architecture: [ x64 ]
         ver: [cp36, cp37, cp38, cp39, cp310]
     steps:
       - uses: actions/checkout@v2
@@ -72,7 +76,7 @@ jobs:
           CIBW_TEST_COMMAND: python -m unittest discover -s {project}/wrap/tests
       - uses: actions/upload-artifact@v2
         with:
-          name: "gnulibc-${{matrix.ver}}"
+          name: "gnulibc-${{matrix.architecture}}-${{matrix.ver}}"
           path: ./wheelhouse/*.whl
 
   musl_linux:
@@ -82,6 +86,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        architecture: [ x64 ]
         ver: [cp36, cp37, cp38, cp39, cp310]
     steps:
       - uses: actions/checkout@v2
@@ -99,7 +104,7 @@ jobs:
           CIBW_TEST_COMMAND: python -m unittest discover -s {project}/wrap/tests
       - uses: actions/upload-artifact@v2
         with:
-          name: "musllibc-${{matrix.ver}}"
+          name: "musllibc-${{matrix.architecture}}-${{matrix.ver}}"
           path: ./wheelhouse/*.whl
 
   windows:
@@ -179,7 +184,7 @@ jobs:
         run: python -m pip install dist/*.whl
       - name: Test installed wheel
         shell: bash -l {0}
-        run: python -m unittest discover -s wrap/tests
+        run: cd wrap/tests; python -m unittest
       - uses: actions/upload-artifact@v2
         with:
           name: "macos-${{matrix.architecture}}-py${{matrix.python-version}}"
