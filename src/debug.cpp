@@ -27,6 +27,7 @@ using namespace brille;
 // #ifdef _MSC_VER
   // #define NOMINMAX
   #include <windows.h>
+  #include <process.h>
   int brille::terminal_width(void){
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
