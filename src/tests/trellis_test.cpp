@@ -14,7 +14,7 @@ bool write_read_test(const BrillouinZoneTrellis3<T,R>& source, const std::string
   namespace fs = std::filesystem;
   auto temp_dir = fs::temp_directory_path();
   fs::path filepath = temp_dir;
-  filepath /= fs::path("brille.h5");
+  filepath /= fs::path("brille"+std::to_string(processid())+".h5");
   auto filename = filepath.string();
 
   // write the BrillouinZoneTrellis3 to disk:
