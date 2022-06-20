@@ -28,11 +28,9 @@ else:
 def get_cmake():
     return CMAKE_BIN
 
-
-# We want users to be able to specify the use of HDF5 for object IO.
-# But this should not be turned on by default (yet).
-# Enable HDF5 IO by passing `--use-hdf` when calling python setup.py.
-USE_HDF5 = False
+# We want users to be able to specify to *not* use HDF5 for object IO.
+# Disable HDF5 IO by passing `--no-hdf` when calling python setup.py.
+USE_HDF5=True
 
 
 def is_vsc():
@@ -92,8 +90,8 @@ class CMakeBuild(build_ext):
         cmake_args += ["-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE"]
         cmake_args += ["-DCMAKE_INSTALL_RPATH={}".format("$ORIGIN")]
 
-        if USE_HDF5:
-            cmake_args += ["-DBRILLE_HDF5=TRUE"]
+        if not USE_HDF5:
+            cmake_args += ["-DBRILLE_HDF5=FALSE"]
 
         if is_vsc():
             cmake_lib_out_dir = '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'
