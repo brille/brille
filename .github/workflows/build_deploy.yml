@@ -271,14 +271,15 @@ jobs:
     -
       name: Download 'musllinux' wheel
       uses: actions/download-artifact@v2
-      id: wheel
+      id: path
       with:
         name: musllibc-x64-cp39
         path: wheelhouse
     -
-      name: Verify downloaded wheel contents
-      run: ls -R
+      name: Get downloaded wheel name
+      run: echo "set-output:: name=wheel::$(ls -R)"
       working-directory: wheelhouse
+      id: wheel
     -
       name: Sphinx Docker build
       uses: g5t/sphinxer@v2.0.0
@@ -287,4 +288,4 @@ jobs:
         pages_dir: io
         is_release: ${{ contains(github.event_name, 'release') }}
         create_readme: true
-        wheel: "${{ steps.wheel.outputs.download-path }}/"
+        wheel: "${{ steps.path.outputs.download-path }}/${{ steps.wheel.outputs.wheel }}"
