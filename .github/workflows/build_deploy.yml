@@ -251,3 +251,40 @@ jobs:
         with:
           user: ${{ secrets.PYPI_USERNAME }}
           password: ${{ secrets.PYPI_PASSWORD }}
+
+  sphinx:
+    runs-on: ubuntu-latest
+    needs: [ musl_linux ]
+    steps:
+    -
+      name: Checkout brille repository
+      uses: actions/checkout@v2
+      with:
+        path: repository
+    -
+      name: Checkout brille.github.io repository
+      uses: actions/checkout@v2
+      with:
+        repository: brille/brille.github.io
+        token: ${{ secrets.BRILLE_GITHUB_IO_TOKEN }}
+        path: io
+    -
+      name: Download 'musllinux' wheel
+      uses: actions/download-artifact@v2
+      id: wheel
+      with:
+        name: musllibc-x64-cp39
+        path: wheelhouse
+    -
+      name: Verify downloaded wheel contents
+      run: ls -R
+      working-directory: wheelhouse
+    -
+      name: Sphinx Docker build
+      uses: g5t/sphinxer@v2.0.0
+      with:
+        source_dir: repository
+        pages_dir: io
+        is_release: ${{ contains(github.event_name, 'release') }}
+        create_readme: true
+        wheel: "${{ steps.wheel.outputs.download-path }}/"
