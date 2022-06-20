@@ -1,7 +1,12 @@
 [build-system]
 # Minimum requirements for the build system to execute.
 requires =[
-	"setuptools",
+	"setuptools>='45'",
+	"setuptools_scm[toml]>='6.2'",
 	"wheel",
-	"cmake>=3.18.2"
+	"cmake>=3.18.2",
+	"numpy==1.13.3; python_version<'3.5'",
+	"oldest-supported-numpy; python_version>='3.5'",
 ]
+
+[tool.setuptools_scm]

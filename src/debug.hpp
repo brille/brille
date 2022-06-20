@@ -88,6 +88,11 @@ int terminal_width(void);
 */
 int terminal_height(void);
 
+/*! \brief Return the running process ID number
+ *
+ */
+int processid();
+
 /*! \brief A utility structure to identify containers in templates
 
 The `value` type is true for `std::vector` and `std::array` and otherwise false.

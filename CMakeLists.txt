@@ -29,7 +29,7 @@ option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
 # Define the minimum version of libraries needed
 set(MINIMUM_PYBIND11_VERSION 2.8.1)
 set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
-set(MINIMUM_CATCH2_VERSION 2.11.3)
+set(MINIMUM_CATCH2_VERSION 2.13.9)
 set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
 
 # Optional support of HDF5-based IO
@@ -61,7 +61,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-#set(CMAKE_MACOSX_RPATH 1)
+set(CMAKE_MACOSX_RPATH OFF)
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif(NOT CMAKE_BUILD_TYPE)
@@ -84,6 +84,9 @@ endif (BRILLE_PROFILING)
 
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
+SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 
 if (PYTHON_EXECUTABLE)
   # Ensure the provided Python interpreter is used
@@ -120,25 +123,16 @@ if (BRILLE_HDF5)
 endif(BRILLE_HDF5)
 
 # Read the version of brille
-execute_process(COMMAND ${Python3_EXECUTABLE} -c "from version_info import version_number; version_number()"
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE BRILLE_VERSION)
+include(checkgit.cmake)
+checkGitSetup() # defines/creates version.hpp; and library 'git_version'
 # So that we can print it to the console along with the specified build type
-message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
-
-# Create a header file with information about the last time tye python module was built
-# This file will be updated even if no other source files are modified but it does not
-# cause relinking the module (if it is the *only* file which changes)
-add_custom_target(write_version_info
-  COMMAND ${Python3_EXECUTABLE} version_info.py src/version.hpp
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
+message(STATUS "Build brille v${GIT_VERSION} with type ${CMAKE_BUILD_TYPE}")
 
 # Create a single header by contatenating all headers in src/
 add_custom_target(single_header
   COMMAND ${Python3_EXECUTABLE} acme.py ${BRILLE_SINGLE_HEADER} -o ${CMAKE_BINARY_DIR}
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  DEPENDS write_version_info
+  DEPENDS git_version
 )
 
 add_custom_target(library DEPENDS single_header ${BRILLE_LIBRARY_TARGET})
@@ -168,6 +162,10 @@ list(APPEND CXX_TARGETS ${BRILLE_LIBRARY_TARGET})
 
 # add the dependencies and include directories for all CXX targets:
 add_subdirectory(src)  # important
+
+foreach(CXX_TARGET IN LISTS CXX_TARGETS)
+  addGitVersion(${CXX_TARGET})
+endforeach()
 
 if(BRILLE_BUILD_TESTING)
   target_link_libraries(${TESTING_TARGET} PUBLIC Catch2::Catch2)

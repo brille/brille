@@ -7,7 +7,7 @@ function(git_fetch package version source required)
         find_package(${package} ${version} QUIET)
     endif()
 
-    if ("${package}_FOUND")
+    if (${${package}_FOUND})
         message(STATUS "Found system ${package}")
     else()
         message(STATUS "Fetch ${package} ${version} from ${source}")

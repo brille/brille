@@ -27,6 +27,7 @@ using namespace brille;
 // #ifdef _MSC_VER
   // #define NOMINMAX
   #include <windows.h>
+  #include <process.h>
   int brille::terminal_width(void){
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -38,6 +39,7 @@ using namespace brille;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
     return csbi.srWindow.Bottom - csbi.srWindow.Top;
   }
+  int brille::processid(void) { return ::_getpid(); }
 #else
   #include <sys/ioctl.h>
   #include <unistd.h>
@@ -51,6 +53,7 @@ using namespace brille;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     return w.ws_row > 0 ? w.ws_row : std::numeric_limits<int>::max();
   }
+  int brille::processid(void){ return ::getpid(); }
 #endif
 
 // Create the global DebugPrinter
