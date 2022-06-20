@@ -1,0 +1,41 @@
+name: 'Versioned Sphinx with Autodoc GH-Pages'
+description: 'Build versioned GitHub Pages with Sphinx'
+author: 'Greg Tucker'
+branding:
+  icon: book-open
+  color: 'green'
+inputs:
+  create_readme:
+    description: 'Auto create a README.md file at branch gh-pages with repo/branch/commit links'
+    default: 'false'
+    required: false
+  source_dir:
+    description: 'Directory relative to $\{{ GITHUB_WORKSPACE }} where the repository is checked out'
+    required: false
+  pages_dir:
+    description: 'Directory relative to $\{{ GITHUB_WORKSPACE }} where the pages branch is checked out'
+    required: true
+  is_release:
+    description: 'Whether this is a release documentation build'
+    default: 'false'
+    required: false
+  update_git:
+    description: 'Update and push the $\{{ pages_dir }} git repositories. `false` is useful for local testing'
+    default: 'true'
+    required: false
+  wheel:
+    description: 'Use a pre-built wheel instead of building before installing'
+    default: 'false'
+    required: false
+outputs:
+  name:
+    description: 'Author name'
+  email:
+    description: 'Author email'
+  docs_sha:
+    description: 'Sphinx source sha'
+  docs_sha8:
+    description: 'Sphinx source short sha'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

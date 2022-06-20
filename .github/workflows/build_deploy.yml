@@ -277,12 +277,14 @@ jobs:
         path: wheelhouse
     -
       name: Get downloaded wheel name
+      id: wheel
       run: echo "::set-output name=wheel::$(ls -R)"
       working-directory: wheelhouse
-      id: wheel
+    -
+      run: echo "${{ steps.wheel.outputs.wheel }}"
     -
       name: Sphinx Docker build
-      uses: g5t/sphinxer@v2.0.0
+      uses: ./repository/.github/actions/sphinxer
       with:
         source_dir: repository
         pages_dir: io
