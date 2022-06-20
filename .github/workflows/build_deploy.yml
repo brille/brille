@@ -103,8 +103,8 @@ jobs:
             *-manylinux_*
           CIBW_ARCHS: auto64
           CIBW_BEFORE_ALL_LINUX: apk update; apk add hdf5-dev
-          CIBW_BEFORE_TEST: python -m pip install numpy
-          CIBW_TEST_COMMAND: python -m unittest discover -s {project}/wrap/tests
+          # CIBW_BEFORE_TEST: python -m pip install numpy
+          # CIBW_TEST_COMMAND: python -m unittest discover -s {project}/wrap/tests
       - uses: actions/upload-artifact@v2
         with:
           name: "musllibc-${{matrix.architecture}}-${{matrix.ver}}"
@@ -279,7 +279,7 @@ jobs:
     -
       name: Get downloaded wheel name
       id: wheel
-      run: echo "::set-output name=wheel::$(ls)"
+      run: echo "::set-output name=wheel::${{ steps.path.outputs.download-path }}/$(ls)"
       working-directory: wheelhouse
     -
       run: echo "${{ steps.wheel.outputs.wheel }}"
@@ -291,4 +291,4 @@ jobs:
         pages_dir: io
         is_release: ${{ contains(github.event_name, 'release') }}
         create_readme: true
-        wheel: "${{ steps.path.outputs.download-path }}/${{ steps.wheel.outputs.wheel }}"
+        wheel: "${{ steps.wheel.outputs.wheel }}"

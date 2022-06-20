@@ -41,6 +41,8 @@ echo "git described as ${named}"
 echo ::endgroup::
 
 WHEEL="${GITHUB_WORKSPACE}/${INPUT_WHEEL}"
+echo_run echo "Looking for ${WHEEL}"
+echo_run ls ${GITHUB_WORKSPACE}
 if [ -f "$WHEEL" ]; then
 	echo ::group::Install pre-built python module
 	echo_run python3 -m pip install $WHEEL
