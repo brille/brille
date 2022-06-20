@@ -54,10 +54,11 @@ jobs:
   gnu_linux:
     needs: [test]
     name: ${{ matrix.ver }} GNU libc wheel
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ ubuntu-20.04 ]
         architecture: [ x64 ]
         ver: [cp36, cp37, cp38, cp39, cp310]
     steps:
@@ -82,10 +83,11 @@ jobs:
   musl_linux:
     needs: [test]
     name: ${{ matrix.ver }} musl libc wheel
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ ubuntu-20.04 ]
         architecture: [ x64 ]
         ver: [cp36, cp37, cp38, cp39, cp310]
     steps:
@@ -108,10 +110,11 @@ jobs:
           path: ./wheelhouse/*.whl
 
   windows:
-    runs-on: windows-2019
     needs: [ test ]
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ windows-2019 ]
         architecture: [ x64 ]
         python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
     steps:
@@ -146,10 +149,11 @@ jobs:
           path: dist/*.whl
 
   macos:
-    runs-on: macos-10.15
     needs: [ test ]
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ macos-10.15 ]
         architecture: [ x64 ]
         python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
     steps:

@@ -205,8 +205,6 @@ TEMPLATE_TEST_CASE("Array IO","[array][io]",double,float){
     fs::path filepath = tdir;
     filepath /= fs::path("brille"+std::to_string(processid())+".h5");
 
-    std::cout << "Use temporary file " << filepath;
-
     std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
     std::uniform_real_distribution<TestType> distribution(TestType(1),TestType(100));
 
