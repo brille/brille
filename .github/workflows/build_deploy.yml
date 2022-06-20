@@ -277,7 +277,7 @@ jobs:
         path: wheelhouse
     -
       name: Get downloaded wheel name
-      run: echo "set-output:: name=wheel::$(ls -R)"
+      run: echo "::set-output name=wheel::$(ls -R)"
       working-directory: wheelhouse
       id: wheel
     -
