@@ -18,6 +18,7 @@ HTML_DIR=`mktemp -d`
 echo ::endgroup::
 
 echo ::group::Gather author and commit information
+echo_run git config --global --add safe.directory $REPO_SRC
 echo_run cd $REPO_SRC
 AUTHOR_NAME="$(git show --format=%an -s)"
 AUTHOR_EMAIL="$(git show --format=%ae -s)"
@@ -86,6 +87,7 @@ for val in $INPUT_PAGES_DIR; do
 	fi
 	echo ::endgroup::
   if [ "${INPUT_UPDATE_GIT}" = true ]; then
+    echo_run git config --global --add safe.directory .
     echo ::group::Configure pages author information
     echo_run git config user.name $AUTHOR_NAME
     echo_run git config user.email $AUTHOR_EMAIL
