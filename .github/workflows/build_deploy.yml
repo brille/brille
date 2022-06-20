@@ -279,7 +279,7 @@ jobs:
     -
       name: Get downloaded wheel name
       id: wheel
-      run: echo "::set-output name=wheel::${{ steps.path.outputs.download-path }}/$(ls)"
+      run: echo "::set-output name=wheel::wheelhouse/$(ls)"
       working-directory: wheelhouse
     -
       run: echo "${{ steps.wheel.outputs.wheel }}"
