@@ -30,7 +30,7 @@ if [ $BRANCH = "master" ]; then
   # only match 'version' tags, e.g., vM.m.p, and keep only up to the second period
   : "${named:=$(git describe --tags --match 'v*'| cut -d'.' -f1-2)}" "${named:=latest}"
 else
-  named="branch-$BRANCH"
+  named="branch/$BRANCH"
 fi
 
 echo "::set-output name=name::"${AUTHOR_NAME}""
