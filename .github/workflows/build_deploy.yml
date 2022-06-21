@@ -15,8 +15,7 @@ jobs:
         python-version: [ '3.10' ]
         cmake-type: [ Release ]
     steps:
-      -
-        uses: brille/python-cmake-ctest-action@v1
+      - uses: brille/python-cmake-ctest-action@v1
         with:
           os: ${{ matrix.os }}
           python-version: ${{ matrix.python-version }}
@@ -31,11 +30,10 @@ jobs:
         platform: [ manylinux, musllinux ]
         python-version: [cp36, cp37, cp38, cp39, cp310]
     steps:
-      -
-        uses: brille/python-hdf5-cibuildwheel-action@v1
+      - uses: brille/python-hdf5-cibuildwheel-action@v1
         with:
           platform: ${{ matrix.platform }}
-          python-version: ${{ python-version }}
+          python-version: ${{ matrix.python-version }}
           arch: auto64
 
   buildwheel:
@@ -47,8 +45,7 @@ jobs:
         os: [ windows-2019, macos-10.15 ]
         python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
     steps:
-      -
-        uses: brille/python-hdf5-buildwheel-action@v1
+      - uses: brille/python-hdf5-buildwheel-action@v1
         with:
           os: ${{ matrix.os }}
           python-version: ${{ matrix.python-version }}
@@ -85,8 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [source, cibuildwheel, buildwheel]
     steps:
-      -
-        uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v2
         id: download
         with:
           path: artifacts
@@ -114,8 +110,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ cibuildwheel ]
     steps:
-    -
-      name: Checkout brille repository
+    - name: Checkout brille repository
       uses: actions/checkout@v2
       with:
         path: repository
