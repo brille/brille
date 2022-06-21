@@ -266,6 +266,7 @@ jobs:
       name: Checkout brille.github.io repository
       uses: actions/checkout@v2
       with:
+        fetch-depth: 0
         repository: brille/brille.github.io
         token: ${{ secrets.BRILLE_GITHUB_IO_TOKEN }}
         path: io
