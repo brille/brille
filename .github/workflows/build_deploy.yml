@@ -285,7 +285,7 @@ jobs:
       run: echo "${{ steps.wheel.outputs.wheel }}"
     -
       name: Sphinx Docker build
-      uses: g5t/sphinxer@v2.0.1
+      uses: g5t/sphinxer@v2.0.2
       with:
         source_dir: repository
         pages_dir: io
