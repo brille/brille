@@ -396,7 +396,7 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
   mots.reserve(W.size());
   for (size_t i=0; i<W.size(); ++i) mots.push_back(Motion<int,double>(W[i], w[i]));
   Symmetry sym(mots);
-  lat.spacegroup_symmetry(sym.generate());
+  auto ret = lat.spacegroup_symmetry(sym.generate());
 
   BrillouinZone bz(lat);
 //  info_update("First Brillouin zone\n", bz.get_polyhedron().python_string());

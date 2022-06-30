@@ -26,6 +26,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <iostream>
 #include <string>
 #include <array>
+#include <utility>
 #include <vector>
 #include <complex>
 #include <chrono>
@@ -50,20 +51,22 @@ namespace brille {
 #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
   /* Absolute value of not-unsigned scalars */
   template<typename T>
-  std::enable_if_t<!std::is_unsigned_v<T>, T>
-  abs(const T x){ return std::abs(x); }
+  inline std::enable_if_t<!std::is_unsigned_v<T>, T>
+  abs(const T x){
+    return std::abs(x);
+  }
   /* Absolute value of unsigned scalars (non-op) */
   template<typename T>
-  std::enable_if_t<std::is_unsigned_v<T>, T>
+  inline std::enable_if_t<std::is_unsigned_v<T>, T>
   abs(const T x){ return x; }
 #endif
 
 #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
   template<class T>
-  std::enable_if_t<!std::is_unsigned_v<T>, bool>
+  inline std::enable_if_t<!std::is_unsigned_v<T>, bool>
   is_negative(const T x){ return x < 0; }
   template<class T>
-  std::enable_if_t<std::is_unsigned_v<T>, bool>
+  inline std::enable_if_t<std::is_unsigned_v<T>, bool>
   is_negative(const T){ return false; }
 #endif
 #if defined(DOXYGEN_SHOULD_SKIP_THIS)
@@ -89,11 +92,6 @@ int terminal_width();
 \return The terminal height in lines or 2¹⁵ if the terminal height is zero.
 */
 int terminal_height();
-
-/*! \brief Return the running process ID number
- *
- */
-int processid();
 
 /*! \brief A utility structure to identify containers in templates
 
@@ -269,8 +267,8 @@ class DebugPrinter{
   bool emit_datetime;
   size_t _before;
 public:
-  DebugPrinter(const std::string& s)
-  : last_function(s), _silenced(false), emit_datetime(false), _before(0)
+  DebugPrinter(std::string s)
+  : last_function(std::move(s)), _silenced(false), emit_datetime(false), _before(0)
   {
     #if defined(PROFILING)
     emit_datetime = true;
@@ -311,7 +309,7 @@ public:
     }
   }
 private:
-  std::string lead_in() const {
+  [[nodiscard]] std::string lead_in() const {
     std::stringstream buffer;
     for (size_t i=0; i<_before; ++i) buffer << " ";
     return buffer.str();
@@ -368,7 +366,7 @@ private:
     //     s += "\n" + this->lead_in();
     //   }
     // } else {
-      size_t w = static_cast<size_t>(terminal_width());
+      auto w = static_cast<size_t>(terminal_width());
       if (_before < w) w -= _before;
       if (l) w /= l+1;
       size_t count = 0;
@@ -382,7 +380,7 @@ private:
   template<typename T, typename... L>
   void inner_print(const std::vector<std::vector<T>>& vv, L... args){
     size_t l = max_element_length(vv);
-    size_t w = static_cast<size_t>(terminal_width());
+    auto w = static_cast<size_t>(terminal_width());
     if (_before < w) w -= _before;
     size_t num;
     std::string s;
@@ -408,7 +406,7 @@ private:
   template<typename T, size_t N, typename... L>
   enable_if_t<!is_container<T>::value, void> inner_print(const std::vector<std::array<T,N>>& x, L... args){
     size_t l = max_element_length(x);
-    size_t w = static_cast<size_t>(terminal_width());
+    auto w = static_cast<size_t>(terminal_width());
     if (_before < w) w -= _before;
     size_t num;
     std::string s;
@@ -480,16 +478,16 @@ public:
       return elapsed();
     }
     /*! \brief Calculate the time elapsed betwen starting and stopping the timer */
-    double elapsed() const {
+    [[nodiscard]] double elapsed() const {
       auto delta = std::chrono::duration_cast<TimeT>(_end - _start);
       return static_cast<double>(delta.count());
     }
     /*! \brief Calculate the average time per iteration of the timer */
-    double average() const {
+    [[nodiscard]] double average() const {
       return elapsed()/static_cast<double>(presses);
     }
     /*! \brief Calculate the uncertainty in the average time per iteration */
-    double jitter() const {
+    [[nodiscard]] double jitter() const {
       return std::sqrt(elapsed())/static_cast<double>(presses);
     }
     /*! \brief Return the time since the timer started or last split call

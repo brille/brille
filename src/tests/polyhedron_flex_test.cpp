@@ -202,7 +202,6 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     filepath /= fs::path(pid_filename("brille",".h5"));
     auto filename = filepath.string();
     std::string dataset="/polyhedron";
-    std::cout << "Writing to file " << filename << std::endl;
     REQUIRE(poly.to_hdf(filename, dataset));
 
     // read-back the file's Polyhedron

@@ -244,18 +244,21 @@ namespace brille {
 //  }
 
 
-  template<class T, template<class> class A> std::enable_if_t<isArray<T,A>, A<T>>
+  template<class T, template<class> class A>
+  inline std::enable_if_t<isArray<T,A>, A<T>>
   three_point_normal(const A<T> &a, const A<T> &b, const A<T> &c) {
     auto n = cross(b - a, c - b);
     return n / norm(n);
   }
 
-  template<class T, template<class> class A, class I> std::enable_if_t<isArray<T,A>, A<T>>
+  template<class T, template<class> class A, class I>
+  inline std::enable_if_t<isArray<T,A>, A<T>>
   three_point_normal(const A<T> &p, const I a, const I b, const I c) {
     return three_point_normal(p.view(a), p.view(b), p.view(c));
   }
 
-  template<class T, template<class> class A, class I> std::enable_if_t<isArray<T,A>, A<T>>
+  template<class T, template<class> class A, class I>
+  inline std::enable_if_t<isArray<T,A>, A<T>>
   three_point_normal(const A<T> &p, const std::vector<I> &f) {
     return three_point_normal(p.view(f[0]), p.view(f[1]), p.view(f[2]));
   }
@@ -426,7 +429,7 @@ namespace brille {
 
   #define POINT_IN_PLANE(FUNCTION, OUT_TYPE) \
   template<class T, class R, template<class> class A, template<class> class B>\
-  std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, OUT_TYPE>\
+  inline std::enable_if_t<isLatVec<T,A> && isLatVec<R,B>, OUT_TYPE>\
   FUNCTION(const A<T>& a, const A<T>& b, const A<T>& c, const B<R>& x){\
     assert(point_in_plane_lattice_check(a, b, c, x));\
     return FUNCTION(a.xyz(), b.xyz(), c.xyz(), x.xyz());\
@@ -830,14 +833,14 @@ namespace brille {
   }
 
   template<class T, template<class> class A>
-  std::enable_if_t<isLatVec<T,A>, std::vector<ind_t>>
+  inline std::enable_if_t<isLatVec<T,A>, std::vector<ind_t>>
   sort_convex_polygon_face(const A<T>& a, const A<T>& b, const A<T>& c, const std::vector<ind_t>& face, const A<T>& points){
     assert(a.same_lattice(b) && a.same_lattice(c) && a.same_lattice(points));
     return sort_convex_polygon_face(a.xyz(), b.xyz(), c.xyz(), face, points.xyz());
   }
 
   template<class T, class I, template<class> class A>
-  std::enable_if_t<isArray<T,A>, std::vector<ind_t>>
+  inline std::enable_if_t<isArray<T,A>, std::vector<ind_t>>
   sort_convex_polygon_face(const std::vector<I>& face, const A<T>& vertices){
     auto a = vertices.view(face[0]);
     auto b = vertices.view(face[1]);
