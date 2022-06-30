@@ -151,7 +151,7 @@ void wrap_lattice(py::module &m){
   cls.def_property_readonly("gamma_star", [](const Lattice<double>& lat){return lat.angle(LengthUnit::inverse_angstrom, 2);});
   cls.def_property_readonly("volume_star",[](const Lattice<double>& lat){return lat.volume(LengthUnit::inverse_angstrom);});
 
-  cls.def_property_readonly("bravais",&Lattice<double>::bravais);
+  cls.def_property_readonly("bravais",[](const Lattice<double>& l){return l.bravais();});
   cls.def_property("spacegroup",
     [](const Lattice<double>& l){
     return l.spacegroup_symmetry();
@@ -222,5 +222,5 @@ void wrap_lattice(py::module &m){
 
   cls.def("__eq__",[](const Lattice<double>& a, const Lattice<double>&b){return a == b;});
   cls.def("__repr__",[](const Lattice<double>& l) {return l.to_verbose_string(AngleUnit::degree);});
-  cls.def("str",&Lattice<double>::to_string);
+  cls.def("str",[](const Lattice<double>& l, LengthUnit lu){return l.to_string(lu);});
 }
