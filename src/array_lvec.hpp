@@ -90,10 +90,10 @@ public:
   using lattice_t = Lattice<metric_t>;
   using type_t = LengthUnit;
 private:
-  type_t _type;
+  type_t _type = LengthUnit::inverse_angstrom;
   lattice_t _lattice;
 public:
-  explicit LVec(type_t typ=LengthUnit::inverse_angstrom): _type(typ), _lattice() {}
+  LVec() = default;
   // default constructor for zero three-vectors:
   LVec(type_t typ, lattice_t lat): bArray<T>(0,3), _type(typ), _lattice(std::move(lat))
   {}

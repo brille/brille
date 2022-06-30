@@ -132,13 +132,13 @@ Symmetry HallSymbol::get_generators() const {
   }
   // copy the symbols and ensure all axis specifiers are explicit:
   std::vector<SeitzSymbol> expsym;
-  if (symbols.size()>0){
-    expsym.push_back(SeitzSymbol(symbols[0].get_order(), symbols[0].get_tran(), symbols[0].implicit_axis()));
+  if (!symbols.empty()){
+    expsym.emplace_back(symbols[0].get_order(), symbols[0].get_tran(), symbols[0].implicit_axis());
     for (size_t i=1; i<symbols.size(); ++i)
-      expsym.push_back(SeitzSymbol(symbols[i].get_order(), symbols[i].get_tran(), symbols[i].implicit_axis(expsym[i-1])));
+      expsym.emplace_back(symbols[i].get_order(), symbols[i].get_tran(), symbols[i].implicit_axis(expsym[i-1]));
   }
   // with all axis symbols now (semi) explicit we can run this more easily
-  if (expsym.size()>0){
+  if (!expsym.empty()){
     gen.add(expsym[0].getr(), expsym[0].gett());
     for (size_t i=1; i<expsym.size(); ++i)
       gen.add(expsym[i].getr(expsym[i-1]), expsym[i].gett(expsym[i-1]));

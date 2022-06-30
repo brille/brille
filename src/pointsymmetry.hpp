@@ -23,6 +23,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief Classes for a lattice pointgroup symmetry operations
 */
+#include <utility>
+
 #include "symmetry_common.hpp" // defines Matrix, Vector, Matrices, Vectors
 #include "hdf_interface.hpp"
 namespace brille {
@@ -42,8 +44,8 @@ namespace brille {
 class PointSymmetry{
   Matrices<int> R;
 public:
-  explicit PointSymmetry(size_t n=0): R(n) { R.resize(n);}
-  explicit PointSymmetry(const Matrices<int>& rots): R(rots){ this->sort(); }
+  explicit PointSymmetry(size_t n=0): R() { R.resize(n);}
+  explicit PointSymmetry(Matrices<int> rots): R(std::move(rots)){ this->sort(); }
   [[nodiscard]] const Matrices<int>& getall()                  const { return this->R;  }
   [[nodiscard]] size_t               size()                    const { return R.size(); }
   size_t               resize(size_t newsize)                            ;

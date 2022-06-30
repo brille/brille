@@ -72,7 +72,7 @@ private:
   Motions M;
 public:
   //! Empty constructor
-  explicit Symmetry(size_t n=0) { M.resize(n); }
+  explicit Symmetry(size_t n=0): M() { M.resize(n); }
   //! Construct from a list of symmetry operation Motions
   explicit Symmetry(Motions m): M(std::move(m)) {};
   //! Construct from a CIF xyz encoded string of one or more Motions
@@ -100,12 +100,12 @@ public:
   \param W A reference to the Matrix part of the Motion to add
   \param w A reference to the Vector part of the Motion to add
   */
-  size_t                 add(const Matrix<int>& W, const Vector<double>& w)    ;
+  size_t                 add(Matrix<int> W, Vector<double> w)    ;
   /*! \brief Add one Motion to the list of Motions
 
   \param M A reference to the Motion to add
   */
-  size_t                 add(const Motion<int,double>& M)                      ;
+  size_t                 add(Motion<int,double> M)                      ;
   /*! \brief Add one CIF xyz encoded Motion to the list of Motions
 
   \param motion A comma separated list of the combined matrix and vector parts

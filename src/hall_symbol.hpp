@@ -21,6 +21,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Classes to handle decoding Hall symbols
 */
 #include <cstring>
+#include <utility>
 // #include <string>
 // #include <sstream>
 // #include <iostream>
@@ -66,12 +67,12 @@ class SeitzSymbol {
   std::string T; /**< Translation part of symbol */
   std::string A; /**< Axis part of symbol */
 public:
-  explicit SeitzSymbol(const int n=0, const std::string& t="", const std::string& a=""): N{n}, T{t}, A{a} {};
-  SeitzSymbol(const int n, const std::string& t, const char a): N{n}, T{t} {A=a;};
+  explicit SeitzSymbol(const int n=0, std::string t="", std::string a=""): N{n}, T{std::move(t)}, A{std::move(a)} {};
+  SeitzSymbol(const int n, std::string t, const char a): N{n}, T{std::move(t)} {A=a;};
   //! Specify the rotation order of the symbol
   int set_order(const int n){ N = n; return N; }
   //! Get the rotation order of the symbol
-  int get_order() const {return N;}
+  [[nodiscard]] int get_order() const {return N;}
   //! Specify the encoded translation of the symbol
   std::string set_tran(const std::string& t){ T = t; return T; }
   //! Specify the encoded orientation axis of the symbol
@@ -81,11 +82,11 @@ public:
   //! Append to the encoded orientation axis of the symbol
   std::string add_axis(const char& a){ A += a; return A; }
   //! Get the encoded translation of the symbol
-  std::string get_tran() const { return T; }
+  [[nodiscard]] std::string get_tran() const { return T; }
   //! Get the encoded orientation axis of the symbol
-  std::string get_axis() const { return A; }
+  [[nodiscard]] std::string get_axis() const { return A; }
   //! Construct the full encoded symbol in ASCII format
-  std::string to_ascii() const;
+  [[nodiscard]] std::string to_ascii() const;
   //! Check that the stored symbol parts are self consistent
   bool validate();
   /*! Decode the stored rotation order and orientation axis
@@ -94,33 +95,33 @@ public:
 
   \return a three-by-three matrix representation of R
   */
-  Matrix<int> getr() const;
+  [[nodiscard]] Matrix<int> getr() const;
   /*! \brief Decode the stored rotation order and orientation axis
 
   \param pre The preceeding symbol required to correctly infer missing symbol part(s)
   \return a three-by-three matrix representation of R
   */
-  Matrix<int> getr(const SeitzSymbol& pre) const;
+  [[nodiscard]] Matrix<int> getr(const SeitzSymbol& pre) const;
   /*! \brief Decode the stored translation vector
 
   \warning Use only when no symbol preceeds this one in the Hall symbol.
 
   \return a three-element vector representation of v
   */
-  Vector<double> gett() const;
+  [[nodiscard]] Vector<double> gett() const;
   /*! \brief Decode the stored translation vector
 
   \param pre The preceeding symbol required to correctly infer missing symbol part(s)
   \return a three-element vector representation of v
   */
-  Vector<double> gett(const SeitzSymbol& pre) const;
+  [[nodiscard]] Vector<double> gett(const SeitzSymbol& pre) const;
   /*! \brief Determine the explicit or implicit orientation axis
 
   \warning Use only when no symbol preceeds this one in the Hall symbol.
 
   \return the stored orientation axis or 'z' which is always the first implicit axis
   */
-  char implicit_axis() const { return A.size() ? A[0] : 'z'; }
+  [[nodiscard]] char implicit_axis() const { return A.size() ? A[0] : 'z'; }
   /*! \brief Determine the explicit or implicit orientation axis
 
   If a symbol does not contain an orientation axis then it uses an implicit
@@ -139,9 +140,9 @@ public:
   \param pre The preceeding symbol required to correctly infer missing symbol part(s)
   \return the stored orientation axis or the inferred implict axis
   */
-  char implicit_axis(const SeitzSymbol& pre) const {
+  [[nodiscard]] char implicit_axis(const SeitzSymbol& pre) const {
     char a = '!';
-    if (A.size()){
+    if (!A.empty()){
       a = A[0];
     } else {
       int tn = std::abs(this->N);
@@ -155,8 +156,8 @@ public:
     return a;
   }
 protected:
-  Matrix<int> inner_getr(const char, const char) const;
-  Vector<double> inner_gett(int, char, char) const;
+  [[nodiscard]] Matrix<int> inner_getr(char, char) const;
+  [[nodiscard]] Vector<double> inner_gett(int, char, char) const;
 };
 
 /*! \brief A class to interact with lattices in Hall notation
@@ -178,10 +179,10 @@ This class contains methods to decode arbitrary Hall symbols and produce the
 Bravais lattice type and the generators of the spacegroup.
 */
 class HallSymbol {
-  Bravais L;
-  bool centrosymmetric;
+  Bravais L = Bravais::_;
+  bool centrosymmetric = false;
   std::vector<SeitzSymbol> symbols;
-  Motion<double,double> V; // change of basis '4×4' matrix
+  Motion<double,double> V = {{1,0,0, 0,1,0, 0,0,1}, {0,0,0}}; // change of basis '4×4' matrix
 public:
   explicit HallSymbol(const Bravais b, const bool c, std::vector<SeitzSymbol>  ss):
     L{b}, centrosymmetric{c}, symbols{std::move(ss)} {};
