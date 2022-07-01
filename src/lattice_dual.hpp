@@ -23,7 +23,16 @@ dual_lattice_parameters(const std::array<T,3>& lengths, const std::array<T,3>& c
     cos_sum += cosines[i] * cosines[i];
     cos_prod *= cosines[i];
   }
-  S unit_volume = std::sqrt(S(1) - cos_sum + cos_prod); // sqrt(1 - sum() + 2 * prod())
+  S unit_volume_squared = S(1) - cos_sum + cos_prod; // 1 - sum() + 2 * prod()
+  if (unit_volume_squared <= S(0)) {
+    std::string msg = "A lattice with interfacial cosines {";
+    for (const auto & c: cosines) msg += " " + std::to_string(c);
+    msg += "} has ";
+    msg += (unit_volume_squared < 0 ? "imaginary" : "no");
+    msg += " volume and can therefore not represent a physical lattice.";
+    throw std::invalid_argument(msg);
+  }
+  S unit_volume = std::sqrt(unit_volume_squared); // sqrt(1 - sum() + 2 * prod())
 
   std::array<S,3> dual_len, dual_cos, dual_sin;
   for (size_t i=0; i<3; ++i) {

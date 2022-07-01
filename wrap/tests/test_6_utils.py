@@ -72,7 +72,7 @@ class UtilsTestBZ (unittest.TestCase):
         bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], 'P 6', wedge_search=False)
         self.check_lattice(bz, [4, 5, 6] + [np.pi/2]*3)
         
-    def test_invalid_input_negative_vol(self):
+    def test_invalid_input_negative_squared_vol(self):
         # Tests for physically impossible lattice
         with self.assertRaises(ValueError):
             bz = br_py.utils.create_bz([4, 5, 6], [30, 30, 90], 'P 6')
