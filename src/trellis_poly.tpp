@@ -506,21 +506,17 @@ PolyTrellis<T,R,S,A>::part_two(
       bool contains_Gamma = std::count(gin.begin(), gin.end(), true) == 1;
       // Triangulate the node polyhedron into tetrahedra (the class name LQPolyTet is misleading...)
       polyhedron::LQPolyTet<S,A> tri_cut{};
-#pragma omp critical
-      {
-      // this uses TetGen, which is not thread safe :/
-      // which kills any parallelisation speed-ups
+      // this uses modified TetGen, which is now thread safe :)
       tri_cut = polyhedron::LQPolyTet(this_node, contains_Gamma);
       if (tri_cut.get_vertices().size(0)<4){
         //something went wrong.
-        /* A (somehow) likely cuplrit is that a face is missing from the cut
+        /* A (somehow) likely culprit is that a face is missing from the cut
         cube and therefor is not a piecewise linear complex. try to re-form
         the input polyhedron and then re-triangulate.*/
         tri_cut = polyhedron::LQPolyTet(this_node.convex_hull(), contains_Gamma);
         if (tri_cut.get_vertices().size(0)<4)
           fatal_errors += 1;
       }
-      } // end critical section
       int added_in_triangulation = tri_cut.any() ? tri_cut.count() : 0;
       // make sure we can match-up the triangulated polyhedron vertices to the
       // known ones:

@@ -113,9 +113,10 @@
 /*                                                                           */
 /*****************************************************************************/
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <tuple>
 #ifdef CPU86
 #include <float.h>
 #endif /* CPU86 */
@@ -372,155 +373,48 @@
   Square(a1, _j, _1); \
   Two_Two_Sum(_j, _1, _l, _2, x5, x4, x3, x2)
 
-/* splitter = 2^ceiling(p / 2) + 1.  Used to split floats in half.           */
-static REAL splitter;
-static REAL epsilon;         /* = 2^(-p).  Used to estimate roundoff errors. */
-/* A set of coefficients used to calculate maximum roundoff errors.          */
-static REAL resulterrbound;
-static REAL ccwerrboundA, ccwerrboundB, ccwerrboundC;
-static REAL o3derrboundA, o3derrboundB, o3derrboundC;
-static REAL iccerrboundA, iccerrboundB, iccerrboundC;
-static REAL isperrboundA, isperrboundB, isperrboundC;
 
-// Options to choose types of geometric computtaions. 
-// Added by H. Si, 2012-08-23.
-static int  _use_inexact_arith; // -X option.
-static int  _use_static_filter; // Default option, disable it by -X1
+/*  A note on controlling the floating-point unit's behaviour:
+ *
+ *  These Fast Robust Predicates are only correct for
+ *  "computers whose floating-point arithmetic uses radix two
+ *  and exact rounding, including machines that comply with the IEEE 754
+ *  floating-point standard."
+ *  To ensure correct floating-point arithmetic, an attempt is made set the FPU
+ *  behaviour by turning off the 'Invalid Operation', 'Zero-divide', and
+ *  'Overflow' masks. As noted in <fpu_control.h> the macro used
+ *      is not sufficient anymore with recent hardware nor on x86-64.
+ *      Some floating point operations are executed in the SSE/SSE2 engines
+ *      which have their own control and status register.
+ *  Furthermore, the preprocessor defines the identifier 'LINUX' if and only if
+ *  the compiler defines '__linux__' and '__i386__' which should only be set on
+ *  32-bit hardware. At present, there is no need to target 32-bit systems.
+ *
+ *  For these reasons, the attempt to control the FPU behaviour is likely never
+ *  successful on modern machines.
+ *  Should this prove incorrect, or should there be a need to include special
+ *  FPU behaviour someone more knowledgeable about modern computer hardware will
+ *  need to weigh in. Fow now, all 'cword' control has been removed.
+ * */
 
-// Static filters for orient3d() and insphere(). 
-// They are pre-calcualted and set in exactinit().
-// Added by H. Si, 2012-08-23.
-static REAL o3dstaticfilter;
-static REAL ispstaticfilter;
-
-
-
-// The following codes were part of "IEEE 754 floating-point test software"
-//          http://www.math.utah.edu/~beebe/software/ieee/
-// The original program was "fpinfo2.c".
-
-static double fppow2(int n)
-{
-  double x, power;
-  x = (n < 0) ? ((double)1.0/(double)2.0) : (double)2.0;
-  n = (n < 0) ? -n : n;
-  power = (double)1.0;
-  while (n-- > 0)
-	power *= x;
-  return (power);
+constexpr std::tuple<REAL, REAL> calc_splitter_epsilon() {
+  REAL splitter{1}, epsilon{1}, half{0.5}, check{1.0}, last_check{0.};
+  int count{0};
+  /* Repeatedly divide 'epsilon' by two until it is too small to add to one
+   * without causing roundoff. (Also check if the sum is equal to the previous
+   * sum, for machines that round up instead of using exact rounding. Not that
+   * the exact predicates library would work on such a machine anyway. */
+  do {
+    last_check = check;
+    epsilon *= half;
+    if (++count % 2) {
+      splitter *= 2.0;
+    }
+    check = 1.0 + epsilon;
+  } while ((check != 1.0) && (check != last_check));
+  splitter += 1.0;
+  return std::make_tuple(splitter, epsilon);
 }
-
-#ifdef SINGLE
-
-static float fstore(float x)
-{
-  return (x);
-}
-
-static int test_float(int verbose)
-{
-  float x;
-  int pass = 1;
-
-  //(void)printf("float:\n");
-
-  if (verbose) {
-    (void)printf("  sizeof(float) = %2u\n", (unsigned int)sizeof(float));
-#ifdef CPU86  // <float.h>
-    (void)printf("  FLT_MANT_DIG = %2d\n", FLT_MANT_DIG);
-#endif
-  }
-
-  x = (float)1.0;
-  while (fstore((float)1.0 + x/(float)2.0) != (float)1.0)
-    x /= (float)2.0;
-  if (verbose)
-    (void)printf("  machine epsilon = %13.5e  ", x);
-
-  if (x == (float)fppow2(-23)) {
-    if (verbose)
-      (void)printf("[IEEE 754 32-bit macheps]\n");
-  } else {
-    (void)printf("[not IEEE 754 conformant] !!\n");
-    pass = 0;
-  }
-
-  x = (float)1.0;
-  while (fstore(x / (float)2.0) != (float)0.0)
-    x /= (float)2.0;
-  if (verbose)
-    (void)printf("  smallest positive number =  %13.5e  ", x);
-
-  if (x == (float)fppow2(-149)) {
-    if (verbose)
-      (void)printf("[smallest 32-bit subnormal]\n");
-  } else if (x == (float)fppow2(-126)) {
-    if (verbose)
-      (void)printf("[smallest 32-bit normal]\n");
-  } else {
-	(void)printf("[not IEEE 754 conformant] !!\n");
-    pass = 0;
-  }
-
-  return pass;
-}
-
-# else
-
-static double dstore(double x)
-{
-  return (x);
-}
-
-static int test_double(int verbose)
-{
-  double x;
-  int pass = 1;
-
-  // (void)printf("double:\n");
-  if (verbose) {
-    (void)printf("  sizeof(double) = %2u\n", (unsigned int)sizeof(double));
-#ifdef CPU86  // <float.h>
-    (void)printf("  DBL_MANT_DIG = %2d\n", DBL_MANT_DIG);
-#endif
-  }
-
-  x = 1.0;
-  while (dstore(1.0 + x/2.0) != 1.0)
-    x /= 2.0;
-  if (verbose) 
-    (void)printf("  machine epsilon = %13.5le ", x);
-
-  if (x == (double)fppow2(-52)) {
-    if (verbose)
-      (void)printf("[IEEE 754 64-bit macheps]\n");
-  } else {
-    (void)printf("[not IEEE 754 conformant] !!\n");
-    pass = 0;
-  }
-
-  x = 1.0;
-  while (dstore(x / 2.0) != 0.0)
-    x /= 2.0;
-  //if (verbose)
-  //  (void)printf("  smallest positive number = %13.5le ", x);
-
-  if (x == (double)fppow2(-1074)) {
-    //if (verbose)
-    //  (void)printf("[smallest 64-bit subnormal]\n");
-  } else if (x == (double)fppow2(-1022)) {
-    //if (verbose)
-    //  (void)printf("[smallest 64-bit normal]\n");
-  } else {
-    (void)printf("[not IEEE 754 conformant] !!\n");
-    pass = 0;
-  }
-
-  return pass;
-}
-
-#endif
-
 /*****************************************************************************/
 /*                                                                           */
 /*  exactinit()   Initialize the variables used for exact arithmetic.        */
@@ -539,110 +433,22 @@ static int test_double(int verbose)
 /*  Don't change this routine unless you fully understand it.                */
 /*                                                                           */
 /*****************************************************************************/
+static constexpr REAL epsilon{std::get<1>(calc_splitter_epsilon())};
+static constexpr REAL splitter{std::get<0>(calc_splitter_epsilon())};
 
-void exactinit(int verbose, int noexact, int nofilter, REAL maxx, REAL maxy, 
-               REAL maxz)
-{
-  REAL half;
-  REAL check, lastcheck;
-  int every_other;
-#ifdef LINUX
-  int cword;
-#endif /* LINUX */
-
-#ifdef CPU86
-#ifdef SINGLE
-  _control87(_PC_24, _MCW_PC); /* Set FPU control word for single precision. */
-#else /* not SINGLE */
-  _control87(_PC_53, _MCW_PC); /* Set FPU control word for double precision. */
-#endif /* not SINGLE */
-#endif /* CPU86 */
-#ifdef LINUX
-#ifdef SINGLE
-  /*  cword = 4223; */
-  cword = 4210;                 /* set FPU control word for single precision */
-#else /* not SINGLE */
-  /*  cword = 4735; */
-  cword = 4722;                 /* set FPU control word for double precision */
-#endif /* not SINGLE */
-  _FPU_SETCW(cword);
-#endif /* LINUX */
-
-  if (verbose) {
-    printf("  Initializing robust predicates.\n");
-  }
-
-#ifdef USE_CGAL_PREDICATES
-  if (cgal_pred_obj.Has_static_filters) {
-    printf("  Use static filter.\n");
-  } else {
-    printf("  No static filter.\n");
-  }
-#endif // USE_CGAL_PREDICATES
-
-#ifdef SINGLE
-  test_float(verbose);
-#else
-  test_double(verbose);
-#endif
-
-  every_other = 1;
-  half = 0.5;
-  epsilon = 1.0;
-  splitter = 1.0;
-  check = 1.0;
-  /* Repeatedly divide `epsilon' by two until it is too small to add to    */
-  /*   one without causing roundoff.  (Also check if the sum is equal to   */
-  /*   the previous sum, for machines that round up instead of using exact */
-  /*   rounding.  Not that this library will work on such machines anyway. */
-  do {
-    lastcheck = check;
-    epsilon *= half;
-    if (every_other) {
-      splitter *= 2.0;
-    }
-    every_other = !every_other;
-    check = 1.0 + epsilon;
-  } while ((check != 1.0) && (check != lastcheck));
-  splitter += 1.0;
-
-  /* Error bounds for orientation and incircle tests. */
-  resulterrbound = (3.0 + 8.0 * epsilon) * epsilon;
-  ccwerrboundA = (3.0 + 16.0 * epsilon) * epsilon;
-  ccwerrboundB = (2.0 + 12.0 * epsilon) * epsilon;
-  ccwerrboundC = (9.0 + 64.0 * epsilon) * epsilon * epsilon;
-  o3derrboundA = (7.0 + 56.0 * epsilon) * epsilon;
-  o3derrboundB = (3.0 + 28.0 * epsilon) * epsilon;
-  o3derrboundC = (26.0 + 288.0 * epsilon) * epsilon * epsilon;
-  iccerrboundA = (10.0 + 96.0 * epsilon) * epsilon;
-  iccerrboundB = (4.0 + 48.0 * epsilon) * epsilon;
-  iccerrboundC = (44.0 + 576.0 * epsilon) * epsilon * epsilon;
-  isperrboundA = (16.0 + 224.0 * epsilon) * epsilon;
-  isperrboundB = (5.0 + 72.0 * epsilon) * epsilon;
-  isperrboundC = (71.0 + 1408.0 * epsilon) * epsilon * epsilon;
-
-  // Set TetGen options.  Added by H. Si, 2012-08-23.
-  _use_inexact_arith = noexact;
-  _use_static_filter = !nofilter;
-
-  // Calculate the two static filters for orient3d() and insphere() tests.
-  // Added by H. Si, 2012-08-23.
-
-  // Sort maxx < maxy < maxz. Re-use 'half' for swapping.
-  if (maxx > maxz) {
-    half = maxx; maxx = maxz; maxz = half;
-  }
-  if (maxy > maxz) {
-    half = maxy; maxy = maxz; maxz = half;
-  }
-  else if (maxy < maxx) {
-    half = maxy; maxy = maxx; maxx = half;
-  }
-
-  o3dstaticfilter = 5.1107127829973299e-15 * maxx * maxy * maxz;
-  ispstaticfilter = 1.2466136531027298e-13 * maxx * maxy * maxz * (maxz * maxz);
-
-}
+static constexpr REAL resulterrbound{(3.0 + 8.0 * epsilon) * epsilon};
+static constexpr REAL ccwerrboundA{(3.0 + 16.0 * epsilon) * epsilon};
+static constexpr REAL ccwerrboundB{(2.0 + 12.0 * epsilon) * epsilon};
+static constexpr REAL ccwerrboundC{(9.0 + 64.0 * epsilon) * epsilon * epsilon};
+static constexpr REAL o3derrboundA{(7.0 + 56.0 * epsilon) * epsilon};
+static constexpr REAL o3derrboundB{(3.0 + 28.0 * epsilon) * epsilon};
+static constexpr REAL o3derrboundC{(26.0 + 288.0 * epsilon) * epsilon * epsilon};
+static constexpr REAL iccerrboundA{(10.0 + 96.0 * epsilon) * epsilon};
+static constexpr REAL iccerrboundB{(4.0 + 48.0 * epsilon) * epsilon};
+static constexpr REAL iccerrboundC{(44.0 + 576.0 * epsilon) * epsilon * epsilon};
+static constexpr REAL isperrboundA{(16.0 + 224.0 * epsilon) * epsilon};
+static constexpr REAL isperrboundB{(5.0 + 72.0 * epsilon) * epsilon};
+static constexpr REAL isperrboundC{(71.0 + 1408.0 * epsilon) * epsilon * epsilon};
 
 /*****************************************************************************/
 /*                                                                           */
@@ -2188,7 +1994,8 @@ REAL orient3d(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 
 #else
 
-REAL orient3d(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd)
+REAL orient3d(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd,
+              const bool & inexact, const bool & filter, const REAL & static_filter)
 {
   REAL adx, bdx, cdx, ady, bdy, cdy, adz, bdz, cdz;
   REAL bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;
@@ -2218,14 +2025,14 @@ REAL orient3d(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd)
       + bdz * (cdxady - adxcdy)
       + cdz * (adxbdy - bdxady);
 
-  if (_use_inexact_arith) {
+  if (inexact) {
     return det;
   }
 
-  if (_use_static_filter) {
-    //if (fabs(det) > o3dstaticfilter) return det;
-    if (det > o3dstaticfilter) return det;
-    if (det < -o3dstaticfilter) return det;
+  if (filter) {
+    //if (fabs(det) > static_filter) return det;
+    if (det > static_filter) return det;
+    if (det < -static_filter) return det;
   }
 
 
@@ -4044,7 +3851,8 @@ REAL insphere(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
 
 #else
 
-REAL insphere(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd, const REAL *pe)
+REAL insphere(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd, const REAL *pe,
+              const bool & inexact, const bool & filter, const REAL & static_filter)
 {
   REAL aex, bex, cex, dex;
   REAL aey, bey, cey, dey;
@@ -4102,14 +3910,14 @@ REAL insphere(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd, co
 
   det = (dlift * abc - clift * dab) + (blift * cda - alift * bcd);
 
-  if (_use_inexact_arith) {
+  if (inexact) {
     return det;
   }
 
-  if (_use_static_filter) {
-    if (fabs(det) > ispstaticfilter) return det;
-    //if (det > ispstaticfilter) return det;
-    //if (det < minus_ispstaticfilter) return det;
+  if (filter) {
+    if (fabs(det) > static_filter) return det;
+    //if (det > static_filter) return det;
+    //if (det < -static_filter) return det;
 
   }
 
