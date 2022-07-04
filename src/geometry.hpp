@@ -94,7 +94,7 @@ namespace brille {
     auto bdz = bz - dz;
     auto cdz = cz - dz;
     return adx * (bdy * cdz - bdz * cdy) + bdx * (cdy * adz - cdz * ady) + cdx * (ady * bdz - adz * bdy);
-  };
+  }
 
     /*! \brief Identify the relative orientation of four points
      *

@@ -35,7 +35,7 @@ static void add_to_maps(const I n_points, I& n_kept, std::vector<I>& map_idx, st
     debug_update("vertex ", i, " added to kept list; total kept now ", n_kept);
   }
   map.push_back(map_idx[i]);
-};
+}
 
 //  auto add_vertex = [&](const auto &vertex, std::vector<ind_t> &map) {
 //    auto equals =

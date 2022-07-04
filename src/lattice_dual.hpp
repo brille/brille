@@ -555,6 +555,18 @@ protected:
   std::shared_ptr<Impl<T>> pointer() const {return ptr;}
 public:
   Lattice() = default;
+
+  // Define copy constructors to avoid forwarding to Impl
+  // Which is only a problem for musl libc, somehow.
+  Lattice(Lattice<T>& lat): ptr(lat.pointer()) {}
+  Lattice(const Lattice<T>& lat): ptr(lat.pointer()) {}
+  Lattice(Lattice<T>&& lat) noexcept : ptr(std::move(lat.ptr)) {}
+  // ^^^ copy constructors require we define assignment too:
+  Lattice<T>& operator =(const Lattice<T>& other){
+    ptr = other.pointer();
+    return *this;
+  }
+
   explicit Lattice(std::shared_ptr<Impl<T>> ptr_): ptr(ptr_) {}
   template<class... Args>
   explicit Lattice(Args&&... args) { ptr = std::make_shared<Impl<T>>(std::forward<Args>(args)...);}

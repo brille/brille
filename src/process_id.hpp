@@ -6,6 +6,6 @@
 namespace brille{
     int process_id();
     std::string pid_filename(std::string base, std::string ext);
-};
+}
 
 #endif
