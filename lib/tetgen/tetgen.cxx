@@ -44,7 +44,7 @@
 //   Please consult the file LICENSE for the detailed copyright notices.      //
 //                                                                            //
 //============================================================================//
-
+#include <utility>
 #include "tetgen.h"
 
 //== io_cxx ==================================================================//
@@ -3800,64 +3800,6 @@ bool tetgenbehavior::parse_commandline(int argc, char **argv)
 //== behavior_cxx ============================================================//
 #endif
 
-//== mempool_cxx =============================================================//
-//                                                                            //
-//                                                                            //
-
-// Initialize fast lookup tables for mesh maniplulation primitives.
-
-int tetgenmesh::bondtbl[12][12] = {{0,},};
-int tetgenmesh::enexttbl[12] = {0,};
-int tetgenmesh::eprevtbl[12] = {0,};
-int tetgenmesh::enextesymtbl[12] = {0,};
-int tetgenmesh::eprevesymtbl[12] = {0,};
-int tetgenmesh::eorgoppotbl[12] = {0,};
-int tetgenmesh::edestoppotbl[12] = {0,};
-int tetgenmesh::fsymtbl[12][12] = {{0,},};
-int tetgenmesh::facepivot1[12] = {0,};
-int tetgenmesh::facepivot2[12][12] = {{0,},};
-int tetgenmesh::tsbondtbl[12][6] = {{0,},};
-int tetgenmesh::stbondtbl[12][6] = {{0,},};
-int tetgenmesh::tspivottbl[12][6] = {{0,},};
-int tetgenmesh::stpivottbl[12][6] = {{0,},};
-
-// Table 'esymtbl' takes an directed edge (version) as input, returns the
-//   inversed edge (version) of it.
-
-int tetgenmesh::esymtbl[12] = {9, 6, 11, 4, 3, 7, 1, 5, 10, 0, 8, 2};
-
-// The following four tables give the 12 permutations of the set {0,1,2,3}.
-//   An offset 4 is added to each element for a direct access of the points
-//   in the tetrahedron data structure.
-
-int tetgenmesh:: orgpivot[12] = {7, 7, 5, 5, 6, 4, 4, 6, 5, 6, 7, 4};
-int tetgenmesh::destpivot[12] = {6, 4, 4, 6, 5, 6, 7, 4, 7, 7, 5, 5};
-int tetgenmesh::apexpivot[12] = {5, 6, 7, 4, 7, 7, 5, 5, 6, 4, 4, 6};
-int tetgenmesh::oppopivot[12] = {4, 5, 6, 7, 4, 5, 6, 7, 4, 5, 6, 7};
-
-// The twelve versions correspond to six undirected edges. The following two
-//   tables map a version to an undirected edge and vice versa.
-
-int tetgenmesh::ver2edge[12] = {0, 1, 2, 3, 3, 5, 1, 5, 4, 0, 4, 2};
-int tetgenmesh::edge2ver[ 6] = {0, 1, 2, 3, 8, 5};
-
-// Edge versions whose apex or opposite may be dummypoint.
-
-int tetgenmesh::epivot[12] = {4, 5, 2, 11, 4, 5, 2, 11, 4, 5, 2, 11};
-
-
-// Table 'snextpivot' takes an edge version as input, returns the next edge
-//   version in the same edge ring.
-
-int tetgenmesh::snextpivot[6] = {2, 5, 4, 1, 0, 3};
-
-// The following three tables give the 6 permutations of the set {0,1,2}.
-//   An offset 3 is added to each element for a direct access of the points
-//   in the triangle data structure.
-
-int tetgenmesh::sorgpivot [6] = {3, 4, 4, 5, 5, 3};
-int tetgenmesh::sdestpivot[6] = {4, 3, 5, 4, 3, 5};
-int tetgenmesh::sapexpivot[6] = {5, 5, 3, 3, 4, 4};
 
 //============================================================================//
 //                                                                            //
@@ -5144,7 +5086,7 @@ REAL tetgenmesh::insphere_s(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe)
 {
   REAL sign;
 
-  sign = insphere(pa, pb, pc, pd, pe);
+  sign = insphere(pa, pb, pc, pd, pe, use_inexact, use_filter, isp_filter);
   if (sign != 0.0) {
     return sign;
   }
@@ -5178,14 +5120,14 @@ REAL tetgenmesh::insphere_s(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe)
     swaps += count;
   } while (count > 0); // Continue if some points are swapped.
 
-  oriA = orient3d(pt[1], pt[2], pt[3], pt[4]);
+  oriA = orient3d(pt[1], pt[2], pt[3], pt[4], use_inexact, use_filter, o3d_filter);
   if (oriA != 0.0) {
     // Flip the sign if there are odd number of swaps.
     if ((swaps % 2) != 0) oriA = -oriA;
     return oriA;
   }
   
-  oriB = -orient3d(pt[0], pt[2], pt[3], pt[4]);
+  oriB = -orient3d(pt[0], pt[2], pt[3], pt[4], use_inexact, use_filter, o3d_filter);
   if (oriB == 0.0) {
     terminatetetgen(this, 2);
   }
@@ -5252,14 +5194,14 @@ REAL tetgenmesh::orient4d_s(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe,
     swaps += count;
   } while (count > 0); // Continue if some points are swapped.
 
-  oriA = orient3d(pt[1], pt[2], pt[3], pt[4]);
+  oriA = orient3d(pt[1], pt[2], pt[3], pt[4], use_inexact, use_filter, o3d_filter);
   if (oriA != 0.0) {
     // Flip the sign if there are odd number of swaps.
     if ((swaps % 2) != 0) oriA = -oriA;
     return oriA;
   }
   
-  oriB = -orient3d(pt[0], pt[2], pt[3], pt[4]);
+  oriB = -orient3d(pt[0], pt[2], pt[3], pt[4], use_inexact, use_filter, o3d_filter);
   if (oriB == 0.0) {
     terminatetetgen(this, 2);
   }
@@ -5333,9 +5275,9 @@ int tetgenmesh::tri_edge_2d(point A, point B, point C, point P, point Q,
   }
 
   // Test A's, B's, and C's orientations wrt plane PQR. 
-  sA = orient3d(P, Q, R, A);
-  sB = orient3d(P, Q, R, B);
-  sC = orient3d(P, Q, R, C);
+  sA = orient3d(P, Q, R, A, use_inexact, use_filter, o3d_filter);
+  sB = orient3d(P, Q, R, B, use_inexact, use_filter, o3d_filter);
+  sC = orient3d(P, Q, R, C, use_inexact, use_filter, o3d_filter);
 
 
   if (sA < 0) {
@@ -5547,8 +5489,8 @@ int tetgenmesh::tri_edge_2d(point A, point B, point C, point P, point Q,
     }
   }
 
-  s1 = orient3d(U[0], U[2], R, V[1]);  // A, C, R, Q
-  s2 = orient3d(U[1], U[2], R, V[0]);  // B, C, R, P
+  s1 = orient3d(U[0], U[2], R, V[1], use_inexact, use_filter, o3d_filter);  // A, C, R, Q
+  s2 = orient3d(U[1], U[2], R, V[0], use_inexact, use_filter, o3d_filter);  // B, C, R, P
 
   if (s1 > 0) {
     return 0;
@@ -5587,8 +5529,8 @@ int tetgenmesh::tri_edge_2d(point A, point B, point C, point P, point Q,
     return 4;
   }
 
-  s3 = orient3d(U[0], U[2], R, V[0]);  // A, C, R, P
-  s4 = orient3d(U[1], U[2], R, V[1]);  // B, C, R, Q
+  s3 = orient3d(U[0], U[2], R, V[0], use_inexact, use_filter, o3d_filter);  // A, C, R, P
+  s4 = orient3d(U[1], U[2], R, V[1], use_inexact, use_filter, o3d_filter);  // B, C, R, Q
       
   if (z1 == 0) {  // (tritri-03)
     if (s1 < 0) {
@@ -5978,17 +5920,17 @@ int tetgenmesh::tri_edge_tail(point A,point B,point C,point P,point Q,point R,
     return tri_edge_2d(A, B, C, P, Q, R, level, types, pos);
   }
 
-  s1 = orient3d(U[0], U[1], V[0], V[1]);
+  s1 = orient3d(U[0], U[1], V[0], V[1], use_inexact, use_filter, o3d_filter);
   if (s1 < 0) {
     return 0;
   }
 
-  s2 = orient3d(U[1], U[2], V[0], V[1]);
+  s2 = orient3d(U[1], U[2], V[0], V[1], use_inexact, use_filter, o3d_filter);
   if (s2 < 0) {
     return 0;
   }
 
-  s3 = orient3d(U[2], U[0], V[0], V[1]);
+  s3 = orient3d(U[2], U[0], V[0], V[1], use_inexact, use_filter, o3d_filter);
   if (s3 < 0) {
     return 0;
   }
@@ -6109,8 +6051,8 @@ int tetgenmesh::tri_edge_test(point A, point B, point C, point P, point Q,
   REAL sP, sQ;
 
   // Test the locations of P and Q with respect to ABC.
-  sP = orient3d(A, B, C, P);
-  sQ = orient3d(A, B, C, Q);
+  sP = orient3d(A, B, C, P, use_inexact, use_filter, o3d_filter);
+  sQ = orient3d(A, B, C, Q, use_inexact, use_filter, o3d_filter);
 
   return tri_edge_tail(A, B, C, P, Q, R, sP, sQ, level, types, pos);
 }
@@ -6167,17 +6109,17 @@ int tetgenmesh::tri_tri_inter(REAL* A,REAL* B,REAL* C,REAL* O,REAL* P,REAL* Q)
   REAL s_o, s_p, s_q;
   REAL s_a, s_b, s_c;
 
-  s_o = orient3d(A, B, C, O);
-  s_p = orient3d(A, B, C, P);
-  s_q = orient3d(A, B, C, Q);
+  s_o = orient3d(A, B, C, O, use_inexact, use_filter, o3d_filter);
+  s_p = orient3d(A, B, C, P, use_inexact, use_filter, o3d_filter);
+  s_q = orient3d(A, B, C, Q, use_inexact, use_filter, o3d_filter);
   if ((s_o * s_p > 0.0) && (s_o * s_q > 0.0)) {
     // o, p, q are all in the same halfspace of ABC.
     return 0; // DISJOINT;
   }
 
-  s_a = orient3d(O, P, Q, A);
-  s_b = orient3d(O, P, Q, B);
-  s_c = orient3d(O, P, Q, C);
+  s_a = orient3d(O, P, Q, A, use_inexact, use_filter, o3d_filter);
+  s_b = orient3d(O, P, Q, B, use_inexact, use_filter, o3d_filter);
+  s_c = orient3d(O, P, Q, C, use_inexact, use_filter, o3d_filter);
   if ((s_a * s_b > 0.0) && (s_a * s_c > 0.0)) {
     // a, b, c are all in the same halfspace of OPQ.
     return 0; // DISJOINT;
@@ -6521,7 +6463,7 @@ REAL tetgenmesh::facedihedral(REAL* pa, REAL* pb, REAL* pc1, REAL* pc2)
     costheta = -1.0;
   }
   theta = acos(costheta);
-  ori = orient3d(pa, pb, pc1, pc2);
+  ori = orient3d(pa, pb, pc1, pc2, use_inexact, use_filter, o3d_filter);
   if (ori > 0.0) {
     theta = 2 * PI - theta;
   }
@@ -6616,7 +6558,7 @@ REAL tetgenmesh::interiorangle(REAL* o, REAL* p1, REAL* p2, REAL* n)
     np[1] = o[1] + n[1];
     np[2] = o[2] + n[2];
     // Adjust theta (0 - 2 * PI).
-    ori = orient3d(p1, o, np, p2);
+    ori = orient3d(p1, o, np, p2, use_inexact, use_filter, o3d_filter);
     if (ori > 0.0) {
       theta = 2 * PI - theta;
     }
@@ -8274,12 +8216,12 @@ int tetgenmesh::flipnm(triface* abtets, int n, int level, int abedgepivot,
       hullflag = (pc == dummypoint); // pc may be dummypoint.
       hulledgeflag = 0;
       if (hullflag == 0) {
-        ori = orient3d(pb, pc, pd, pe); // Is [b,c] locally convex?
+        ori = orient3d(pb, pc, pd, pe, use_inexact, use_filter, o3d_filter); // Is [b,c] locally convex?
         if (ori > 0) {
-          ori = orient3d(pc, pa, pd, pe); // Is [c,a] locally convex?
+          ori = orient3d(pc, pa, pd, pe, use_inexact, use_filter, o3d_filter); // Is [c,a] locally convex?
           if (ori > 0) {
             // Test if [a,b] is locally convex OR flat.
-            ori = orient3d(pa, pb, pd, pe);
+            ori = orient3d(pa, pb, pd, pe, use_inexact, use_filter, o3d_filter);
             if (ori > 0) {
               // Found a 2-to-3 flip: [a,b,c] => [e,d]
               reducflag = 1;
@@ -8308,9 +8250,9 @@ int tetgenmesh::flipnm(triface* abtets, int n, int level, int abedgepivot,
           //   locally non-convex (at hull faces [a,b,e] and [b,a,d]).
           //   In this case, an edge flip [a,b] to [e,d] is still possible.
           pf = apex(abtets[(i + 2) % n]);
-          ori = orient3d(pd, pe, pf, pa);
+          ori = orient3d(pd, pe, pf, pa, use_inexact, use_filter, o3d_filter);
           if (ori < 0) {
-            ori = orient3d(pe, pd, pf, pb);
+            ori = orient3d(pe, pd, pf, pb, use_inexact, use_filter, o3d_filter);
             if (ori < 0) {
               // Found a 4-to-4 flip: [a,b] => [e,d]
               reducflag = 1;
@@ -8478,7 +8420,7 @@ int tetgenmesh::flipnm(triface* abtets, int n, int level, int abedgepivot,
           edgepivot = 0; // No edge is selected yet.
 
           // Test if [b,c] is locally convex or flat.
-          ori = orient3d(pb, pc, pd, pe);
+          ori = orient3d(pb, pc, pd, pe, use_inexact, use_filter, o3d_filter);
           if (ori <= 0) {
             // Select the edge [c,b].
             enext(abtets[i], flipedge); // [b,c,a,d]
@@ -8486,7 +8428,7 @@ int tetgenmesh::flipnm(triface* abtets, int n, int level, int abedgepivot,
           }
           if (!edgepivot) {
             // Test if [c,a] is locally convex or flat.
-            ori = orient3d(pc, pa, pd, pe);
+            ori = orient3d(pc, pa, pd, pe, use_inexact, use_filter, o3d_filter);
             if (ori <= 0) {
               // Select the edge [a,c].
               eprev(abtets[i], flipedge); // [c,a,b,d].
@@ -8726,9 +8668,9 @@ int tetgenmesh::flipnm(triface* abtets, int n, int level, int abedgepivot,
     if (hullflag == 0) {
       // Make sure that no inverted tet will be created, i.e. the new tets
       //   [d,c,e,a] and [c,d,e,b] must be valid tets. 
-      ori = orient3d(pd, pc, pe, pa);
+      ori = orient3d(pd, pc, pe, pa, use_inexact, use_filter, o3d_filter);
       if (ori < 0) {
-        ori = orient3d(pc, pd, pe, pb);
+        ori = orient3d(pc, pd, pe, pb, use_inexact, use_filter, o3d_filter);
         if (ori < 0) {
           reducflag = 1;
         }
@@ -8739,7 +8681,7 @@ int tetgenmesh::flipnm(triface* abtets, int n, int level, int abedgepivot,
       //   Note: [a,b] may even be a non-convex hull edge.
       if (!nonconvex) {
         //  The mesh is convex, only do flip if it is a coplanar hull edge.
-        ori = orient3d(pa, pb, pc, pd); 
+        ori = orient3d(pa, pb, pc, pd, use_inexact, use_filter, o3d_filter);
         if (ori == 0) {
           reducflag = 1;
         }
@@ -8763,7 +8705,7 @@ int tetgenmesh::flipnm(triface* abtets, int n, int level, int abedgepivot,
           chkpt = oppo(spintet);
           if (chkpt == pb) break;
           if ((chkpt != dummypoint) && (apex(spintet) != dummypoint)) {
-            ori = -orient3d(pd, pc, apex(spintet), chkpt);
+            ori = -orient3d(pd, pc, apex(spintet), chkpt, use_inexact, use_filter, o3d_filter);
             if (ori > bigvol) {
               bigvol = ori;
               searchpt = chkpt;
@@ -8772,13 +8714,13 @@ int tetgenmesh::flipnm(triface* abtets, int n, int level, int abedgepivot,
         }
         if (searchpt != NULL) { 
           // Now valid the configuration.
-          ori1 = orient3d(pd, pc, searchpt, pa);
-          ori2 = orient3d(pd, pc, searchpt, pb);
+          ori1 = orient3d(pd, pc, searchpt, pa, use_inexact, use_filter, o3d_filter);
+          ori2 = orient3d(pd, pc, searchpt, pb, use_inexact, use_filter, o3d_filter);
           if (ori1 * ori2 >= 0.0) {
             reducflag = 0; // Not valid. 
           } else {
-            ori1 = orient3d(pa, pb, searchpt, pc);
-            ori2 = orient3d(pa, pb, searchpt, pd);
+            ori1 = orient3d(pa, pb, searchpt, pc, use_inexact, use_filter, o3d_filter);
+            ori2 = orient3d(pa, pb, searchpt, pd, use_inexact, use_filter, o3d_filter);
             if (ori1 * ori2 >= 0.0) {
               reducflag = 0; // Not valid.
             }
@@ -9451,7 +9393,7 @@ int tetgenmesh::insertpoint(point insertpt, triface *searchtet, face *splitsh,
           } else {
             if (!nonconvex) {
               // Test if this hull face is visible by the new point. 
-              ori = orient3d(pts[4], pts[5], pts[6], insertpt); 
+              ori = orient3d(pts[4], pts[5], pts[6], insertpt, use_inexact, use_filter, o3d_filter);
               if (ori < 0) {
                 // A visible hull face. 
                 // Include it in the cavity. The convex hull will be enlarged.
@@ -9770,13 +9712,13 @@ int tetgenmesh::insertpoint(point insertpt, triface *searchtet, face *splitsh,
               // Check if this face is visible by p.
               pc = apex(spintet);
               if (pc != dummypoint) {
-                ori = orient3d(pa, pb, pc, insertpt);
+                ori = orient3d(pa, pb, pc, insertpt, use_inexact, use_filter, o3d_filter);
                 if (ori >= 0) {
                   // Not visible. Check another face in this tet.
                   esym(spintet, neineitet);
                   pc = apex(neineitet);
                   if (pc != dummypoint) {
-                    ori = orient3d(pb, pa, pc, insertpt);
+                    ori = orient3d(pb, pa, pc, insertpt, use_inexact, use_filter, o3d_filter);
                     if (ori >= 0) {
                       // Not visible. Found this face.
                       j = 1; // Flag that it is found.
@@ -9838,11 +9780,11 @@ int tetgenmesh::insertpoint(point insertpt, triface *searchtet, face *splitsh,
               if ((fabs(volume) / attrib) < b->epsilon) {
                 ori = 0.0;
               } else {
-                ori = orient3d(pa, pb, pc, insertpt); 
+                ori = orient3d(pa, pb, pc, insertpt, use_inexact, use_filter, o3d_filter);
               }
             } else {
               ori = orient3d(org(*cavetet), dest(*cavetet), apex(*cavetet),
-                             insertpt); 
+                             insertpt, use_inexact, use_filter, o3d_filter);
             }
             enqflag = (ori > 0);
             // Comment: if ori == 0 (coplanar case), we also cut the tet.
@@ -10708,6 +10650,26 @@ void tetgenmesh::insertpoint_abort(face *splitseg, insertvertexflags *ivf)
 //                                                                            //
 //============================================================================//
 
+void tetgenmesh::set_static_filters(int noexact, int nostaticfilter, REAL x, REAL y, REAL z){
+  // Calculate the two static filters for orient3d() and insphere() tests.
+  // Added by H. Si, 2012-08-23.
+  // Moved to tetgenmesh properties by G. Tucker, 2022-07-04
+  use_inexact = noexact;
+  use_filter = !nostaticfilter;
+  // Sort x < y < z
+  if (x > z){
+    std::swap(x, z);
+  }
+  if (y > z) {
+    std::swap(y, z);
+  }
+  else if (y < x) {
+    std::swap(y, x);
+  }
+  o3d_filter = 5.1107127829973299e-15 * x * y * z;
+  isp_filter = 1.2466136531027298e-13 * x * y * z * (z * z);
+}
+
 void tetgenmesh::transfernodes()
 {
   point pointloop;
@@ -10773,7 +10735,9 @@ void tetgenmesh::transfernodes()
   y = ymax - ymin;
   z = zmax - zmin;
 
-  exactinit(b->verbose, b->noexact, b->nostaticfilter, x, y, z);
+  this->set_static_filters(b->noexact, b->nostaticfilter, x, y, z);
+
+//  exactinit(b->verbose);
 
   // Use the number of points as the random seed.
   srand(in->numberofpoints);
@@ -11232,7 +11196,7 @@ enum tetgenmesh::locateresult
 
   // Let searchtet be the face such that 'searchpt' lies above to it.
   for (searchtet->ver = 0; searchtet->ver < 4; searchtet->ver++) {
-    ori = orient3d(org(*searchtet), dest(*searchtet), apex(*searchtet), searchpt);
+    ori = orient3d(org(*searchtet), dest(*searchtet), apex(*searchtet), searchpt, use_inexact, use_filter, o3d_filter);
     if (ori < 0.0) break;
   }
 
@@ -11259,17 +11223,17 @@ enum tetgenmesh::locateresult
     s = rand() % 3; // s \in \{0,1,2\}
     for (i = 0; i < s; i++) enextself(*searchtet);
 
-    oriorg = orient3d(dest(*searchtet), apex(*searchtet), toppo, searchpt);
+    oriorg = orient3d(dest(*searchtet), apex(*searchtet), toppo, searchpt, use_inexact, use_filter, o3d_filter);
     if (oriorg < 0) {
       //nextmove = ORGMOVE;
       enextesymself(*searchtet);
     } else {
-      oridest = orient3d(apex(*searchtet), org(*searchtet), toppo, searchpt);
+      oridest = orient3d(apex(*searchtet), org(*searchtet), toppo, searchpt, use_inexact, use_filter, o3d_filter);
       if (oridest < 0) {
         //nextmove = DESTMOVE;
         eprevesymself(*searchtet);
       } else {
-        oriapex = orient3d(org(*searchtet), dest(*searchtet), toppo, searchpt);
+        oriapex = orient3d(org(*searchtet), dest(*searchtet), toppo, searchpt, use_inexact, use_filter, o3d_filter);
         if (oriapex < 0) {
           //nextmove = APEXMOVE;
           esymself(*searchtet);
@@ -11362,7 +11326,7 @@ enum tetgenmesh::locateresult
     torg = org(*searchtet);
     tdest = dest(*searchtet);
     tapex = apex(*searchtet);
-    ori = orient3d(torg, tdest, tapex, searchpt); 
+    ori = orient3d(torg, tdest, tapex, searchpt, use_inexact, use_filter, o3d_filter);
     if (ori < 0.0) break;
   }
   if (searchtet->ver == 4) {
@@ -11383,9 +11347,9 @@ enum tetgenmesh::locateresult
     }
 
     // We enter from one of serarchtet's faces, which face do we exit?
-    oriorg = orient3d(tdest, tapex, toppo, searchpt); 
-    oridest = orient3d(tapex, torg, toppo, searchpt);
-    oriapex = orient3d(torg, tdest, toppo, searchpt);
+    oriorg = orient3d(tdest, tapex, toppo, searchpt, use_inexact, use_filter, o3d_filter);
+    oridest = orient3d(tapex, torg, toppo, searchpt, use_inexact, use_filter, o3d_filter);
+    oriapex = orient3d(torg, tdest, toppo, searchpt, use_inexact, use_filter, o3d_filter);
 
     // Now decide which face to move. It is possible there are more than one
     //   faces are viable moves. If so, randomly choose one.
@@ -11634,7 +11598,7 @@ int  tetgenmesh::insert_vertex_bw(point insertpt, triface *searchtet,
             enqflag = (sign < 0.0);
           } else {
             pts = (point *) neightet.tet;
-            ori = orient3d(pts[4], pts[5], pts[6], insertpt);
+            ori = orient3d(pts[4], pts[5], pts[6], insertpt, use_inexact, use_filter, o3d_filter);
             if (ori < 0) {
               // A visible hull face.
               enqflag = true;
@@ -12584,7 +12548,7 @@ int tetgenmesh::sinsertvertex(point insertpt, face *searchsh, face *splitseg,
       spivot(neighsh, casout);
       if (casout.sh == NULL) {
         // A convex hull edge. Is it visible by p.
-        ori = orient3d(sorg(neighsh), sdest(neighsh), dummypoint, insertpt);
+        ori = orient3d(sorg(neighsh), sdest(neighsh), dummypoint, insertpt, use_inexact, use_filter, o3d_filter);
         if (ori < 0) {
           *searchsh = neighsh; // Visible, update 'searchsh'.
         } else {
@@ -12641,7 +12605,7 @@ int tetgenmesh::sinsertvertex(point insertpt, face *searchsh, face *splitseg,
       // A convex hull edge. Is it visible by p.
       pa = sorg(*searchsh);
       pb = sdest(*searchsh);
-      ori = orient3d(pa, pb, dummypoint, insertpt);
+      ori = orient3d(pa, pb, dummypoint, insertpt, use_inexact, use_filter, o3d_filter);
       // Finish the process if p is not visible by the hull edge.
       if (ori >= 0) break;
     }
@@ -13222,8 +13186,8 @@ int tetgenmesh::sremovevertex(point delpt, face* parentsh, face* parentseg,
           pd = sapex(flipfaces[1]);
           calculateabovepoint4(pa, pb, pc, pd);
           // Check if a 2-to-2 flip is possible.
-          ori1 = orient3d(pc, pd, dummypoint, pa);
-          ori2 = orient3d(pc, pd, dummypoint, pb);
+          ori1 = orient3d(pc, pd, dummypoint, pa, use_inexact, use_filter, o3d_filter);
+          ori2 = orient3d(pc, pd, dummypoint, pb, use_inexact, use_filter, o3d_filter);
           if (ori1 * ori2 < 0) {
             // A 2-to-2 flip is found.
             flip22(flipfaces, lawson, 0);
@@ -13320,7 +13284,7 @@ enum tetgenmesh::locateresult tetgenmesh::slocate(point searchpt,
   }
 
   // 'dummypoint' is given. Make sure it is above [a,b,c]
-  ori = orient3d(pa, pb, pc, dummypoint);
+  ori = orient3d(pa, pb, pc, dummypoint, use_inexact, use_filter, o3d_filter);
   if (ori > 0) {
     sesymself(*searchsh); // Reverse the face orientation.
   } else if (ori == 0.0) {
@@ -13332,7 +13296,7 @@ enum tetgenmesh::locateresult tetgenmesh::slocate(point searchpt,
   for (i = 0; i < 3; i++) {
     pa = sorg(*searchsh);
     pb = sdest(*searchsh);
-    ori = orient3d(pa, pb, dummypoint, searchpt);
+    ori = orient3d(pa, pb, dummypoint, searchpt, use_inexact, use_filter, o3d_filter);
     if (ori > 0) break;
     senextself(*searchsh);
   }
@@ -13349,8 +13313,8 @@ enum tetgenmesh::locateresult tetgenmesh::slocate(point searchpt,
 
   while (1) {
 
-    ori_bc = orient3d(pb, pc, dummypoint, searchpt);
-    ori_ca = orient3d(pc, pa, dummypoint, searchpt);
+    ori_bc = orient3d(pb, pc, dummypoint, searchpt, use_inexact, use_filter, o3d_filter);
+    ori_ca = orient3d(pc, pa, dummypoint, searchpt, use_inexact, use_filter, o3d_filter);
 
     if (ori_bc < 0) {
       if (ori_ca < 0) { // (--)
@@ -13550,12 +13514,12 @@ enum tetgenmesh::interresult tetgenmesh::sscoutsegment(face *searchsh,
     if ((sqrt(triarea(startpt, pb, endpt)) / len) < b->epsilon) {
       ori_ab = 0.0;
     } else {
-      ori_ab = orient3d(startpt, pb, dummypoint, endpt);
+      ori_ab = orient3d(startpt, pb, dummypoint, endpt, use_inexact, use_filter, o3d_filter);
     }
     if ((sqrt(triarea(pc, startpt, endpt)) / len) < b->epsilon) {
       ori_ca = 0.0;
     } else {
-      ori_ca = orient3d(pc, startpt, dummypoint, endpt);
+      ori_ca = orient3d(pc, startpt, dummypoint, endpt, use_inexact, use_filter, o3d_filter);
     }
 
     if (ori_ab < 0) {
@@ -13709,8 +13673,8 @@ enum tetgenmesh::interresult tetgenmesh::sscoutsegment(face *searchsh,
     pd = sdest(flipshs[0]);
     // Check if pa and pb are on the different sides of [pc, pd]. 
     // Re-use ori_ab, ori_ca for the tests.
-    ori_ab = orient3d(pc, pd, dummypoint, pb);
-    ori_ca = orient3d(pd, pc, dummypoint, pa);
+    ori_ab = orient3d(pc, pd, dummypoint, pb, use_inexact, use_filter, o3d_filter);
+    ori_ca = orient3d(pd, pc, dummypoint, pa, use_inexact, use_filter, o3d_filter);
     if (ori_ab <= 0) {
       flipshpush(&(flipshs[0])); 
     } else if (ori_ca <= 0) {
@@ -14015,7 +13979,7 @@ int tetgenmesh::triangulate(int shmark, arraypool* ptlist, arraypool* conlist,
           point pa = sorg(searchsh);
           point pb = sdest(searchsh);
           point pc = sapex(searchsh);
-          REAL chkori = orient3d(pa, pb, pc, cons[1]);
+          REAL chkori = orient3d(pa, pb, pc, cons[1], use_inexact, use_filter, o3d_filter);
           if (chkori != 0.0) {
             REAL len = distance(pa, pb);
             len += distance(pb, pc);
@@ -14818,9 +14782,9 @@ enum tetgenmesh::interresult
     //   above or below the horizon.  We test the orientations of 'endpt'
     //   with respect to three planes: abc (horizon), bad (right plane),
     //   and acd (left plane). 
-    hori = orient3d(pa, pb, pc, endpt);
-    rori = orient3d(pb, pa, pd, endpt);
-    lori = orient3d(pa, pc, pd, endpt);
+    hori = orient3d(pa, pb, pc, endpt, use_inexact, use_filter, o3d_filter);
+    rori = orient3d(pb, pa, pd, endpt, use_inexact, use_filter, o3d_filter);
+    lori = orient3d(pa, pc, pd, endpt, use_inexact, use_filter, o3d_filter);
 
     // Now decide the tet to move.  It is possible there are more than one
     //   tets are viable moves. Is so, randomly choose one. 
@@ -15577,7 +15541,7 @@ int tetgenmesh::scoutcrossedge(triface& crosstet, arraypool* missingshbds,
             pd = dest(neightet);
             calculateabovepoint4(pa, pb, pc, pd);
             // The lifted point must lie above 'searchsh'.
-			ori = orient3d(pa, pb, pc, dummypoint);
+			ori = orient3d(pa, pb, pc, dummypoint, use_inexact, use_filter, o3d_filter);
 			if (ori > 0) {
 		      sesymself(searchsh);
 		      senextself(searchsh);
@@ -15699,7 +15663,7 @@ int tetgenmesh::scoutcrossedge(triface& crosstet, arraypool* missingshbds,
 					}
 				  }
                   // Adjust the edge such that d lies below [a,b,c].
-                  ori = orient3d(pa, pb, pc, pd);
+                  ori = orient3d(pa, pb, pc, pd, use_inexact, use_filter, o3d_filter);
                   if (ori < 0) {
                     esymself(crosstet);
                   }
@@ -16104,7 +16068,7 @@ void tetgenmesh::delaunizecavity(arraypool *cavpoints, arraypool *cavfaces,
     pt[2] = apex(*parytet);
     for (j = 0; j < 3; j++) {
       if (pt[j] != dummypoint) { // Do not include a hull point.
-        ori = orient3d(pa, pb, pc, pt[j]);
+        ori = orient3d(pa, pb, pc, pt[j], use_inexact, use_filter, o3d_filter);
         if (ori != 0) {
           pd = pt[j];
           if (ori > 0) {  // Swap pa and pb.
@@ -16358,7 +16322,7 @@ bool tetgenmesh::fillcavity(arraypool* topshells, arraypool* botshells,
                 toptet = searchtet;
                 // The face lies in the interior of R.
                 // Get the tet (in topnewtets) which lies above R.
-                ori = orient3d(pa, pb, pc, pd);
+                ori = orient3d(pa, pb, pc, pd, use_inexact, use_filter, o3d_filter);
                 if (ori < 0) {
                   fsymself(toptet);
                   pa = org(toptet);
@@ -16494,7 +16458,7 @@ bool tetgenmesh::fillcavity(arraypool* topshells, arraypool* botshells,
                   // Let 'toptet' be [a,b,c,#], and 'bottet' be [b,a,d,*].
                   // Adjust 'toptet' and 'bottet' to be the crossing edges.
                   // Test orient3d(b,c,#,d).
-                  ori = orient3d(dest(toptet), pc, oppo(toptet), pd);
+                  ori = orient3d(dest(toptet), pc, oppo(toptet), pd, use_inexact, use_filter, o3d_filter);
                   if (ori < 0) {
                     // Edges [a,d] and [b,c] cross each other.
                     enextself(toptet); // [b,c]
@@ -17064,7 +17028,7 @@ void tetgenmesh::flipcertify(triface *chkface,badface **pqueue,point plane_pa,
     }
   }
 
-  insph = insphere(p[1], p[0], p[2], p[3], p[4]);
+  insph = insphere(p[1], p[0], p[2], p[3], p[4], use_inexact, use_filter, isp_filter);
   ori4 = orient4d(p[1], p[0], p[2], p[3], p[4], w[1], w[0], w[2], w[3], w[4]);
   if (ori4 > 0) {
     // Add the face into queue.
@@ -17250,7 +17214,7 @@ void tetgenmesh::flipinsertfacet(arraypool *crosstets, arraypool *toppoints,
           for (i = 0; i < 3; i++) {
             p1 = org(fliptet);
             p2 = dest(fliptet);
-            ori[i] = orient3d(p1, p2, pd, pe);
+            ori[i] = orient3d(p1, p2, pd, pe, use_inexact, use_filter, o3d_filter);
             if (ori[i] < 0) {
               convcount--;
               //break;
@@ -18781,11 +18745,11 @@ int tetgenmesh::removefacebyflips(triface *flipface, flipconstraints* fc)
   pd = oppo(fliptets[0]);
   pe = oppo(fliptets[1]);
 
-  ori = orient3d(pa, pb, pd, pe);
+  ori = orient3d(pa, pb, pd, pe, use_inexact, use_filter, o3d_filter);
   if (ori > 0) {
-    ori = orient3d(pb, pc, pd, pe);
+    ori = orient3d(pb, pc, pd, pe, use_inexact, use_filter, o3d_filter);
     if (ori > 0) {
-      ori = orient3d(pc, pa, pd, pe);
+      ori = orient3d(pc, pa, pd, pe, use_inexact, use_filter, o3d_filter);
       if (ori > 0) {
         // Found a 2-to-3 flip.
         reducflag = 1;
@@ -19372,7 +19336,7 @@ int tetgenmesh::add_steinerpt_in_schoenhardtpoly(triface *abtets, int n,
     }
     for (i = 0; i < cavetetlist->objects; i++) {
       parytet = (triface *) fastlookup(cavetetlist, i);
-      ori = orient3d(dest(*parytet), org(*parytet), apex(*parytet), sampt);
+      ori = orient3d(dest(*parytet), org(*parytet), apex(*parytet), sampt, use_inexact, use_filter, o3d_filter);
       if (i == 0) {
         minvol = ori;
       } else {
@@ -21914,7 +21878,7 @@ int tetgenmesh::removevertexbyflips(point steinerpt)
 			// [2017-10-15] Check if the tet is inverted?
 			point chkp1 = org(neightet);
 			point chkp2 = apex(neightet);
-			REAL chkori = orient3d(rpt, lpt, chkp1, chkp2);
+			REAL chkori = orient3d(rpt, lpt, chkp1, chkp2, use_inexact, use_filter, o3d_filter);
 			if (chkori >= 0.0) {
 				// Either inverted or degenerated.
 				break;
@@ -22419,7 +22383,7 @@ int tetgenmesh::smoothpoint(point smtpt, arraypool *linkfacelist, int ccw,
           pa = dest(*parytet);
         }
         pc = apex(*parytet);
-        ori = orient3d(pa, pb, pc, nextpt);
+        ori = orient3d(pa, pb, pc, nextpt, use_inexact, use_filter, o3d_filter);
         if (ori < 0.0) {
           // Calcuate the objective function value.
           if (opm->max_min_volume) {
@@ -22647,11 +22611,11 @@ int tetgenmesh::suppressbdrysteinerpoint(point steinerpt)
       // Test if the ray startpt->v2 lies in the cone: where 'steinerpt'
       //   is the apex, and three sides are defined by the triangle 
       //   [pa, pb, pc].
-      ori = orient3d(steinerpt, pa, pb, v2);
+      ori = orient3d(steinerpt, pa, pb, v2, use_inexact, use_filter, o3d_filter);
       if (ori >= 0) {
-        ori = orient3d(steinerpt, pb, pc, v2);
+        ori = orient3d(steinerpt, pb, pc, v2, use_inexact, use_filter, o3d_filter);
         if (ori >= 0) {
-          ori = orient3d(steinerpt, pc, pa, v2);
+          ori = orient3d(steinerpt, pc, pa, v2, use_inexact, use_filter, o3d_filter);
           if (ori >= 0) {
             // Found! Calculate the intersection.
             planelineint(pa, pb, pc, steinerpt, v2, startpt, &u);
@@ -22689,7 +22653,7 @@ int tetgenmesh::suppressbdrysteinerpoint(point steinerpt)
           pa = org(*parytet);
           pb = dest(*parytet);
           pc = apex(*parytet);
-          ori = orient3d(pb, pa, pc, samplept);
+          ori = orient3d(pb, pa, pc, samplept, use_inexact, use_filter, o3d_filter);
           {
             // [2017-10-15] Rounding
             REAL lab = distance(pa, pb);
@@ -24522,7 +24486,7 @@ void tetgenmesh::reconstructmesh()
       }
     }
     // Check the orientation.
-    ori = orient3d(p[0], p[1], p[2], p[3]);
+    ori = orient3d(p[0], p[1], p[2], p[3], use_inexact, use_filter, o3d_filter);
     if (ori > 0.0) {
       // Swap the first two vertices.
       q[0] = p[0]; p[0] = p[1]; p[1] = q[0];
@@ -25173,7 +25137,7 @@ int tetgenmesh::scout_point(point searchpt, triface *searchtet, int /*randflag*/
         point pa = org(chktet);
         point pb = org(chktet);
         point pc = org(chktet);
-        REAL ori = orient3d(pa, pb, pc, searchpt);
+        REAL ori = orient3d(pa, pb, pc, searchpt, use_inexact, use_filter, o3d_filter);
         REAL averlen = (distance(pa, pb) +
                         distance(pb, pc) +
                         distance(pc, pa)) / 3.;
@@ -27308,11 +27272,11 @@ bool tetgenmesh::check_enc_subface(face *chkfac, point *pencpt, REAL *ccent,
         pb = dest(adjtet);
         pc = apex(adjtet);
         projpt2face(toppo, pa, pb, pc, prjpt);
-        ori = orient3d(pa, pb, toppo, prjpt);
+        ori = orient3d(pa, pb, toppo, prjpt, use_inexact, use_filter, o3d_filter);
         if (ori >= 0) {
-          ori = orient3d(pb, pc, toppo, prjpt);
+          ori = orient3d(pb, pc, toppo, prjpt, use_inexact, use_filter, o3d_filter);
           if (ori >= 0) {
-            ori = orient3d(pc, pa, toppo, prjpt);
+            ori = orient3d(pc, pa, toppo, prjpt, use_inexact, use_filter, o3d_filter);
             if (ori >= 0) {
               prjdist = distance(toppo, prjpt);
               if (encpt == NULL) {
@@ -27584,7 +27548,7 @@ tetgenmesh::locate_on_surface(point searchpt, face* searchsh)
     pb = dest(searchtet);
     pc = apex(searchtet);
     parallel_shift(pa, pb, pc, pa, toppo);
-    if (orient3d(pa, pb, toppo, searchpt) > 0) {
+    if (orient3d(pa, pb, toppo, searchpt, use_inexact, use_filter, o3d_filter) > 0) {
       break;
     }
     enextself(searchtet);
@@ -27610,8 +27574,8 @@ tetgenmesh::locate_on_surface(point searchpt, face* searchsh)
     }
 
     parallel_shift(pa, pb, pc, pc, toppo);
-    REAL ori1 = orient3d(pb, pc, toppo, searchpt);
-    REAL ori2 = orient3d(pc, pa, toppo, searchpt);
+    REAL ori1 = orient3d(pb, pc, toppo, searchpt, use_inexact, use_filter, o3d_filter);
+    REAL ori2 = orient3d(pc, pa, toppo, searchpt, use_inexact, use_filter, o3d_filter);
 
     if (ori1 > 0) {
       if (ori2 > 0) {
@@ -28144,21 +28108,21 @@ bool tetgenmesh::check_tetrahedron(triface *chktet, REAL* param, int &qflag)
   W[0] = hr; W[1] = R[1]; W[2] = R[2];
   Z[0] = hs; Z[1] = S[1]; Z[2] = S[2];
 
-  REAL D1 = orient3d(U, V, W, Z);
+  REAL D1 = orient3d(U, V, W, Z, use_inexact, use_filter, o3d_filter);
         
   U[0] = P[0]; U[1] = hp; //U[2] = P[2];
   V[0] = Q[0]; V[1] = hq; //V[2] = Q[2];
   W[0] = R[0]; W[1] = hr; //W[2] = R[2];
   Z[0] = S[0]; Z[1] = hs; //Z[2] = S[2];
 
-  REAL D2 = orient3d(U, V, W, Z);
+  REAL D2 = orient3d(U, V, W, Z, use_inexact, use_filter, o3d_filter);
 
   /*U[0] = P[0];*/ U[1] = P[1]; U[2] = hp;
   /*V[0] = Q[0];*/ V[1] = Q[1]; V[2] = hq;
   /*W[0] = R[0];*/ W[1] = R[1]; W[2] = hr;
   /*Z[0] = S[0];*/ Z[1] = S[1]; Z[2] = hs;
 
-  REAL D3 = orient3d(U, V, W, Z);
+  REAL D3 = orient3d(U, V, W, Z, use_inexact, use_filter, o3d_filter);
 
   REAL DD = D * 2.;
 
@@ -28510,7 +28474,7 @@ enum tetgenmesh::locateresult
     torg = org(*searchtet);
     tdest = dest(*searchtet);
     tapex = apex(*searchtet);
-    ori = orient3d(torg, tdest, tapex, searchpt);
+    ori = orient3d(torg, tdest, tapex, searchpt, use_inexact, use_filter, o3d_filter);
     if (ori < 0) break;
   }
 
@@ -28534,9 +28498,9 @@ enum tetgenmesh::locateresult
 
     // We enter from the crruent face of `serarchtet', which face do we exit?
     // Find the next face which is intersect with the line (startpt->searchpt).
-    oriorg  = orient3d(tdest, tapex, toppo, searchpt);
-    oridest = orient3d(tapex,  torg, toppo, searchpt);
-    oriapex = orient3d( torg, tdest, toppo, searchpt);
+    oriorg  = orient3d(tdest, tapex, toppo, searchpt, use_inexact, use_filter, o3d_filter);
+    oridest = orient3d(tapex,  torg, toppo, searchpt, use_inexact, use_filter, o3d_filter);
+    oriapex = orient3d( torg, tdest, toppo, searchpt, use_inexact, use_filter, o3d_filter);
 
     if (oriorg < 0) {
       if (oridest < 0) {
@@ -28927,11 +28891,11 @@ bool tetgenmesh::split_tetrahedron(triface* splittet, // the tet to be split.
           pb = dest(adjtet);
           pc = apex(adjtet);
           projpt2face(param, pa, pb, pc, prjpt);
-          ori = orient3d(pa, pb, toppo, prjpt);
+          ori = orient3d(pa, pb, toppo, prjpt, use_inexact, use_filter, o3d_filter);
           if (ori >= 0) {
-            ori = orient3d(pb, pc, toppo, prjpt);
+            ori = orient3d(pb, pc, toppo, prjpt, use_inexact, use_filter, o3d_filter);
             if (ori >= 0) {
-              ori = orient3d(pc, pa, toppo, prjpt);
+              ori = orient3d(pc, pa, toppo, prjpt, use_inexact, use_filter, o3d_filter);
               if (ori >= 0) {
                 scount++;
                 // Found such a subface, try to split it.
@@ -29854,7 +29818,7 @@ long tetgenmesh::lawsonflip3d(flipconstraints *fc)
         //   locally non-convex edge (ori < 0) or a flat edge (ori = 0) is
         //   encountered, and 'fliptet' represents that edge.
         for (i = 0; i < 3; i++) {
-          ori = orient3d(org(fliptets[0]), dest(fliptets[0]), pd, pe);
+          ori = orient3d(org(fliptets[0]), dest(fliptets[0]), pd, pe, use_inexact, use_filter, o3d_filter);
           if (ori > 0) {
             // Avoid creating a nearly degenerated new tet at boundary.
             //   Re-use fliptets[2], fliptets[3];
@@ -29996,16 +29960,16 @@ long tetgenmesh::lawsonflip3d(flipconstraints *fc)
 
                   // Validate the four new tets (not inverted)
                   REAL o1, o2;
-                  o1 = orient3d(pe, pd, pc, pa);
-                  o2 = orient3d(pe, pd, pb, pc);
+                  o1 = orient3d(pe, pd, pc, pa, use_inexact, use_filter, o3d_filter);
+                  o2 = orient3d(pe, pd, pb, pc, use_inexact, use_filter, o3d_filter);
                   if ((o1 >= 0.) || (o2 >= 0.)) {
                     //assert(0); // to debug...
                     continue; // inverted new tets
                   }
                   if (pf != dummypoint) {
                     REAL o3, o4;
-                    o3 = orient3d(pe, pd, pa, pf);
-                    o4 = orient3d(pe, pd, pf, pb);
+                    o3 = orient3d(pe, pd, pa, pf, use_inexact, use_filter, o3d_filter);
+                    o4 = orient3d(pe, pd, pf, pb, use_inexact, use_filter, o3d_filter);
                     if ((o3 >= 0.) || (o4 >= 0.)) {
                       continue; // inverted new tets
                     }
@@ -30500,7 +30464,7 @@ bool tetgenmesh::move_vertex(point mesh_vert, REAL target[3])
       pa =  org(*cavetet);
       pb = dest(*cavetet);
       pc = apex(*cavetet);
-      ori = orient3d(pa, pb, pc, newpos);
+      ori = orient3d(pa, pb, pc, newpos, use_inexact, use_filter, o3d_filter);
       if (ori >= 0) {
         moveflag = false;
         break; // This tet becomes invalid.
@@ -30880,7 +30844,7 @@ bool tetgenmesh::get_tetqual(triface *chktet, point oppo_pt, badface *bf)
   
   if (flat_flag) {
     // This tet is nearly degenerate.
-    bf->cent[4] = orient3d(bf->fdest, bf->forg, bf->fapex, bf->foppo);
+    bf->cent[4] = orient3d(bf->fdest, bf->forg, bf->fapex, bf->foppo, use_inexact, use_filter, o3d_filter);
     if (bf->cent[4] <= 0.0) {
       return false; // degenerated or inverted.
     }
@@ -31143,7 +31107,7 @@ bool tetgenmesh::add_steinerpt_to_repair(badface *bf, bool bSmooth)
           int t1ver;
           do {
             point *ppt = (point *) &(spintet.tet[4]);
-            vol = orient3d(ppt[1], ppt[0], ppt[2], ppt[3]);
+            vol = orient3d(ppt[1], ppt[0], ppt[2], ppt[3], use_inexact, use_filter, o3d_filter);
             if (vol > max_vol) {
               max_vol = vol;
               splittet = spintet;
@@ -31756,7 +31720,7 @@ int tetgenmesh::check_mesh(int topoflag)
       if (tetloop.ver == 0) {  // Only test for inversion once.
         if (!ishulltet(tetloop)) {  // Only do test if it is not a hull tet.
           if (!topoflag) {
-            ori = orient3d(pa, pb, pc, pd);
+            ori = orient3d(pa, pb, pc, pd, use_inexact, use_filter, o3d_filter);
             if (ori >= 0.0) {
               printf("  !! !! %s ", ori > 0.0 ? "Inverted" : "Degenerated");
               printf("  (%d, %d, %d, %d) (ori = %.17g)\n", pointmark(pa),
@@ -32363,7 +32327,7 @@ int tetgenmesh::check_delaunay(int perturb)
         if (perturb) {
           sign = insphere_s(pa, pb, pc, pd, pe);
         } else {
-          sign = insphere(pa, pb, pc, pd, pe);
+          sign = insphere(pa, pb, pc, pd, pe, use_inexact, use_filter, isp_filter);
         }
         if (sign < 0.0) {
           ndcount++;
@@ -32452,7 +32416,7 @@ int tetgenmesh::check_regular(int type)
         p[4] = oppo(symtet);   // pe
 
         if (type == 0) {
-          sign = insphere(p[1], p[0], p[2], p[3], p[4]);
+          sign = insphere(p[1], p[0], p[2], p[3], p[4], use_inexact, use_filter, isp_filter);
         } else if (type == 1) {
           sign = insphere_s(p[1], p[0], p[2], p[3], p[4]);
         } else if (type == 2) {

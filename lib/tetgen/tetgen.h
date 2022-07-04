@@ -856,13 +856,15 @@ public:
 //                                                                            //
 //============================================================================//
 
-void exactinit(int, int, int, REAL, REAL, REAL);
+//void exactinit(int);
 
 REAL orient2d(const REAL *pa, const REAL *pb, const REAL *pc);
 REAL incircle(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd);
 
-REAL orient3d(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd);
-REAL insphere(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd, const REAL *pe);
+REAL orient3d(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd,
+              const bool & inexact=false, const bool & filter=false, const REAL & static_filter=0.);
+REAL insphere(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd, const REAL *pe,
+              const bool & inexact=false, const bool & filter=false, const REAL & static_filter=0.);
 REAL orient4d(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe,
               REAL ah, REAL bh, REAL ch, REAL dh, REAL eh);
 
@@ -1497,6 +1499,13 @@ public:
   long recover_delaunay_count;
   unsigned long totalworkmemory;      // Total memory used by working arrays.
 
+  // Previously global static filter parameters
+  // set by ::set_static_filters
+  bool use_inexact;
+  bool use_filter;
+  REAL o3d_filter;
+  REAL isp_filter;
+
 
 //============================================================================//
 //                                                                            //
@@ -1505,17 +1514,60 @@ public:
 //============================================================================//
 
   // Fast lookup tables for mesh manipulation primitives.
-  static int bondtbl[12][12], fsymtbl[12][12];
-  static int esymtbl[12], enexttbl[12], eprevtbl[12];
-  static int enextesymtbl[12], eprevesymtbl[12]; 
-  static int eorgoppotbl[12], edestoppotbl[12];
-  static int facepivot1[12], facepivot2[12][12];
-  static int orgpivot[12], destpivot[12], apexpivot[12], oppopivot[12];
-  static int tsbondtbl[12][6], stbondtbl[12][6];
-  static int tspivottbl[12][6], stpivottbl[12][6];
-  static int ver2edge[12], edge2ver[6], epivot[12];
-  static int sorgpivot [6], sdestpivot[6], sapexpivot[6];
-  static int snextpivot[6];
+  // Initialize fast lookup tables for mesh maniplulation primitives.
+
+  int bondtbl[12][12] = {{0,},};
+  int enexttbl[12] = {0,};
+  int eprevtbl[12] = {0,};
+  int enextesymtbl[12] = {0,};
+  int eprevesymtbl[12] = {0,};
+  int eorgoppotbl[12] = {0,};
+  int edestoppotbl[12] = {0,};
+  int fsymtbl[12][12] = {{0,},};
+  int facepivot1[12] = {0,};
+  int facepivot2[12][12] = {{0,},};
+  int tsbondtbl[12][6] = {{0,},};
+  int stbondtbl[12][6] = {{0,},};
+  int tspivottbl[12][6] = {{0,},};
+  int stpivottbl[12][6] = {{0,},};
+
+  // Table 'esymtbl' takes an directed edge (version) as input, returns the
+  //   inversed edge (version) of it.
+
+  int esymtbl[12] = {9, 6, 11, 4, 3, 7, 1, 5, 10, 0, 8, 2};
+
+  // The following four tables give the 12 permutations of the set {0,1,2,3}.
+  //   An offset 4 is added to each element for a direct access of the points
+  //   in the tetrahedron data structure.
+
+  int  orgpivot[12] = {7, 7, 5, 5, 6, 4, 4, 6, 5, 6, 7, 4};
+  int destpivot[12] = {6, 4, 4, 6, 5, 6, 7, 4, 7, 7, 5, 5};
+  int apexpivot[12] = {5, 6, 7, 4, 7, 7, 5, 5, 6, 4, 4, 6};
+  int oppopivot[12] = {4, 5, 6, 7, 4, 5, 6, 7, 4, 5, 6, 7};
+
+  // The twelve versions correspond to six undirected edges. The following two
+  //   tables map a version to an undirected edge and vice versa.
+
+  int ver2edge[12] = {0, 1, 2, 3, 3, 5, 1, 5, 4, 0, 4, 2};
+  int edge2ver[ 6] = {0, 1, 2, 3, 8, 5};
+
+  // Edge versions whose apex or opposite may be dummypoint.
+
+  int epivot[12] = {4, 5, 2, 11, 4, 5, 2, 11, 4, 5, 2, 11};
+
+
+  // Table 'snextpivot' takes an edge version as input, returns the next edge
+  //   version in the same edge ring.
+
+  int snextpivot[6] = {2, 5, 4, 1, 0, 3};
+
+  // The following three tables give the 6 permutations of the set {0,1,2}.
+  //   An offset 3 is added to each element for a direct access of the points
+  //   in the triangle data structure.
+
+  int sorgpivot [6] = {3, 4, 4, 5, 5, 3};
+  int sdestpivot[6] = {4, 3, 5, 4, 3, 5};
+  int sapexpivot[6] = {5, 5, 3, 3, 4, 4};
 
   void inittables();
 
@@ -1542,9 +1594,9 @@ public:
   inline void edestoppo(triface& t1, triface& t2);
   inline void edestoppoself(triface& t);
   inline void fsym(triface& t1, triface& t2);
-  inline void fsymself(triface& t);
+//  inline void fsymself(triface& t);
   inline void fnext(triface& t1, triface& t2);
-  inline void fnextself(triface& t);
+//  inline void fnextself(triface& t);
   inline point org (triface& t);
   inline point dest(triface& t);
   inline point apex(triface& t);
@@ -1877,7 +1929,7 @@ public:
 // sorting of each subset provides locality.                                  //
 //                                                                            //
 //============================================================================//
-
+  void set_static_filters(int, int, REAL, REAL, REAL);
   void transfernodes();
 
   // Point sorting.
