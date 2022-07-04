@@ -56,13 +56,13 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 #ifdef __GNUC__
-#define always_inline __attribute__((always_inline)) inline
+#define BRILLE_ALWAYS_INLINE __attribute__((always_inline)) inline
 #define restrict __restrict__
 #elif _WIN32
-#define always_inline __forceinline
+#define BRILLE_ALWAYS_INLINE __forceinline
 #define restrict __restrict
 #else
-#define always_inline inline
+#define BRILLE_ALWAYS_INLINE inline
 #define restrict
 #endif
 #endif
@@ -72,7 +72,7 @@ namespace brille::assignment {
 using sidx = long long int; // in case idx is unsigned :/
 
 template <typename idx, typename cost>
-always_inline std::tuple<cost, cost, sidx, sidx>
+BRILLE_ALWAYS_INLINE std::tuple<cost, cost, sidx, sidx>
 find_umins_plain(
     idx dim, idx i, const cost *restrict assign_cost,
     const cost *restrict v) {
@@ -106,7 +106,7 @@ find_umins_plain(
 #define DOUBLE_MIN_DIM 100000  // 64-bit code is actually always slower
 
 template <typename idx>
-always_inline std::tuple<float, float, sidx, sidx>
+BRILLE_ALWAYS_INLINE std::tuple<float, float, sidx, sidx>
 find_umins(
     idx dim, idx i, const float *restrict assign_cost,
     const float *restrict v) {
@@ -185,7 +185,7 @@ find_umins(
 }
 
 template <typename idx>
-always_inline std::tuple<double, double, sidx, sidx>
+BRILLE_ALWAYS_INLINE std::tuple<double, double, sidx, sidx>
 find_umins(
     idx dim, idx i, const double *restrict assign_cost,
     const double *restrict v) {

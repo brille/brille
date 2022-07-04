@@ -113,10 +113,6 @@
 /*                                                                           */
 /*****************************************************************************/
 
-#if defined(__linux__) && defined(__i386__)
-  #define LINUX 1
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -127,7 +123,7 @@
 #include <fpu_control.h>
 #endif /* LINUX */
 
-#include "tetgen.h"         // Defines the symbol REAL (float or double).
+#include "tetgen.h"            // Defines the symbol REAL (float or double).
 
 #ifdef USE_CGAL_PREDICATES
   #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
@@ -386,12 +382,12 @@ static REAL o3derrboundA, o3derrboundB, o3derrboundC;
 static REAL iccerrboundA, iccerrboundB, iccerrboundC;
 static REAL isperrboundA, isperrboundB, isperrboundC;
 
-// Options to choose types of geometric computtaions.
+// Options to choose types of geometric computtaions. 
 // Added by H. Si, 2012-08-23.
 static int  _use_inexact_arith; // -X option.
 static int  _use_static_filter; // Default option, disable it by -X1
 
-// Static filters for orient3d() and insphere().
+// Static filters for orient3d() and insphere(). 
 // They are pre-calcualted and set in exactinit().
 // Added by H. Si, 2012-08-23.
 static REAL o3dstaticfilter;
@@ -403,7 +399,7 @@ static REAL ispstaticfilter;
 //          http://www.math.utah.edu/~beebe/software/ieee/
 // The original program was "fpinfo2.c".
 
-double fppow2(int n)
+static double fppow2(int n)
 {
   double x, power;
   x = (n < 0) ? ((double)1.0/(double)2.0) : (double)2.0;
@@ -416,12 +412,12 @@ double fppow2(int n)
 
 #ifdef SINGLE
 
-float fstore(float x)
+static float fstore(float x)
 {
   return (x);
 }
 
-int test_float(int verbose)
+static int test_float(int verbose)
 {
   float x;
   int pass = 1;
@@ -471,12 +467,12 @@ int test_float(int verbose)
 
 # else
 
-double dstore(double x)
+static double dstore(double x)
 {
   return (x);
 }
 
-int test_double(int verbose)
+static int test_double(int verbose)
 {
   double x;
   int pass = 1;
@@ -492,7 +488,7 @@ int test_double(int verbose)
   x = 1.0;
   while (dstore(1.0 + x/2.0) != 1.0)
     x /= 2.0;
-  if (verbose)
+  if (verbose) 
     (void)printf("  machine epsilon = %13.5le ", x);
 
   if (x == (double)fppow2(-52)) {
@@ -543,10 +539,8 @@ int test_double(int verbose)
 /*  Don't change this routine unless you fully understand it.                */
 /*                                                                           */
 /*****************************************************************************/
-#ifdef LINUX
-static int previous_cword;
-#endif
-void exactinit(int verbose, int noexact, int nofilter, REAL maxx, REAL maxy,
+
+void exactinit(int verbose, int noexact, int nofilter, REAL maxx, REAL maxy, 
                REAL maxz)
 {
   REAL half;
@@ -564,7 +558,6 @@ void exactinit(int verbose, int noexact, int nofilter, REAL maxx, REAL maxy,
 #endif /* not SINGLE */
 #endif /* CPU86 */
 #ifdef LINUX
-  _FPU_GETCW(previous_cword);
 #ifdef SINGLE
   /*  cword = 4223; */
   cword = 4210;                 /* set FPU control word for single precision */
@@ -649,12 +642,6 @@ void exactinit(int verbose, int noexact, int nofilter, REAL maxx, REAL maxy,
   o3dstaticfilter = 5.1107127829973299e-15 * maxx * maxy * maxz;
   ispstaticfilter = 1.2466136531027298e-13 * maxx * maxy * maxz * (maxz * maxz);
 
-}
-
-void exactdeinit(){
-  #ifdef LINUX
-    _FPU_SETCW(previous_cword);
-  #endif
 }
 
 /*****************************************************************************/
@@ -894,64 +881,64 @@ int expansion_sum_zeroelim2(int elen, REAL *e, int flen, REAL *f, REAL *h)
 /*                                                                           */
 /*****************************************************************************/
 
-int fast_expansion_sum(int elen, REAL *e, int flen, REAL *f, REAL *h)
-/* h cannot be e or f. */
-{
-  REAL Q;
-  INEXACT REAL Qnew;
-  INEXACT REAL bvirt;
-  REAL avirt, bround, around;
-  int eindex, findex, hindex;
-  REAL enow, fnow;
-
-  enow = e[0];
-  fnow = f[0];
-  eindex = findex = 0;
-  if ((fnow > enow) == (fnow > -enow)) {
-    Q = enow;
-    enow = e[++eindex];
-  } else {
-    Q = fnow;
-    fnow = f[++findex];
-  }
-  hindex = 0;
-  if ((eindex < elen) && (findex < flen)) {
-    if ((fnow > enow) == (fnow > -enow)) {
-      Fast_Two_Sum(enow, Q, Qnew, h[0]);
-      enow = e[++eindex];
-    } else {
-      Fast_Two_Sum(fnow, Q, Qnew, h[0]);
-      fnow = f[++findex];
-    }
-    Q = Qnew;
-    hindex = 1;
-    while ((eindex < elen) && (findex < flen)) {
-      if ((fnow > enow) == (fnow > -enow)) {
-        Two_Sum(Q, enow, Qnew, h[hindex]);
-        enow = e[++eindex];
-      } else {
-        Two_Sum(Q, fnow, Qnew, h[hindex]);
-        fnow = f[++findex];
-      }
-      Q = Qnew;
-      hindex++;
-    }
-  }
-  while (eindex < elen) {
-    Two_Sum(Q, enow, Qnew, h[hindex]);
-    enow = e[++eindex];
-    Q = Qnew;
-    hindex++;
-  }
-  while (findex < flen) {
-    Two_Sum(Q, fnow, Qnew, h[hindex]);
-    fnow = f[++findex];
-    Q = Qnew;
-    hindex++;
-  }
-  h[hindex] = Q;
-  return hindex + 1;
-}
+//static int fast_expansion_sum(int elen, REAL *e, int flen, REAL *f, REAL *h)
+///* h cannot be e or f. */
+//{
+//  REAL Q;
+//  INEXACT REAL Qnew;
+//  INEXACT REAL bvirt;
+//  REAL avirt, bround, around;
+//  int eindex, findex, hindex;
+//  REAL enow, fnow;
+//
+//  enow = e[0];
+//  fnow = f[0];
+//  eindex = findex = 0;
+//  if ((fnow > enow) == (fnow > -enow)) {
+//    Q = enow;
+//    enow = e[++eindex];
+//  } else {
+//    Q = fnow;
+//    fnow = f[++findex];
+//  }
+//  hindex = 0;
+//  if ((eindex < elen) && (findex < flen)) {
+//    if ((fnow > enow) == (fnow > -enow)) {
+//      Fast_Two_Sum(enow, Q, Qnew, h[0]);
+//      enow = e[++eindex];
+//    } else {
+//      Fast_Two_Sum(fnow, Q, Qnew, h[0]);
+//      fnow = f[++findex];
+//    }
+//    Q = Qnew;
+//    hindex = 1;
+//    while ((eindex < elen) && (findex < flen)) {
+//      if ((fnow > enow) == (fnow > -enow)) {
+//        Two_Sum(Q, enow, Qnew, h[hindex]);
+//        enow = e[++eindex];
+//      } else {
+//        Two_Sum(Q, fnow, Qnew, h[hindex]);
+//        fnow = f[++findex];
+//      }
+//      Q = Qnew;
+//      hindex++;
+//    }
+//  }
+//  while (eindex < elen) {
+//    Two_Sum(Q, enow, Qnew, h[hindex]);
+//    enow = e[++eindex];
+//    Q = Qnew;
+//    hindex++;
+//  }
+//  while (findex < flen) {
+//    Two_Sum(Q, fnow, Qnew, h[hindex]);
+//    fnow = f[++findex];
+//    Q = Qnew;
+//    hindex++;
+//  }
+//  h[hindex] = Q;
+//  return hindex + 1;
+//}
 
 /*****************************************************************************/
 /*                                                                           */
@@ -966,7 +953,7 @@ int fast_expansion_sum(int elen, REAL *e, int flen, REAL *f, REAL *h)
 /*  properties.                                                              */
 /*                                                                           */
 /*****************************************************************************/
-
+static
 int fast_expansion_sum_zeroelim(int elen, REAL *e, int flen, REAL *f, REAL *h)
 /* h cannot be e or f. */
 {
@@ -1178,37 +1165,37 @@ int linear_expansion_sum_zeroelim(int elen, REAL *e, int flen, REAL *f,
 /*  will h.)                                                                 */
 /*                                                                           */
 /*****************************************************************************/
-
-int scale_expansion(int elen, REAL *e, REAL b, REAL *h)
-/* e and h cannot be the same. */
-{
-  INEXACT REAL Q;
-  INEXACT REAL sum;
-  INEXACT REAL product1;
-  REAL product0;
-  int eindex, hindex;
-  REAL enow;
-  INEXACT REAL bvirt;
-  REAL avirt, bround, around;
-  INEXACT REAL c;
-  INEXACT REAL abig;
-  REAL ahi, alo, bhi, blo;
-  REAL err1, err2, err3;
-
-  Split(b, bhi, blo);
-  Two_Product_Presplit(e[0], b, bhi, blo, Q, h[0]);
-  hindex = 1;
-  for (eindex = 1; eindex < elen; eindex++) {
-    enow = e[eindex];
-    Two_Product_Presplit(enow, b, bhi, blo, product1, product0);
-    Two_Sum(Q, product0, sum, h[hindex]);
-    hindex++;
-    Two_Sum(product1, sum, Q, h[hindex]);
-    hindex++;
-  }
-  h[hindex] = Q;
-  return elen + elen;
-}
+//static
+//int scale_expansion(int elen, REAL *e, REAL b, REAL *h)
+///* e and h cannot be the same. */
+//{
+//  INEXACT REAL Q;
+//  INEXACT REAL sum;
+//  INEXACT REAL product1;
+//  REAL product0;
+//  int eindex, hindex;
+//  REAL enow;
+//  INEXACT REAL bvirt;
+//  REAL avirt, bround, around;
+//  INEXACT REAL c;
+//  INEXACT REAL abig;
+//  REAL ahi, alo, bhi, blo;
+//  REAL err1, err2, err3;
+//
+//  Split(b, bhi, blo);
+//  Two_Product_Presplit(e[0], b, bhi, blo, Q, h[0]);
+//  hindex = 1;
+//  for (eindex = 1; eindex < elen; eindex++) {
+//    enow = e[eindex];
+//    Two_Product_Presplit(enow, b, bhi, blo, product1, product0);
+//    Two_Sum(Q, product0, sum, h[hindex]);
+//    hindex++;
+//    Two_Sum(product1, sum, Q, h[hindex]);
+//    hindex++;
+//  }
+//  h[hindex] = Q;
+//  return elen + elen;
+//}
 
 /*****************************************************************************/
 /*                                                                           */
@@ -1224,7 +1211,7 @@ int scale_expansion(int elen, REAL *e, REAL b, REAL *h)
 /*  will h.)                                                                 */
 /*                                                                           */
 /*****************************************************************************/
-
+static
 int scale_expansion_zeroelim(int elen, REAL *e, REAL b, REAL *h)
 /* e and h cannot be the same. */
 {
@@ -1276,41 +1263,41 @@ int scale_expansion_zeroelim(int elen, REAL *e, REAL b, REAL *h)
 /*  nonadjacent expansion.                                                   */
 /*                                                                           */
 /*****************************************************************************/
-
-int compress(int elen, REAL *e, REAL *h)
-/* e and h may be the same. */
-{
-  REAL Q, q;
-  INEXACT REAL Qnew;
-  int eindex, hindex;
-  INEXACT REAL bvirt;
-  REAL enow, hnow;
-  int top, bottom;
-
-  bottom = elen - 1;
-  Q = e[bottom];
-  for (eindex = elen - 2; eindex >= 0; eindex--) {
-    enow = e[eindex];
-    Fast_Two_Sum(Q, enow, Qnew, q);
-    if (q != 0) {
-      h[bottom--] = Qnew;
-      Q = q;
-    } else {
-      Q = Qnew;
-    }
-  }
-  top = 0;
-  for (hindex = bottom + 1; hindex < elen; hindex++) {
-    hnow = h[hindex];
-    Fast_Two_Sum(hnow, Q, Qnew, q);
-    if (q != 0) {
-      h[top++] = q;
-    }
-    Q = Qnew;
-  }
-  h[top] = Q;
-  return top + 1;
-}
+//static
+//int compress(int elen, REAL *e, REAL *h)
+///* e and h may be the same. */
+//{
+//  REAL Q, q;
+//  INEXACT REAL Qnew;
+//  int eindex, hindex;
+//  INEXACT REAL bvirt;
+//  REAL enow, hnow;
+//  int top, bottom;
+//
+//  bottom = elen - 1;
+//  Q = e[bottom];
+//  for (eindex = elen - 2; eindex >= 0; eindex--) {
+//    enow = e[eindex];
+//    Fast_Two_Sum(Q, enow, Qnew, q);
+//    if (q != 0) {
+//      h[bottom--] = Qnew;
+//      Q = q;
+//    } else {
+//      Q = Qnew;
+//    }
+//  }
+//  top = 0;
+//  for (hindex = bottom + 1; hindex < elen; hindex++) {
+//    hnow = h[hindex];
+//    Fast_Two_Sum(hnow, Q, Qnew, q);
+//    if (q != 0) {
+//      h[top++] = q;
+//    }
+//    Q = Qnew;
+//  }
+//  h[top] = Q;
+//  return top + 1;
+//}
 
 /*****************************************************************************/
 /*                                                                           */
@@ -1319,7 +1306,7 @@ int compress(int elen, REAL *e, REAL *h)
 /*  See either version of my paper for details.                              */
 /*                                                                           */
 /*****************************************************************************/
-
+static
 REAL estimate(int elen, REAL *e)
 {
   REAL Q;
@@ -1357,19 +1344,20 @@ REAL estimate(int elen, REAL *e)
 /*  nearly so.                                                               */
 /*                                                                           */
 /*****************************************************************************/
+//static
+//REAL orient2dfast(REAL *pa, REAL *pb, REAL *pc)
+//{
+//  REAL acx, bcx, acy, bcy;
+//
+//  acx = pa[0] - pc[0];
+//  bcx = pb[0] - pc[0];
+//  acy = pa[1] - pc[1];
+//  bcy = pb[1] - pc[1];
+//  return acx * bcy - acy * bcx;
+//}
 
-REAL orient2dfast(REAL *pa, REAL *pb, REAL *pc)
-{
-  REAL acx, bcx, acy, bcy;
-
-  acx = pa[0] - pc[0];
-  bcx = pb[0] - pc[0];
-  acy = pa[1] - pc[1];
-  bcy = pb[1] - pc[1];
-  return acx * bcy - acy * bcx;
-}
-
-REAL orient2dexact(REAL *pa, REAL *pb, REAL *pc)
+//static
+REAL orient2dexact(const REAL *pa, const REAL *pb, const REAL *pc)
 {
   INEXACT REAL axby1, axcy1, bxcy1, bxay1, cxay1, cxby1;
   REAL axby0, axcy0, bxcy0, bxay0, cxay0, cxby0;
@@ -1452,7 +1440,7 @@ REAL orient2dslow(REAL *pa, REAL *pb, REAL *pc)
   return deter[deterlen - 1];
 }
 
-REAL orient2dadapt(REAL *pa, REAL *pb, REAL *pc, REAL detsum)
+REAL orient2dadapt(const REAL *pa, const REAL *pb, const REAL *pc, REAL detsum)
 {
   INEXACT REAL acx, acy, bcx, bcy;
   REAL acxtail, acytail, bcxtail, bcytail;
@@ -1532,7 +1520,7 @@ REAL orient2dadapt(REAL *pa, REAL *pb, REAL *pc, REAL detsum)
   return(D[Dlength - 1]);
 }
 
-REAL orient2d(REAL *pa, REAL *pb, REAL *pc)
+REAL orient2d(const REAL *pa, const REAL *pb, const REAL *pc)
 {
   REAL detleft, detright, det;
   REAL detsum, errbound;
@@ -1615,7 +1603,7 @@ REAL orient3dfast(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
        + cdx * (ady * bdz - adz * bdy);
 }
 
-REAL orient3dexact(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
+REAL orient3dexact(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd)
 {
   INEXACT REAL axby1, bxcy1, cxdy1, dxay1, axcy1, bxdy1;
   INEXACT REAL bxay1, cxby1, dxcy1, axdy1, cxay1, dxby1;
@@ -2188,11 +2176,11 @@ REAL orient3dadapt(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *p
 
 #ifdef USE_CGAL_PREDICATES
 
-REAL orient3d(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd)
+REAL orient3d(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 {
-  return (REAL)
+  return (REAL) 
     - cgal_pred_obj.orientation_3_object()
-        (Point(pa[0], pa[1], pa[2]),
+        (Point(pa[0], pa[1], pa[2]), 
          Point(pb[0], pb[1], pb[2]),
          Point(pc[0], pc[1], pc[2]),
          Point(pd[0], pd[1], pd[2]));
@@ -2226,7 +2214,7 @@ REAL orient3d(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd)
   adxbdy = adx * bdy;
   bdxady = bdx * ady;
 
-  det = adz * (bdxcdy - cdxbdy)
+  det = adz * (bdxcdy - cdxbdy) 
       + bdz * (cdxady - adxcdy)
       + cdz * (adxbdy - bdxady);
 
@@ -2559,7 +2547,7 @@ REAL incircleslow(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
   return deter[deterlen - 1];
 }
 
-REAL incircleadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL permanent)
+REAL incircleadapt(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd, REAL permanent)
 {
   INEXACT REAL adx, bdx, cdx, ady, bdy, cdy;
   REAL det, errbound;
@@ -3131,7 +3119,7 @@ REAL incircleadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL permanent)
   return finnow[finlength - 1];
 }
 
-REAL incircle(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
+REAL incircle(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd)
 {
   REAL adx, bdx, cdx, ady, bdy, cdy;
   REAL bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady;
@@ -3243,7 +3231,7 @@ REAL inspherefast(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
   return (dlift * abc - clift * dab) + (blift * cda - alift * bcd);
 }
 
-REAL insphereexact(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
+REAL insphereexact(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd, const REAL *pe)
 {
   INEXACT REAL axby1, bxcy1, cxdy1, dxey1, exay1;
   INEXACT REAL bxay1, cxby1, dxcy1, exdy1, axey1;
@@ -3825,7 +3813,7 @@ REAL insphereslow(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
   return deter[deterlen - 1];
 }
 
-REAL insphereadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe,
+REAL insphereadapt(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd, const REAL *pe,
                    REAL permanent)
 {
   INEXACT REAL aex, bex, cex, dex, aey, bey, cey, dey, aez, bez, cez, dez;
@@ -4056,7 +4044,7 @@ REAL insphere(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
 
 #else
 
-REAL insphere(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
+REAL insphere(const REAL *pa, const REAL *pb, const REAL *pc, const REAL *pd, const REAL *pe)
 {
   REAL aex, bex, cex, dex;
   REAL aey, bey, cey, dey;
@@ -4194,9 +4182,9 @@ REAL insphere(REAL *pa, REAL *pb, REAL *pc, REAL *pd, REAL *pe)
 /*  See my Robust Predicates paper for details.                              */
 /*                                                                           */
 /*****************************************************************************/
-
+//static
 REAL orient4dexact(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe,
-                   REAL aheight, REAL bheight, REAL cheight, REAL dheight,
+                   REAL aheight, REAL bheight, REAL cheight, REAL dheight, 
                    REAL eheight)
 {
   INEXACT REAL axby1, bxcy1, cxdy1, dxey1, exay1;
@@ -4410,8 +4398,9 @@ REAL orient4dexact(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe,
   return deter[deterlen - 1];
 }
 
+static
 REAL orient4dadapt(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe,
-                   REAL aheight, REAL bheight, REAL cheight, REAL dheight,
+                   REAL aheight, REAL bheight, REAL cheight, REAL dheight, 
                    REAL eheight, REAL permanent)
 {
   INEXACT REAL aex, bex, cex, dex, aey, bey, cey, dey, aez, bez, cez, dez;
@@ -4606,8 +4595,8 @@ REAL orient4dadapt(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe,
                        aheight, bheight, cheight, dheight, eheight);
 }
 
-REAL orient4d(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe,
-              REAL aheight, REAL bheight, REAL cheight, REAL dheight,
+REAL orient4d(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe, 
+              REAL aheight, REAL bheight, REAL cheight, REAL dheight, 
               REAL eheight)
 {
  REAL aex, bex, cex, dex;
@@ -4710,3 +4699,12 @@ REAL orient4d(REAL* pa, REAL* pb, REAL* pc, REAL* pd, REAL* pe,
  return orient4dadapt(pa, pb, pc, pd, pe,
                       aheight, bheight, cheight, dheight, eheight, permanent);
 }
+
+
+
+
+
+
+//==============================================================================
+
+

@@ -25,8 +25,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 */
 // #include <complex>
 #include <cstdint>
-#include "array.hpp"
-#include "array_latvec.hpp" // defines bArray
+#include "array_.hpp" // defines bArray
 #include "sorting_status.hpp"
 #include "munkres.hpp"
 #include "lapjv.hpp"

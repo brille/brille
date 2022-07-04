@@ -154,11 +154,12 @@ if(BRILLE_BUILD_TESTING)
   # target for Catch2 based tests
   add_executable(${TESTING_TARGET})
 endif()
-add_subdirectory(lib)
 
 # target for C++ shared library
 add_library(${BRILLE_LIBRARY_TARGET} src/hdf_interface.hpp)
 list(APPEND CXX_TARGETS ${BRILLE_LIBRARY_TARGET})
+
+add_subdirectory(lib)
 
 # add the dependencies and include directories for all CXX targets:
 add_subdirectory(src)  # important

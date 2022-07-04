@@ -20,15 +20,12 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 */
 #ifndef BASIS_HPP
 #define BASIS_HPP
-// #include <vector>
-// #include <array>
-// #include <tuple>
 #include <utility>
 
 #include "symmetry.hpp"
-// #include "utilities.hpp"
-// #include "approx.hpp"
 #include "types.hpp"
+#include "approx_float.hpp"
+
 namespace brille {
 
 /*! \brief The atom basis of a lattice
@@ -37,7 +34,8 @@ The positions and types of atoms within the basis of a lattice
 */
 class Basis{
 public:
-  using point = std::array<double,3>; //!< The container for an atom position
+  using element_t = double;
+  using point = std::array<element_t,3>; //!< The container for an atom position
   // using index = unsigned long;
 private:
   std::vector<point> positions_; //!< all atom positions
@@ -87,24 +85,27 @@ public:
             - that atom's index if it exists, or the total number of atoms
               in the basis if it does not
   */
-  [[nodiscard]] std::tuple<bool, ind_t> equivalent_to(const point& Kappa) const {
+  [[nodiscard]] std::tuple<bool, ind_t> equivalent_to(const point& Kappa, element_t e_tol = element_t(0), int n_tol = 0) const {
     // find κ' equivalent to K in the first unit cell, all elements ∈ [0,1)
     // We need to protect against mapping Kᵢ ≈ -0 to 1; which you might introduce
     // by looking for an equivalent Κ' = Κ%1. This discontinuity near 0 and 1
     // is exactly what we don't want. Instead map numbers near 0 and near 1 to
     // near zero before checking for point equivalency
-    auto checker = [Kappa](const point& p){
+    auto checker = [Kappa,e_tol,n_tol](const point& p){
       point d, z{{0,0,0}};
       // find the difference vector % 1, with the discontinuity moved to 0.5
       for (int i=0; i<3; ++i) d[i] = Kappa[i]-p[i]+0.5;
       for (int i=0; i<3; ++i) d[i] = std::abs(d[i]-std::floor(d[i]))-0.5;
-      return brille::approx::vector(d.data(), z.data());
+      auto ok = approx_float::equal(d, z, e_tol, e_tol, n_tol);
+//      info_update_if(ok,  "   match ", Kappa, " to ", p);
+//      info_update_if(!ok, "no match ", Kappa, " to ", p, " since ", d);
+      return ok;
     };
     // now search for κ'
     auto kp_itr = std::find_if(positions_.begin(), positions_.end(), checker);
     bool found = kp_itr != positions_.end();
     // κ' (or size(positions_) if no equivalent position found)
-    ind_t kp = static_cast<ind_t>(std::distance(positions_.begin(), kp_itr));
+    auto kp = static_cast<ind_t>(std::distance(positions_.begin(), kp_itr));
     return std::make_tuple(found, kp);
   }
   /*! \brief Determine the equivalent atom index after a Symmetry operation
@@ -117,10 +118,10 @@ public:
   \return the output of `equivalent_to` after applying the operation
   */
   template<class T, class R>
-  std::tuple<bool, ind_t> equivalent_after_operation(const size_t k, const Motion<T,R>& op){
+  std::tuple<bool, ind_t> equivalent_after_operation(const size_t k, const Motion<T,R>& op, element_t e_tol = element_t(0), int n_tol = 0){
     if (k>=positions_.size()) throw std::runtime_error("invalid atom position index");
     point K_pos = op.move_point(positions_[k]);
-    return this->equivalent_to(K_pos);
+    return this->equivalent_to(K_pos, e_tol, n_tol);
   }
   /*! \brief Determine the equivalent atom index after a PointSymmetry operation
 
@@ -132,20 +133,20 @@ public:
   \return the output of `equivalent_to` after applying the operation
   */
   template<class T>
-  std::tuple<bool, ind_t> equivalent_after_operation(const size_t k, const std::array<T,9>& op){
+  std::tuple<bool, ind_t> equivalent_after_operation(const size_t k, const std::array<T,9>& op, element_t e_tol = element_t(0), int n_tol = 0){
     if (k>=positions_.size()) throw std::runtime_error("invalid atom positon index");
     point K_pos;
     brille::utils::multiply_matrix_vector(K_pos.data(), op.data(), positions_[k].data());
-    return this->equivalent_to(K_pos);
+    return this->equivalent_to(K_pos, e_tol, n_tol);
   }
   //! Return a string representation of the atom types and positions
   [[nodiscard]] std::string to_string() const {
     std::string repr;
     for (size_t i=0; i<this->size(); ++i)
       repr += std::to_string(types_[i]) + " : " + "( "
-            + std::to_string(positions_[i][0]) + " "
-            + std::to_string(positions_[i][1]) + " "
-            + std::to_string(positions_[i][2])  + " )\n";
+            + my_to_string(positions_[i][0]) + " "
+            + my_to_string(positions_[i][1]) + " "
+            + my_to_string(positions_[i][2])  + " )\n";
     return repr;
   }
 #ifdef USE_HIGHFIVE

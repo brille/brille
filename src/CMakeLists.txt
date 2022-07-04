@@ -19,16 +19,19 @@ message(STATUS "Using interpreter: ${Python3_EXECUTABLE}")
 
 #set(CXX_SOURCES
 list(APPEND CXX_SOURCES
+  approx_config.cpp
   bravais.cpp
   bz.cpp
+  bz_move.cpp
   bz_wedge.cpp
   comparisons.cpp
   debug.cpp
   hall_symbol.cpp
-  lattice.cpp
   neighbours.cpp
+  polyhedron_faces.cpp
   pointgroup.cpp
   pointsymmetry.cpp
+  process_id.cpp
   spg_database.cpp
   symmetry.cpp
 )

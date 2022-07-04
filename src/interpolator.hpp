@@ -27,12 +27,9 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 // #include <cassert>
 // #include <functional>
 #include <omp.h>
-// #include "array_latvec.hpp" // defines bArray
 #include "phonon.hpp"
 #include "permutation.hpp"
 #include "permutation_table.hpp"
-// #include "approx.hpp"
-// #include "utilities.hpp"
 #include "rotates.hpp"
 namespace brille {
 
@@ -91,6 +88,8 @@ public:
   template<class Z> using element_t =std::array<Z,3>;
   using costfun_t = CostFunction<T>;
   using shape_t = std::vector<ind_t>;
+  using interpolated_out_t = brille::Array<T>;
+  using interpolated_in_t = brille::Array2<T>;
 protected:
   bArray<T> data_;      //!< The stored Array2 of points indexed like the holding-Object's vertices
   shape_t shape_;       //!< The shape of the input Array (or Array2)
@@ -380,12 +379,12 @@ public:
   */
   template<class R, class RotT>
   bool rotate_in_place(bArray<T>& x,
-                       const LQVec<R>& q,
+                       const lattice::LVec<R>& q,
                        const RotT& rt,
                        const PointSymmetry& ps,
                        const std::vector<size_t>& r,
                        const std::vector<size_t>& invr,
-                       const int nth) const {
+                       const int nth=0) const {
     switch (rotlike_){
       case RotatesLike::Real:       return this->rip_real(x,ps,r,invr,nth);
       case RotatesLike::Axial:      return this->rip_axial(x,ps,r,invr,nth);
@@ -554,7 +553,7 @@ private:
     // data_ is always 2D: (N,1), (N,B), or (N,Y)
     for (ind_t offset=1; offset < b_; ++offset)
     for (ind_t i=0, j=offset; j < b_; ++i, ++j)
-    if (brille::approx::vector(s_, data_.ptr(idx, i*s_), data_.ptr(idx, j*s_))) return true;
+    if (brille::approx_float::vector(s_, data_.ptr(idx, i*s_), data_.ptr(idx, j*s_))) return true;
     // no matches
     return false;
   }
@@ -570,15 +569,15 @@ private:
   bool rip_recip(bArray<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   bool rip_axial(bArray<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   template<class R>
-  bool rip_gamma_complex(bArray<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  bool rip_gamma_complex(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   template<class R, class S=T>
   enable_if_t<is_complex<S>::value, bool>
-  rip_gamma(bArray<T>& x, const LQVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
+  rip_gamma(bArray<T>& x, const lattice::LVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
     return rip_gamma_complex(x, q, gt, ps, r, ir, nth);
   }
   template<class R, class S=T>
   enable_if_t<!is_complex<S>::value, bool>
-  rip_gamma(bArray<T>&, const LQVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
+  rip_gamma(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
     throw std::runtime_error("RotatesLike == Gamma requires complex valued data!");
   }
 

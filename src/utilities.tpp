@@ -264,7 +264,7 @@ template<class I, class T> T vector_angle(const I n, const T* A, const T* B){
     c_t = (nA || nB) ? T(0) : T(1);
   }
   T act = std::abs(c_t);
-  if (brille::approx::scalar(act, 1.0) && act>1){
+  if (brille::approx_float::scalar(act, 1.0) && act>1){
     c_t /= act;
     act = std::abs(c_t);
   }
@@ -300,7 +300,7 @@ template<class I, class T> T euclidean_angle(const I n, const std::complex<T>* A
     c_t = (nA || nB) ? T(0) : T(1);
   }
   T act = std::abs(c_t);
-  if (brille::approx::scalar(act, 1.0) && act>1){
+  if (brille::approx_float::scalar(act, 1.0) && act>1){
     c_t /= act;
     act = std::abs(c_t);
   }
@@ -367,7 +367,7 @@ template<class I, class T> T hermitian_angle(const I n, const std::complex<T>* A
     c_t = (nA || nB) ? T(0) : T(1);
   }
   T act = std::abs(c_t);
-  if (brille::approx::scalar(act,1.0) && act>1){
+  if (brille::approx_float::scalar(act,1.0) && act>1){
     c_t/=act; // force close-to-one values to one, maintaining the sign
     act = std::abs(c_t);
   }

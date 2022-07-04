@@ -52,10 +52,10 @@ size_t Symmetry::add(const int *r, const double *t){
   for (size_t i=0; i<3; ++i) newT[i]=t[i];
   return this->add(newR,newT);
 }
-size_t Symmetry::add(const Matrix<int>& r, const Vector<double>& t){
+size_t Symmetry::add(Matrix<int> r, Vector<double> t){
   return this->add(Motion<int,double>(r,t));
 }
-size_t Symmetry::add(const Motion<int,double>& m){
+size_t Symmetry::add(Motion<int,double> m){
   this->M.push_back(m);
   return this->size();
 }
@@ -69,7 +69,7 @@ bool Symmetry::from_ascii(const std::string& s){
   return true;
 }
 size_t Symmetry::add(const std::string& s){
-  Motion<int,double> m;
+  Motion<int,double> m({0,0,0, 0,0,0, 0,0,0}, {0,0,0});
   m.from_ascii(s);
   return this->add(m);
 }
@@ -80,7 +80,7 @@ Vector<double> Symmetry::gett(const size_t i) const {
   return (i<this->size()) ? this->M[i].gett() : Vector<double>({0,0,0});
 }
 Motion<int,double> Symmetry::getm(const size_t i) const {
-  return (i<this->size()) ? this->M[i] : Motion<int,double>();
+  return (i<this->size()) ? this->M[i] : Motion<int,double>({0,0,0, 0,0,0, 0,0,0}, {0,0,0});
 }
 size_t Symmetry::resize(const size_t newsize){
   this->M.resize(newsize);
@@ -106,13 +106,14 @@ size_t  Symmetry::erase(const size_t i){
 int Symmetry::order(const size_t i) const {
   if (i>=this->size())
     throw std::out_of_range("The requested symmetry operation is out of range");
-  Motion<int,double> e, t(this->getm(i)); // x initalised to {E,0}
+  Motion<int,double> e({1, 0, 0, 0, 1, 0, 0, 0, 1}, {0, 0, 0});
+  auto t = getm(i);
   int ord{0};
   while (++ord < 10 && t != e) { // if M[i]==e then order is 1 and this is done
     // info_update("M^",ord," = {");
     // info_update(t.getr());
     // info_update("|",t.gett(),"}");
-    t = this->getm(i)*t;
+    t = getm(i)*t;
   }
   info_update_if(t!=e,"Order not found for Motion {\n",this->getr(i),"|\n",this->gett(i),"\n}");
   return ord;
@@ -123,19 +124,19 @@ std::vector<int> Symmetry::orders() const {
   return o;
 }
 Symmetry Symmetry::generate() const {
-  Motion<int,double> x, y, e;
+  Motion<int,double> e({1,0,0, 0,1,0, 0,0,1}, {0,0,0});
   Symmetry gen;
   gen.add(e);
   size_t gensize;
   for (size_t i=0; i<this->size(); ++i){
-    x = e;
+    auto x = e;
     // for each of {W,w}, {W²,Ww+w}, {W³,W²w+Ww+w}, …
     for (int count=this->order(i); count--;) /* loop runs count times */ {
-      x = this->getm(i)*x;
+      x = getm(i)*x;
       // multiply {Wⁱ,Wⁱ⁻¹w+…} by the motions in gen
       gensize = gen.size(); // only multiply against pre-existing motions
       for (size_t j=0; j<gensize; ++j){
-        y = x * gen.getm(j);
+        auto y = x * gen.getm(j);
         // add missing motions to gen
         if (!gen.has(y)) gen.add(y);
       }
@@ -143,7 +144,7 @@ Symmetry Symmetry::generate() const {
   }
   return gen;
 }
-Symmetry Symmetry::generators(void) const{
+Symmetry Symmetry::generators() const{
   Symmetry lA(this->getallm()), lB, lC;
   while (lA.size()){
     lB.add(lA.getm(0)); // move the first element of lA to lB
@@ -177,6 +178,16 @@ bool Symmetry::has_space_inversion() const {
   Motion<int,double> space_inversion({{-1,0,0, 0,-1,0, 0,0,-1}},{{0.,0.,0.}});
   for (auto op: this->M) if (op == space_inversion) return true;
   return false;
+}
+
+Symmetry Symmetry::add_space_inversion() const {
+  if (this->has_space_inversion()) return *this;
+  auto gens = this->generators();
+  // add time-reversal/space-inversion
+  std::array<int,9> inversion{{-1,0,0, 0,-1,0, 0,0,-1}};
+  std::array<double,3> zero{{0,0,0}};
+  gens.add(inversion, zero);
+  return gens.generate();
 }
 
 size_t Symmetry::find_matrix_index(const Matrix<int>& m) const {

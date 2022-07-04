@@ -18,23 +18,24 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <iostream>
 #include <pybind11/pybind11.h>
 #include "_common_grid.hpp"
-#include "trellis.hpp"
 #include "bz_trellis.hpp"
+#include "approx_config.hpp"
 
 #ifndef WRAP_BRILLE_TRELLIS_HPP_
 #define WRAP_BRILLE_TRELLIS_HPP_
 
 namespace py = pybind11;
 
-template<class T,class R>
+template<class T,class R,class S>
 void declare_bztrellisq(py::module &m, const std::string &typestr){
   using namespace pybind11::literals;
   using namespace brille;
-  using Class = BrillouinZoneTrellis3<T,R>;
+  using Class = BrillouinZoneTrellis3<T,R,S>;
   std::string pyclass_name = std::string("BZTrellisQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());
   // Initializer (BrillouinZone, maximum node volume fraction, always_triangulate)
-  cls.def(py::init<BrillouinZone,double,bool>(), "brillouinzone"_a, "node_volume_fraction"_a=0.1, "always_triangulate"_a=false);
+  cls.def(py::init<BrillouinZone,double,bool>(), "bz_"_a, "node_volume_fraction"_a=0.1, "always_triangulate"_a=false);
+  cls.def(py::init<BrillouinZone,double,bool,approx_float::Config>(), "bz_"_a, "node_volume_fraction"_a, "always_triangulate"_a, "approx_config"_a);
 
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
 
@@ -67,7 +68,6 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
   def_grid_interpolate(cls);
   def_grid_ir_interpolate(cls);
   def_grid_sort(cls);
-  def_grid_debye_waller(cls);
 
 #ifdef USE_HIGHFIVE
   def_grid_hdf_interface(cls, pyclass_name);

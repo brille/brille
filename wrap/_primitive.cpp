@@ -28,7 +28,10 @@ void wrap_primitivetransform(pybind11::module & m){
 
   cls.def_property_readonly("P",[](const PrimitiveTransform &p){
     std::vector<ssize_t> sz{3u,3u};
-    return sa2np(sz,p.get_P());
+    auto sixP = p.get_6P();
+    std::array<double, 9> P;
+    for (size_t i=0; i<9u; ++i) P[i] = sixP[i]/6.0;
+    return sa2np(sz, P);
   });
 
   cls.def_property_readonly("invP",[](const PrimitiveTransform &p){
@@ -38,7 +41,10 @@ void wrap_primitivetransform(pybind11::module & m){
 
   cls.def_property_readonly("Pt",[](const PrimitiveTransform &p){
     std::vector<ssize_t> sz{3u,3u};
-    return sa2np(sz,p.get_Pt());
+    auto sixPt = p.get_6Pt();
+    std::array<double, 9> Pt;
+    for (size_t i=0; i<9u; ++i) Pt[i] = sixPt[i]/6.0;
+    return sa2np(sz,Pt);
   });
 
   cls.def_property_readonly("invPt",[](const PrimitiveTransform &p){

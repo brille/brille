@@ -38,7 +38,7 @@ bool Interpolator<T>::rip_real(
   for (long long si=0; si<xsize; ++si){
     ind_t i = brille::utils::s2u<ind_t, long long>(si);
     T * xi = x.ptr(i);
-    if (!brille::approx::matrix(3, ident.data(), ptsym.get(r[i]).data())){
+    if (!brille::approx_float::matrix(3, ident.data(), ptsym.get(r[i]).data())){
       for (ind_t b=0; b<b_; ++b){
         // scalar elements do not need to be rotated, so skip them
         ind_t o = b*s_ + no[0];

@@ -16,14 +16,17 @@ You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <pybind11/pybind11.h>
 #include "bz.hpp"
+#include "lattice_dual.hpp"
 #include "_c_to_python.hpp"
 #include "_array.hpp"
+#include "array_l_.hpp"
 
 namespace py = pybind11;
 
 void wrap_brillouinzone(py::module & m){
   using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
   using namespace brille;
+  using namespace brille::lattice;
   using CLS = BrillouinZone;
   py::class_<CLS> cls(m,"BrillouinZone",R"pbdoc(
     Construct and hold a first Brillouin zone and, optionally and by default,
@@ -150,14 +153,59 @@ void wrap_brillouinzone(py::module & m){
         algorithm will fail to find an appropriate irreducible Brillouin zone
         and an error will be raised. (Set to ``True`` by default).
   )pbdoc");
-  cls.def(py::init<Reciprocal,bool,int,bool,bool>(),
-          "lattice"_a, "use_primitive"_a=true, "search_length"_a=1,
-          "time_reversal_symmetry"_a=false, "wedge_search"_a=true);
+  cls.def(py::init([](
+    const lattice::Lattice<double> & lat,
+    const bool use_primitive,
+    const int search_length,
+    const bool time_reversal_symmetry,
+    const bool wedge_search,
+    const bool divide_primitive
+    ){
+    auto cfg = BrillouinZoneConfig();
+    cfg.primitive(use_primitive);
+    cfg.divide_extent(search_length);
+    cfg.divide_primitive(divide_primitive);
+    cfg.time_reversal(time_reversal_symmetry);
+    cfg.wedge_search(wedge_search);
+    return BrillouinZone(lat, cfg);
+  }),
+  "lattice"_a,
+  "use_primitive"_a=true,
+  "search_length"_a=1,
+  "time_reversal_symmetry"_a=false,
+  "wedge_search"_a=true,
+  "divide_primitive"_a=true
+  );
+  cls.def(py::init([](
+              const lattice::Lattice<double> & lat,
+              const approx_float::Config ac,
+              const bool use_primitive,
+              const int search_length,
+              const bool time_reversal_symmetry,
+              const bool wedge_search,
+              const bool divide_primitive
+          ){
+            auto cfg = BrillouinZoneConfig();
+            cfg.primitive(use_primitive);
+            cfg.divide_extent(search_length);
+            cfg.divide_primitive(divide_primitive);
+            cfg.time_reversal(time_reversal_symmetry);
+            cfg.wedge_search(wedge_search);
+            return BrillouinZone(lat, cfg, ac);
+          }),
+          "lattice"_a,
+          "approx_config"_a,
+          "use_primitive"_a=true,
+          "search_length"_a=1,
+          "time_reversal_symmetry"_a=false,
+          "wedge_search"_a=true,
+          "divide_primitive"_a=true
+  );
 
   // return the internal Lattice object
   cls.def_property_readonly("lattice", [](const CLS &b){ return b.get_lattice();},
   R"pbdoc(
-  Returns the defining :py:class:`brille._brille.Reciprocal` lattice
+  Returns the defining :py:class:`brille._brille.Lattice` lattice
   )pbdoc");
 
   // access the polyhedra directly
@@ -187,57 +235,57 @@ void wrap_brillouinzone(py::module & m){
 
   // first Brillouin zone polyhedron
   cls.def_property_readonly("normals",
-  [](const CLS &b){return brille::a2py(b.get_normals().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_normals().hkl());},
   R"pbdoc(
   Return the first Brillouin zone face normals in rlu
   )pbdoc");
   cls.def_property_readonly("normals_invA",
-  [](const CLS &b){return brille::a2py(b.get_normals().get_xyz());},
+  [](const CLS &b){return brille::a2py(b.get_normals().xyz());},
   R"pbdoc(
   Return the first Brillouin zone face normals in inverse ångstrom
   )pbdoc");
   cls.def_property_readonly("normals_primitive",
-  [](const CLS &b){return brille::a2py(b.get_primitive_normals().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_primitive_normals().hkl());},
   R"pbdoc(
   Return the first Brillouin zone face normals in primitive-lattice rlu
   )pbdoc");
   cls.def_property_readonly("points",
-  [](const CLS &b){return brille::a2py(b.get_points().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_points().hkl());},
   R"pbdoc(
   Return the first Brillouin zone face centres in rlu
   )pbdoc");
   cls.def_property_readonly("points_invA",
-  [](const CLS &b){return brille::a2py(b.get_points().get_xyz());},
+  [](const CLS &b){return brille::a2py(b.get_points().xyz());},
   R"pbdoc(
   Return the first Brillouin zone face centres in inverse ångstrom
   )pbdoc");
   cls.def_property_readonly("points_primitive",
-  [](const CLS &b){return brille::a2py(b.get_primitive_points().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_primitive_points().hkl());},
   R"pbdoc(
   Return the first Brillouin zone face centres in primitive-lattice rlu
   )pbdoc");
   cls.def_property_readonly("vertices",
-  [](const CLS &b){return brille::a2py(b.get_vertices().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_vertices().hkl());},
   R"pbdoc(
   Return the first Brillouin zone unique face corners in rlu
   )pbdoc");
   cls.def_property_readonly("vertices_invA",
-  [](const CLS &b){return brille::a2py(b.get_vertices().get_xyz());},
+  [](const CLS &b){return brille::a2py(b.get_vertices().xyz());},
   R"pbdoc(
   Return the first Brillouin zone unique face corners in inverse ångstrom
   )pbdoc");
   cls.def_property_readonly("half_edge_points",
-  [](const CLS &b){return brille::a2py(b.get_half_edges().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_half_edges().hkl());},
   R"pbdoc(
   Return the first Brillouin zone face edge centres in rlu
   )pbdoc");
   cls.def_property_readonly("half_edge_points_invA",
-  [](const CLS &b){return brille::a2py(b.get_half_edges().get_xyz());},
+  [](const CLS &b){return brille::a2py(b.get_half_edges().xyz());},
   R"pbdoc(
   Return the first Brillouin zone face edge centres in inverse ångstrom
   )pbdoc");
   cls.def_property_readonly("vertices_primitive",
-  [](const CLS &b){return brille::a2py(b.get_primitive_vertices().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_primitive_vertices().hkl());},
   R"pbdoc(
   Return the first Brillouin zone unique face corners in primitive-lattice rlu
   )pbdoc");
@@ -254,47 +302,47 @@ void wrap_brillouinzone(py::module & m){
 
   // irreducible first Brillouin zone polyhedron
   cls.def_property_readonly("ir_normals",
-  [](const CLS &b){return brille::a2py(b.get_ir_normals().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_ir_normals().hkl());},
   R"pbdoc(
   Return the irreducible Brillouin zone face normals in rlu
   )pbdoc");
   cls.def_property_readonly("ir_normals_invA",
-  [](const CLS &b){return brille::a2py(b.get_ir_normals().get_xyz());},
+  [](const CLS &b){return brille::a2py(b.get_ir_normals().xyz());},
   R"pbdoc(
   Return the irreducible Brillouin zone face normals in inverse ångstrom
   )pbdoc");
   cls.def_property_readonly("ir_normals_primitive",
-  [](const CLS &b){return brille::a2py(b.get_ir_primitive_normals().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_ir_primitive_normals().hkl());},
   R"pbdoc(
   Return the irreducible Brillouin zone face normals in primitive-lattice rlu
   )pbdoc");
   cls.def_property_readonly("ir_points",
-  [](const CLS &b){return brille::a2py(b.get_ir_points().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_ir_points().hkl());},
   R"pbdoc(
   Return the irreducible Brillouin zone face centres in rlu
   )pbdoc");
   cls.def_property_readonly("ir_points_invA",
-  [](const CLS &b){return brille::a2py(b.get_ir_points().get_xyz());},
+  [](const CLS &b){return brille::a2py(b.get_ir_points().xyz());},
   R"pbdoc(
   Return the irreducible Brillouin zone face centres in inverse ångstrom
   )pbdoc");
   cls.def_property_readonly("ir_points_primitive",
-  [](const CLS &b){return brille::a2py(b.get_ir_primitive_points().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_ir_primitive_points().hkl());},
   R"pbdoc(
   Return the irreducible Brillouin zone face centres in primitive-lattice rlu
   )pbdoc");
   cls.def_property_readonly("ir_vertices",
-  [](const CLS &b){return brille::a2py(b.get_ir_vertices().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_ir_vertices().hkl());},
   R"pbdoc(
   Return the irreducible Brillouin zone unique face corners in rlu
   )pbdoc");
   cls.def_property_readonly("ir_vertices_invA",
-  [](const CLS &b){return brille::a2py(b.get_ir_vertices().get_xyz());},
+  [](const CLS &b){return brille::a2py(b.get_ir_vertices().xyz());},
   R"pbdoc(
   Return the irreducible Brillouin zone unique face corners in inverse ångstrom
   )pbdoc");
   cls.def_property_readonly("ir_vertices_primitive",
-  [](const CLS &b){return brille::a2py(b.get_ir_primitive_vertices().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_ir_primitive_vertices().hkl());},
   R"pbdoc(
   Return the irreducible Brillouin zone unique face corners in primitive-lattice rlu
   )pbdoc");
@@ -311,17 +359,17 @@ void wrap_brillouinzone(py::module & m){
 
   // irreducible reciprocal space wedge
   cls.def_property_readonly("wedge_normals",
-  [](const CLS &b){return brille::a2py(b.get_ir_wedge_normals().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_ir_wedge_normals().hkl());},
   R"pbdoc(
   Return the normals of the irreducible wedge rlu
   )pbdoc");
   cls.def_property_readonly("wedge_normals_invA",
-  [](const CLS &b){return brille::a2py(b.get_ir_wedge_normals().get_xyz());},
+  [](const CLS &b){return brille::a2py(b.get_ir_wedge_normals().xyz());},
   R"pbdoc(
   Return the normals of the irreducible wedge inverse ångstrom
   )pbdoc");
   cls.def_property_readonly("wedge_normals_primitive",
-  [](const CLS &b){return brille::a2py(b.get_primitive_ir_wedge_normals().get_hkl());},
+  [](const CLS &b){return brille::a2py(b.get_primitive_ir_wedge_normals().hkl());},
   R"pbdoc(
   Return the normals of the irreducible wedge primitive-lattice rlu
   )pbdoc");
@@ -332,7 +380,7 @@ void wrap_brillouinzone(py::module & m){
     brille::Array2<double> sp = brille::py2a2(p);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
-    LQVec<double> pv( b.get_lattice(), sp); // no copy :)
+    auto pv = lattice::LVec<double>(LengthUnit::inverse_angstrom, b.get_lattice(), sp); // no copy :)
     return b.isinside(pv);
   },"points"_a, R"pbdoc(
     Determine whether each of the provided reciprocal lattice points is located
@@ -355,9 +403,9 @@ void wrap_brillouinzone(py::module & m){
     brille::Array2<double> sp = brille::py2a2(Q);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
-    LQVec<double> Qv( b.get_lattice(),  sp); // view
-    LQVec<double> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
-    LQVec<int>  tauv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    auto Qv = LQVec<double>(b.get_lattice(),  sp); // view
+    auto qv = LQVec<double>(b.get_lattice(), sp.shape(), sp.stride()); // output
+    auto tauv = LQVec<int>(b.get_lattice(), sp.shape(), sp.stride()); // output
     bool success = b.moveinto(Qv,qv,tauv,threads);
     if (!success) throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
     return py::make_tuple(brille::a2py(qv), brille::a2py(tauv));
@@ -388,10 +436,10 @@ void wrap_brillouinzone(py::module & m){
     brille::Array2<double> sp = brille::py2a2(Q);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
-    LQVec<double> Qv( b.get_lattice(),  sp); // view
+    auto Qv = LQVec<double>(b.get_lattice(),  sp); // view
     // prepare intermediate outputs
-    LQVec<double> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
-    LQVec<int>  tauv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    auto qv = LQVec<double>(b.get_lattice(), sp.shape(), sp.stride()); // output
+    auto tauv = LQVec<int>(b.get_lattice(), sp.shape(), sp.stride()); // output
     std::vector<size_t> rotidx(Qv.numel()/3), invrotidx(Qv.numel()/3);
     if (!b.ir_moveinto(Qv, qv, tauv, rotidx, invrotidx, threads))
       throw std::runtime_error("Moving points into irreducible zone failed.");
@@ -452,9 +500,9 @@ void wrap_brillouinzone(py::module & m){
     brille::Array2<double> sp = brille::py2a2(Q);
     if (sp.size(sp.ndim()-1) != 3)
       throw std::runtime_error("The last dimension must have size 3");
-    LQVec<double> Qv( b.get_lattice(),  sp); // view
+    auto Qv = LQVec<double>(b.get_lattice(), sp); // view
     // prepare intermediate outputs
-    LQVec<double> qv(b.get_lattice(), sp.shape(), sp.stride()); // output
+    auto qv = LQVec<double>(b.get_lattice(), sp.shape(), sp.stride()); // output
     std::vector<std::array<int,9>> rots(Qv.numel()/3);
     std::vector<size_t> ridx(Qv.numel()/3);
     if (!b.ir_moveinto_wedge(Qv, qv, ridx, threads))

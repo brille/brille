@@ -5,12 +5,15 @@
 
 #include "spg_database.hpp"
 #include "utilities.hpp"
-#include "lattice.hpp"
-#include "array_latvec.hpp"
+#include "lattice_dual.hpp"
+#include "array_.hpp"
 #include "transform.hpp"
-#include "approx.hpp"
+#include "approx_float.hpp"
 
 using namespace brille;
+using namespace brille::lattice;
+using namespace brille::math;
+using namespace brille::approx_float;
 
 TEST_CASE("primitive transforms","[transform]"){
   Bravais c{Bravais::_};
@@ -22,67 +25,47 @@ TEST_CASE("primitive transforms","[transform]"){
   SECTION("Rhombohedral centring"){ c = Bravais::R; }
   PrimitiveTransform PT(c);
   REQUIRE( !PT.does_nothing() );
-  std::array<double,9> P = PT.get_P();
-  std::array<int,9> invP = PT.get_invP();
-  double I[9]={1.,0.,0., 0.,1.,0., 0.,0.,1.};
-  double res[9];
-  brille::utils::multiply_matrix_matrix<double,int,double,3>(res,invP.data(),P.data());
-  REQUIRE( brille::approx::matrix<double,double,3>(res,I) );
+  std::array<PrimitiveTraits::sixP,9> sixP = PT.get_6P();
+  std::array<PrimitiveTraits::invP,9> invP = PT.get_invP();
+  int I[9]={6,0,0, 0,6,0, 0,0,6};
+  int res[9];
+  brille::utils::multiply_matrix_matrix<int,PrimitiveTraits::invP,PrimitiveTraits::sixP,3>(res,invP.data(),sixP.data());
+  REQUIRE( matrix<int, int, 3>(res,I) );
 }
 
 TEST_CASE("primitive vector transforms","[transform]"){
-  std::string spgr;
-  SECTION("Primitive spacegroup"){    spgr = "P 1";   }
-  SECTION("Body-centred spacegroup"){ spgr = "Im-3m"; }
-  SECTION("Face-centred spacegroup"){ spgr = "Fmm2";  }
-  Direct d(1,1,1,brille::halfpi,brille::halfpi,brille::halfpi,spgr);
-  Reciprocal r = d.star();
+  auto run_tests = [] (const std::string& spgr, const LengthUnit lu){
+    auto lat = Direct<double>({1,1,1}, {half_pi, half_pi, half_pi}, spgr);
 
-  std::default_random_engine gen(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
-  std::uniform_real_distribution<double> dst(-5.0,5.0);
+    std::default_random_engine gen(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
+    std::uniform_real_distribution<double> dst(-5.0,5.0);
 
-  int nQ = 33;
-  std::vector<std::array<double,3>> rawQ;
-  for (int i=0; i<nQ; ++i) rawQ.push_back({dst(gen), dst(gen), dst(gen)});
-  LDVec<double> V(d,bArray<double>::from_std(rawQ));
-  LQVec<double> Q(r,bArray<double>::from_std(rawQ));
+    int nQ = 500;
+    std::vector<std::array<double,3>> rawQ;
+    rawQ.reserve(nQ);
+    for (int i=0; i<nQ; ++i) rawQ.push_back({dst(gen), dst(gen), dst(gen)});
+//    for (int i=0; i<nQ; ++i) rawQ.push_back({static_cast<double>(i), static_cast<double>(i*i), static_cast<double>(i*i*i)});
 
-  // int nQ = 7;
-  // double rawQ[] = {1.,0.,0., 0.,1.,0., 0.,0.,1., 1.,1.,0., 1.,0.,1., 0.,1.,1., 1.,1.,1.};
-  // LDVec<double> V(d,nQ,rawQ);
-  // LQVec<double> Q(r,nQ,rawQ);
+    auto V = LVec<double>(lu, lat, bArray<double>::from_std(rawQ));
+    auto Vp = transform_to_primitive(lat, V);
+    // Test 1: make sure that |Vᵢ|==|Vpᵢ|
+    for (int i=0; i<nQ; ++i)
+      REQUIRE( Vp.norm(i) == Approx(V.norm(i)) );
+    // Test 2: Check components, expressed in absolute LengthUnit units
+    auto Vxyz = V.xyz();
+    auto Vpxyz = Vp.xyz();
+    for (int i=0; i<nQ; ++i) REQUIRE( Vxyz.norm(i) == Approx(Vpxyz.norm(i)) );
+    // Test 2a: Verify that the individual components are the same in the cartesian coordinate system
+    for (auto i: V.subItr()) REQUIRE(Vpxyz[i] == Approx(Vxyz[i]));
 
-  LDVec<double> Vp = transform_to_primitive(d,V);
-  // Test 1: make sure that |Vᵢ|==|Vpᵢ| and |Qᵢ|==|Qpᵢ|
-  for (int i=0; i<nQ; ++i)
-    REQUIRE( Vp.norm(i) == Approx(V.norm(i)) );
-  // Test 2: Check compoments, expressed in inverse Angstrom:
-  bArray<double> Vxyz = V.get_xyz();
-  bArray<double> Vpxyz = Vp.get_xyz();
-  for (int i=0; i<nQ; ++i)
-    REQUIRE( Vxyz.norm(i) == Approx(Vpxyz.norm(i)) );
-  // // THE FOLLOWING WILL FAIL, since the xyz coordinate system is arbitrarily
-  // // aligned with x along a, and the direction of a and a' are not guaranteed
-  // // to be the same!
-  // for (auto i: SubIt(V.shape())) REQUIRE(Vpxyz[i] == Approx(Vxyz[i]));
-  // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
-  LDVec<double> pVp = transform_from_primitive(d,Vp);
-  for (auto i: V.subItr()) REQUIRE(pVp[i] == Approx(V[i]));
-
-  LQVec<double> Qp = transform_to_primitive(r,Q);
-  // Test 1: make sure that |Qᵢ|==|Qpᵢ|
-  for (int i=0; i<nQ; ++i)
-    REQUIRE( Qp.norm(i) == Approx(Q.norm(i)) );
-  // Test 2: Check compoments, expressed in inverse Angstrom:
-  bArray<double> Qxyz = Q.get_xyz();
-  bArray<double> Qpxyz = Qp.get_xyz();
-  for (int i=0; i<nQ; ++i)
-    REQUIRE( Qxyz.norm(i) == Approx(Qpxyz.norm(i)) );
-  // // THE FOLLOWING WILL FAIL, since the xyz coordinate system is arbitrarily
-  // // aligned with x along a, and the direction of a and a' are not guaranteed
-  // // to be the same!
-  // for (auto i: SubIt(Q.shape())) REQUIRE(Qpxyz[i] == Approx(Qxyz[i]));
-  // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
-  LQVec<double> pQp = transform_from_primitive(r,Qp);
-  for (auto i: Q.subItr()) REQUIRE(pQp[i] == Approx(Q[i]));
+    // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
+    auto pVp = transform_from_primitive(lat,Vp);
+    for (auto i: V.subItr()) REQUIRE(pVp[i] == Approx(V[i]));
+  };
+  SECTION("Primitive, direct"){    run_tests("P 1", LengthUnit::angstrom);   }
+  SECTION("Body-centred, direct"){ run_tests("Im-3m", LengthUnit::angstrom); }
+  SECTION("Face-centred, direct"){ run_tests("Fmm2", LengthUnit::angstrom);  }
+  SECTION("Primitive, reciprocal"){    run_tests("P 1", LengthUnit::inverse_angstrom);   }
+  SECTION("Body-centred, reciprocal"){ run_tests("Im-3m", LengthUnit::inverse_angstrom); }
+  SECTION("Face-centred, reciprocal"){ run_tests("Fmm2", LengthUnit::inverse_angstrom);  }
 }

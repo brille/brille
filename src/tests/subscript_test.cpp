@@ -18,7 +18,7 @@ TEST_CASE("Full array iterator","[subscript]"){
   for (auto x : sit){
     REQUIRE(n < expected.size());
     REQUIRE(x.size() == expected[n].size());
-    REQUIRE(brille::approx::vector(x.size(), x.data(), expected[n++].data()));
+    REQUIRE(brille::approx_float::vector(x.size(), x.data(), expected[n++].data()));
   }
   REQUIRE( expected.size() == n);
 }
@@ -34,7 +34,7 @@ TEST_CASE("Fixed-index array iterator", "[subscript]"){
   for (auto x : sit){
     REQUIRE(n < expected.size());
     REQUIRE(x.size() == expected[n].size());
-    REQUIRE(brille::approx::vector(x.size(), x.data(), expected[n++].data()));
+    REQUIRE(brille::approx_float::vector(x.size(), x.data(), expected[n++].data()));
   }
   REQUIRE( expected.size() == n);
 }
@@ -55,7 +55,7 @@ TEST_CASE("Auto broadcasting","[subscript]"){
   }
   BroadcastIt<int> ab_itr(a, b);
   REQUIRE(ab_itr.shape().size() == a.size());
-  REQUIRE(approx::vector(a.size(), a.data(), ab_itr.shape().data()));
+  REQUIRE(approx_float::vector(a.size(), a.data(), ab_itr.shape().data()));
   size_t n{0};
   for (auto [outer, ax, bx]: ab_itr){
     // std::cout << "{ ";
@@ -68,14 +68,14 @@ TEST_CASE("Auto broadcasting","[subscript]"){
     //
     REQUIRE(outer.size() == ax.size());
     REQUIRE(outer.size() == bx.size());
-    REQUIRE(approx::vector(outer.size(), outer.data(), ax.data())); // specific to this case;
+    REQUIRE(approx_float::vector(outer.size(), outer.data(), ax.data())); // specific to this case;
     //
     REQUIRE(n < o_expected.size());
     REQUIRE(outer.size() == o_expected[n].size());
-    REQUIRE(approx::vector(outer.size(), outer.data(), o_expected[n].data()));
+    REQUIRE(approx_float::vector(outer.size(), outer.data(), o_expected[n].data()));
     //
     REQUIRE(bx.size() == b_expected[n].size());
-    REQUIRE(approx::vector(bx.size(), bx.data(), b_expected[n].data()));
+    REQUIRE(approx_float::vector(bx.size(), bx.data(), b_expected[n].data()));
     //
     ++n;
   }
@@ -91,7 +91,7 @@ TEST_CASE("Equal-shape 'broadcasting'","[subscript]"){
   };
   BroadcastIt<unsigned> ab_itr(a, b);
   REQUIRE(ab_itr.shape().size() == a.size());
-  REQUIRE(approx::vector(a.size(), a.data(), ab_itr.shape().data()));
+  REQUIRE(approx_float::vector(a.size(), a.data(), ab_itr.shape().data()));
   size_t n{0};
   for (auto [ox, ax, bx]: ab_itr){
     // std::cout << "{ ";
@@ -107,13 +107,13 @@ TEST_CASE("Equal-shape 'broadcasting'","[subscript]"){
     //
     REQUIRE(n < expected.size());
     REQUIRE(ox.size() == expected[n].size());
-    REQUIRE(approx::vector(ox.size(), ox.data(), expected[n].data()));
+    REQUIRE(approx_float::vector(ox.size(), ox.data(), expected[n].data()));
     //
     REQUIRE(ax.size() == expected[n].size());
-    REQUIRE(approx::vector(ax.size(), ax.data(), expected[n].data()));
+    REQUIRE(approx_float::vector(ax.size(), ax.data(), expected[n].data()));
     //
     REQUIRE(bx.size() == expected[n].size());
-    REQUIRE(approx::vector(bx.size(), bx.data(), expected[n].data()));
+    REQUIRE(approx_float::vector(bx.size(), bx.data(), expected[n].data()));
     //
     ++n;
   }
@@ -141,7 +141,7 @@ TEST_CASE("Higher dimension broadcasting","[subscript]"){
   };
   BroadcastIt<int> ab_itr(a, b);
   REQUIRE(ab_itr.shape().size() == o.size());
-  REQUIRE(approx::vector(o.size(), o.data(), ab_itr.shape().data()));
+  REQUIRE(approx_float::vector(o.size(), o.data(), ab_itr.shape().data()));
   size_t n{0};
   for (auto [ox, ax, bx]: ab_itr){
     // std::cout << "{ ";
@@ -157,13 +157,13 @@ TEST_CASE("Higher dimension broadcasting","[subscript]"){
     //
     REQUIRE(n < o_expected.size());
     REQUIRE(ox.size() == o_expected[n].size());
-    REQUIRE(approx::vector(ox.size(), ox.data(), o_expected[n].data()));
+    REQUIRE(approx_float::vector(ox.size(), ox.data(), o_expected[n].data()));
     //
     REQUIRE(ax.size() == a_expected[n].size());
-    REQUIRE(approx::vector(ax.size(), ax.data(), a_expected[n].data()));
+    REQUIRE(approx_float::vector(ax.size(), ax.data(), a_expected[n].data()));
     //
     REQUIRE(bx.size() == b_expected[n].size());
-    REQUIRE(approx::vector(bx.size(), bx.data(), b_expected[n].data()));
+    REQUIRE(approx_float::vector(bx.size(), bx.data(), b_expected[n].data()));
     //
     ++n;
   }
@@ -182,7 +182,7 @@ TEST_CASE("Full Array2 iterator","[subscript2]"){
   for (auto x : sit){
     REQUIRE(n < expected.size());
     REQUIRE(x.size() == expected[n].size());
-    REQUIRE(brille::approx::vector(x.size(), x.data(), expected[n++].data()));
+    REQUIRE(brille::approx_float::vector(x.size(), x.data(), expected[n++].data()));
   }
   REQUIRE( expected.size() == n);
 }
@@ -194,7 +194,7 @@ TEST_CASE("Fixed-index Array2 iterator", "[subscript2]"){
   for (auto x : sit){
     REQUIRE(n < expected.size());
     REQUIRE(x.size() == expected[n].size());
-    REQUIRE(brille::approx::vector(x.size(), x.data(), expected[n++].data()));
+    REQUIRE(brille::approx_float::vector(x.size(), x.data(), expected[n++].data()));
   }
   REQUIRE( expected.size() == n);
 }
@@ -215,7 +215,7 @@ TEST_CASE("Auto Array2 broadcasting","[subscript2]"){
   }
   BroadcastIt2<int> ab_itr(a, b);
   REQUIRE(ab_itr.shape().size() == a.size());
-  REQUIRE(approx::vector(a.size(), a.data(), ab_itr.shape().data()));
+  REQUIRE(approx_float::vector(a.size(), a.data(), ab_itr.shape().data()));
   size_t n{0};
   for (auto [outer, ax, bx]: ab_itr){
     // std::cout << "{ ";
@@ -228,14 +228,14 @@ TEST_CASE("Auto Array2 broadcasting","[subscript2]"){
     //
     REQUIRE(outer.size() == ax.size());
     REQUIRE(outer.size() == bx.size());
-    REQUIRE(approx::vector(outer.size(), outer.data(), ax.data())); // specific to this case;
+    REQUIRE(approx_float::vector(outer.size(), outer.data(), ax.data())); // specific to this case;
     //
     REQUIRE(n < o_expected.size());
     REQUIRE(outer.size() == o_expected[n].size());
-    REQUIRE(approx::vector(outer.size(), outer.data(), o_expected[n].data()));
+    REQUIRE(approx_float::vector(outer.size(), outer.data(), o_expected[n].data()));
     //
     REQUIRE(bx.size() == b_expected[n].size());
-    REQUIRE(approx::vector(bx.size(), bx.data(), b_expected[n].data()));
+    REQUIRE(approx_float::vector(bx.size(), bx.data(), b_expected[n].data()));
     //
     ++n;
   }
@@ -251,7 +251,7 @@ TEST_CASE("Equal-shape Array2 'broadcasting'","[subscript2]"){
   };
   BroadcastIt2<unsigned> ab_itr(a, b);
   REQUIRE(ab_itr.shape().size() == a.size());
-  REQUIRE(approx::vector(a.size(), a.data(), ab_itr.shape().data()));
+  REQUIRE(approx_float::vector(a.size(), a.data(), ab_itr.shape().data()));
   size_t n{0};
   for (auto [ox, ax, bx]: ab_itr){
     // std::cout << "{ ";
@@ -267,13 +267,13 @@ TEST_CASE("Equal-shape Array2 'broadcasting'","[subscript2]"){
     //
     REQUIRE(n < expected.size());
     REQUIRE(ox.size() == expected[n].size());
-    REQUIRE(approx::vector(ox.size(), ox.data(), expected[n].data()));
+    REQUIRE(approx_float::vector(ox.size(), ox.data(), expected[n].data()));
     //
     REQUIRE(ax.size() == expected[n].size());
-    REQUIRE(approx::vector(ax.size(), ax.data(), expected[n].data()));
+    REQUIRE(approx_float::vector(ax.size(), ax.data(), expected[n].data()));
     //
     REQUIRE(bx.size() == expected[n].size());
-    REQUIRE(approx::vector(bx.size(), bx.data(), expected[n].data()));
+    REQUIRE(approx_float::vector(bx.size(), bx.data(), expected[n].data()));
     //
     ++n;
   }

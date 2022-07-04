@@ -23,8 +23,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <pybind11/complex.h>
 #include <thread>
 
-#include "array.hpp"
-#include "array2.hpp"
+#include "array_.hpp"
 
 namespace brille {
   template<class T>
@@ -96,7 +95,7 @@ namespace brille {
     // of elements. This IS NOT the allocated size of the array unless it is
     // contiguous. For non-contiguous arrays the allocated memory will fill
     // max(shape[i]*stride[i])
-    ind_t num = brille::utils::s2u<ind_t,pybind11::ssize_t>(info.size);
+    auto num = brille::utils::s2u<ind_t,pybind11::ssize_t>(info.size);
     for (pybind11::ssize_t i=0; i<info.ndim; ++i){
       shape.push_back(static_cast<ind_t>(info.shape[i]));
       stride.push_back(static_cast<ind_t>(info.strides[i]/sizeof(T)));
@@ -140,8 +139,8 @@ namespace brille {
     pybind11::buffer_info info = pya.request();
     if (info.ndim != 2)
       throw std::runtime_error("brille::Array2 objects require 2D input!");
-    std::array<ind_t,2> shape, stride;
-    ind_t num = brille::utils::s2u<ind_t,pybind11::ssize_t>(info.size);
+    std::array<ind_t,2> shape{{0,0}}, stride{{0,0}};
+    auto num = brille::utils::s2u<ind_t,pybind11::ssize_t>(info.size);
     for (pybind11::ssize_t i=0; i<info.ndim; ++i){
       shape[i] = static_cast<ind_t>(info.shape[i]);
       stride[i] = static_cast<ind_t>(info.strides[i]/sizeof(T));

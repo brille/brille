@@ -117,8 +117,8 @@ Array<T>::extract(const std::vector<std::array<I,Nel>>& i) const
   for (auto a: i) for (auto x: a) if (!(0 <= x && static_cast<ind_t>(x) < _shape[0]))
     throw std::runtime_error("Array extract index must be in range");
   shape_t osh{static_cast<ind_t>(i.size()), static_cast<ind_t>(Nel)};
-  for (ind_t i=1; i<this->ndim(); ++i)
-    osh.push_back(_shape[i]);
+  for (ind_t j=1; j<this->ndim(); ++j)
+    osh.push_back(_shape[j]);
   Array<T> out(osh);
   shape_t xi{_shape};
   for (ind_t a=0; a<i.size(); ++a)
@@ -1189,9 +1189,9 @@ Array<T> Array<T>::slice(const ind_t i) const {
     ind_t n_shift{_shift + i*_stride[0]};
     // pull together the remaining dimension(s)
     shape_t n_str, n_shp;
-    for (ind_t i=1; i<_shape.size(); ++i){
-      n_str.push_back(_stride[i]);
-      n_shp.push_back(_shape[i]);
+    for (ind_t j=1; j<_shape.size(); ++j){
+      n_str.push_back(_stride[j]);
+      n_shp.push_back(_shape[j]);
     }
     // ensuring that we keep at least one
     if (n_shp.size() < 1){
@@ -1230,7 +1230,7 @@ SCALAR_INPLACE_OP(/=)
 template<class T>
 bool broadcast_shape_check(const std::vector<T>& a, const std::vector<T>&b){
   bool ok = a.size() == b.size();
-  ok &= brille::approx::vector(a.size(), a.data(), b.data());
+  ok &= brille::approx_float::vector(a.size(), a.data(), b.data());
   if (!ok){
     std::string msg = "In place broadcasting is not possible for { ";
     for (auto x: a) msg += std::to_string(x) + " ";

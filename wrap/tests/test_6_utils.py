@@ -12,27 +12,22 @@ if br_mod != br_py:
 
 def get_latvec(lens, angs):
     # Calculates the lattice vectors after the convention of self.spglib
-    xhat = np.array([1, 0, 0]);
-    yhat = np.array([np.cos(angs[2]), np.sin(angs[2]), 0]);
-    vol = np.sqrt(1 - np.sum(np.cos(angs)**2) + 2*np.prod(np.cos(angs)));
-    zhat = np.array([np.cos(angs[1]), \
-                     (np.cos(angs[0]) - np.cos(angs[1])*np.cos(angs[2]))/np.sin(angs[2]), \
-                     vol / np.sin(angs[2])]);
-    return np.array([lens[0]*xhat, lens[1]*yhat, lens[2]*zhat]);
+    xhat = np.array([1, 0, 0])
+    yhat = np.array([np.cos(angs[2]), np.sin(angs[2]), 0])
+    vol = np.sqrt(1 - np.sum(np.cos(angs)**2) + 2*np.prod(np.cos(angs)))
+    zhat = np.array([np.cos(angs[1]),
+                     (np.cos(angs[0]) - np.cos(angs[1])*np.cos(angs[2]))/np.sin(angs[2]),
+                     vol / np.sin(angs[2])])
+    return np.array([lens[0]*xhat, lens[1]*yhat, lens[2]*zhat])
 
 
 class UtilsTestBZ (unittest.TestCase):
     # Tests create_bz routines
-    a = 4.0
-    b = 4.0
-    c = 5.0
-    alpha = np.pi / 2
-    beta = np.pi / 2
-    gamma = 2 * np.pi / 3
+    a, b, c, alpha, beta, gamma = 4.0, 4.0, 5.0, np.pi/2, np.pi/2, 2*np.pi/3
     spg = 'P 6'
 
     def check_lattice(self, bz, vals=None):
-        lattice = bz.lattice.star
+        lattice = bz.lattice
         if not vals:
             vals = [self.a, self.b, self.c, self.alpha, self.beta, self.gamma]
         self.assertAlmostEqual(lattice.a, vals[0])
@@ -77,7 +72,7 @@ class UtilsTestBZ (unittest.TestCase):
         bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], 'P 6', wedge_search=False)
         self.check_lattice(bz, [4, 5, 6] + [np.pi/2]*3)
         
-    def test_invalid_input_negative_vol(self):
+    def test_invalid_input_negative_squared_vol(self):
         # Tests for physically impossible lattice
         with self.assertRaises(ValueError):
             bz = br_py.utils.create_bz([4, 5, 6], [30, 30, 90], 'P 6')
@@ -87,18 +82,19 @@ class UtilsTestBZ (unittest.TestCase):
         with self.assertRaises(ValueError):
             bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90])
 
-    def test_spacegroup_number(self):
-        # Tests for a spacegroup / Hall number instead of a Hall symbol
-        bz = br_py.utils.create_bz(self.a, self.b, self.c, self.alpha, self.beta, self.gamma, 1)
-        self.check_lattice(bz)
+    # 'Hall number' specification removed in v0.6.0
+    # def test_spacegroup_number(self):
+    #     # Tests for a spacegroup / Hall number instead of a Hall symbol
+    #     bz = br_py.utils.create_bz(self.a, self.b, self.c, self.alpha, self.beta, self.gamma, 1)
+    #     self.check_lattice(bz)
 
     def test_invalid_spacegroups(self):
         # Tests for invalid spacegroups given
         with self.assertRaises(ValueError):
-            # Must be a string or number
+            # Must be a string
             bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], [])
-        with self.assertRaises(RuntimeError):
-            # "Unknown lattice type"
+        with self.assertRaises(ValueError):
+            # Must be a string
             bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], -1)
 
     def test_using_reciprocal(self):

@@ -20,14 +20,14 @@ class S = typename std::common_type<T,R>::type,
 class I = typename brille::ind_t
 >
 static std::complex<S>
-e_iqd(const LQVec<T>& q, const I i, const bArray<R>& d, const size_t j)
+e_iqd(const lattice::LVec<T>& q, const I i, const bArray<R>& d, const size_t j)
 {
   // const double pi = 3.14159265358979323846;
   S dotqd{0};
   I jj = static_cast<I>(j);
   for (I k=0; k<3u; ++k)
     dotqd += q.val(i,k)*d.val(jj,k);
-  std::complex<S> i_2pi_x(0, 2*brille::pi*dotqd);
+  std::complex<S> i_2pi_x(0, brille::math::two_pi * dotqd);
   return std::exp(i_2pi_x);
 }
 
@@ -47,7 +47,7 @@ product of q = (h,k,l) and d = (a,b,c) is q⋅d = 2π (h*a + k*b + l*c).
 template<class T>
 template<class R>
 bool Interpolator<T>::rip_gamma_complex(
-  bArray<T>& x, const LQVec<R>& q, const GammaTable& pgt,
+  bArray<T>& x, const lattice::LVec<R>& q, const GammaTable& pgt,
   const PointSymmetry& ptsym, const std::vector<size_t>& ridx, const std::vector<size_t>& invRidx,
   const int nthreads
 ) const {
@@ -56,7 +56,7 @@ bool Interpolator<T>::rip_gamma_complex(
   auto e_iqd_gt = [q,pgt](ind_t i, ind_t k, size_t r){
     return e_iqd(q, i, pgt.vectors(), pgt.vector_index(k,r));
   };
-  if (! pgt.lattice().isstar(q.get_lattice()))
+  if (!pgt.lattice().is_same(q.lattice()) || q.type() != LengthUnit::inverse_angstrom)
     throw std::runtime_error("The q points and GammaTable must be in mutually reciprocal lattices");
   verbose_update("Interpolator::rip_gamma_complex called with ",nthreads," threads");
   omp_set_num_threads( (nthreads>0) ? nthreads : omp_get_max_threads() );

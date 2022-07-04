@@ -67,6 +67,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 */
 // #include <string>
+#include <utility>
+
 #include "symmetry.hpp"
 #include "pointsymmetry.hpp"
 namespace brille {
@@ -129,12 +131,12 @@ public:
   //! empty constructor
   Pointgroup(): number(0), holohedry(Holohedry::_), laue(Laue::_){}
   //! Construct from a 'serial number'
-  Pointgroup(const int no): number(no) {setup();}
+  explicit Pointgroup(const int no): number(no) {setup();}
   //! Construct from all required information
-  Pointgroup(const int no, const std::string& sym, const std::string& sch, const Holohedry& h, const Laue& l):
-    number(no), symbol(sym), schoenflies(sch), holohedry(h), laue(l) {}
+  Pointgroup(const int no, std::string  sym, std::string  sch, const Holohedry& h, const Laue& l):
+    number(no), symbol(std::move(sym)), schoenflies(std::move(sch)), holohedry(h), laue(l) {}
   //! Return a string representation of the contained information
-  std::string to_string(void) const {
+  [[nodiscard]] std::string to_string() const {
     std::string str = "<Pointgroup";
     str += " " + symbol;
     str += " " + schoenflies;
@@ -143,28 +145,28 @@ public:
     return str+">";
   }
   //! Return the serial number
-  int get_number(void) const {return number;}
+  [[nodiscard]] int get_number() const {return number;}
   //! Return the Hermann-Mauguin symbol
-  std::string get_symbol(void) const { return symbol; }
+  [[nodiscard]] std::string get_symbol() const { return symbol; }
   //! Return the Schoenflies symbol
-  std::string get_schoenflies(void) const { return schoenflies; }
+  [[nodiscard]] std::string get_schoenflies() const { return schoenflies; }
   //! Return the Holohedry enumerated geometric class
-  Holohedry get_holohedry(void) const { return holohedry; }
+  [[nodiscard]] Holohedry get_holohedry() const { return holohedry; }
   //! Return the Laue enumerated class
-  Laue get_laue(void) const { return laue; }
+  [[nodiscard]] Laue get_laue() const { return laue; }
   //! Return a string representation of the geometric class
-  std::string get_holohedry_string(void) const { return my_to_string(holohedry); }
+  [[nodiscard]] std::string get_holohedry_string() const { return my_to_string(holohedry); }
   //! Return a string representation of the Laue class
-  std::string get_laue_string(void) const { return my_to_string(laue); }
+  [[nodiscard]] std::string get_laue_string() const { return my_to_string(laue); }
 protected:
-  void setup(void);
+  void setup();
 };
 //! Set the transformation matrix from the set of pointgroup symmetry operations
-Pointgroup ptg_get_transformation_matrix(int *transform_mat, const int *rotations, const int num_rotations);
+Pointgroup ptg_get_transformation_matrix(int *transform_mat, const int *rotations, int num_rotations);
 //! Return a pointgroup PointSymmetry object from the provided symmetry operations
-PointSymmetry ptg_get_pointsymmetry(const int *rotations, const int num_rotations);
+PointSymmetry ptg_get_pointsymmetry(const int *rotations, int num_rotations);
 //! Set the pointgroup symmetry operations from the 'Hall number'
-int get_pointgroup_rotations_hall_number(int *rotations, const int max_size, const int hall_number, const int is_time_reversal);
+int get_pointgroup_rotations_hall_number(int *rotations, int max_size, int hall_number, int is_time_reversal);
 //! Determine the isometry of a pointgroup operation in matrix form
 int isometry_value(const int *rot);
 //! Determine the order of a pointgroup operation in matrix form
@@ -172,6 +174,6 @@ int rotation_order(const int *rot);
 //! Return three 3-vectors: the characteristic axis of a pointgroup operation and two perpendicular axes
 std::array<std::array<int,3>,3> rotation_axis_and_perpendicular_vectors(const int* rot);
 //! Remove duplicates from a list of pointgroup operations in matrix form
-std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array<int,9>>&, const int);
+std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array<int,9>>&, int);
 } // namespace brille
 #endif

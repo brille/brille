@@ -40,6 +40,9 @@ template<> DataType create_datatype<brille::LengthUnit>(){
 template<> DataType create_datatype<brille::HF_Matrix<int>>(){
   return create_compound_Matrix<int>();
 }
+  template<> DataType create_datatype<brille::HF_Matrix<double>>(){
+    return create_compound_Matrix<double>();
+  }
 template<> DataType create_datatype<brille::HF_Motion<int,double>>(){
   return create_compound_Motion<int,double>();
 }

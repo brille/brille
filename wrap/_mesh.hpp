@@ -25,15 +25,15 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 namespace py = pybind11;
 
-template<class T,class R>
+template<class T,class R,class S>
 void declare_bzmeshq(py::module &m, const std::string &typestr){
   using namespace pybind11::literals;
   using namespace brille;
-  using Class = BrillouinZoneMesh3<T,R>;
+  using Class = BrillouinZoneMesh3<T,R,S>;
   std::string pyclass_name = std::string("BZMeshQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());
   // Initializer (BrillouinZone, max-volume, is-volume-rlu)
-  cls.def(py::init<BrillouinZone,double,int,int>(), "brillouinzone"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1);
+  cls.def(py::init<BrillouinZone,double,int,int>(), "bz_"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1);
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
   cls.def_property_readonly("rlu",[](const Class& cobj){
     return brille::a2py(cobj.get_mesh_hkl());
@@ -49,7 +49,7 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
   def_grid_fill(cls);
   def_grid_ir_interpolate(cls);
   def_grid_sort(cls);
-  def_grid_debye_waller(cls);
+//  def_grid_debye_waller(cls);
 
 #ifdef USE_HIGHFIVE
   def_grid_hdf_interface(cls, pyclass_name);

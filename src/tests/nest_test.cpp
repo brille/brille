@@ -3,24 +3,26 @@
 #include "bz_nest.hpp"
 
 using namespace brille;
+using namespace brille::math;
+using namespace brille::lattice;
 
 TEST_CASE("BrillouinZoneNest3 instantiation","[nest]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  std::array<double,3> len{3.2598, 3.2598, 3.2598}, ang{half_pi, half_pi, half_pi};
+  auto lat = Direct(len, ang, "-I 4 2 3"); // was 529
+  BrillouinZone bz(lat);
   double max_volume = 0.01;
   ind_t number_rho = 100;
   ind_t max_branchings = 5;
-  BrillouinZoneNest3<double,double> bzn0(bz, number_rho, max_branchings);
-  BrillouinZoneNest3<double,double> bzn1(bz, max_volume, max_branchings);
+  BrillouinZoneNest3<double,double,double> bzn0(bz, number_rho, max_branchings);
+  BrillouinZoneNest3<double,double,double> bzn1(bz, max_volume, max_branchings);
 }
 TEST_CASE("BrillouinZoneNest3 vertex accessors","[nest]"){
-  Direct d(10.75, 10.75, 10.75, brille::halfpi, brille::halfpi, brille::halfpi, 525);
-  BrillouinZone bz(d.star());
+  auto lat = Direct<double>({10.75, 10.75, 10.75}, {half_pi, half_pi, half_pi}, "F 4d 2 3 -1d"); // was 525
+  BrillouinZone bz(lat);
   ind_t number_rho = 1000;
   ind_t max_branchings = 5;
-  BrillouinZoneNest3<double,double> bzn(bz, number_rho, max_branchings);
+  BrillouinZoneNest3<double,double,double> bzn(bz, number_rho, max_branchings);
 
   SECTION("get_xyz"){auto verts = bzn.get_xyz(); REQUIRE(verts.size(0) > 0u);}
   SECTION("get_hkl"){auto verts = bzn.get_hkl(); REQUIRE(verts.size(0) > 0u);}
@@ -29,13 +31,12 @@ TEST_CASE("BrillouinZoneNest3 vertex accessors","[nest]"){
 }
 
 TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
-  // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  std::array<double,3> len{3.2598, 3.2598, 3.2598}, ang{half_pi, half_pi, half_pi};
+  auto lat = Direct(len, ang, "-I 4 2 3"); // was 529
+  BrillouinZone bz(lat);
   double max_volume = 0.01;
   ind_t max_branchings = 5;
-  BrillouinZoneNest3<double,double> bzn(bz, max_volume, max_branchings);
+  BrillouinZoneNest3<double,double,double> bzn(bz, max_volume, max_branchings);
 
   auto Qmap = bzn.get_hkl();
   auto Qxyz = bzn.get_xyz();
@@ -59,15 +60,15 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   std::uniform_real_distribution<double> distribution(0.,1.);
 
   brille::ind_t nQmap = Qmap.size(0), nQ = 10;//10000;
-  LQVec<double> Q(r,nQ);
+  auto Q = LQVec<double>(lat,nQ);
   double rli;
   for (ind_t i=0; i<nQ; ++i){
     rli = distribution(generator);
     Q.set(i, rli*Qmap.view(i%nQmap) + (1-rli)*Qmap.view((i+1)%nQmap) );
   }
 
-  auto [intres, dummy] =  bzn.ir_interpolate_at(Q,1);
-  auto QinvA = Q.get_xyz();
+  auto [intres, dummy] =  bzn.ir_interpolate_at(Q, 1);
+  auto QinvA = Q.xyz();
   // QinvA is (at present) a brille::Array2<double> and so can not be reshaped
   // to 3D (maybe introducing conversion routines is a good idea?)
   // Instead make a new brille::Array and copy the Q values by hand:
@@ -89,11 +90,11 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
 
 TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   // The conventional cell for Nb
-  Direct d(3.2598, 3.2598, 3.2598, brille::halfpi, brille::halfpi, brille::halfpi, 529);
-  Reciprocal r = d.star();
-  BrillouinZone bz(r);
+  std::array<double,3> len{3.2598, 3.2598, 3.2598}, ang{half_pi, half_pi, half_pi};
+  auto lat = Direct(len, ang, "-I 4 2 3"); // was 529
+  BrillouinZone bz(lat);
   double max_volume = 0.01;
-  BrillouinZoneNest3<double,double> bzn(bz, max_volume);
+  BrillouinZoneNest3<double,double,double> bzn(bz, max_volume);
 
   auto Qmap = bzn.get_hkl();
   auto Qxyz = bzn.get_xyz();
@@ -113,8 +114,8 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   // In order to have easily-interpretable results we need to ensure we only
   // interpolate at points within the irreducible meshed volume.
   // Use points distributed randomly in the Irreducible Polyhedron
-  Polyhedron irp = bz.get_ir_polyhedron();
-  auto Q = LQVec<double>::from_invA(r, irp.rand_rejection(nQ));
+  auto irp = bz.get_ir_polyhedron();
+  auto Q = irp.rand_rejection(nQ); // already reciprocal lattice vectors
   // Q are now random points in the irreducible Brillouin zone polyhedron
 
   // We may run into problems if any of the points are too close to the irBz
@@ -125,7 +126,7 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
 
   auto [intres, dummy] = bzn.ir_interpolate_at(Q, 1 /*thread*/);
 
-  auto QinvA = Q.get_xyz();
+  auto QinvA = Q.xyz();
   // QinvA is (at present) a brille::Array2<double> and so can not be reshaped
   // to 3D (maybe introducing conversion routines is a good idea?)
   // Instead make a new brille::Array and copy the Q values by hand:

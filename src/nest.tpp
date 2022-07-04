@@ -15,8 +15,8 @@ See the GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
-template<class T, class S>
-void Nest<T,S>::construct(const Polyhedron& poly, const size_t max_branchings, const double max_volume){
+template<class T, class S, class V, template<class> class A>
+void Nest<T,S,V,A>::construct(const Nest<T,S,V,A>::poly_t& poly, const size_t max_branchings, const double max_volume){
   SimpleTet root_tet(poly);
   double exponent;
   exponent = std::log(root_tet.maximum_volume()/max_volume)/std::log(static_cast<double>(max_branchings));
@@ -29,7 +29,7 @@ void Nest<T,S>::construct(const Polyhedron& poly, const size_t max_branchings, c
   // copy-over the vertices of the root node
   vertices_ = root_tet.get_vertices();
   // we need to make a guess about how many vertices we'll need:
-  ind_t number_density = static_cast<ind_t>(poly.get_volume()/max_volume); // shockingly, this is about right for total number of vertices!
+  ind_t number_density = static_cast<ind_t>(poly.volume()/max_volume); // shockingly, this is about right for total number of vertices!
   ind_t nVerts = vertices_.size(0);
   vertices_.resize(number_density + nVerts);
   // copy over the per-tetrahedron vertex indices to the root's branches
@@ -51,13 +51,13 @@ void Nest<T,S>::construct(const Polyhedron& poly, const size_t max_branchings, c
   if (vertices_.size(0) > nVerts) vertices_.resize(nVerts);
 }
 
-template<class T,class S>
-void Nest<T,S>::subdivide(
-  NestNode& node, const size_t nBr, const size_t maxBr,
+template<class T, class S, class V, template<class> class A>
+void Nest<T,S,V,A>::subdivide(
+    Nest<T,S,V,A>::root_t& node, const size_t nBr, const size_t maxBr,
   const double max_volume, const double exp, ind_t& nVerts
 ){
   if (!node.is_leaf()) return; // return node; // we can only branch un-branched nodes
-  Polyhedron poly(vertices_.extract(node.boundary().vertices()));
+  poly_t poly(vertices_.extract(node.boundary().vertices()));
   double mult = (maxBr > nBr) ? std::pow(static_cast<double>(maxBr-nBr),exp) : 1.0;
   SimpleTet node_tet(poly, max_volume*mult);
   // add any new vertices to the object's array, keep a mapping for all:

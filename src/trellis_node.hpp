@@ -5,28 +5,14 @@
     \brief A class holding a hybrid grid of cuboid and triangulated tetrahedral
            cells and data for interpolation
 */
-// #include <vector>
-// #include <array>
 #include <queue>
-// #include <tuple>
-// #include <mutex>
 #include <condition_variable>
 #include <atomic>
-// #include <algorithm>
 #include <functional>
 #include <utility>
-// #include <omp.h>
 #include "enums.hpp"
-// #include "array.hpp"
-// #include "array2.hpp"
-// #include "array_latvec.hpp" // defines bArray
-#include "polyhedron.hpp"
-// #include "utilities.hpp"
-// #include "debug.hpp"
 #include "triangulation_simple.hpp"
 #include "interpolatordual.hpp"
-// #include "permutation.hpp"
-// #include "approx.hpp"
 #include "hdf_interface.hpp"
 namespace brille {
 
@@ -135,22 +121,19 @@ namespace brille {
       - outside of the volume no inidices or weights are set and the returned bool
         is false.
     */
-    bool indices_weights(
-      const bArray<double>& vertices,
-      const bArray<double>& x,
-      std::vector<std::pair<ind_t,double>>& iw,
-      const bool should_contain
-    ) const override {
+    template<class T, class I, template<class> class A>
+    std::enable_if_t<isArray<T,A>, bool>
+    indices_weights(const A<T>& vertices, const A<T>& x, std::vector<std::pair<I,T>>& iw, const bool should_contain) const {
       // The CubeNode object contains the indices into `vertices` necessary to find
       // the 8 corners of the cube. Those indices should be ordered
       // (000) (100) (110) (010) (101) (001) (011) (111)
       // so that vertex_indices[i] and vertex_indices[7-i] are connected by a body diagonal
       auto node_verts = vertices.extract(vertex_indices);
-      double node_volume = abs(node_verts.view(0)-node_verts.view(7)).prod(1)[0];
+      T node_volume = abs(node_verts.view(0)-node_verts.view(7)).prod(1)[0];
       auto w = abs(x - node_verts).prod(1)/node_volume; // the normalised volume of each sub-parallelpiped
       // If any normalised weights are greater than 1+eps() the point isn't in this node
       iw.clear();
-      if (w.any(brille::cmp::gt, 1.) && !should_contain) return false;
+      if (w.any(brille::cmp::gt, T(1)) && !should_contain) return false;
       auto needed = w.is(brille::cmp::gt, 0.);
       for (int i=0; i<8; ++i) if (needed[i]) {
         // the weight corresponds to the vertex opposite the one used to find the partial volume
@@ -166,12 +149,21 @@ namespace brille {
     extracted from two vertices and the Node volume is the product of the body
     diagonal elements.
     */
-    [[nodiscard]] double volume(const bArray<double>& vertices) const override {
+    template<class T, template<class> class A>
+    [[nodiscard]]
+    std::enable_if_t<isArray<T,A>, T>
+    volume(const A<T>& vertices) const {
       // The CubeNode object contains the indices into `vertices` necessary to find
       // the 8 corners of the cube. Those indices should be ordered
       // (000) (100) (110) (010) (101) (001) (011) (111)
-      // so that vertex_indices[i] and vertex_indices[7-i] are connected by a body diagonal
-      return abs(vertices.view(vertex_indices[0])-vertices.view(vertex_indices[7])).prod(1)[0];
+//      // so that vertex_indices[i] and vertex_indices[7-i] are connected by a body diagonal
+//      return abs(vertices.view(vertex_indices[0])-vertices.view(vertex_indices[7])).prod(1)[0];
+      // If the vertex coordinates are not absolut units, the body diagonal is not necessarily the node volume
+      auto a = vertices.view(vertex_indices[1]);
+      auto b = vertices.view(vertex_indices[0]);
+      auto c = vertices.view(vertex_indices[3]);
+      auto d = vertices.view(vertex_indices[5]);
+      return pseudo_orient3d(a, b, c, d)[0];
     }
 #ifdef USE_HIGHFIVE
     //! Write to an HDF file
@@ -271,20 +263,22 @@ namespace brille {
     If the point is not inside any of the triangulated tetrahedra no inidices
     or weights are set and the returned bool is false.
     */
-    bool indices_weights(
-      const bArray<double>& vertices,
-      const bArray<double>& x,
-      std::vector<std::pair<ind_t,double>>& iw,
+    template<class T, class I, template<class> class A>
+    std::enable_if_t<isArray<T,A>, bool>
+    indices_weights(
+      const A<T>& vertices,
+      const A<T>& x,
+      std::vector<std::pair<I,T>>& iw,
       const bool should_contain
-    ) const override {
+    ) const {
       iw.clear();
-      std::array<double,4> w{{0,0,0,0}};
-      std::vector<double> most_neg(vi_t.size());
+      std::array<T,4> w{{0,0,0,0}};
+      std::vector<T> most_neg(vi_t.size());
       for (ind_t i=0; i<vi_t.size(); ++i){
         most_neg[i] = tetrahedra_contains(i, vertices, x, w);
         if (most_neg[i] >= 0.){
-          for (int j=0; j<4; ++j) if (!brille::approx::scalar(w[j], 0.))
-            iw.emplace_back(vi_t[i][j], w[j]);
+          for (int j=0; j<4; ++j) if (!brille::approx_float::scalar(w[j], 0.))
+            iw.emplace_back(static_cast<I>(vi_t[i][j]), w[j]);
           return true;
         }
       }
@@ -295,22 +289,30 @@ namespace brille {
         auto i = std::distance(most_neg.begin(), std::max_element(most_neg.begin(), most_neg.end()));
         verbose_update("PolyNode does not contain ",x.to_string(0)," but should\n\tUsing tetrahedron with ",most_neg[i]," weight for one vertex");
         bool allow_shortcut{false}; // just incase we chose a really bad tetrahedron
-        tetrahedra_contains(static_cast<ind_t>(i), vertices, x, w, allow_shortcut);
-        for (int j=0; j<4; ++j) if (!brille::approx::scalar(w[j], 0.))
-          iw.emplace_back(vi_t[i][j], w[j]);
+        auto val = tetrahedra_contains(static_cast<ind_t>(i), vertices, x, w, allow_shortcut);
+        if (val > 0.){
+          throw std::runtime_error("This shouldn't be possible");
+        }
+        for (int j=0; j<4; ++j) if (!brille::approx_float::scalar(w[j], 0.))
+          iw.emplace_back(static_cast<I>(vi_t[i][j]), w[j]);
         return true;
       }
       return false;
     }
     //! Return the total triangulated volume of the PolyNode
-    [[nodiscard]] double volume(const bArray<double>&) const override {
+    template<class T, template<class> class A>
+    [[nodiscard]]
+    std::enable_if_t<isArray<T,A>, T>
+    volume(const A<T>&) const {
       return std::accumulate(vol_t.begin(), vol_t.end(), 0.);
     }
   private:
-    double tetrahedra_contains(
+    template<template<class> class A>
+    std::enable_if_t<isArray<double,A>, double>
+    tetrahedra_contains(
       const ind_t t,
-      const bArray<double>& v,
-      const bArray<double>& x,
+      const A<double>& v,
+      const A<double>& x,
       std::array<double,4>& w,
       const bool allow_shortcut = true
     ) const {
@@ -319,17 +321,27 @@ namespace brille {
         if (away < 0.) return away;
       }
       double vol6 = vol_t[t]*6.0;
-      w[0] = orient3d( x.ptr(0),           v.ptr(vi_t[t][1u]), v.ptr(vi_t[t][2u]), v.ptr(vi_t[t][3u]) )/vol6;
-      w[1] = orient3d( v.ptr(vi_t[t][0u]), x.ptr(0),           v.ptr(vi_t[t][2u]), v.ptr(vi_t[t][3u]) )/vol6;
-      w[2] = orient3d( v.ptr(vi_t[t][0u]), v.ptr(vi_t[t][1u]), x.ptr(0),           v.ptr(vi_t[t][3u]) )/vol6;
-      w[3] = orient3d( v.ptr(vi_t[t][0u]), v.ptr(vi_t[t][1u]), v.ptr(vi_t[t][2u]), x.ptr(0)           )/vol6;
-      if (std::any_of(w.begin(), w.end(), [](double z){return z < 0. && !brille::approx::scalar(z, 0.);}))
+      // use pseudo_orient3d which is lattice-aware
+      w[0] = pseudo_orient3d(x, v.view(vi_t[t][1u]), v.view(vi_t[t][2u]), v.view(vi_t[t][3u]))[0]/vol6;
+      w[1] = pseudo_orient3d(v.view(vi_t[t][0u]), x, v.view(vi_t[t][2u]), v.view(vi_t[t][3u]))[0]/vol6;
+      w[2] = pseudo_orient3d(v.view(vi_t[t][0u]), v.view(vi_t[t][1u]), x, v.view(vi_t[t][3u]))[0]/vol6;
+      w[3] = pseudo_orient3d(v.view(vi_t[t][0u]), v.view(vi_t[t][1u]), v.view(vi_t[t][2u]), x)[0]/vol6;
+      if (std::any_of(w.begin(), w.end(), [](double z){return z < 0. && !brille::approx_float::scalar(z, 0.);}))
         return *std::min_element(w.begin(), w.end());
       return 0.;
     }
-    [[nodiscard]] double tetrahedra_might_contain(
+//    template<class T, template<class> class A>
+//    [[nodiscard]] std::enable_if_t<isLatVec<T,A>, T>
+//    tetrahedra_contains(const ind_t t, const A<T>& v, const A<T>& x, std::array<double,4>& w, const bool allow_shortcut=true) const {
+//      // FIXME replace orient3d with a lattice-aware volume calculator
+//      //    Then the two methods here could be combined and copying v avoided
+//      return this->tetrahedra_contains(t, v.xyz(), x.xyz(), w, allow_shortcut);
+//    }
+    template<template<class> class A>
+    [[nodiscard]] std::enable_if_t<isBareArray<double,A>, double>
+    tetrahedra_might_contain(
       const ind_t t,
-      const bArray<double>& x
+      const A<double>& x
     ) const {
       // find the vector from the circumsphere centre to x:
       double v[3];
@@ -340,8 +352,13 @@ namespace brille {
       double d2{0}, r2 = ci_t[t][3]*ci_t[t][3];
       for (double i : v) d2 += i*i;
       // if the squared distance is no greater than the squared radius, x might be inside the tetrahedra
-      //return d2 < r2 || brille::approx::scalar(d2, r2);
-      return d2 < r2 || brille::approx::scalar(d2, r2) ? 0. : -d2;
+      //return d2 < r2 || brille::approx_float::scalar(d2, r2);
+      return d2 < r2 || brille::approx_float::scalar(d2, r2) ? 0. : -d2;
+    }
+    template<class T, template<class> class A>
+    [[nodiscard]] std::enable_if_t<isLatVec<T,A>, T>
+    tetrahedra_might_contain(const ind_t t, const A<T>& x) const {
+      return this->tetrahedra_might_contain(t, x.xyz());
     }
 
 #ifdef USE_HIGHFIVE
@@ -422,6 +439,19 @@ namespace brille {
     explicit NodeContainer() = default;
     NodeContainer(nodes_t&& n, cubes_t&& c, polys_t&& p)
         : nodes_(std::move(n)), cube_nodes_(std::move(c)), poly_nodes_(std::move(p)) {}
+    NodeContainer(const std::vector<NodeType>& types) {
+      nodes_.reserve(types.size());
+      ind_t n_cube{0}, n_poly{0}, null_idx{(std::numeric_limits<ind_t>::max)()};
+      for (const auto & x: types){
+        switch (x) {
+        case NodeType::cube: nodes_.emplace_back(x, n_cube++); break;
+        case NodeType::poly: nodes_.emplace_back(x, n_poly++); break;
+        default: nodes_.emplace_back(x, null_idx);
+        }
+      }
+      cube_nodes_.resize(n_cube);
+      poly_nodes_.resize(n_poly);
+    }
     bool operator!=(const NodeContainer& other) const {
       if (nodes_ != other.nodes_) return true;
       if (cube_nodes_ != other.cube_nodes_) return true;
@@ -458,6 +488,20 @@ namespace brille {
     //! Push a NullNode onto the back of the container
     void push_back(const NullNode&){
       nodes_.emplace_back(NodeType::null, (std::numeric_limits<ind_t>::max)());
+    }
+    void set(const ind_t i, CubeNode&& n){
+      assert(i < nodes_.size());
+      assert(nodes_[i].first == NodeType::cube);
+      assert(nodes_[i].second < cube_nodes_.size());
+      cube_nodes_[nodes_[i].second] = std::move(n);
+    }
+    void set(const ind_t i, PolyNode&& n){
+      assert(i < nodes_.size());
+      assert(nodes_[i].first == NodeType::poly);
+      assert(nodes_[i].second < poly_nodes_.size());
+      poly_nodes_[nodes_[i].second] = std::move(n);
+    }
+    void set(const ind_t, NullNode){
     }
     //! Return the NodeType of the indexed node
     [[nodiscard]] NodeType type(const ind_t i) const {
@@ -516,12 +560,10 @@ namespace brille {
 
     \see CubeNode::indices_weights, PolyNode::indices_weights
     */
-    bool indices_weights(const ind_t i,
-                         const bArray<double>& v,
-                         const bArray<double>& x,
-                         std::vector<std::pair<ind_t,double>>& iw,
-                         const bool sc=false
-                       ) const{
+    template<class T, class I, template<class> class A>
+    std::enable_if_t<isArray<T,A>, bool>
+    indices_weights(const ind_t i, const A<T>& v, const A<T>& x,
+                    std::vector<std::pair<I,T>>& iw, const bool sc=false) const {
       switch (nodes_[i].first){
         case NodeType::cube:
         return cube_nodes_[nodes_[i].second].indices_weights(v,x,iw,sc);
@@ -538,7 +580,9 @@ namespace brille {
     \param verts all vertex positions of the PolyhedronTrellis
     \param i     the indexed node to interogate
     */
-    [[nodiscard]] double volume(const bArray<double>& verts, const ind_t i) const {
+    template<class T, template<class> class A>
+    [[nodiscard]] std::enable_if_t<isArray<T,A>, T>
+    volume(const A<T>& verts, const ind_t i) const {
       switch (nodes_[i].first){
         case NodeType::cube:
         return cube_nodes_[nodes_[i].second].volume(verts);

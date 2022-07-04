@@ -49,12 +49,12 @@ public:
     this->locked(f);
     this->visits(v);
   }
-  bool sorted() const { return status & s_mask; }
-  bool locked() const { return status & l_mask; }
-  bool queued() const { return status & q_mask; }
-  bool claimed() const { return status & c_mask; }
-  bool visited() const { return (status & v_mask) > 0; }
-  status_t visits() const { return status>>v_shift; }
+  [[nodiscard]] bool sorted() const { return status & s_mask; }
+  [[nodiscard]] bool locked() const { return status & l_mask; }
+  [[nodiscard]] bool queued() const { return status & q_mask; }
+  [[nodiscard]] bool claimed() const { return status & c_mask; }
+  [[nodiscard]] bool visited() const { return (status & v_mask) > 0; }
+  [[nodiscard]] status_t visits() const { return status>>v_shift; }
   bool sorted(bool s) {
     if (this->sorted() != s) {
       status_t rem = this->status & (l_mask + q_mask + c_mask + v_mask);
@@ -113,7 +113,7 @@ public:
     if (this->sorted()) return false;
     return true;
   }
-  std::string to_string() const {
+  [[nodiscard]] std::string to_string() const {
     std::string str;
     bool s{this->sorted()}, l{this->locked()};
     if (s) str += "sorted";
@@ -126,7 +126,7 @@ public:
     return str;
   }
 
-  bool is_queable() const {
+  [[nodiscard]] bool is_queable() const {
     return !(this->locked() || this->sorted() || this->queued() || this->claimed());
     // only queable if not locked, sorted, queued, or claimed
     // 15u == 1u + 2u + 4u + 8u

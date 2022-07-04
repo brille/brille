@@ -1,6 +1,6 @@
 /* This file is part of brille.
 
-Copyright © 2019,2020 Greg Tucker <greg.tucker@stfc.ac.uk>
+Copyright © 2019-2022 Greg Tucker <gregory.tucker@ess.eu>
 
 brille is free software: you can redistribute it and/or modify it under the
 terms of the GNU Affero General Public License as published by the Free
@@ -26,11 +26,14 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <iostream>
 #include <string>
 #include <array>
+#include <utility>
 #include <vector>
 #include <complex>
 #include <chrono>
-// #define VERBOSE_DEBUG
-// #define DEBUG // comment-out for no debugging output
+//#define VERBOSE_DEBUG
+//#define DEBUG // comment-out for no debugging output
+
+#define PRINTING_PRECISION 16
 namespace brille {
 // brille::abs (defined here instead of approx to avoid circular referencing)
 #if defined(DOXYGEN_SHOULD_SKIP_THIS)
@@ -48,20 +51,22 @@ namespace brille {
 #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
   /* Absolute value of not-unsigned scalars */
   template<typename T>
-  std::enable_if_t<!std::is_unsigned_v<T>, T>
-  abs(const T x){ return std::abs(x); }
+  inline std::enable_if_t<!std::is_unsigned_v<T>, T>
+  abs(const T x){
+    return std::abs(x);
+  }
   /* Absolute value of unsigned scalars (non-op) */
   template<typename T>
-  std::enable_if_t<std::is_unsigned_v<T>, T>
+  inline std::enable_if_t<std::is_unsigned_v<T>, T>
   abs(const T x){ return x; }
 #endif
 
 #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
   template<class T>
-  std::enable_if_t<!std::is_unsigned_v<T>, bool>
+  inline std::enable_if_t<!std::is_unsigned_v<T>, bool>
   is_negative(const T x){ return x < 0; }
   template<class T>
-  std::enable_if_t<std::is_unsigned_v<T>, bool>
+  inline std::enable_if_t<std::is_unsigned_v<T>, bool>
   is_negative(const T){ return false; }
 #endif
 #if defined(DOXYGEN_SHOULD_SKIP_THIS)
@@ -81,17 +86,12 @@ namespace brille {
 
 \return The terminal width in characters or 2¹⁵ if the terminal width is zero.
 */
-int terminal_width(void);
+int terminal_width();
 /*! \brief Determine the height of the current terminal window
 
 \return The terminal height in lines or 2¹⁵ if the terminal height is zero.
 */
-int terminal_height(void);
-
-/*! \brief Return the running process ID number
- *
- */
-int processid();
+int terminal_height();
 
 /*! \brief A utility structure to identify containers in templates
 
@@ -112,13 +112,13 @@ template<bool C, typename T> using enable_if_t = typename std::enable_if<C,T>::t
 
 /*! \brief Construct a string representation of non-container input */
 template<typename T, typename=typename std::enable_if<!is_container<T>::value>::type>
-const std::string my_to_string(const T x, const size_t width=0){
+std::string my_to_string(const T x, const size_t width=0){
   std::ostringstream streamobj;
   size_t w{width};
   if constexpr (!std::is_integral<T>::value){
     streamobj << std::fixed;
-    streamobj << std::setprecision(4);
-    if (w>4) w -= 5u; // account for the decimal mark and four places
+    streamobj << std::setprecision(PRINTING_PRECISION);
+    if (w > PRINTING_PRECISION) w -= 1 + PRINTING_PRECISION; // account for the decimal mark and precision
   }
   // char may or may not be signed, depending on the system
   if constexpr (std::is_base_of<char,T>::value || (std::is_integral<T>::value && std::is_unsigned<T>::value) ){
@@ -132,14 +132,14 @@ const std::string my_to_string(const T x, const size_t width=0){
 }
 /*! \brief Construct a string representation of complex non-container input */
 template<typename T, typename=typename std::enable_if<!is_container<T>::value>::type>
-const std::string my_to_string(const std::complex<T> x, const size_t width=0){
+std::string my_to_string(const std::complex<T> x, const size_t width=0){
   T r = std::real(x), i=std::imag(x);
   std::ostringstream streamobj;
   size_t w{width};
   if (!std::is_integral<T>::value){
     streamobj << std::fixed;
-    streamobj << std::setprecision(4);
-    if (w>9) w -= 10u; // account for the decimal mark and four places
+    streamobj << std::setprecision(PRINTING_PRECISION);
+    if (w > 1 + 2 * PRINTING_PRECISION) w -= 2 + 2 * PRINTING_PRECISION;
   }
   if (!std::is_integral<T>::value || std::is_signed<T>::value){
     if (w>3) streamobj << std::setw(w-3); // -3 for -±i
@@ -155,17 +155,51 @@ const std::string my_to_string(const std::complex<T> x, const size_t width=0){
 template<typename T, template<class> class C,
         typename=typename std::enable_if<!is_container<T>::value>::type,
         typename=typename std::enable_if<is_container<C<T>>::value>::type>
-const std::string my_to_string(const std::vector<C<T>>& v, const size_t){
+std::string my_to_string(const std::vector<C<T>>& v, const size_t){
   std::string s;
   for (C<T> x: v) s += my_to_string(x) + "\n";
   return s;
 }
 /*! \brief Construct a string representation of a container input */
 template<typename T, typename=typename std::enable_if<is_container<T>::value>::type>
-const std::string my_to_string(const T & a, const size_t w=0){
+std::string my_to_string(const T & a, const size_t w=0){
   std::string s;
   for (auto x: a) s += my_to_string(x, w);
   return s;
+}
+template<class T, class R> std::string my_to_string(const std::pair<T,R>& p, const size_t w=0){
+  size_t h = (w - 1u) / 2u;
+  std::string s = my_to_string(p.first, h) + "—" + my_to_string(p.second, h);
+  return s;
+}
+
+template<typename T>
+[[nodiscard]] std::string list_to_string(const std::vector<T>& v){
+  std::string s{"["};
+  for (const auto & x: v) s += my_to_string(x) + ", ";
+  if (v.size()) {
+    s.pop_back();
+    s.pop_back();
+  }
+  return s + "]";
+}
+template<typename T, size_t N>
+[[nodiscard]] std::string list_to_string(const std::array<T,N>& v){
+  std::string s{"["};
+  for (const auto & x: v) s += my_to_string(x) + ", ";
+  s.pop_back();
+  s.pop_back();
+  return s + "]";
+}
+template<typename T>
+[[nodiscard]] std::string lists_to_string(const std::vector<std::vector<T>>& vv){
+ std::string s{"["};
+ for (const auto & v: vv) s += list_to_string(v) + ",\n";
+ if (vv.size()){
+   s.pop_back();
+   s.pop_back();
+ }
+ return s + "]";
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -233,18 +267,18 @@ class DebugPrinter{
   bool emit_datetime;
   size_t _before;
 public:
-  DebugPrinter(const std::string& s)
-  : last_function(s), _silenced(false), emit_datetime(false), _before(0)
+  DebugPrinter(std::string s)
+  : last_function(std::move(s)), _silenced(false), emit_datetime(false), _before(0)
   {
     #if defined(PROFILING)
     emit_datetime = true;
     #endif
   };
-  bool silenced() const {return _silenced;}
+  [[nodiscard]] bool silenced() const {return _silenced;}
   bool silenced(bool slc) {_silenced = slc; return _silenced;}
   bool silence() {_silenced = true; return _silenced;}
   bool unsilence() {_silenced = false; return !_silenced;}
-  bool datetime() const {return emit_datetime;}
+  [[nodiscard]] bool datetime() const {return emit_datetime;}
   bool datetime(bool edt) {emit_datetime = edt; return emit_datetime;}
   template<typename... L> void print(const std::string& fnc, L... l){
     if (!_silenced){
@@ -275,14 +309,24 @@ public:
     }
   }
 private:
-  std::string lead_in() const {
+  [[nodiscard]] std::string lead_in() const {
     std::stringstream buffer;
     for (size_t i=0; i<_before; ++i) buffer << " ";
     return buffer.str();
   }
+  template<typename... L>
+  void inner_print(const std::string& x, L... l){
+    std::cout << x;
+    this->inner_print(l...);
+  }
+  template<typename... L>
+  void inner_print(const char* x, L... l){
+    std::cout << x;
+    this->inner_print(l...);
+  }
   template<typename T, typename... L>
   enable_if_t<!is_container<T>::value, void> inner_print(const T& x, L... l){
-    std::cout << x;
+    std::cout << my_to_string(x);
     this->inner_print(l...);
   }
   template<typename T, typename... L>
@@ -306,7 +350,7 @@ private:
     //   }
     // } else {
       for (auto y: x){
-        s += " " + my_to_string(y, l);
+        s += " " + my_to_string(y, l) + ",";
         if (!(++count % w)) s += "\n" + this->lead_in();
       }
     // }
@@ -322,12 +366,12 @@ private:
     //     s += "\n" + this->lead_in();
     //   }
     // } else {
-      size_t w = static_cast<size_t>(terminal_width());
+      auto w = static_cast<size_t>(terminal_width());
       if (_before < w) w -= _before;
       if (l) w /= l+1;
       size_t count = 0;
       for (size_t i=0; i<N; ++i){
-        s += " " + my_to_string(x[i], l);
+        s += " " + my_to_string(x[i], l) + ",";
         if (!(++count % w)) s += "\n" + this->lead_in();
       }
     // }
@@ -336,25 +380,33 @@ private:
   template<typename T, typename... L>
   void inner_print(const std::vector<std::vector<T>>& vv, L... args){
     size_t l = max_element_length(vv);
-    size_t w = static_cast<size_t>(terminal_width());
+    auto w = static_cast<size_t>(terminal_width());
     if (_before < w) w -= _before;
     size_t num;
     std::string s;
     if (l) w /= l+1;
-    for (auto v: vv){
+    s += "[";
+    ++_before;
+    for (size_t i=0; i < vv.size(); ++i){
+      const auto & v{vv[i]};
       num = 0;
-      for (auto x: v){
-        s += my_to_string(x, l);
+      s += "[";
+      for (size_t j=0; j < v.size(); ++j){
+        s += my_to_string(v[j], l);
+        if (j + 1 < v.size()) s += ',';
         if (!(++num %w)) s += "\n" + this->lead_in();
       }
+      s += "]";
+      s += (i + 1 < vv.size()) ? "," : "]";
       s += "\n" + this->lead_in();
     }
+    --_before;
     this->inner_print(s, args...);
   }
   template<typename T, size_t N, typename... L>
   enable_if_t<!is_container<T>::value, void> inner_print(const std::vector<std::array<T,N>>& x, L... args){
     size_t l = max_element_length(x);
-    size_t w = static_cast<size_t>(terminal_width());
+    auto w = static_cast<size_t>(terminal_width());
     if (_before < w) w -= _before;
     size_t num;
     std::string s;
@@ -374,7 +426,7 @@ private:
       if (l) w /= l+1;
       for (size_t i=0; i<x.size(); num=0, ++i){
         for (auto y: x[i]){
-          s += my_to_string(y, l);
+          s += my_to_string(y, l) + ",";
           if (!(++num % w)) s += "\n" + this->lead_in();
         }
         s += "\n" + this->lead_in();
@@ -382,7 +434,7 @@ private:
     // }
     this->inner_print(s, args...);
   }
-  void inner_print(void){};
+  void inner_print(){};
 };
 
 //! The single namespace wide `DebugPrinter` used with the logging macros.
@@ -426,16 +478,16 @@ public:
       return elapsed();
     }
     /*! \brief Calculate the time elapsed betwen starting and stopping the timer */
-    double elapsed() const {
+    [[nodiscard]] double elapsed() const {
       auto delta = std::chrono::duration_cast<TimeT>(_end - _start);
       return static_cast<double>(delta.count());
     }
     /*! \brief Calculate the average time per iteration of the timer */
-    double average() const {
+    [[nodiscard]] double average() const {
       return elapsed()/static_cast<double>(presses);
     }
     /*! \brief Calculate the uncertainty in the average time per iteration */
-    double jitter() const {
+    [[nodiscard]] double jitter() const {
       return std::sqrt(elapsed())/static_cast<double>(presses);
     }
     /*! \brief Return the time since the timer started or last split call

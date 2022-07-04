@@ -143,25 +143,14 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
         else:
             raise ValueError('Spacegroup not given')
     if not isinstance(spacegroup, str):
-        try:
-            spacegroup = int(spacegroup)
-        except TypeError as e0:
-            e1 = ValueError('Invalid spacegroup input. It must be a string or number')
-            e1.__suppress_context__ = True
-            e1.__traceback__ = e0.__traceback__
-            raise e1
+        e1 = ValueError('Invalid spacegroup input. It must be a string (or valid Spacegroup object)')
+        e1.__suppress_context__ = True
+        raise e1
 
-    if is_reciprocal:
-        if lattice_vectors is not None:
-            lattice = brille.Reciprocal(lattice_vectors, spacegroup)
-        else:
-            lattice = brille.Reciprocal(lens, angs, spacegroup)
+    if lattice_vectors is not None:
+        lattice = brille.Lattice(lattice_vectors, spacegroup, real_space=not is_reciprocal)
     else:
-        if lattice_vectors is not None:
-            lattice = brille.Direct(lattice_vectors, spacegroup)
-        else:
-            lattice = brille.Direct(lens, angs, spacegroup)
-        lattice = lattice.star
+        lattice = brille.Lattice(lens, angs, spacegroup, real_space=not is_reciprocal)
 
     try:
         return brille.BrillouinZone(lattice, use_primitive=use_primitive,
@@ -173,6 +162,11 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
         if 'Failed to find an irreducible Brillouin zone' in str(e0):
             e1 = RuntimeError(str(e0) + ' You can try again with wedge_search=False ' \
                             'to calculate with just the first Brillouin zone')
+            e1.__suppress_context__ = True
+            e1.__traceback__ = e0.__traceback__
+            raise e1
+        elif 'the dot product between Lattice Vectors requires same or starred lattices' in str(e0):
+            e1 = ValueError("Error constructing lattice. Invalid parameters?")
             e1.__suppress_context__ = True
             e1.__traceback__ = e0.__traceback__
             raise e1

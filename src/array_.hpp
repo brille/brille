@@ -15,21 +15,19 @@ See the GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
-#ifndef BRILLE_ARRAY__HPP_
-#define BRILLE_ARRAY__HPP_
+#ifndef _BRILLE_ARRAY__HPP_
+#define _BRILLE_ARRAY__HPP_
 /*! \file
     \brief Forward declarations for Array* classes which can be constructed
            from each other.
 */
+// Declare the array types without defining them
+#include "array_pre.hpp"
+// The arrays need to know about each other so their constructors can act as converts
+#include "array.hpp"
+#include "array2.hpp"
+// The following includes must happen *after* Array and Array2 are fully defined
+// (so array.hpp and array2.hpp can not include circular references back to array_.hpp)
+#include "array_post.hpp"
 
-namespace brille {
-  // declare both Array and Array2 so that they can each contain conversion
-  // constructors for the other.
-  template<class T> class Array;
-  template<class T> class Array2;
-
-  // declare their itterators here
-  template<class T> class ArrayIt;
-  template<class T> class Array2It;
-}
 #endif

@@ -23,6 +23,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief Classes for a lattice spacegroup Symmetry operations
 */
+#include <utility>
+
 #include "symmetry_common.hpp"
 #include "motion.hpp"
 #include "bravais.hpp"
@@ -70,23 +72,23 @@ private:
   Motions M;
 public:
   //! Empty constructor
-  Symmetry(size_t n=0) { M.resize(n); }
+  explicit Symmetry(size_t n=0): M() { M.resize(n); }
   //! Construct from a list of symmetry operation Motions
-  Symmetry(const Motions& m): M(m) {};
+  explicit Symmetry(Motions m): M(std::move(m)) {};
   //! Construct from a CIF xyz encoded string of one or more Motions
-  Symmetry(const std::string& strrep){ this->from_ascii(strrep); };
+  explicit Symmetry(const std::string& strrep){ this->from_ascii(strrep); };
   //! Return the centring type of the symmetry operations
-  Bravais                getcentring() const;
+  [[nodiscard]] Bravais                getcentring() const;
   //! Return a reference to the held Motions
-  const Motions&         getallm() const {return this->M;}
+  [[nodiscard]] const Motions&         getallm() const {return this->M;}
   //! Return just the matrix part of all held Motions
-  Matrices<int>          getallr() const;
+  [[nodiscard]] Matrices<int>          getallr() const;
   //! Return just the translation part of all held motions
-  Vectors<double>        getallt() const;
+  [[nodiscard]] Vectors<double>        getallt() const;
   //! Return the number of symmetry operations held
-  size_t                 size()    const { return M.size(); }
+  [[nodiscard]] size_t                 size()    const { return M.size(); }
   //! Increase or decrease the allocated space for Motions
-  size_t                 resize(const size_t i)                                ;
+  size_t                 resize(size_t i)                                ;
   /*! \brief Add one Motion to the list of Motions from its matrix and vector parts
 
   \param r A pointer to the first element of a 3x3 row-ordered contiguous array
@@ -98,12 +100,12 @@ public:
   \param W A reference to the Matrix part of the Motion to add
   \param w A reference to the Vector part of the Motion to add
   */
-  size_t                 add(const Matrix<int>& W, const Vector<double>& w)    ;
+  size_t                 add(Matrix<int> W, Vector<double> w)    ;
   /*! \brief Add one Motion to the list of Motions
 
   \param M A reference to the Motion to add
   */
-  size_t                 add(const Motion<int,double>& M)                      ;
+  size_t                 add(Motion<int,double> M)                      ;
   /*! \brief Add one CIF xyz encoded Motion to the list of Motions
 
   \param motion A comma separated list of the combined matrix and vector parts
@@ -116,17 +118,17 @@ public:
   //! Replace the held Motions by those described in a CIF xyz encoded string
   bool                   from_ascii(const std::string& s)                      ;
   //! Remove the `i`ᵗʰ element from the Motions
-  size_t                 erase(const size_t i)                                 ;
+  size_t                 erase(size_t i)                                 ;
   //! Return the `i`ᵗʰ element then remove it from the Motions
-  Motion<int,double>     pop(const size_t i)                                   ;
+  Motion<int,double>     pop(size_t i)                                   ;
   //! Check for the presence of a specified Motion in the Motions
-  bool                   has(const Motion<int,double>&)                   const;
+  [[nodiscard]] bool                   has(const Motion<int,double>&)                   const;
   //! Return the Matrix part of the `i`ᵗʰ Motion
-  Matrix<int>            getr(const size_t i)                             const;
+  [[nodiscard]] Matrix<int>            getr(size_t i)                             const;
   //! Return the Vector partof the `i`ᵗʰ Motion
-  Vector<double>         gett(const size_t i)                             const;
+  [[nodiscard]] Vector<double>         gett(size_t i)                             const;
   //! Return the `i`ᵗʰ Motion
-  Motion<int,double>     getm(const size_t i)                             const;
+  [[nodiscard]] Motion<int,double>     getm(size_t i)                             const;
   /*! \brief Find and return the order of the `i`ᵗʰ Motion
 
   \param i The index of the Motion for which to find its order
@@ -135,9 +137,9 @@ public:
   successive applications of the `i`ᵗʰ Motion required to equal the identity
   operation.
   */
-  int order(const size_t i) const;
+  [[nodiscard]] int order(size_t i) const;
   //! Return the order of all Motions
-  std::vector<int> orders(void) const;
+  [[nodiscard]] std::vector<int> orders() const;
   /*! \brief Generate all group operations from the known subset
 
   Assuming that the held Motions represet a subset of the full Symmetry group
@@ -145,7 +147,7 @@ public:
   members, adding the unique missing members to the known Motions.
   Repeat this until no new Motions are found.
   */
-  Symmetry generate(void) const;
+  [[nodiscard]] Symmetry generate() const;
   /*! \brief Find a subset of Motions which can generate all stored Motions
 
   If the Symmetry object represents a complete group, it must contain Motions
@@ -160,17 +162,18 @@ public:
 
   This returned Symmetry object contains the subgroup G'.
   */
-  Symmetry generators(void) const;
+  [[nodiscard]] Symmetry generators() const;
   bool operator==(const Symmetry& other) const;
   bool operator!=(const Symmetry& other) const { return !this->operator==(other);}
   //! Check whether the Motions contain (̄𝟙, ⃗0)
-  bool has_space_inversion() const;
+  [[nodiscard]] bool has_space_inversion() const;
+  [[nodiscard]] Symmetry add_space_inversion() const;
   /*! \brief Find a Matrix in the Motions and return its index
 
   If none of the Motions have a matching Matrix part the total number of
   Motions is instead returned.
   */
-  size_t  find_matrix_index(const Matrix<int>&) const;
+  [[nodiscard]] size_t  find_matrix_index(const Matrix<int>&) const;
 
 #ifdef USE_HIGHFIVE
   // Output to HDF5 file/object

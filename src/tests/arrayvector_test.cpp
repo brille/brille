@@ -4,8 +4,9 @@
 
 #include <catch2/catch.hpp>
 // for now we want to be able to switch between Array and Array2
-// array_latvec.hpp defines a bArray<T> as one or the other:
-#include "array_latvec.hpp"
+// array_.hpp defines a bArray<T> as one or the other:
+#include "array_.hpp"
+#include "process_id.hpp"
 
 using namespace brille;
 
@@ -200,11 +201,6 @@ TEST_CASE("Append Array(s)","[array]"){
 }
 
 TEMPLATE_TEST_CASE("Array IO","[array][io]",double,float){
-    namespace fs=std::filesystem;
-    auto tdir = fs::temp_directory_path();
-    fs::path filepath = tdir;
-    filepath /= fs::path("brille"+std::to_string(processid())+".h5");
-
     std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
     std::uniform_real_distribution<TestType> distribution(TestType(1),TestType(100));
 
@@ -215,6 +211,10 @@ TEMPLATE_TEST_CASE("Array IO","[array][io]",double,float){
 
 #ifdef USE_HIGHFIVE
     // write the array to disk:
+    namespace fs=std::filesystem;
+    auto tdir = fs::temp_directory_path();
+    fs::path filepath = tdir;
+    filepath /= fs::path(pid_filename("brille",".h5"));
     auto filename = filepath.string();
     std::string dataset = "/array2";
     rand_array.to_hdf(filename, dataset);

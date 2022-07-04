@@ -20,7 +20,10 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief Classes for the effect of symmetry on phonon eigenvectors
 */
-#include "array_latvec.hpp" // defines bArray
+#include "array_.hpp" // defines bArray
+#include "array_l_.hpp"
+//#include "lattice_dual.hpp"
+
 namespace brille {
 
 /*! \brief A superclass for all rotation-required tabulated information
@@ -86,7 +89,8 @@ but this is left for a future exercise if it becomes necessary.
 
 */
 class GammaTable: public RotateTable {
-// public:
+ public:
+  using lattice_t = lattice::Lattice<double>;
 //   using ind_t = unsigned;
 private:
   std::vector<ind_t> point2space_; //! maps Rᵣ to Sᵣ
@@ -96,21 +100,25 @@ private:
   ind_t n_sym_ops;
   std::vector<ind_t> l_mapping; //! maps (κ,r) to l=Nₒ(κ,Sᵣ)
   std::vector<ind_t> v_mapping; //! maps (κ,r) to v
-  Direct lattice_;
+  lattice_t lattice_;
   bArray<double> vectors_; //! element v is (Rᵣ⁻¹ ⃗rₖ - ⃗rₗ)
 public:
-  explicit GammaTable(): n_atoms(0), n_sym_ops(0) {
+  explicit GammaTable(): n_atoms(0), n_sym_ops(0), lattice_({1,1,1}, {90,90,90}, "P 1", "", LengthUnit::angstrom){
     l_mapping.resize(0);
     v_mapping.resize(0);
   }
-  GammaTable(const Direct& dlat, const int time_reversal=0){
+  GammaTable(const lattice_t& dlat, const int time_reversal=0): lattice_(dlat) {
     this->construct(dlat, time_reversal);
   }
-  bool construct(const Direct& dlat, const int time_reversal=0){
+  bool construct(const lattice_t& dlat, const int time_reversal=0, double e_tol=0., int n_tol=1){
     lattice_ = dlat;
-    PointSymmetry ps = dlat.get_pointgroup_symmetry(time_reversal);
-    Symmetry spgsym = dlat.get_spacegroup_symmetry(time_reversal);
-    Basis bs = dlat.get_basis();
+    auto ps = dlat.pointgroup_symmetry();
+    auto spgsym = dlat.spacegroup_symmetry();
+    if (time_reversal){
+      ps = ps.add_space_inversion();
+      spgsym = spgsym.add_space_inversion();
+    }
+    Basis bs = dlat.basis();
     // resize all vectors/arrays
     n_atoms = static_cast<ind_t>(bs.size());
     n_sym_ops = static_cast<ind_t>(ps.size());
@@ -134,7 +142,7 @@ public:
       bool found;
       ind_t l;
       auto motion = spgsym.getm(point2space_[r]);
-      std::tie(found,l) = bs.equivalent_after_operation(k, motion);
+      std::tie(found,l) = bs.equivalent_after_operation(k, motion, e_tol, n_tol);
       if (!found){
         info_update(bs.to_string(),"\ndoes not have an equivalent atom to ",k," for symmetry operation\n",motion.getr(),"+",motion.gett());
         throw std::runtime_error("All atoms in the basis *must* be mapped to an equivalent atom for *all* symmetry operations");
@@ -146,8 +154,8 @@ public:
       // check if this vector is in vectors_
       // look for an equal vector within the first count vectors_ -- return its index, or count if none match
       // count >= 1, so view is fine:
-      ind_t v = norm(vectors_.view(0,count) - vec).is(brille::cmp::eq, 0.).first();
-      // store the vector if its not already present
+      ind_t v = norm(vectors_.view(0,count) - vec).is(brille::cmp::eq, 0., e_tol, n_tol).first();
+      // store the vector if it is not already present
       if (count == v) vectors_.set(count++, vec);
       ind_t key = this->calc_key(k, r);
       l_mapping[key] = l;
@@ -160,7 +168,7 @@ public:
   ind_t F0(Ik k, Ir r) const {
     return l_mapping[this->calc_key(k,r)];
   }
-  const bArray<double>& vectors() const {return vectors_;}
+  [[nodiscard]] const bArray<double>& vectors() const {return vectors_;}
   template<class Ik, class Ir>
   ind_t vector_index(Ik k, Ir r) const {
     return v_mapping[this->calc_key(k,r)];
@@ -172,12 +180,12 @@ public:
     // return vectors_.view(this->vector_index(k,r));
   }
   template<class Ik, class Ir>
-  LDVec<double> ldvector(Ik k, Ir r) const {
-    return LDVec<double>(lattice_, this->vector(k,r));
+  lattice::LVec<double> ldvector(Ik k, Ir r) const {
+    return lattice::LVec<double>(LengthUnit::angstrom, lattice_, this->vector(k,r));
   }
-  const Direct& lattice() const {return lattice_;}
+  [[nodiscard]] const lattice_t& lattice() const {return lattice_;}
 private:
-  template<class Ik, class Ir> ind_t calc_key(Ik k, Ir r) const {
+  template<class Ik, class Ir> [[nodiscard]] ind_t calc_key(Ik k, Ir r) const {
     if (k<n_atoms && r<n_sym_ops)
       return static_cast<ind_t>(k)*n_sym_ops + static_cast<ind_t>(r);
     throw std::runtime_error("Attempting to access out of bounds mapping!");

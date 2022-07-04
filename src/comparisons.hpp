@@ -21,7 +21,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Defines a comparisons for `brille`
 */
 #include <functional>
-#include "approx.hpp"
+#include "approx_float.hpp"
 namespace brille {
 
 /** \brief Binary comparison operators
@@ -50,58 +50,58 @@ floating point equivalency.
 template<class T, class R>
 class Comparer{
 private:
-  bool useT; /*!< from `brille::approx::tols<T,R>` */
-  T relT; /*!< from `brille::approx::tols<T,R>` */
-  R relR; /*!< from `brille::approx::tols<T,R>` */
-  T absT; /*!< from `brille::approx::tols<T,R>` */
-  R absR; /*!< from `brille::approx::tols<T,R>` */
+  bool useT; /*!< from `brille::approx_float::tols<T,R>` */
+  T relT; /*!< from `brille::approx_float::tols<T,R>` */
+  R relR; /*!< from `brille::approx_float::tols<T,R>` */
+  T absT; /*!< from `brille::approx_float::tols<T,R>` */
+  R absR; /*!< from `brille::approx_float::tols<T,R>` */
   std::function<bool(const T&,const R&)> scalar; /*!< comparison function for scalars */
   std::function<bool(const size_t&,const T*,const size_t&,const R*,const size_t&)> vector; /*!< comparison function for strided vectors */
 public:
-  Comparer(const cmp op){
+  explicit Comparer(const cmp op, const T Ttol=T(0), const R Rtol=R(0), int tol=1): useT{false}, relT{0}, relR{0}, absT{0}, absR{0}{
     // predetermine tolerances and which we should use:
     bool c;
-    std::tie(c, this->useT, this->relT, this->relR, this->absT, this->absR) = brille::approx::tols<T,R>();
+    std::tie(c, this->useT, this->relT, this->relR, this->absT, this->absR) = approx_float::tols<T,R>(Ttol, Rtol, tol);
     // set the comparison function
     switch(op){
       case cmp::lt:
       scalar = [&](const T& a, const R& b){
-        return !brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) && a<b;
+        return !approx_float::_scalar(a,b,useT,relT,relR,absT,absR) && a<b;
       };
       break;
       case cmp::gt:
       scalar = [&](const T& a, const R& b){
-        return !brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) && a>b;
+        return !approx_float::_scalar(a,b,useT,relT,relR,absT,absR) && a>b;
       };
       break;
       case cmp::le:
       scalar = [&](const T& a, const R& b){
-        return brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) || a<b;
+        return approx_float::_scalar(a,b,useT,relT,relR,absT,absR) || a<b;
       };
       break;
       case cmp::ge:
       scalar = [&](const T& a, const R& b){
-        return brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) || a>b;
+        return approx_float::_scalar(a,b,useT,relT,relR,absT,absR) || a>b;
       };
       break;
       case cmp::eq:
       scalar = [&](const T& a, const R& b){
-        return brille::approx::_scalar(a,b,useT,relT,relR,absT,absR);
+        return approx_float::_scalar(a,b,useT,relT,relR,absT,absR);
       };
       break;
       case cmp::nle:
       scalar = [&](const T& a, const R& b){
-        return !brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) && a>b;
+        return !approx_float::_scalar(a,b,useT,relT,relR,absT,absR) && a>b;
       };
       break;
       case cmp::nge:
       scalar = [&](const T& a, const R& b){
-        return !brille::approx::_scalar(a,b,useT,relT,relR,absT,absR) && a<b;
+        return !approx_float::_scalar(a,b,useT,relT,relR,absT,absR) && a<b;
       };
       break;
       case cmp::neq:
       scalar = [&](const T& a, const R& b){
-        return !brille::approx::_scalar(a,b,useT,relT,relR,absT,absR);
+        return !approx_float::_scalar(a,b,useT,relT,relR,absT,absR);
       };
       break;
       default:
@@ -113,17 +113,25 @@ public:
       case cmp::nge:
       case cmp::nle:
       vector = [&](const size_t n, const T* a, const size_t sa, const R* b, const size_t sb){
+        /* Replace this by a short-cutting variant:
         bool ret{false};
         for (size_t i=0; i<n; ++i) ret |= this->scalar(a[i*sa], b[i*sb]);
         return ret;
+        */
+        for (size_t i=0; i<n; ++i) if (this->scalar(a[i*sa], b[i*sb])) return true;
+        return false;
       };
       break;
       // A vector IS X if all of the elements ARE X
       default:
       vector = [&](const size_t n, const T* a, const size_t sa, const R* b, const size_t sb){
+        /* Replace this by a short-cutting variant:
         bool ret{true};
         for (size_t i=0; i<n; ++i) ret &= this->scalar(a[i*sa], b[i*sb]);
         return ret;
+        */
+        for (size_t i=0; i<n; ++i) if (!this->scalar(a[i*sa], b[i*sb])) return false;
+        return true;
       };
     }
   }

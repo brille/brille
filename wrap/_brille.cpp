@@ -34,6 +34,9 @@ void wrap_sortingstatus(pybind11::module &);
 void wrap_spacegroup(pybind11::module &);
 void wrap_symmetry(pybind11::module &);
 void wrap_trellis(pybind11::module &);
+void wrap_enums(pybind11::module &);
+void wrap_basis(pybind11::module &);
+void wrap_approx(pybind11::module &);
 
 void wrap_version(pybind11::module & m){
   using namespace brille::version;
@@ -88,4 +91,7 @@ PYBIND11_MODULE(_brille, m){
   wrap_bravais(m);
   wrap_interpolator(m);
   wrap_debug(m);
+  wrap_enums(m);
+  wrap_basis(m);
+  wrap_approx(m);
 }

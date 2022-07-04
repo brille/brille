@@ -18,7 +18,9 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "_mesh.hpp"
 
 void wrap_mesh(pybind11::module & m){
-  declare_bzmeshq<double,double>(m,"dd");
-  declare_bzmeshq<double,std::complex<double>>(m,"dc");
-  declare_bzmeshq<std::complex<double>,std::complex<double>>(m,"cc");
+  using D = double;
+  using C = std::complex<double>;
+  declare_bzmeshq<D,D,D>(m,"dd");
+  declare_bzmeshq<D,C,D>(m,"dc");
+  declare_bzmeshq<C,C,D>(m,"cc");
 }

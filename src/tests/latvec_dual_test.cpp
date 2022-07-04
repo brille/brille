@@ -1,31 +1,31 @@
 #include <catch2/catch.hpp>
 
-#include "lattice.hpp"
-#include "array_latvec.hpp"
+#include "lattice_dual.hpp"
+#include "array_l_.hpp"
 
 using namespace brille;
+using namespace brille::lattice;
 
 TEST_CASE("Lattice Vector tests","[latvec]"){
-  Direct d(1.,1.,1.);
-  Reciprocal r = d.star();
+  auto lattice = Direct<double>({1,1,1}, {90,90,90}, "P 1");
 
   std::vector<std::array<double,3>> values{{1,0,0},{0,1,0},{0,0,1}};
-  LQVec<double> q(r, bArray<double>::from_std(values));
+  auto q = LQVec<double>(lattice, bArray<double>::from_std(values));
 
   SECTION("length via .norm(integer)"){
-    for(ind_t i=0; i<3; i++)
-    REQUIRE( q.norm(i) == Approx(2*brille::pi) );
+    for(int i=0; i<3; i++)
+    REQUIRE( q.norm(i) == Approx(brille::math::two_pi) );
   }
   SECTION("length via norm()"){
     auto normq = norm(q);
     REQUIRE( normq.size(0) == q.size(0) );
     REQUIRE( normq.size(1) == 1u );
-    for(ind_t i=0; i<q.size(0); ++i)
+    for(size_t i=0; i<q.size(0); ++i)
       REQUIRE( q.norm(i) == normq[i] );
   }
   SECTION("Single-element access via [integer] and cross product .cross(integer,integer)"){
-    LQVec<double> z = q.view(2);
-    LQVec<double> xy = q.cross(0,1)*(norm(z)/norm(q.view(1))/norm(q.view(0)));
+    auto z = q.view(2);
+    auto xy = q.cross(0,1)*(norm(z)/norm(q.view(1))/norm(q.view(0)));
     REQUIRE( z.is(xy) );
   }
 }

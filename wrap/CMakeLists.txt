@@ -1,8 +1,11 @@
 set(BRILLE_PYTHON_MODULE_SOURCES
   "${BRILLE_PYTHON_MODULE}.cpp" # this needs to be first
+  _approx.cpp
+  _basis.cpp
   _bravais.cpp
   _bz.cpp
   _debug.cpp
+  _enums.cpp
   _hall_symbol.cpp
   _interpolator.cpp
   _lattice.cpp

@@ -24,8 +24,8 @@ so we start with that:
 
 .. code-block:: python
 
-  from brille import Reciprocal
-  lattice = Reciprocal((1, 1, 1), (90, 90, 90))
+  from brille import Lattice
+  lattice = Lattice((1, 1, 1), (90, 90, 90), real_space=False)
 
 The created `lattice` spans reciprocal space with three orthogonal basis vectors
 each of unit length, :math:`1 \AA^{-1}`, and as a result has a unit cell with
@@ -179,9 +179,9 @@ produce a hybrid interpolation grid with at least :math:`1000` points.
 
 .. code:: python
 
-  from brille import Direct, BrillouinZone, BZTrellisQdd
+  from brille import Lattice, BrillouinZone, BZTrellisQdd
   a_fe = 2.87
-  direct_lattice = Direct((a_fe, a_fe, a_fe), (90, 90, 90), 'I m -3 m')
+  direct_lattice = Lattice((a_fe, a_fe, a_fe), (90, 90, 90), 'I m -3 m')
   brillouin_zone = BrillouinZone(direct_lattice.star)
   grid = BZTrellisQdd(brillouin_zone, brillouin_zone.ir_polyhedron.volume/1000)
 

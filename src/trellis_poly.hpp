@@ -15,37 +15,28 @@ See the GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
-#ifndef BRILLE_TRELLIS_HPP_
-#define BRILLE_TRELLIS_HPP_
+#ifndef BRILLE_TRELLIS_POLY_HPP_
+#define BRILLE_TRELLIS_POLY_HPP_
 /*! \file
     \author Greg Tucker
     \brief A class holding a hybrid grid of cuboid and triangulated tetrahedral
            cells and data for interpolation
 */
-// #include <vector>
-// #include <array>
 #include <queue>
-// #include <tuple>
-// #include <mutex>
 #include <condition_variable>
 #include <atomic>
-// #include <algorithm>
 #include <functional>
 #include <utility>
-// #include <omp.h>
-// #include "array.hpp"
-// #include "array2.hpp"
-// #include "array_latvec.hpp" // defines bArray
-#include "polyhedron.hpp"
-// #include "utilities.hpp"
-// #include "debug.hpp"
-#include "triangulation_simple.hpp"
+#include <filesystem>
 #include "interpolatordual.hpp"
-// #include "permutation.hpp"
-// #include "approx.hpp"
 #include "hdf_interface.hpp"
 #include "trellis_node.hpp"
-namespace brille {
+#include "polyhedron_flex.hpp"
+#include "triangulation_poly.hpp"
+#include "approx_float.hpp"
+#include "approx_config.hpp"
+
+namespace brille::polytrellis {
 
 /*
   Storing the lowest bin boundary (zero[3]), constant difference (step[3]),
@@ -63,9 +54,9 @@ namespace brille {
 // template<class T, class I>
 // static int on_boundary(const T zero, const T step, const I size, const T x, const I i){
 //   // if x is infinitesimally smaller than zero+step*(i+1)
-//   if (i+1<size && brille::approx::scalar(zero+step*(i+1),x)) return  1;
+//   if (i+1<size && brille::approx_float::scalar(zero+step*(i+1),x)) return  1;
 //   // if x is infinitesimally larger than zero+step*i
-//   if (i  >0    && brille::approx::scalar(zero+step*(i  ),x)) return -1;
+//   if (i  >0    && brille::approx_float::scalar(zero+step*(i  ),x)) return -1;
 //   return 0;
 // }
 template<class T>
@@ -80,10 +71,11 @@ template<class T>
 static int on_boundary(const std::vector<T>& bin_edges, const T x, const size_t i){
   // if (i==0) then above d was *either* 0 or 1, otherwise d = i + 1;
   // if (i==0) we can't go lower in either case, so no problem.
-  if (i+2<bin_edges.size() && brille::approx::scalar(bin_edges[i+1],x)) return  1;
-  if (i  >0                && brille::approx::scalar(bin_edges[i  ],x)) return -1;
+  if (i+2<bin_edges.size() && brille::approx_float::scalar(bin_edges[i+1],x)) return  1;
+  if (i  >0                && brille::approx_float::scalar(bin_edges[i  ],x)) return -1;
   return 0;
 }
+
 
 /*! \brief A class implementing a hybrid Cartesian and n-simplex grid in 3 dimensions
 
@@ -113,55 +105,83 @@ typically small, this is a relatively fast process; with the tetrahedra found
 the vertices and their weights required for linear interpolation are again
 trivial to determine.
 */
-template<typename T, typename R>
-class PolyhedronTrellis{
+template<class DataValues, class DataVectors, class VertexComponents, template<class> class VertexType>
+class PolyTrellis{
 public:
-  using data_t = DualInterpolator<T,R>; //!< the container which holds the data to interpolate and performs the interpolation
-  using vert_t = bArray<double>;        //!< the container which holds the vertex positions of the PolyhedronTrellis
+  using class_t = PolyTrellis<DataValues, DataVectors, VertexComponents, VertexType>;
+  using boundary_t = polyhedron::Faces;
+  using data_t = DualInterpolator<DataValues, DataVectors>;
+  using vert_t = VertexType<VertexComponents>;
+  using nodes_t = NodeContainer;
+  using knots_t = std::array<std::vector<double>, 3u>;
+  using approx_t = approx_float::Config;
+  using poly_t = polyhedron::Poly<VertexComponents, VertexType>;
 protected:
-  Polyhedron polyhedron_; //!< the Polyhedron bounding the domain of the PolyhedronTrellis
-  data_t data_;           //!< data for interpolation stored for each indexed vertex of the PolyhedronTrellis
-  vert_t vertices_;       //!< the indexed vertices of the PolyhedronTrellis
-  NodeContainer nodes_;   //!< the nodes of the trellis, indexing the vertices of the PolyhedronTrellis
-  std::array<std::vector<double>,3> boundaries_; //!< The coordinates of the trellis intersections, which bound the nodes
+  boundary_t boundary_; //!< the Polyhedron bounding the domain of the PolyhedronTrellis
+  data_t data_;         //!< data for interpolation stored for each indexed vertex of the PolyhedronTrellis
+  vert_t vertices_;     //!< the indexed vertices of the PolyhedronTrellis
+  nodes_t nodes_;       //!< the nodes of the trellis, indexing the vertices of the PolyhedronTrellis
+  knots_t knots_;       //!< The coordinates of the trellis intersections
+  approx_t approx_;     //!< Approximate comparisons configuration
 public:
-  bool operator!=(const PolyhedronTrellis<T, R>& other) const {
-    if (polyhedron_ != other.polyhedron_) return true;
+  bool operator!=(const class_t& other) const {
+    if (boundary_ != other.boundary_) return true;
     if (data_ != other.data_) return true;
     if (vertices_ != other.vertices_) return true;
     if (nodes_ != other.nodes_) return true;
-    if (boundaries_ != other.boundaries_) return true;
+    if (knots_ != other.knots_) return true;
     return false;
   }
   /*!\brief Construct a PolyhedronTrellis from all required information
    *
    * */
-  PolyhedronTrellis(const Polyhedron& p, const data_t& d, const vert_t& v, NodeContainer n, std::array<std::vector<double>,3> b)
-      : polyhedron_(p), data_(d), vertices_(v), nodes_(std::move(n)), boundaries_(std::move(b)) {}
+  PolyTrellis(boundary_t p, const data_t& d, const vert_t& v, nodes_t n, knots_t b, approx_t cfg)
+      : boundary_(std::move(p)), data_(d), vertices_(v), nodes_(std::move(n)), knots_(std::move(b)), approx_(cfg) {}
   //
   /*! \brief Construct from a bounding Polyhedron
 
-  \param polyhedron         the boundary of the PolyhedronTrellis domain
+  \param polyhedron         the boundary of the PolyTrellis domain
   \param max_volume         maximum node volume in the same units as the
-                            Polyhedron volume
+                            boundary volume
   \param always_triangulate control whether nodes fully within the domain of the
                             PolyhedronTrellis are CubeNode (true) or PolyNode
                             (false) objects
   */
-  explicit PolyhedronTrellis(const Polyhedron& polyhedron, double max_volume, bool always_triangulate=false);
-  // explicit PolyhedronTrellis(const Polyhedron& polyhedron, const double max_volume){
-  //   this->construct(polyhedron, max_volume);
-  // }
-  // PolyhedronTrellis(const Polyhedron& polyhedron, const size_t number_density){
-  //   double max_volume = polyhedron.get_volume()/static_cast<double>(number_density);
-  //   this->construct(polyhedron, max_volume);
-  // };
+  PolyTrellis(const poly_t& polyhedron,
+              double max_volume,
+              bool always_triangulate=false
+  ): boundary_(polyhedron.faces()), vertices_(polyhedron.vertices()){
+    // the approximate configuration can not be a default function parameter
+    // if we want to pick-up runtime changes in the namespace object
+    this->construct(polyhedron, max_volume, always_triangulate, approx_float::config);
+  }
+  PolyTrellis(const poly_t& polyhedron,
+              double max_volume,
+              bool always_triangulate,
+              approx_t cfg
+  ): boundary_(polyhedron.faces()), vertices_(polyhedron.vertices())
+  {
+    this->construct(polyhedron, max_volume, always_triangulate, cfg);
+  }
+  void construct(const poly_t& poly,
+                 double max_volume,
+                 bool always_triangulate,
+                 approx_t cfg);
+private:
+  std::tuple<std::map<size_t, poly_t>, std::vector<std::vector<ind_t>>, std::vector<ind_t>, VertexType<VertexComponents>, ind_t>
+  part_one(const poly_t&, const VertexType<VertexComponents>&,
+           std::vector<NodeType>&, bool, VertexComponents, int);
+  void
+  part_two(const std::map<size_t, poly_t>&, const std::vector<NodeType>& ,
+           const std::vector<std::vector<ind_t>>&, ind_t, ind_t,
+           VertexComponents, int);
+public:
   //! Explicit empty constructor
-  explicit PolyhedronTrellis(): vertices_(0,3) {}
+  explicit PolyTrellis(): vertices_(0,3) {}
   //! Return the number of trellis intersections
   [[nodiscard]] ind_t expected_vertex_count() const {
     ind_t count = 1u;
-    for (ind_t i=0; i<3u; ++i) count *= boundaries_[i].size();
+    for (ind_t i=0; i<3u; ++i) count *= knots_[i].size();
     return count;
   }
   //! Return the number of indexed vertices
@@ -208,9 +228,9 @@ public:
           interpolation or an empty vector if the point is not in the domain of
           the PolyhedronTrellis.
   */
-  [[nodiscard]] std::vector<std::pair<ind_t,double>>
-  indices_weights(const bArray<double>& x) const {
-    std::vector<std::pair<ind_t,double>> iw{};
+  [[nodiscard]] std::vector<std::pair<ind_t,VertexComponents>>
+  indices_weights(const vert_t& x) const {
+    std::vector<std::pair<ind_t,VertexComponents>> iw{};
     if (x.ndim()!=2 && x.size(0)!=1u && x.size(1)!=3u)
       throw std::runtime_error("The indices and weights can only be found for one point at a time.");
     // if node_index does not throw an error then the indicated node *should*
@@ -220,8 +240,7 @@ public:
     return iw;
   }
   //! Check that the held data can be used for linear interpolation
-  template<class S>
-  unsigned check_before_interpolating(const bArray<S>& x) const{
+  unsigned check_before_interpolating(const vert_t& x) const{
     unsigned int mask = 0u;
     if (data_.size()==0)
       throw std::runtime_error("The interpolation data must be filled before interpolating.");
@@ -238,20 +257,20 @@ public:
   \returns a tuple of the interpolated eigenvalues and eigenvectors for all
            points in `x`
   */
-  std::tuple<brille::Array<T>, brille::Array<R>>
-  interpolate_at(const bArray<double>& x) const {
+  std::tuple<typename data_t::value_out_t, typename data_t::vector_out_t>
+  interpolate_at(const vert_t& x) const {
     profile_update("Single thread interpolation at ",x.size(0)," points");
     this->check_before_interpolating(x);
     auto valsh = data_.values().shape();
     auto vecsh = data_.vectors().shape();
     valsh[0] = vecsh[0] = x.size(0);
-    brille::Array<T> vals_out(valsh);
-    brille::Array<R> vecs_out(vecsh);
+    typename data_t::value_out_t vals_out(valsh);
+    typename data_t::vector_out_t  vecs_out(vecsh);
     // vals and vecs are row-ordered contiguous by default, so we can create
     // mutable data-sharing Array2 objects for use with
     // Interpolator2::interpolate_at through the constructor:
-    brille::Array2<T> vals2(vals_out);
-    brille::Array2<R> vecs2(vecs_out);
+    typename data_t::value_in_t vals2(vals_out);
+    typename data_t::vector_in_t vecs2(vecs_out);
     for (ind_t i=0; i<x.size(0); ++i){
       verbose_update("Locating ",x.to_string(i));
       auto indwghts = this->indices_weights(x.view(i));
@@ -273,8 +292,8 @@ public:
   \returns a tuple of the interpolated eigenvalues and eigenvectors for all
            points in `x`
   */
-  std::tuple<brille::Array<T>, brille::Array<R>>
-  interpolate_at(const bArray<double>& x, const int threads) const {
+  std::tuple<typename data_t::value_out_t, typename data_t::vector_out_t>
+  interpolate_at(const vert_t& x, const int threads) const {
     this->check_before_interpolating(x);
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     profile_update("Parallel interpolation at ",x.size(0)," points with ",threads," threads");
@@ -282,13 +301,13 @@ public:
     auto vecsh = data_.vectors().shape();
     valsh[0] = vecsh[0] = x.size(0);
     // shared between threads
-    brille::Array<T> vals_out(valsh);
-    brille::Array<R> vecs_out(vecsh);
+    typename data_t::value_out_t vals_out(valsh);
+    typename data_t::vector_out_t  vecs_out(vecsh);
     // vals and vecs are row-ordered contiguous by default, so we can create
     // mutable data-sharing Array2 objects for use with
     // Interpolator2::interpolate_at through the constructor:
-    brille::Array2<T> vals2(vals_out);
-    brille::Array2<R> vecs2(vecs_out);
+    typename data_t::value_in_t vals2(vals_out);
+    typename data_t::vector_in_t vecs2(vecs_out);
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     auto xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
     size_t n_unfound{0};
@@ -310,13 +329,13 @@ public:
   //! Return the total number of nodes within the trellis
   ind_t node_count() {
     ind_t count = 1u;
-    for (ind_t i=0; i<3u; ++i) count *= static_cast<ind_t>(boundaries_[i].size()-1);
+    for (ind_t i=0; i<3u; ++i) count *= static_cast<ind_t>(knots_[i].size()-1);
     return count;
   }
   //! Return the number of nodes along each of the three dimensions of the trellis
   [[nodiscard]] std::array<ind_t,3> size() const {
     std::array<ind_t,3> s{};
-    for (ind_t i=0; i<3u; ++i) s[i] = static_cast<ind_t>(boundaries_[i].size()-1);
+    for (ind_t i=0; i<3u; ++i) s[i] = static_cast<ind_t>(knots_[i].size()-1);
     return s;
   }
   //! Return the span between neighbouring nodes along each of the three dimensions of the trellis
@@ -337,10 +356,11 @@ public:
         neighbouring node(s) which the point is on the surface of to find a
         non-null node subscript index.
   */
-  [[nodiscard]] std::array<ind_t,3> node_subscript(const bArray<double>& p) const {
+  [[nodiscard]] std::array<ind_t,3> node_subscript(const vert_t& p) const {
     std::array<ind_t,3> sub{{0,0,0}};
+    auto pos = get_xyz(p.view(0)).to_std(); // the knots are in the absolute xyz frame
     for (ind_t dim=0; dim<3u; ++dim)
-      sub[dim] = static_cast<ind_t>(find_bin(boundaries_[dim], p.val(0,dim)));
+      sub[dim] = static_cast<ind_t>(find_bin(knots_[dim], pos[dim]));
     // it's possible that a subscript could go beyond the last bin in any direction!
     bool bad = !subscript_ok_and_not_null(sub);
     if (bad){
@@ -349,7 +369,7 @@ public:
       // directions. if we are, on_boundary returns the direction in which we
       // can safely take a step without leaving the binned region
       for (ind_t i=0; i<3; ++i)
-        close[i] = on_boundary(boundaries_[i], p.val(0,i), sub[i]);
+        close[i] = on_boundary(knots_[i], pos[i], sub[i]);
       auto num_close = std::count_if(close.begin(), close.end(), [](int a){return a!=0;});
       // check one
       std::array<ind_t,3> newsub{sub};
@@ -381,7 +401,9 @@ public:
       }
       if (!bad) sub = newsub;
       else
-      info_update("The node subscript ",sub," for the point ",p.to_string(0u)," is either invalid or points to a null node!");
+      info_update("The node subscript ",sub,
+                  " for the point (hkl) ", p.to_string(0u), "(xyz) ", pos,
+                  " is either invalid or points to a null node!");
     }
     return sub;
   }
@@ -423,7 +445,7 @@ public:
     return nodes_.poly_at(idx);
   }
   //! Return a string representation of the size of the trellis
-  [[nodiscard]] std::string to_string(void) const {
+  [[nodiscard]] std::string to_string() const {
     std::string str = "(";
     for (auto i: this->size()) str += " " + std::to_string(i);
     str += " )";
@@ -443,20 +465,18 @@ public:
   template<typename... A> void set_vector_cost_info(A... args) {data_.set_vector_cost_info(args...);}
   //! Return the number of bytes used per Q point
   [[nodiscard]] size_t bytes_per_point() const {return data_.bytes_per_point(); }
-  //! Calculate the Debye-Waller factor for the provided Q points and ion masses
-  template<template<class> class A>
-  brille::Array<double> debye_waller(const A<double>& Qpts, const std::vector<double>& Masses, const double t_K) const{
-    return data_.debye_waller(Qpts,Masses,t_K);
-  }
   //! Determine the sorting permutation for every connected pair of vertices in the PolyhedronTrellis
   void sort(){ data_.sort(); }
   //! Find the total volume of all trellis nodes
   [[nodiscard]] double total_node_volume() const {
     double vol{0.};
-    for (ind_t i=0; i<nodes_.size(); ++i)
-      vol += nodes_.volume(vertices_, i);
+    for (ind_t i=0; i<nodes_.size(); ++i) {
+      auto v = nodes_.volume(vertices_, i);
+      vol += v;
+    }
     return vol;
   }
+  [[nodiscard]] approx_t approx_config() const {return approx_;}
 private:
   [[nodiscard]] bool subscript_ok_and_not_null(const std::array<ind_t,3>& sub) const {
     return this->subscript_ok(sub) && !nodes_.is_null(this->sub2idx(sub));
@@ -517,55 +537,69 @@ private:
     return out;
   }
   std::set<size_t> collect_keys();
-  std::set<size_t> collect_keys_node(const ind_t);
+  std::set<size_t> collect_keys_node(ind_t);
 
   [[nodiscard]] std::vector<std::array<double,3>> trellis_centres() const {
-    std::array<std::vector<double>,3> cents;
-    for (size_t i=0; i<3; ++i) for (size_t j=0; j<boundaries_[i].size()-1; ++j)
-      cents[i].push_back((boundaries_[i][j]+boundaries_[i][j+1])/2);
+    knots_t cents;
+    for (size_t i=0; i<3; ++i) for (size_t j=0; j<knots_[i].size()-1; ++j)
+      cents[i].push_back((knots_[i][j]+knots_[i][j+1])/2);
     std::vector<std::array<double,3>> centres;
     for (auto z: cents[2]) for (auto y: cents[1]) for (auto x: cents[0])
       centres.push_back({x,y,z});
     return centres;
   }
   [[nodiscard]] std::array<size_t,3> trellis_centres_span() const {
-    size_t cs0{boundaries_[0].size()-1}, cs1{boundaries_[1].size()-1};
+    // TODO: This is identical to span()?
+    size_t cs0{knots_[0].size()-1}, cs1{knots_[1].size()-1};
     return std::array<size_t,3>({1, cs0, cs0*cs1});
   }
   [[nodiscard]] std::vector<std::array<double,3>> trellis_intersections() const {
     std::vector<std::array<double,3>> intersections;
-    for (auto z: boundaries_[2]) for (auto y: boundaries_[1]) for (auto x: boundaries_[0])
+    for (auto z: knots_[2]) for (auto y: knots_[1]) for (auto x: knots_[0])
       intersections.push_back({x,y,z});
     return intersections;
   }
   [[nodiscard]] std::array<ind_t,3> trellis_intersections_span() const {
-    size_t bs0{boundaries_[0].size()}, bs1{boundaries_[1].size()};
+    size_t bs0{knots_[0].size()}, bs1{knots_[1].size()};
     return std::array<ind_t,3>({1,static_cast<ind_t>(bs0),static_cast<ind_t>(bs0*bs1)});
   }
   [[nodiscard]] std::vector<std::array<ind_t,3>> trellis_local_cube_indices() const {
     /* Each node with linear index idx has a subscripted index (i,j,k)
-       and is surrounded by the trellis intersections of boundaries
+       and is surrounded by the trellis intersections of boundaries (the knots)
        (i,j,k) + { (000), (100), (110), (010), (101), (001), (011), (111)};
     */
     // the order of the cube node intersections is paramount:
     std::vector<std::array<ind_t,3>> idx{{{0,0,0}},{{1,0,0}},{{1,1,0}},{{0,1,0}},{{1,0,1}},{{0,0,1}},{{0,1,1}},{{1,1,1}}};
     return idx;
   }
-  [[nodiscard]] Polyhedron trellis_local_cube() const {
-    std::array<double,3> min_corner{}, max_corner{};
-    for (size_t i=0; i<3; ++i){
-      double cen = (boundaries_[i][0] + boundaries_[i][1])/2;
-      min_corner[i] = (boundaries_[i][0] < boundaries_[i][1] ? boundaries_[i][0] : boundaries_[i][1])-cen;
-      max_corner[i] = (boundaries_[i][0] > boundaries_[i][1] ? boundaries_[i][0] : boundaries_[i][1])-cen;
-    }
-    return polyhedron_box(min_corner, max_corner);
-  }
-  [[nodiscard]] double trellis_node_circumsphere_radius() const {
-    // this will break if the boundaries_ are ever allowed to be non-uniform
-    double a = boundaries_[0][1]-boundaries_[0][0];
-    double b = boundaries_[1][1]-boundaries_[1][0];
-    double c = boundaries_[2][1]-boundaries_[2][0];
+  [[nodiscard]] double maximum_node_circumsphere_radius() const {
+    // this will break if the knots_ are ever allowed to be non-uniform
+    double a = knots_[0][1]-knots_[0][0];
+    double b = knots_[1][1]-knots_[1][0];
+    double c = knots_[2][1]-knots_[2][0];
     return 0.5*std::sqrt(a*a+b*b+c*c);
+  }
+  //! Return the polyhedron face indexes into trellis_intersections for an indexed node
+  [[nodiscard]] boundary_t trellis_node_faces(const ind_t index){
+    auto ijk = idx2sub(index); // the node subscript
+    auto ks = trellis_intersections_span();
+    ind_t i0 = this->sub2idx(ijk, ks);     // 000 0
+    ind_t i1 = i0         + ks[1]        ; // 010 1
+    ind_t i2 = i0         + ks[1] + ks[2]; // 011 2
+    ind_t i3 = i0                 + ks[2]; // 001 3
+    ind_t i4 = i0 + ks[0]                ; // 100 4
+    ind_t i5 = i0 + ks[0] + ks[1]        ; // 110 5
+    ind_t i6 = i0 + ks[0] + ks[1] + ks[2]; // 111 6
+    ind_t i7 = i0 + ks[0]         + ks[2]; // 101 7
+    std::vector<std::vector<ind_t>> faces{
+        {i3,i0,i4,i7}, // y == 0
+        {i3,i2,i1,i0}, // x == 0
+        {i0,i1,i5,i4}, // z == 0
+        {i3,i7,i6,i2}, // z == 1
+        {i7,i4,i5,i6}, // x == 1
+        {i2,i6,i5,i1}  // y ==1
+    };
+    return boundary_t(faces);
   }
 
 #ifdef USE_HIGHFIVE
@@ -575,39 +609,41 @@ public:
   to_hdf(HFObject& obj, const std::string& entry) const {
     auto group = overwrite_group(obj, entry);
     bool ok{true};
-    ok &= polyhedron_.to_hdf(group, "polyhedron");
+    ok &= boundary_.to_hdf(group, "boundary");
     ok &= data_.to_hdf(group, "data");
     ok &= vertices_.to_hdf(group, "vertices");
     ok &= nodes_.to_hdf(group, "container");
-    ok &= lists_to_hdf(boundaries_, group, "boundaries");
+    ok &= lists_to_hdf(knots_, group, "knots");
+    ok &= approx_.to_hdf(group, "approx");
     return ok;
   }
   template<class HF>
-  static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, PolyhedronTrellis<T,R>>
+  static std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, class_t>
   from_hdf(HF& obj, const std::string& entry) {
     auto group = obj.getGroup(entry);
-    auto p = Polyhedron::from_hdf(group, "polyhedron");
+    auto p = boundary_t::from_hdf(group, "boundary");
     auto d = data_t::from_hdf(group, "data");
     auto v = vert_t::from_hdf(group, "vertices");
-    NodeContainer n = NodeContainer::from_hdf(group, "container");
-    auto bl = lists_from_hdf<double>(group, "boundaries"); // returns a std::vector<std::vector<double>>
+    auto n = nodes_t::from_hdf(group, "container");
+    auto bl = lists_from_hdf<double>(group, "knots"); // returns a std::vector<std::vector<double>>
     if (bl.size() != 3) throw std::runtime_error("Error reading boundaries from file");
-    std::array<std::vector<double>, 3> b;
+    knots_t b;
     for (size_t i=0; i<3u; ++i) b[i] = bl[i];
     //      return {p, d, v, n, b};
-    return PolyhedronTrellis(p, d, v, n, b);
+    auto cfg = approx_t::from_hdf(group, "approx");
+    return PolyTrellis(p, d, v, n, b, cfg);
   }
   bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
     HighFive::File file(filename, perm);
     return this->to_hdf(file, entry);
   }
-  static PolyhedronTrellis<T,R> from_hdf(const std::string& filename, const std::string& entry){
+  static class_t from_hdf(const std::string& filename, const std::string& entry){
     HighFive::File file(filename, HighFive::File::ReadOnly);
-    return PolyhedronTrellis<T,R>::from_hdf(file, entry);
+    return class_t::from_hdf(file, entry);
   }
 #endif // USE_HIGHFIVE
 };
 
-#include "trellis.tpp"
+#include "trellis_poly.tpp"
 } // end namespace brille
 #endif
