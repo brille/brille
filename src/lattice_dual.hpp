@@ -109,13 +109,22 @@ public:
    * @param p Real space point symmetry operations
    * @param a Real space lattice atom basis
    */
-  Impl(matrix_t v, matrix_t r, matrix_t m, matrix_t rm, Bravais b, Symmetry s, PointSymmetry p, Basis a)
+  Impl(matrix_t v, matrix_t r, matrix_t m, matrix_t rm, Bravais b, Symmetry s, PointSymmetry p, Basis a, bool snap_to_symmetry=false)
       : _real_vectors{std::move(v)},
         _reciprocal_vectors{std::move(r)},
         _real_metric{std::move(m)},
         _reciprocal_metric{std::move(rm)},
         _bravais(b), _space(std::move(s)), _point(std::move(p)), _basis(std::move(a))
-  {}
+  {
+    if (snap_to_symmetry) {
+      auto success = _basis.snap_to(_space.getallm());
+      if (!success){
+        std::string msg("Requested snap_to_symmetry failed with result \n");
+        msg += _basis.to_string();
+        throw std::runtime_error(msg);
+      }
+    }
+  }
   /*! \brief Lattice parameters and Symmetry constructor
    *
    * @param lengths Basis vector lengths in units given by `lu`
@@ -162,6 +171,31 @@ public:
     spacegroup_symmetry(s);
     _bravais = _space.getcentring();
     set_point_symmetry();
+  }
+  /*! \brief Lattice basis vectors, Symmetry, and Basis construction
+   *
+   * @param vectors A flattened row-ordered 3x3 matrix of the basis vectors
+   * @param mv Indicates if the pre-flattened matrix was row- or column-vectors
+   * @param s Real space symmetry operations
+   * @param b Real space lattice atom basis
+   * @param snap_to_symmetry Whether to enforce the symmetry operations on the basis
+   * @param lu Indicates if the vectors are of the real or reciprocal basis
+   */
+  Impl(const matrix_t & vectors, const MatrixVectors mv, const Symmetry & s, Basis b, const bool snap_to_symmetry, const LengthUnit lu): _basis(std::move(b))
+  {
+    set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu);
+    set_metrics();
+    spacegroup_symmetry(s);
+    _bravais = _space.getcentring();
+    set_point_symmetry();
+    if (snap_to_symmetry) {
+      auto success = _basis.snap_to(_space.getallm());
+      if (!success){
+        std::string msg("Requested snap_to_symmetry failed with result \n");
+        msg += _basis.to_string();
+        throw std::runtime_error(msg);
+      }
+    }
   }
   /*! \brief Lattice parameters and Hermann-Maunguin spacegroup information constructor
    *

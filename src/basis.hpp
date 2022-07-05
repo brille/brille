@@ -76,6 +76,56 @@ public:
   //! Return all atom types in the basis
   [[nodiscard]] std::vector<ind_t> types() const {return types_;}
 
+  /*! \brief Determine the closest atom in the basis to a given point
+
+  \param Kappa a position which may not be in the first unit cell
+  \returns a tuple containing
+            - whether an atom is in the basis at position  ⃗k' =  ⃗K + ⃗G
+              for a lattice vector ⃗G
+            - that atom's index if it exists, or the closest atom's index if not
+            - the difference vector between ⃗k and  ⃗K + ⃗G
+  */
+  [[nodiscard]] std::tuple<bool, ind_t, point> closest_to(const point& Kappa, element_t e_tol = element_t(0), int n_tol = 0) const {
+    // find κ' equivalent to K in the first unit cell, all elements ∈ [0,1)
+    // We need to protect against mapping Kᵢ ≈ -0 to 1; which you might introduce
+    // by looking for an equivalent Κ' = Κ%1. This discontinuity near 0 and 1
+    // is exactly what we don't want. Instead, map numbers near 0 and near 1 to
+    // near zero before checking for point equivalency
+    auto checker = [Kappa,e_tol,n_tol](const point& p){
+      point d, z{{0,0,0}};
+      // find the difference vector % 1, with the discontinuity moved to 0.5
+      for (int i=0; i<3; ++i) d[i] = Kappa[i]-p[i]+0.5;
+      for (int i=0; i<3; ++i) d[i] = std::abs(d[i]-std::floor(d[i]))-0.5;
+      auto ok = approx_float::equal(d, z, e_tol, e_tol, n_tol);
+      //      info_update_if(ok,  "   match ", Kappa, " to ", p);
+      //      info_update_if(!ok, "no match ", Kappa, " to ", p, " since ", d);
+      return std::make_tuple(ok, d);
+    };
+    // now search for κ'
+    std::vector<std::tuple<bool, point>> equal_difference;
+    equal_difference.reserve(positions_.size());
+    for (const auto & position: positions_) equal_difference.push_back(checker(position));
+    auto itr = std::find_if(equal_difference.begin(), equal_difference.end(), [](std::tuple<bool, point>& ed){return std::get<bool>(ed);});
+    bool found = itr != equal_difference.end();
+    // κ'
+    ind_t kp;
+    if (found) {
+      kp = static_cast<ind_t>(std::distance(equal_difference.begin(), itr));
+    } else {
+      // no match within tolerance, so we must find the closest κ'
+      std::vector<double> distances;
+      distances.reserve(equal_difference.size());
+      for (const auto& ed: equal_difference){
+        double distance{0.};
+        for (const auto & x: std::get<point>(ed)) distance += x * x;
+        distances.push_back(distance);
+      }
+      auto min_at = std::min_element(distances.begin(), distances.end());
+      kp = static_cast<ind_t>(std::distance(distances.begin(), min_at));
+    }
+    return std::make_tuple(found, kp, std::get<point>(equal_difference[kp]));
+  }
+
   /*! \brief Determine if an atom exists in the basis
 
   \param Kappa a position which may not be in the first unit cell
@@ -122,6 +172,50 @@ public:
     if (k>=positions_.size()) throw std::runtime_error("invalid atom position index");
     point K_pos = op.move_point(positions_[k]);
     return this->equivalent_to(K_pos, e_tol, n_tol);
+  }
+  template<class T, class R>
+  bool snap_to(const std::vector<Motion<T,R>> ops, element_t e_tol = element_t(0), int n_tol = 0){
+    auto all_ok = [](const auto & a){
+      return std::all_of(a.begin(), a.end(), [](const auto& b){return b;});
+    };
+    // every atom must have an equivalent atom for every operation
+    std::vector<bool> is_ok(positions_.size(), true);
+    for (size_t k=0; k<positions_.size(); ++k){
+      for (const auto & op: ops){
+        is_ok[k] = std::get<bool>(equivalent_after_operation(k, op, e_tol, n_tol));
+        if (!is_ok[k]) break;
+      }
+      // if (!is_ok[k]) break; // we can not break early in case multiple atoms need to be modified
+    }
+    if (all_ok(is_ok)) return true;
+    // not all ok; figure out *which* need to be snapped
+    for (size_t k=0; k<positions_.size(); ++k){
+      if (!is_ok[k]){
+        std::vector<std::tuple<bool, ind_t, point>> closest;
+        closest.reserve(ops.size());
+        point delta{{0,0,0}};
+        ind_t count{0};
+        for (const auto & op: ops){
+          point K_pos = op.move_point(positions_[k]);
+          auto c = closest_to(K_pos, e_tol, n_tol);
+          if (std::get<ind_t>(c) == k){
+            count++;
+            for (size_t xi=0; xi<3; ++xi) delta[xi] += std::get<point>(c)[xi];
+          }
+        }
+        if (count) for (auto & d: delta) d /= static_cast<double>(count);
+        for (size_t xi=0; xi<3; ++xi) positions_[k][xi] += delta[xi];
+      }
+    }
+    // double check that we've snapped appropriately
+    for (size_t k=0; k<positions_.size(); ++k){
+      for (const auto & op: ops){
+        is_ok[k] = std::get<bool>(equivalent_after_operation(k, op, e_tol, n_tol));
+        if (!is_ok[k]) break;
+      }
+      if (!is_ok[k]) break;
+    }
+    return all_ok(is_ok);
   }
   /*! \brief Determine the equivalent atom index after a PointSymmetry operation
 

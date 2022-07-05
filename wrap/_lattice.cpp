@@ -73,7 +73,7 @@ void wrap_lattice(py::module &m){
     auto len = np2sa<double,3>(lengths);
     auto ang = np2sa<double,3>(angles);
     return Lattice<double>(len, ang, sym, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
-  }),"basis_vector_lengths"_a, "basis_vector_angles"_a, "symmetry"_a, "real_space"_a=true);
+  }),"basis_vector_lengths"_a, "basis_vector_angles"_a, "symmetry"_a, py::kw_only(), "real_space"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& lengths,
        const py::array_t<double>& angles,
@@ -82,7 +82,7 @@ void wrap_lattice(py::module &m){
     auto len = np2sa<double,3>(lengths);
     auto ang = np2sa<double,3>(angles);
     return Lattice<double>(len, ang, sym, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
-  }),"basis_vector_lengths"_a, "basis_vector_angles"_a, "symmetry_information"_a="P 1", "real_space"_a=true);
+  }),"basis_vector_lengths"_a, "basis_vector_angles"_a, "symmetry_information"_a="P 1", py::kw_only(), "real_space"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& lengths,
        const py::array_t<double>& angles,
@@ -92,7 +92,7 @@ void wrap_lattice(py::module &m){
     auto len = np2sa<double,3>(lengths);
     auto ang = np2sa<double,3>(angles);
     return Lattice<double>(len, ang, n, c, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
-  }), "basis_vector_lengths"_a, "basis_vector_angles"_a, "HM_name"_a, "HM_choice"_a, "real_space"_a=true);
+  }), "basis_vector_lengths"_a, "basis_vector_angles"_a, "HM_name"_a, "HM_choice"_a, py::kw_only(), "real_space"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& vectors,
        const Symmetry& sym,
@@ -100,16 +100,17 @@ void wrap_lattice(py::module &m){
        const bool row) {
     auto mat = np2sa<double,9>(vectors);
     return Lattice<double>(mat, row ? MatrixVectors::row : MatrixVectors::column, sym, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
-  }),"basis_vectors"_a, "symmetry"_a, "real_space"_a=true, "row_vectors"_a=true);
+  }),"basis_vectors"_a, "symmetry"_a, py::kw_only(), "real_space"_a=true, "row_vectors"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& vectors,
        const Symmetry& sym,
        const Basis& bas,
+       const bool snap,
        const bool dir,
        const bool row) {
     auto mat = np2sa<double,9>(vectors);
-    return Lattice<double>(mat, row ? MatrixVectors::row : MatrixVectors::column, sym, bas, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
-  }),"basis_vectors"_a, "symmetry"_a, "basis"_a, "real_space"_a=true, "row_vectors"_a=true);
+    return Lattice<double>(mat, row ? MatrixVectors::row : MatrixVectors::column, sym, bas, snap, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
+  }),"basis_vectors"_a, "symmetry"_a, "basis"_a, py::kw_only(), "snap_to_symmetry"_a=false, "real_space"_a=true, "row_vectors"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& vectors,
        const std::string& sym,
@@ -117,7 +118,7 @@ void wrap_lattice(py::module &m){
        const bool row) {
     auto mat = np2sa<double,9>(vectors);
     return Lattice<double>(mat, row ? MatrixVectors::row : MatrixVectors::column, sym, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
-  }),"basis_vectors"_a, "symmetry_information"_a="P 1", "real_space"_a=true, "row_vectors"_a=true);
+  }),"basis_vectors"_a, "symmetry_information"_a="P 1", py::kw_only(), "real_space"_a=true, "row_vectors"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& vectors,
        const std::string& n,
@@ -126,7 +127,7 @@ void wrap_lattice(py::module &m){
        const bool row) {
     auto mat = np2sa<double,9>(vectors);
     return Lattice<double>(mat, row ? MatrixVectors::row : MatrixVectors::column, n, c, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
-  }),"basis_vectors"_a, "HM_name"_a, "HM_choice"_a, "real_space"_a=true, "row_vectors"_a=true);
+  }),"basis_vectors"_a, "HM_name"_a, "HM_choice"_a, py::kw_only(), "real_space"_a=true, "row_vectors"_a=true);
 
   // accessors
   cls.def_property_readonly("real_vectors",[](const Lattice<double>& lat){
@@ -152,6 +153,7 @@ void wrap_lattice(py::module &m){
   cls.def_property_readonly("volume_star",[](const Lattice<double>& lat){return lat.volume(LengthUnit::inverse_angstrom);});
 
   cls.def_property_readonly("bravais",[](const Lattice<double>& l){return l.bravais();});
+  cls.def_property_readonly("basis",[](const Lattice<double>& l){return l.basis();});
   cls.def_property("spacegroup",
     [](const Lattice<double>& l){
     return l.spacegroup_symmetry();

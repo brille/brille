@@ -60,6 +60,37 @@ class Lattice (unittest.TestCase):
         r = s.Lattice(np.array([1, 1, 1])*np.pi*2, np.array([1, 1, 1])*np.pi/2, real_space=False)
         self.assertEqual(d, r)
 
+    def test_f_basis(self):
+        vectors = np.array([[1.7797736800000001, 1.027552813333333, 6.219738366666666],
+                            [-1.7797736800000001, 1.027552813333333, 6.219738366666666],
+                            [0.0, -2.055105626666667, 6.219738366666666]])
+        positions = np.array([[0.89401258, 0.89401259, 0.89401258],
+                              [0.10598742, 0.10598741, 0.10598742],
+                              [0.5, 0.5, 0.5],
+                              [0., 0.99999999, 0.]])
+        types = [0, 0, 1, 2]
+        basis = s.Basis(positions, types)
+
+        rotations = np.array([[[-1,  0,  0], [ 0, -1,  0], [ 0,  0, -1]],
+                              [[ 0,  0,  1], [ 1,  0,  0], [ 0,  1,  0]],
+                              [[ 0,  0, -1], [ 0, -1,  0], [-1,  0,  0]]])
+        translations = np.array([[0., 0., 0.] for _ in rotations])
+        generators = s.Symmetry(rotations, translations)
+        symmetry = generators.generate()
+
+        # Without specifying snap_to_symmetry the basis positions are as specified
+        lat = s.Lattice(vectors, symmetry, basis)
+        self.assertTrue(np.allclose(lat.basis.positions, positions))
+
+        # but specifying snap_to_symmetry=True forces the positions to take on their symmetry averages
+
+        avg_positions = np.array([[0.8940125833333333, 0.8940125833333333, 0.8940125833333333],
+                                  [0.1059874166666667, 0.1059874166666666, 0.1059874166666667],
+                                  [0.5, 0.5, 0.5],
+                                  [0., 1., 0.]])
+        lat = s.Lattice(vectors, symmetry, basis, snap_to_symmetry=True)
+        self.assertTrue(np.allclose(lat.basis.positions, avg_positions))
+
 
 if __name__ == '__main__':
   unittest.main()
