@@ -168,7 +168,7 @@ std::string my_to_string(const T & a, const size_t w=0){
   return s;
 }
 template<class T, class R> std::string my_to_string(const std::pair<T,R>& p, const size_t w=0){
-  size_t h = (w - 1u) / 2u;
+  size_t h = (w > 2u) ? (w - 1u) / 2u : 0u;  // ensure we do not overflow to h = 2⁶³ -- GitHub issue #79
   std::string s = my_to_string(p.first, h) + "—" + my_to_string(p.second, h);
   return s;
 }
