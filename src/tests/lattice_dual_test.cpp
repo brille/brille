@@ -101,3 +101,65 @@ TEST_CASE("Verify Lattice property correctness","[latticedual]"){
     perform_checks(lat, true);
   }
 }
+
+
+
+TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2zr2o7][64]"){
+  // Basis vectors from https://github.com/pace-neutrons/Euphonic/blob/aa3cc28786797bb3052f898dd63d4928d6f27ee2/tests_and_analysis/test/data/force_constants/LZO_force_constants.json#L186
+  std::array<double,9> latmat {7.583912824349999, 1.8412792137035698e-32, 0.,
+                               3.791956412170034, 3.791956412170034, 5.362636186024768,
+                               3.791956412170034,-3.791956412170034, 5.362636186024768};
+  // Symmetry information from CASTEP file via brilleu
+  // the generators are: 4-fold [1 -1 1], 2-fold [-1 1 1], 3-fold [1 1 -3], -𝟙
+  // row-ordered generator matrices
+  //  std::vector<std::array<int,9>> W {
+  //      {{ 0,-1, 0,  0, 0,-1,  1, 1, 1}},
+  //      {{-1,-1,-1,  0, 0, 1,  0, 1, 0}},
+  //      {{-1,-1,-1,  1, 0, 0,  0, 0, 1}},
+  //      {{-1, 0, 0,  0,-1, 0,  0, 0,-1}}
+  //  };
+  //  std::vector<std::array<double,3>> w{
+  //      {{0.0, 0.0, 0.5}},
+  //      {{0.5, 0.0, 0.0}},
+  //      {{0.5, 0.0, 0.0}},
+  //      {{0.0, 0.0, 0.0}}
+  //  };
+
+  std::vector<std::array<int,9>> W {
+      {{ 0,-1, 0,  1, 1, 1, -1, 0, 0}},
+      {{ 0, 0, 1, -1,-1,-1,  1, 0, 0}},
+      {{ 0, 0, 1,  1, 0, 0,  0, 1, 0}},
+      {{-1, 0, 0,  0,-1, 0,  0, 0,-1}}
+  };
+  std::vector<std::array<double,3>> w{
+      {{0.0, 0.5, 0.0}},
+      {{0.0, 0.5, 0.0}},
+      {{0.0, 0.0, 0.0}},
+      {{0.0, 0.0, 0.0}}
+  };
+
+  Symmetry::Motions mots;
+  mots.reserve(W.size());
+  for (size_t i=0; i<W.size(); ++i) mots.push_back(Motion<int,double>(W[i], w[i]));
+  Symmetry sym(mots);
+  //
+  auto wrong_lat = Direct<double>(latmat, MatrixVectors::row, sym);
+
+  std::cout << wrong_lat.to_verbose_string();
+  //
+  std::array<double, 3> wrong_angstrom {{7.5839128243499987, 7.5839128243445124, 7.5839128243445124}};
+  std::array<double, 3> wrong_degrees {{59.9999999999612257, 60.0000000000193836, 60.0000000000193836}};
+
+  auto wrong_lengths = wrong_lat.lengths(LengthUnit::angstrom);
+  auto wrong_angles = wrong_lat.angles(LengthUnit::angstrom, AngleUnit::degree);
+  for (size_t i=0; i<3; ++i){
+    //    REQUIRE(wrong_angstrom[i] == wrong_lengths[i]);
+    //    REQUIRE(wrong_degrees[i] == wrong_angles[i]);
+    std::cout << wrong_angstrom[i] - wrong_lengths[i] << ", ";
+    std::cout << wrong_degrees[i] - wrong_angles[i] << std::endl;
+  }
+
+  auto right_lat = Direct<double>(latmat, MatrixVectors::row, sym, true);
+
+  std::cout << right_lat.to_verbose_string();
+}
