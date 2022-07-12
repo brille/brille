@@ -103,7 +103,7 @@ private:
   lattice_t lattice_;
   bArray<double> vectors_; //! element v is (Rᵣ⁻¹ ⃗rₖ - ⃗rₗ)
 public:
-  explicit GammaTable(): n_atoms(0), n_sym_ops(0), lattice_({1,1,1}, {90,90,90}, "P 1", "", LengthUnit::angstrom){
+  explicit GammaTable(): n_atoms(0), n_sym_ops(0), lattice_(LengthUnit::angstrom, {1,1,1}, {90,90,90}, "P 1", ""){
     l_mapping.resize(0);
     v_mapping.resize(0);
   }
