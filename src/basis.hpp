@@ -85,63 +85,74 @@ public:
             - that atom's index if it exists, or the closest atom's index if not
             - the difference vector between ⃗k and  ⃗K + ⃗G
   */
-  [[nodiscard]] std::tuple<bool, ind_t, point> closest_to(const point& Kappa, element_t e_tol = element_t(0), int n_tol = 0) const {
+  [[nodiscard]] std::tuple<bool, ind_t, point> closest_to(const ind_t type, const point& Kappa, element_t e_tol = element_t(0), int n_tol = 0) const {
     // find κ' equivalent to K in the first unit cell, all elements ∈ [0,1)
     // We need to protect against mapping Kᵢ ≈ -0 to 1; which you might introduce
     // by looking for an equivalent Κ' = Κ%1. This discontinuity near 0 and 1
     // is exactly what we don't want. Instead, map numbers near 0 and near 1 to
     // near zero before checking for point equivalency
-    auto checker = [Kappa,e_tol,n_tol](const point& p){
+    auto check = [type,Kappa,e_tol,n_tol](const point& p, const ind_t& t){
       point d, z{{0,0,0}};
+      if (t != type) return std::make_tuple(false, false, z);
       // find the difference vector % 1, with the discontinuity moved to 0.5
       for (int i=0; i<3; ++i) d[i] = Kappa[i]-p[i]+0.5;
       for (int i=0; i<3; ++i) d[i] = std::abs(d[i]-std::floor(d[i]))-0.5;
       auto ok = approx_float::equal(d, z, e_tol, e_tol, n_tol);
       //      info_update_if(ok,  "   match ", Kappa, " to ", p);
       //      info_update_if(!ok, "no match ", Kappa, " to ", p, " since ", d);
-      return std::make_tuple(ok, d);
+      return std::make_tuple(true, ok, d);
     };
     // now search for κ'
-    std::vector<std::tuple<bool, point>> equal_difference;
-    equal_difference.reserve(positions_.size());
-    for (const auto & position: positions_) equal_difference.push_back(checker(position));
-    auto itr = std::find_if(equal_difference.begin(), equal_difference.end(), [](std::tuple<bool, point>& ed){return std::get<bool>(ed);});
-    bool found = itr != equal_difference.end();
+    std::vector<std::tuple<bool, bool, point>> v;
+    v.reserve(positions_.size());
+    for (size_t i=0; i<size(); ++i) v.push_back(check(positions_[i], types_[i]));
+    // look for one with matching type and position
+    auto itr = std::find_if(v.begin(), v.end(), [](const auto& a){return std::get<0>(a) && std::get<1>(a);});
+    bool found = itr != v.end();
     // κ'
     ind_t kp;
     if (found) {
-      kp = static_cast<ind_t>(std::distance(equal_difference.begin(), itr));
+      kp = static_cast<ind_t>(std::distance(v.begin(), itr));
     } else {
       // no match within tolerance, so we must find the closest κ'
       std::vector<double> distances;
-      distances.reserve(equal_difference.size());
-      for (const auto& ed: equal_difference){
+      distances.reserve(v.size());
+      for (const auto& ed: v) if (std::get<0>(ed)) {
+        // if the type matches, append the distance to the list
         double distance{0.};
         for (const auto & x: std::get<point>(ed)) distance += x * x;
         distances.push_back(distance);
+      } else {
+        // otherwise the distance is, effectively, infinite
+        distances.push_back((std::numeric_limits<double>::max)());
       }
       auto min_at = std::min_element(distances.begin(), distances.end());
       kp = static_cast<ind_t>(std::distance(distances.begin(), min_at));
     }
-    return std::make_tuple(found, kp, std::get<point>(equal_difference[kp]));
+    return std::make_tuple(found, kp, std::get<point>(v[kp]));
   }
 
   /*! \brief Determine if an atom exists in the basis
 
+   \param type the atom type searched for
   \param Kappa a position which may not be in the first unit cell
+   \param e_tol options floating point approximate comparison tolerance
+   \param n_tol optional, ~10^[number of floating point digits] to compare
   \returns a tuple containing
             - whether an atom is in the basis at position  ⃗k' =  ⃗K + ⃗G
               for a lattice vector ⃗G
             - that atom's index if it exists, or the total number of atoms
               in the basis if it does not
   */
-  [[nodiscard]] std::tuple<bool, ind_t> equivalent_to(const point& Kappa, element_t e_tol = element_t(0), int n_tol = 0) const {
+  [[nodiscard]] std::tuple<bool, ind_t> equivalent_to(const ind_t type, const point& Kappa, element_t e_tol = element_t(0), int n_tol = 0) const {
     // find κ' equivalent to K in the first unit cell, all elements ∈ [0,1)
     // We need to protect against mapping Kᵢ ≈ -0 to 1; which you might introduce
     // by looking for an equivalent Κ' = Κ%1. This discontinuity near 0 and 1
     // is exactly what we don't want. Instead map numbers near 0 and near 1 to
     // near zero before checking for point equivalency
-    auto checker = [Kappa,e_tol,n_tol](const point& p){
+    auto checker = [type,Kappa,e_tol,n_tol](const point& p, const ind_t& t){
+      // if the atom type is different, the positions "can't" be the same
+      if (t != type) return false;
       point d, z{{0,0,0}};
       // find the difference vector % 1, with the discontinuity moved to 0.5
       for (int i=0; i<3; ++i) d[i] = Kappa[i]-p[i]+0.5;
@@ -152,11 +163,15 @@ public:
       return ok;
     };
     // now search for κ'
-    auto kp_itr = std::find_if(positions_.begin(), positions_.end(), checker);
-    bool found = kp_itr != positions_.end();
-    // κ' (or size(positions_) if no equivalent position found)
-    auto kp = static_cast<ind_t>(std::distance(positions_.begin(), kp_itr));
-    return std::make_tuple(found, kp);
+    for (size_t i=0; i<positions_.size(); ++i)
+      if (checker(positions_[i], types_[i]))
+        return std::make_tuple(true, i);
+    return std::make_tuple(false, positions_.size());
+//    auto kp_itr = std::find_if(positions_.begin(), positions_.end(), checker);
+//    bool found = kp_itr != positions_.end();
+//    // κ' (or size(positions_) if no equivalent position found)
+//    auto kp = static_cast<ind_t>(std::distance(positions_.begin(), kp_itr));
+//    return std::make_tuple(found, kp);
   }
   /*! \brief Determine the equivalent atom index after a Symmetry operation
 
@@ -171,7 +186,7 @@ public:
   std::tuple<bool, ind_t> equivalent_after_operation(const size_t k, const Motion<T,R>& op, element_t e_tol = element_t(0), int n_tol = 0){
     if (k>=positions_.size()) throw std::runtime_error("invalid atom position index");
     point K_pos = op.move_point(positions_[k]);
-    return this->equivalent_to(K_pos, e_tol, n_tol);
+    return this->equivalent_to(types_[k], K_pos, e_tol, n_tol);
   }
   template<class T, class R>
   bool snap_to(const std::vector<Motion<T,R>> ops, element_t e_tol = element_t(0), int n_tol = 0){
@@ -197,7 +212,7 @@ public:
         ind_t count{0};
         for (const auto & op: ops){
           point K_pos = op.move_point(positions_[k]);
-          auto c = closest_to(K_pos, e_tol, n_tol); // (found_or_not, closest_atom_index, difference_vector)
+          auto c = closest_to(types_[k], K_pos, e_tol, n_tol); // (found_or_not, closest_atom_index, difference_vector)
           if (std::get<ind_t>(c) == k){
             count++;
             for (size_t xi=0; xi<3; ++xi) delta[xi] += std::get<point>(c)[xi];
@@ -230,7 +245,7 @@ public:
     if (k>=positions_.size()) throw std::runtime_error("invalid atom positon index");
     point K_pos;
     brille::utils::multiply_matrix_vector(K_pos.data(), op.data(), positions_[k].data());
-    return this->equivalent_to(K_pos, e_tol, n_tol);
+    return this->equivalent_to(types_[k], K_pos, e_tol, n_tol);
   }
   //! Return a string representation of the atom types and positions
   [[nodiscard]] std::string to_string() const {
