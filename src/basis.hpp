@@ -191,31 +191,30 @@ public:
     // not all ok; figure out *which* need to be snapped
     for (size_t k=0; k<positions_.size(); ++k){
       if (!is_ok[k]){
-        std::vector<std::tuple<bool, ind_t, point>> closest;
-        closest.reserve(ops.size());
+        // we know the k-th atom position is (slightly) wrong, find how much
+        // it needs to be moved to be 'right':
         point delta{{0,0,0}};
         ind_t count{0};
         for (const auto & op: ops){
           point K_pos = op.move_point(positions_[k]);
-          auto c = closest_to(K_pos, e_tol, n_tol);
+          auto c = closest_to(K_pos, e_tol, n_tol); // (found_or_not, closest_atom_index, difference_vector)
           if (std::get<ind_t>(c) == k){
             count++;
             for (size_t xi=0; xi<3; ++xi) delta[xi] += std::get<point>(c)[xi];
           }
         }
+        // calculate the average difference vector for the closest atom
         if (count) for (auto & d: delta) d /= static_cast<double>(count);
+        // and add it to the k-th position, thereby fixing its wrong position
         for (size_t xi=0; xi<3; ++xi) positions_[k][xi] += delta[xi];
       }
     }
     // double check that we've snapped appropriately
-    for (size_t k=0; k<positions_.size(); ++k){
-      for (const auto & op: ops){
-        is_ok[k] = std::get<bool>(equivalent_after_operation(k, op, e_tol, n_tol));
-        if (!is_ok[k]) break;
-      }
-      if (!is_ok[k]) break;
-    }
-    return all_ok(is_ok);
+    for (size_t k=0; k<positions_.size(); ++k)
+      for (const auto & op: ops)
+        if (!std::get<bool>(equivalent_after_operation(k, op, e_tol, n_tol)))
+          return false;
+    return true;
   }
   /*! \brief Determine the equivalent atom index after a PointSymmetry operation
 
