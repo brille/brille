@@ -261,6 +261,11 @@ static int get_pointgroup_number(const PointSymmetry & pointsym)
   return 0;
 }
 
+[[maybe_unused]] Pointgroup brille::get_pointgroup(const PointSymmetry& ps){
+  auto no = get_pointgroup_number(ps);
+  return Pointgroup(no);
+}
+
 /*! Fill in an isometry class table such that each table[i] contains the number
 of pointgroup operations with the i-encoded isometry type.
 
