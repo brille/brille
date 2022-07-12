@@ -84,6 +84,10 @@ public:
   [[nodiscard]] Vector<int>          perpendicular_axis(size_t i)                 const;
   [[nodiscard]] Vectors<int>         perpendicular_axes()                           const;
   [[nodiscard]] PointSymmetry        higher(int min_order=0)                      const;
+  [[nodiscard]] int maps(const std::array<int, 3>&, const std::array<int, 3>&, size_t i) const;
+  [[nodiscard]] int maps(const std::array<int, 3>&, const std::array<int, 3>&) const;
+  [[nodiscard]] bool connects(size_t, size_t, size_t) const;
+  [[nodiscard]] bool connects(size_t, size_t) const;
 #ifdef USE_HIGHFIVE
     // Output to HDF5 file/object
     template<class HF>

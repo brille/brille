@@ -391,3 +391,64 @@ PointSymmetry PointSymmetry::higher(const int min_order) const {
   }
   return out;
 }
+
+
+int PointSymmetry::maps(const std::array<int, 3>& from, const std::array<int, 3>& to, size_t i) const {
+  std::array<int, 3> t{{0, 0, 0}};
+  const auto Ri = data(i);
+  auto oi = order(i);
+  auto match = [](const std::array<int, 3>& a, const std::array<int, 3>& b){
+    if (a[0] != b[0]) return false;
+    if (a[1] != b[1]) return false;
+    if (a[2] != b[2]) return false;
+    return true;
+  };
+  if (match(from, to)) return oi;
+  for (int n=0; n<oi; ++n){
+    brille::utils::mul_mat_vec_inplace(3u, Ri, t.data());
+    if (match(t, to)) return n+1;
+  }
+  return 0;
+}
+
+int PointSymmetry::maps(const std::array<int, 3>& from, const std::array<int, 3>& to) const {
+  std::vector<std::pair<int, int>> order_mult;
+  order_mult.reserve(size());
+  for (size_t i=0; i<size(); ++i){
+    order_mult.emplace_back(order(i), maps(from, to, i));
+  }
+  std::vector<int> ratio;
+  ratio.reserve(size());
+  for (const auto & om: order_mult){
+    if (om.second > 0 && om.first % om.second == 0){
+      ratio.push_back(om.first / om.second);
+    }
+  }
+  // remove any duplicates, requires sorting elements first
+  std::sort(ratio.begin(), ratio.end());
+  auto last = std::unique(ratio.begin(), ratio.end());
+  ratio.erase(last, ratio.end());
+  if (ratio.size() > 1u){
+    throw std::runtime_error("Only one effective-order should connect two vectors!");
+  }
+  return ratio.empty() ? 0 : ratio[1u];
+}
+
+bool PointSymmetry::connects(const size_t a, const size_t b, const size_t i) const {
+  // look for the ath column of R[i] which is zero except for its bth entry
+  // or the reverse,
+  // e.g. [_ _ 1; _ _ 0; _ _ 0] or [0 _ _; 0 _ _; 1 _ _] for connects(0, 2, i)
+  bool f{true}, r{true};
+  for (size_t j=0; j<3u; ++j){
+    f &= R[i][a + j*3u] == (j==b ? 1 : 0);
+    r &= R[i][b + j*3u] == (j==a ? 1 : 0);
+  }
+  return f || r;
+}
+
+bool PointSymmetry::connects(const size_t a, const size_t b) const {
+  for (size_t i=0; i<size(); ++i){
+    if (connects(a, b, i)) return true;
+  }
+  return false;
+}
