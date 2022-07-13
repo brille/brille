@@ -15,7 +15,6 @@
 #include "pointgroup.hpp"
 
 namespace brille::lattice {
-
 template<class T, class S=std::common_type_t<T, double>> std::array<S, 9>
 standard_orientation_matrix(const std::array<T, 9>& bv){
   /* for arbitrary basis vectors stored as a row-flattened column vector matrix
@@ -306,175 +305,57 @@ public:
 
 
 private:
-  bool snap_param_mon(std::array<T, 3>&, std::array<T, 3>& dcos, std::array<T, 3>& dsin){
-    /* two real-space inter-basis-vector angles must be 90 degrees */
-    auto [index, count] = not_right_angles(dcos, dsin);
-    bool ok = count < 2u;
-    if (!ok){
-      // find the angle farthest from 90 degrees -- assume this one is right
-      // TODO this could be better -- look for the 2-fold stationary axis in _point!
-      T diff{0};
-      for (size_t i=0; i<3u; ++i) if (std::abs(dcos[i]) > diff) {
-        diff = std::abs(dcos[i]);
-        index = i;
-      }
-      // set other angles to be exactly 90 degrees
-      for (size_t i=0; i<3u; ++i) if (i != index){
-        dcos[i] = T(0);
-        dsin[i] = T(1);
-      }
-    }
-    return ok;
-  }
-  bool snap_param_ort(std::array<T, 3>&, std::array<T, 3>& dcos, std::array<T, 3>& dsin){
-    /* all real-space inter-basis-vector angles must be 90 degrees */
-    auto [index, count] = not_right_angles(dcos, dsin);
-    bool ok =  count == 0u;
-    if (!ok){
-      // set all angles to be exactly 90 degrees
-      for (size_t i=0; i<3u; ++i) {
-        dcos[i] = T(0);
-        dsin[i] = T(1);
-      }
-    }
-    return ok;
-  }
-  bool snap_param_tet(std::array<T, 3>& dv, std::array<T, 3>& dcos, std::array<T, 3>& dsin){
-    /* all real-space inter-basis-vector angles must be 90 degrees */
-    /* two real-space basis-vector lengths must match */
-    auto [index, count] = not_right_angles(dcos, dsin);
-    auto matching = count_matching(dv);
-    bool angle_ok = count == 0u;
-    bool len_ok = matching > 1u;
-    if (!angle_ok){
-      // set all angles to be exactly 90 degrees
-      for (size_t i=0; i<3u; ++i) {
-        dcos[i] = T(0);
-        dsin[i] = T(1);
-      }
-    }
-    if (!len_ok){
-      // figure-out which two *should* be the same:
-      auto ab = _point.connects(0, 1);
-      auto bc = _point.connects(1, 2);
-      auto ac = _point.connects(0, 2);
-      if (!((ab ^ bc) ^ ac)){
-        throw std::runtime_error("Tetragonal systems should only connect two axes!");
-      }
-      size_t i{ab ? 0u : bc ? 1u : 2u}, j{ab ? 1u : bc ? 2u : 0u};
-      dv[i] = dv[j] = (dv[i] + dv[j]) / T(2);
-    }
-    return angle_ok && len_ok;
-  }
-  bool inner_snap_param_hex(bool ab, bool bc, std::array<T, 3>& dv, std::array<T, 3>& dcos, std::array<T, 3>& dsin){
-    using approx_float::scalar;
-    const T c120{math::cosd(T(120))}, s120{math::sind(T(120))};
-    size_t i{ab ? 0u : bc ? 1u : 2u}, j{ab ? 1u : bc ? 2u : 0u}; // equal lens
-    size_t k{ab ? 2u : bc ? 0u : 1u}; // the angle that must be 120 degrees
-    bool len_ok = scalar(dv[i], dv[j]);
-    bool ang_ok = scalar(dcos[k], c120) && scalar(dsin[k], s120);
-    if (!len_ok){
-      dv[i] = dv[j] = (dv[i] + dv[j]) / T(2);
-    }
-    if (!ang_ok){
-      dcos[k] = c120;
-      dsin[k] = c120;
-    }
-    return len_ok && ang_ok;
-  }
-  bool snap_param_tri(std::array<T, 3>& dv, std::array<T, 3>& dcos, std::array<T, 3>& dsin){
-    /* Either the same as hexagonal (a=b, alpha=beta=90, gamma=120 degrees) *or* rhombohedral (a=b=c, alpha=beta=gamma) */
-    auto ab = _point.connects(0, 1);
-    auto bc = _point.connects(1, 2);
-    auto ac = _point.connects(0, 2);
-
-    bool is_hex = ((ab ^ bc) ^ ac);
-    bool is_rho = ab && bc && ac;
-    if (is_rho){
-      bool len_ok = count_matching(dv) == 3u;
-      bool ang_ok = count_matching(dcos) == 3u;
-      if (!len_ok) {
-        dv[0] = dv[1] = dv[2] = (dv[0] + dv[1] + dv[2]) / T(3);
-      }
-      if (!ang_ok) {
-        // assume that the cosine is more accurate?
-        dcos[0] = dcos[1] = dcos[2] = (dcos[0] + dcos[1] + dcos[2]) / T(3);
-        dsin[0] = dsin[1] = dsin[2] = std::sqrt(1 - dcos[0] * dcos[0]);
-      }
-      return len_ok && ang_ok;
-    }
-    if (is_hex) {
-      return inner_snap_param_hex(ab, bc, dv, dcos, dsin);
-    }
-    throw std::runtime_error("Triclinic systems must be hexagonal or rhombohedral!");
-  }
-  bool snap_param_hex(std::array<T, 3>& dv, std::array<T, 3>& dcos, std::array<T, 3>& dsin){
-    /* a=b, alpha=beta=90, gamma=120 degrees */
-    auto ab = _point.connects(0, 1);
-    auto bc = _point.connects(1, 2);
-    auto ac = _point.connects(0, 2);
-    if (!((ab ^ bc) ^ ac)){
-      throw std::runtime_error("Hexagonal systems must connect only two axes!");
-    }
-    return inner_snap_param_hex(ab, bc, dv, dcos, dsin);
-  }
-  bool snap_param_cub(std::array<T, 3>& dv, std::array<T, 3>& dcos, std::array<T, 3>& dsin){
-    /* all real-space inter-basis-vector angles must be 90 degrees */
-    /* all real-space basis-vector lengths must match */
-    auto [index, count] = not_right_angles(dcos, dsin);
-    bool angle_ok = count == 0u;
-    bool len_ok = count_matching(dv) == 3u;
-    if (!angle_ok){
-      // set all angles to be exactly 90 degrees
-      for (size_t i=0; i<3u; ++i) {
-        dcos[i] = T(0);
-        dsin[i] = T(1);
-      }
-    }
-    if (!len_ok){
-      auto ab = _point.connects(0, 1);
-      auto bc = _point.connects(1, 2);
-      auto ac = _point.connects(0, 2);
-      if (!(ab && bc && ac)){
-        throw std::runtime_error("Cubic systems must connect all axes!");
-      }
-      dv[0] = dv[1] = dv[2] = (dv[0] + dv[1] + dv[2]) / T(3);
-    }
-    return angle_ok && len_ok;
-  }
   bool snap_parameters_to_symmetry(std::array<T, 3>& dv, std::array<T, 3>& dcos, std::array<T, 3>& dsin){
-    auto pg = get_pointgroup(_point);
-    bool ok;
-    switch(pg.get_holohedry()){
-    case Holohedry::monoclinic:
-      ok = snap_param_mon(dv, dcos, dsin);
-      break;
-    case Holohedry::orthogonal:
-      ok = snap_param_ort(dv, dcos, dsin);
-      break;
-    case Holohedry::tetragonal:
-      ok = snap_param_tet(dv, dcos, dsin);
-      break;
-    case Holohedry::trigonal:
-      ok = snap_param_tri(dv, dcos, dsin);
-      break;
-    case Holohedry::hexagonal:
-      ok = snap_param_hex(dv, dcos, dsin);
-      break;
-    case Holohedry::cubic:
-      ok = snap_param_cub(dv, dcos, dsin);
-      break;
-    case Holohedry::triclinic:
-    default:
-      ok = true;
+    // determine if basis vectors are connected by symmetry operations
+    std::vector<std::array<int,3>> eis {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+    // (a-b, b-c, c-a), (a*-b*, b*-c*, c*-a*)
+    bool real[3]{false, false, false}, dual[3]{false, false, false};
+    for (size_t i=0; i<3u; ++i){
+      const auto j{(i+1)%3u};
+      // Real lattice vectors rotate like v' = R v
+      real[i] = _point.mat_vec_links(eis[i], eis[j]);
+      // Reciprocal lattice vectors rotate like q' = tr(R) q = tr(tr(q) R)
+      dual[i] = _point.vec_mat_links(eis[i], eis[j]);
     }
-    return ok;
+    if (real[0] && real[1]) /* a-b + b-c -> a-c */ {
+      // single lattice length
+      dv[0] = dv[1] = dv[2] = (dv[0] + dv[1] + dv[2])/T(3);
+      if (dual[0] && dual[1]) /* a*-b* + b*-c* -> a*-c* */ {
+        // also single lattice angle
+        dcos[0] = dcos[1] = dcos[2] = (dcos[0] + dcos[1] + dcos[2])/T(3);
+        dsin[1] = dsin[2] = dsin[2] = std::sqrt(1 - dcos[0] * dcos[0]);
+      } else {
+        for (size_t i=0; i<3u; ++i) if (dual[i]) {
+          const auto j{(i+1)%3u};
+          dcos[i] = dcos[j] = (dcos[i] + dcos[j]) / T(2);
+          dsin[i] = dsin[j] = std::sqrt(1 - dcos[i] * dcos[i]);
+        }
+      }
+    } else {
+      // check for two-connected basis vectors
+      for (size_t i=0; i<3u; ++i) if (real[i]) {
+        // {i: pair} = {0: a-b, 1: b-c, 2: c-a}
+        const auto j{(i+1)%3u};
+        dv[i] = dv[j] = (dv[i] + dv[j]) / T(2);
+        if (dual[0] && dual[1]){
+          throw std::runtime_error("How can more than two dual-vectors be mapped when only two real-vectors are mapped?");
+        }
+        for (size_t k=0; k<3u; ++k) if(k!=i && dual[k]){
+        throw std::runtime_error("How can a dual-vector be mapped if its real-vector is not mapped?");
+        }
+        if (dual[i]) {
+          dcos[i] = dcos[j] = (dcos[i] + dcos[j]) / T(2);
+          dsin[i] = dsin[j] = std::sqrt(1 - dcos[i] * dcos[i]);
+        }
+      }
+    }
+    return real[0] || real[1] || real[2]; // signal if we did anything
   }
   void snap_basis_vectors_to_symmetry(){
     // calculate lattice parameters from already-set _real_vectors:
     auto dv = lengths(LengthUnit::angstrom);
     auto [dcos, dsin] = inter_facial_angles_to_cosines_sines(angles(LengthUnit::angstrom), AngleUnit::radian);
-    if (!snap_parameters_to_symmetry(dv, dcos, dsin)) {
+    if (snap_parameters_to_symmetry(dv, dcos, dsin)) {
       // determine the re-orientation matrix necessary to align the real basis
       // vectors with the 'standard' orientation of a || x, b⋅z == 0, b⋅y > 0
       auto R = standard_orientation_matrix(_real_vectors);
@@ -490,6 +371,86 @@ private:
       for (auto & x: _reciprocal_vectors) x *= math::two_pi;
     }
   }
+//  void snap_basis_vectors_to_symmetry(){
+//    using approx_float::scalar;
+//    using linear_algebra::dot;
+//    using linear_algebra::norm, linear_algebra::mul_mat_mat, linear_algebra::mul_mat_vec;
+//    matrix_t vectors{{0,0,0, 0,0,0, 0,0,0}}, deviations{{0,0,0, 0,0,0, 0,0,0}};
+//    size_t counts[3]{0,0,0};
+//
+//    matrix_t _bv{_real_vectors}, _inv_bv{linear_algebra::mat_inverse(_real_vectors)};
+//
+//    std::vector<std::array<int,3>> e_i_list {{1, 0, 0}, {0, 1, 0}, {0, 0, 1},
+//                                             {-1, 0, 0}, {0, -1, 0}, {0, 0, -1},
+//                                             {1, 1, 0}, {1, 0, 1}, {0, 1, 1},
+//                                             {-1, 1, 0}, {-1, 0, 1}, {0, -1, 1},
+//                                             {1, -1, 0}, {1, 0, -1}, {0, 1, -1},
+//                                             {-1, -1, 0}, {-1, 0, -1}, {0, -1, -1},
+//                                             {1, 1, 1}, {-1, 1, 1}, {1, -1, 1},
+//                                             {1, 1, -1}, {-1, -1, 1}, {-1, 1, -1},
+//                                             {1, -1, -1}, {-1, -1, -1}};
+//    auto vectors_match = [](const auto & a, const auto & b){
+//      if (a[0] * b[0] + a[1] * b[1] + a[2] * b[2]) return true;
+//      return false;
+//    };
+//    std::vector<vector_t> vs;
+//    for (size_t i=0; i<3u; ++i) vs.push_back(vector(LengthUnit::angstrom, i));
+//
+//    std::array<std::vector<vector_t>, 3> all_e_j;
+//
+//    for (const auto & e_i_lu: e_i_list){
+//      vector_t e_i_c{0,0,0};
+//      for (size_t i=0; i<3u; ++i) if (e_i_lu[i]) {
+//        for (size_t j=0; j<3u; ++j) e_i_c[j] += e_i_lu[i] * vs[i][j];
+//      }
+//      // loop over all output real space basis vectors
+//      for (size_t e_j =0; e_j <3u; ++e_j){
+//        std::array<int,3> e_j_lu{{0,0,0}}; e_j_lu[e_j] = 1;
+//        if (!vectors_match(e_i_lu, e_j_lu)) {
+//          info_update("Operations which map ", e_i_lu," to ", e_j_lu);
+//          // and for all point group operations that link e_i to e_j
+//          for (const auto &r : _point.mat_vec_linking_operations(e_i_lu, e_j_lu)) {
+//            // The rotation matrix in cartesian coordinates
+//            auto r_c = mul_mat_mat(_bv, mul_mat_mat(r, _inv_bv));
+//            // now rotate the cartesian basis vector to point along e_j
+//            auto e_j_c = mul_mat_vec(r_c, e_i_c);
+//            //          info_update(e_j_c);
+//            // add the result to the output basis vector at 'e_j'
+//            for (size_t i = 0; i < 3u; ++i) vectors[e_j + 3u * i] += e_j_c[i];
+//            // add the difference to the output deviations at 'e_j'
+//            for (size_t i = 0; i < 3u; ++i) {
+//              auto x = e_j_c[i] - _bv[e_j + 3u * i];
+//              deviations[e_j + 3u * i] += x * x;
+//            }
+//            ++counts[e_j];
+//            all_e_j[e_j].push_back(e_j_c);
+//          }
+//        }
+//      }
+//    }
+//    // Show all found 'matching' basis vectors:
+//    for (size_t i=0; i<3; ++i){
+//      std::cout << i << ". basis vectors" << std::endl;
+//      for (const auto & x: all_e_j[i]){
+//        for (const auto & z: x) std::cout << std::fixed << std::setprecision(16) << std::setw(20) << z << " ";
+//        std::cout << std::endl;
+//      }
+//      std::cout << std::endl;
+//    }
+//
+//    // complete finding the average output basis vectors
+//    for (size_t z=0; z<9u; ++z) vectors[z] /= static_cast<T>(counts[z % 3u]);
+//    for (size_t z=0; z<9u; ++z) deviations[z] /= static_cast<T>(counts[z % 3u]);
+//    auto greatest_deviation = std::sqrt(*std::max_element(deviations.begin(), deviations.end()));
+//    for (size_t z=0; z<9u; ++z) deviations[z] = std::abs(vectors[z] - _real_vectors[z]);
+//    auto greatest_change = *std::max_element(deviations.begin(), deviations.end());
+//    info_update("Deviations ", greatest_deviation, " changes ", greatest_change);
+//
+//    // TODO actually check if the basis vectors changed?
+//    _real_vectors = vectors;
+//    _reciprocal_vectors = transpose(linear_algebra::mat_inverse(_real_vectors));
+//    for (auto & x: _reciprocal_vectors) x *= math::two_pi;
+//  }
   void set_vectors(const vector_t& v, const vector_t& a, LengthUnit lu, AngleUnit angle_unit, bool snap_to_symmetry=false){
     auto [cos, sin] = inter_facial_angles_to_cosines_sines(a, angle_unit);
     // arrays are small; so copying shouldn't hurt
@@ -502,8 +463,7 @@ private:
     default:
       throw std::logic_error("The length unit must be angstrom or inverse angstrom!");
     }
-    if (snap_to_symmetry && !snap_parameters_to_symmetry(dv, dcos, dsin)){
-      // dv, dcos, and/or dsin updated -- recalculate rv, rcos, rsin from them
+    if (snap_to_symmetry && snap_parameters_to_symmetry(dv, dcos, dsin)){
       std::tie(rv, rcos, rsin) = dual_lattice_parameters(dv, dcos, dsin);
     }
     // the B-matrix as in Acta Cryst. (1967). 22, 457 [with the 2pi convention]

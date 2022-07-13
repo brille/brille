@@ -143,23 +143,34 @@ TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2
   for (size_t i=0; i<W.size(); ++i) mots.push_back(Motion<int,double>(W[i], w[i]));
   Symmetry sym(mots);
   //
-  auto wrong_lat = Direct<double>(latmat, MatrixVectors::row, sym);
-
-  std::cout << wrong_lat.to_verbose_string();
+  LengthUnit lu { LengthUnit::angstrom };
+  AngleUnit au {AngleUnit::degree };
   //
-  std::array<double, 3> wrong_angstrom {{7.5839128243499987, 7.5839128243445124, 7.5839128243445124}};
-  std::array<double, 3> wrong_degrees {{59.9999999999612257, 60.0000000000193836, 60.0000000000193836}};
-
-  auto wrong_lengths = wrong_lat.lengths(LengthUnit::angstrom);
-  auto wrong_angles = wrong_lat.angles(LengthUnit::angstrom, AngleUnit::degree);
-  for (size_t i=0; i<3; ++i){
-    //    REQUIRE(wrong_angstrom[i] == wrong_lengths[i]);
-    //    REQUIRE(wrong_degrees[i] == wrong_angles[i]);
-    std::cout << wrong_angstrom[i] - wrong_lengths[i] << ", ";
-    std::cout << wrong_degrees[i] - wrong_angles[i] << std::endl;
-  }
+  auto wrong_lat = Direct<double>(latmat, MatrixVectors::row, sym);
+  auto wrong_lengths = wrong_lat.lengths(lu);
+  auto wrong_angles = wrong_lat.angles(lu, au);
 
   auto right_lat = Direct<double>(latmat, MatrixVectors::row, sym, true);
+  auto right_lengths = right_lat.lengths(lu);
+  auto right_angles = right_lat.angles(lu, au);
 
-  std::cout << right_lat.to_verbose_string();
+  auto std_dev = [](const auto & v){
+    double m{0};
+    for (const auto & x: v) m += x;
+    m /= static_cast<double>(v.size());
+    double s{0};
+    for (const auto & x: v) s += (x-m)*(x-m);
+    s = std::sqrt(s) / static_cast<double>(v.size() - 1);
+    return s;
+  };
+  // snapping should improve the standard deviation in the parameters
+  REQUIRE(std_dev(right_lengths) <= std_dev(wrong_lengths));
+  REQUIRE(std_dev(right_angles) <= std_dev(wrong_angles));
+
+  auto wrong_mat = wrong_lat.to_xyz(lu);
+  auto right_mat = right_lat.to_xyz(lu);
+  for (size_t i=0; i<9u; ++i){
+    // snapping to symmetry should preserve the basis vector orientation
+    REQUIRE(approx_float::scalar(wrong_mat[i], right_mat[i]));
+  }
 }

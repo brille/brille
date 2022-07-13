@@ -25,22 +25,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
            and primitive lattices for seven centring types.
 */
 #include "spg_database.hpp"
+#include "linear_algebra.hpp"
 namespace brille {
-
-/*! \brief Transpose a flattened matrix
-
-A square matrix can be indexed by its row and column or by a linear index
-starting from the first row and first column. This function takes an array
-of the linear-indexed elements of a 3x3 square matrix and returns another
-such array with the row and column indices switched.
-
-\param a the flattened-3x3 matrix to transpose
-\returns aᵀ in flattened form
-*/
-template<class T> std::array<T,9> transpose(const std::array<T,9>& a){
-  return std::array<T,9>({a[0],a[3],a[6],a[1],a[4],a[7],a[2],a[5],a[8]});
-}
-
 /*! \brief A class to hold transformation matricies and their inverse, with the matrix
 stored in an object determined by a provided Bravais centring type.
 
