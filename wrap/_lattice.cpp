@@ -29,6 +29,13 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 namespace py = pybind11;
 
+static brille::LengthUnit lat_type(bool direct){
+  return direct ? brille::LengthUnit::angstrom : brille::LengthUnit::inverse_angstrom;
+}
+static brille::MatrixVectors mat_type(bool row){
+  return row ? brille::MatrixVectors::row : brille::MatrixVectors::column;
+}
+
 void wrap_lattice(py::module &m){
   using namespace pybind11::literals;
   using namespace brille;
@@ -72,7 +79,7 @@ void wrap_lattice(py::module &m){
        const bool dir){
     auto len = np2sa<double,3>(lengths);
     auto ang = np2sa<double,3>(angles);
-    return Lattice<double>(len, ang, sym, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
+    return Lattice<double>(lat_type(dir), len, ang, sym);
   }),"basis_vector_lengths"_a, "basis_vector_angles"_a, "symmetry"_a, py::kw_only(), "real_space"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& lengths,
@@ -81,7 +88,7 @@ void wrap_lattice(py::module &m){
        const bool dir){
     auto len = np2sa<double,3>(lengths);
     auto ang = np2sa<double,3>(angles);
-    return Lattice<double>(len, ang, sym, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
+    return Lattice<double>(lat_type(dir),len, ang, sym);
   }),"basis_vector_lengths"_a, "basis_vector_angles"_a, "symmetry_information"_a="P 1", py::kw_only(), "real_space"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& lengths,
@@ -91,7 +98,7 @@ void wrap_lattice(py::module &m){
        const bool dir) {
     auto len = np2sa<double,3>(lengths);
     auto ang = np2sa<double,3>(angles);
-    return Lattice<double>(len, ang, n, c, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
+    return Lattice<double>(lat_type(dir), len, ang, n, c);
   }), "basis_vector_lengths"_a, "basis_vector_angles"_a, "HM_name"_a, "HM_choice"_a, py::kw_only(), "real_space"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& vectors,
@@ -99,7 +106,7 @@ void wrap_lattice(py::module &m){
        const bool dir,
        const bool row) {
     auto mat = np2sa<double,9>(vectors);
-    return Lattice<double>(mat, row ? MatrixVectors::row : MatrixVectors::column, sym, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
+    return Lattice<double>(lat_type(dir), mat, mat_type(row), sym);
   }),"basis_vectors"_a, "symmetry"_a, py::kw_only(), "real_space"_a=true, "row_vectors"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& vectors,
@@ -109,7 +116,7 @@ void wrap_lattice(py::module &m){
        const bool dir,
        const bool row) {
     auto mat = np2sa<double,9>(vectors);
-    return Lattice<double>(mat, row ? MatrixVectors::row : MatrixVectors::column, sym, bas, snap, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
+    return Lattice<double>(lat_type(dir), mat, mat_type(row), sym, bas, snap);
   }),"basis_vectors"_a, "symmetry"_a, "basis"_a, py::kw_only(), "snap_to_symmetry"_a=false, "real_space"_a=true, "row_vectors"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& vectors,
@@ -117,7 +124,7 @@ void wrap_lattice(py::module &m){
        const bool dir,
        const bool row) {
     auto mat = np2sa<double,9>(vectors);
-    return Lattice<double>(mat, row ? MatrixVectors::row : MatrixVectors::column, sym, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
+    return Lattice<double>(lat_type(dir), mat, mat_type(row), sym);
   }),"basis_vectors"_a, "symmetry_information"_a="P 1", py::kw_only(), "real_space"_a=true, "row_vectors"_a=true);
   cls.def(py::init(
     [](const py::array_t<double>& vectors,
@@ -126,7 +133,7 @@ void wrap_lattice(py::module &m){
        const bool dir,
        const bool row) {
     auto mat = np2sa<double,9>(vectors);
-    return Lattice<double>(mat, row ? MatrixVectors::row : MatrixVectors::column, n, c, dir ? LengthUnit::angstrom : LengthUnit::inverse_angstrom);
+    return Lattice<double>(lat_type(dir), mat, mat_type(row), n, c);
   }),"basis_vectors"_a, "HM_name"_a, "HM_choice"_a, py::kw_only(), "real_space"_a=true, "row_vectors"_a=true);
 
   // accessors
