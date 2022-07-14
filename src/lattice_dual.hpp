@@ -25,26 +25,26 @@ standard_orientation_matrix(const std::array<T, 9>& bv){
    *   Find the rotation matrix which takes us to the standard upper triangular
    *   form with flattened matrix {a, bx, cx, 0, by, cy, 0, 0, cz}
    * */
-  // tan(ψ) = -ay / az
-  S ψ = std::atan2(-bv[3], bv[6]);
-  auto [ψc, ψs] = math::cos_and_sin(ψ);
+  // tan(mu) = -ay / az
+  S mu = std::atan2(-bv[3], bv[6]);
+  auto [c_mu, s_mu] = math::cos_and_sin(mu);
 
-  // tan(θ) = -az / (ax * cos(ψ))
-  S θ = std::atan2(-bv[6], bv[0] * ψc);
-  auto [θc, θs] = math::cos_and_sin(θ);
+  // tan(nu) = -az / (ax * cos(mu))
+  S nu = std::atan2(-bv[6], bv[0] * c_mu);
+  auto [c_nu, s_nu] = math::cos_and_sin(nu);
 
-  // tan(ϕ) = (bx sin(θ) - by cos(θ) sin(ψ) + bz cos(θ) cos(ψ)) / (by cos(ψ) + bz sin(ψ))
-  S num = bv[1] * θs - bv[4] * θc * ψs + bv[7] * θc * ψc;
-  S den = bv[4] * ψc + bv[7] * ψs;
-  S ϕ = std::atan2(num, den);
-  auto [ϕc, ϕs] = math::cos_and_sin(ϕ);
+  // tan(xi) = (bx sin(nu) - by cos(nu) sin(mu) + bz cos(nu) cos(mu)) / (by cos(mu) + bz sin(mu))
+  S num = bv[1] * s_nu - bv[4] * c_nu * s_mu + bv[7] * c_nu * c_mu;
+  S den = bv[4] * c_mu + bv[7] * s_mu;
+  S xi = std::atan2(num, den);
+  auto [c_xi, s_xi] = math::cos_and_sin(xi);
 
   // Rotation matrix, verified 'by hand' multiple times.
-  std::array<S,9> rotation_matrix{{
-      θc,                      θs * ψs,                -θs * ψc,
-      ϕs * θs,  ϕc * ψc - ϕs * θc * ψs,  ϕc * ψs + ϕs * θc * ψc,
-      ϕc * θs, -ϕs * ψc - ϕc * θc * ψs, -ϕs * ψs + ϕc * θc * ψc
-  }};
+  std::array<S,9> rotation_matrix{
+      {c_nu,                              s_nu * s_mu,                      -s_nu * c_mu,
+       s_xi * s_nu,  c_xi * c_mu - s_xi * c_nu * s_mu,  c_xi * s_mu + s_xi * c_nu * c_mu,
+       c_xi * s_nu, -s_xi * c_mu - c_xi * c_nu * s_mu, -s_xi * s_mu + c_xi * c_nu * c_mu}
+  };
   return rotation_matrix;
 }
 
