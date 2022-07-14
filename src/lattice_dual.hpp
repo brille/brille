@@ -306,6 +306,16 @@ private:
     }
   }
   bool snap_parameters_to_symmetry(std::array<T, 3>& dv, std::array<T, 3>& dcos, std::array<T, 3>& dsin){
+    // check if centring can give us a hint:
+    /* If the Lattice has spacegroup operations with centering is it *not*
+     * primitive. If the centering indicates that it is Rhombohedral then
+     * it is actually the Hexagonal setting of a rhombohedral lattice, so
+     * two angles must be 90 degrees and the third 120 degrees.
+     * If it is A,B,C Face centred, I Body centred, F face centred, then
+     * the symmetry-constrained angles *must* be 90 degrees.
+     * */
+    // don't use the stored Bravais value in case of user error?
+    bool centring_hint{_space.getcentring() != Bravais::P};
     // determine if basis vectors are connected by symmetry operations
     std::vector<std::array<int,3>> eis {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
     // (a-b, b-c, c-a), (a*-b*, b*-c*, c*-a*)
@@ -317,17 +327,32 @@ private:
       // Reciprocal lattice vectors rotate like q' = tr(R) q = tr(tr(q) R)
       dual[i] = _point.vec_mat_links(eis[i], eis[j]);
     }
+    std::array<T,3> orig_v{{0,0,0}}, orig_cos{{0,0,0}};
+    if (real[0] || real[1] || real[2]) {
+      for(size_t i=0; i<3u; ++i){
+        orig_v[i] = dv[i];
+        orig_cos[i] = dcos[i];
+      }
+    }
     if (real[0] && real[1]) /* a-b + b-c -> a-c */ {
       // single lattice length
       dv[0] = dv[1] = dv[2] = (dv[0] + dv[1] + dv[2])/T(3);
       if (dual[0] && dual[1]) /* a*-b* + b*-c* -> a*-c* */ {
         // also single lattice angle
-        dcos[0] = dcos[1] = dcos[2] = (dcos[0] + dcos[1] + dcos[2])/T(3);
+        if (centring_hint){
+          dcos[0] = dcos[1] = dcos[2] = T(0);
+        } else {
+          dcos[0] = dcos[1] = dcos[2] = (dcos[0] + dcos[1] + dcos[2])/T(3);
+        }
         dsin[1] = dsin[2] = dsin[2] = std::sqrt(1 - dcos[0] * dcos[0]);
       } else {
         for (size_t i=0; i<3u; ++i) if (dual[i]) {
           const auto j{(i+1)%3u};
-          dcos[i] = dcos[j] = (dcos[i] + dcos[j]) / T(2);
+          if (centring_hint && _bravais != Bravais::R){
+            dcos[i] = dcos[j] = T(0);
+          } else {
+            dcos[i] = dcos[j] = (dcos[i] + dcos[j]) / T(2);
+          }
           dsin[i] = dsin[j] = std::sqrt(1 - dcos[i] * dcos[i]);
         }
       }
@@ -344,12 +369,37 @@ private:
         throw std::runtime_error("How can a dual-vector be mapped if its real-vector is not mapped?");
         }
         if (dual[i]) {
-          dcos[i] = dcos[j] = (dcos[i] + dcos[j]) / T(2);
+          if (centring_hint && _bravais == Bravais::R){
+            const auto k{(i+2)%3u};
+            std::tie(dcos[k], dsin[k]) = math::cos_and_sin_d(T(120));
+          }
+          if (centring_hint){
+            dcos[i] = dcos[j] = T(0);
+          } else {
+            dcos[i] = dcos[j] = (dcos[i] + dcos[j]) / T(2);
+          }
           dsin[i] = dsin[j] = std::sqrt(1 - dcos[i] * dcos[i]);
         }
       }
     }
-    return real[0] || real[1] || real[2]; // signal if we did anything
+
+    bool changed{false};
+    if (real[0] || real[1] || real[2]){
+      std::ostringstream msg;
+      msg << "Basis vector lengths, angles changed by (";
+      for (size_t i=0; i<3u; ++i) {
+        if (!approx_float::scalar(orig_v[i] - dv[i], 0.)) changed = true;
+        msg << " " << dv[i] - orig_v[i];
+      }
+      msg << " )Å, (";
+      for(size_t i=0; i<3u; ++i){
+        if (!approx_float::scalar(orig_cos[i] - dcos[i], 0.)) changed=true;
+        msg << " " << std::acos(dcos[i]) - std::acos(orig_cos[i]);
+      }
+      msg << ")°";
+      info_update_if(changed, msg.str());
+    }
+    return changed; // signal if we did anything
   }
   void snap_basis_vectors_to_symmetry(){
     // calculate lattice parameters from already-set _real_vectors:
