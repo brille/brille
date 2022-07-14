@@ -68,8 +68,8 @@ class UtilsTestBZ (unittest.TestCase):
     def test_invalid_input_wrong_spg(self):
         # Tests incorrect spacegroup for lattice parameters - cannot find IR wedge
         with self.assertRaises(RuntimeError):
-            bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], 'P 6')
-        bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], 'P 6', wedge_search=False)
+            bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], 'P 6', snap_to_symmetry=False)
+        bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], 'P 6', wedge_search=False, snap_to_symmetry=False)
         self.check_lattice(bz, [4, 5, 6] + [np.pi/2]*3)
         
     def test_invalid_input_negative_squared_vol(self):

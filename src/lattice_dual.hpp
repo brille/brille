@@ -166,145 +166,145 @@ public:
    * @param p Real space point symmetry operations
    * @param a Real space lattice atom basis
    */
-  Impl(matrix_t v, matrix_t r, matrix_t m, matrix_t rm, Bravais b, Symmetry s, PointSymmetry p, Basis a, bool snap_to_symmetry=false)
+  Impl(matrix_t v, matrix_t r, matrix_t m, matrix_t rm, Bravais b, Symmetry s, PointSymmetry p, Basis a, bool snap_to_symmetry=true)
       : _real_vectors{std::move(v)},
         _reciprocal_vectors{std::move(r)},
         _real_metric{std::move(m)},
         _reciprocal_metric{std::move(rm)},
         _bravais(b), _space(std::move(s)), _point(std::move(p)), _basis(std::move(a))
   {
-    if (snap_to_symmetry) {
-      auto success = _basis.snap_to(_space.getallm());
-      if (!success){
-        std::string msg("Requested snap_to_symmetry failed with result \n");
-        msg += _basis.to_string();
-        throw std::runtime_error(msg);
-      }
-    }
+    snap_basis_to_symmetry(snap_to_symmetry);
   }
   /*! \brief Lattice parameters and Symmetry constructor
    *
+   * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
    * @param lengths Basis vector lengths in units given by `lu`
    * @param angles Inter-basis-vector angles in units given by `au`
    * @param s The Symmetry operation of the real space lattice
-   * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
    * @param au Indicates if the angles are expressed in units of degrees, radians, or fractions of pi-radians
    */
-  Impl(const LengthUnit lu, const vector_t & lengths, const vector_t & angles, const Symmetry & s, bool snap_to_symmetry=false, const AngleUnit au=AngleUnit::not_provided)
+  Impl(const LengthUnit lu, const vector_t & lengths, const vector_t & angles, const Symmetry & s, Basis basis=Basis(), bool snap_to_symmetry=true, const AngleUnit au=AngleUnit::not_provided)
+  : _basis(std::move(basis))
   {
     spacegroup_symmetry(s);
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(lengths, angles, lu, au, snap_to_symmetry);
     set_metrics();
+    snap_basis_to_symmetry(snap_to_symmetry);
   }
   /*! \brief Lattice basis vectors and Symmetry constructor
    *
+   * @param lu Indicates if the vectors are that of the real or reciprocal space
    * @param vectors A flattened row-ordered 3x3 matrix of the basis vectors
    * @param mv Indicates if the pre-flattened matrix was row- or column-vectors
    * @param s The Symmetry operation of the real space lattice
-   * @param lu Indicates if the vectors are that of the real or reciprocal space
+   * @param basis Real space lattice atom basis
+   * @param snap_to_symmetry Whether to enforce the symmetry operations on the basis and lattice parameters
    */
-  Impl(const LengthUnit lu, const matrix_t & vectors, const MatrixVectors mv, const Symmetry & s, bool snap_to_symmetry=false)
+  Impl(const LengthUnit lu, const matrix_t & vectors, const MatrixVectors mv, const Symmetry & s, Basis basis=Basis(), bool snap_to_symmetry=true)
+  : _basis(std::move(basis))
   {
     spacegroup_symmetry(s);
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
     set_metrics();
-  }
-  /*! \brief Lattice basis vectors, Symmetry, and Basis construction
-   *
-   * @param vectors A flattened row-ordered 3x3 matrix of the basis vectors
-   * @param mv Indicates if the pre-flattened matrix was row- or column-vectors
-   * @param s Real space symmetry operations
-   * @param b Real space lattice atom basis
-   * @param snap_to_symmetry Whether to enforce the symmetry operations on the basis
-   * @param lu Indicates if the vectors are of the real or reciprocal basis
-   */
-  Impl(const LengthUnit lu, const matrix_t & vectors, const MatrixVectors mv, const Symmetry & s, Basis b, const bool snap_to_symmetry=false): _basis(std::move(b))
-  {
-    set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu);
-    set_metrics();
-    spacegroup_symmetry(s);
-    _bravais = _space.getcentring();
-    set_point_symmetry();
-    if (snap_to_symmetry) {
-      auto success = _basis.snap_to(_space.getallm());
-      if (!success){
-        std::string msg("Requested snap_to_symmetry failed with result \n");
-        msg += _basis.to_string();
-        throw std::runtime_error(msg);
-      }
-    }
+    snap_basis_to_symmetry(snap_to_symmetry);
   }
   /*! \brief Lattice parameters and Hermann-Maunguin spacegroup information constructor
    *
+   * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
    * @param lengths Basis vector lengths in units given by `lu`
    * @param angles Inter-basis-vector angles in units given by `au`
    * @param s short or long Hermann-Mauguin group name, as used in the International Tables of Crystallography
    * @param c Hermann-Mauguin centering/axis 'choice', only required if non-default
-   * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
+   * @param basis Real space lattice atom basis
+   * @param snap_to_symmetry Whether to enforce the symmetry operations on the basis and lattice parameters
    * @param au Indicates if the angles are expressed in units of degrees, radians, or fractions of pi-radians
    */
-  Impl(const LengthUnit lu, const vector_t & lengths, const vector_t & angles, const std::string& s, const std::string& c, bool snap_to_symmetry=false, const AngleUnit au=AngleUnit::not_provided)
+  Impl(const LengthUnit lu, const vector_t & lengths, const vector_t & angles, const std::string& s, const std::string& c, Basis basis=Basis(), bool snap_to_symmetry=true, const AngleUnit au=AngleUnit::not_provided)
+  : _basis(std::move(basis))
   {
     set_space_symmetry(s, c);
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(lengths, angles, lu, au, snap_to_symmetry);
     set_metrics();
+    snap_basis_to_symmetry(snap_to_symmetry);
   }
   /*! \brief Lattice parameters and string-encoded spacegroup information constructor
    *
+  * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
    *@param lengths Basis vector lengths in units given by `lu`
   * @param angles Inter-basis-vector angles in units given by `au`
   * @param s Hall symbol, CIF xyz operations, or International Table group name
-  * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
+  * @param basis Real space lattice atom basis
+  * @param snap_to_symmetry Whether to enforce the symmetry operations on the basis and lattice parameters
   * @param au Indicates if the angles are expressed in units of degrees, radians, or fractions of pi-radians
    */
-  Impl(const LengthUnit lu, const vector_t & lengths, const vector_t & angles, const std::string& s, bool snap_to_symmetry=false, const AngleUnit au=AngleUnit::not_provided)
+  Impl(const LengthUnit lu, const vector_t & lengths, const vector_t & angles, const std::string& s, Basis basis=Basis(), bool snap_to_symmetry=true, const AngleUnit au=AngleUnit::not_provided)
+  : _basis(std::move(basis))
   {
     set_space_symmetry(s);
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(lengths, angles, lu, au, snap_to_symmetry);
     set_metrics();
+    snap_basis_to_symmetry(snap_to_symmetry);
   }
   /*! \brief Lattice basis vectors and Hermann-Maunguin spacegroup information constructor
    *
+   * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
    * @param vectors A flattened row-ordered 3x3 matrix of the basis vectors
    * @param mv Indicates if the pre-flattened matrix was row- or column-vectors
    * @param s short or long Hermann-Mauguin group name, as used in the International Tables of Crystallography
    * @param c Hermann-Mauguin centering/axis 'choice', only required if non-default
-   * @param lu Indicates if the lengths are for the real or reciprocal space basis vectors
+   * @param basis Real space lattice atom basis
+   * @param snap_to_symmetry Whether to enforce the symmetry operations on the basis and lattice parameters
    */
-  Impl(const LengthUnit lu, const matrix_t & vectors, const MatrixVectors mv, const std::string& s, const std::string& c, bool snap_to_symmetry=false)
+  Impl(const LengthUnit lu, const matrix_t & vectors, const MatrixVectors mv, const std::string& s, const std::string& c, Basis basis=Basis(), bool snap_to_symmetry=true)
+  : _basis(std::move(basis))
   {
     set_space_symmetry(s, c);
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
     set_metrics();
+    snap_basis_to_symmetry(snap_to_symmetry);
   }
   /*! \brief Lattice basis vectors and string-encoded spacegroup information constructor
    *
+   * @param lu Indicates if the vectors are of the real or reciprocal basis
    * @param vectors A flattened row-ordered 3x3 matrix of the basis vectors
    * @param mv Indicates if the pre-flattened matrix was row- or column-vectors
    * @param s Hall symbol, CIF xyz operations, or International Table group name
-   * @param lu Indicates if the vectors are of the real or reciprocal basis
+   * @param basis Real space lattice atom basis
+   * @param snap_to_symmetry Whether to enforce the symmetry operations on the basis and lattice parameters
    */
-  Impl(const LengthUnit lu, const matrix_t & vectors, const MatrixVectors mv, const std::string& s, bool snap_to_symmetry=false)
+  Impl(const LengthUnit lu, const matrix_t & vectors, const MatrixVectors mv, const std::string& s, Basis basis=Basis(), bool snap_to_symmetry=true)
+  : _basis(std::move(basis))
   {
     set_space_symmetry(s);
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
     set_metrics();
+    snap_basis_to_symmetry(snap_to_symmetry);
   }
 
 
 private:
+  void snap_basis_to_symmetry(const bool snap_to_symmetry){
+    if (snap_to_symmetry) {
+      auto success = _basis.snap_to(_space.getallm());
+      if (!success) {
+        std::string msg("Requested snap_to_symmetry failed with result \n");
+        msg += _basis.to_string();
+        throw std::runtime_error(msg);
+      }
+    }
+  }
   bool snap_parameters_to_symmetry(std::array<T, 3>& dv, std::array<T, 3>& dcos, std::array<T, 3>& dsin){
     // determine if basis vectors are connected by symmetry operations
     std::vector<std::array<int,3>> eis {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
@@ -655,12 +655,14 @@ public:
   [[nodiscard]] bool has_space_inversion() const {return _point.has_space_inversion();}
   [[nodiscard]] bool is_triclinic() const {return _point.higher(1).size() == 0u;}
 
-  Basis basis(const std::vector<vector_t>& pos, const std::vector<ind_t>& typ){
+  Basis basis(const std::vector<vector_t>& pos, const std::vector<ind_t>& typ, bool snap_to_symmetry=true){
     _basis = Basis(pos, typ);
+    snap_basis_to_symmetry(snap_to_symmetry);
     return _basis;
   }
-  Basis basis(const Basis& b){
+  Basis basis(const Basis& b, bool snap_to_symmetry=true){
     _basis = b;
+    snap_basis_to_symmetry(snap_to_symmetry);
     return _basis;
   }
 

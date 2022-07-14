@@ -146,11 +146,11 @@ TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2
   LengthUnit lu { LengthUnit::angstrom };
   AngleUnit au {AngleUnit::degree };
   //
-  auto wrong_lat = Direct<double>(latmat, MatrixVectors::row, sym);
+  auto wrong_lat = Direct<double>(latmat, MatrixVectors::row, sym, Basis(), false);
   auto wrong_lengths = wrong_lat.lengths(lu);
   auto wrong_angles = wrong_lat.angles(lu, au);
 
-  auto right_lat = Direct<double>(latmat, MatrixVectors::row, sym, true);
+  auto right_lat = Direct<double>(latmat, MatrixVectors::row, sym, Basis(), true);
   auto right_lengths = right_lat.lengths(lu);
   auto right_angles = right_lat.angles(lu, au);
 

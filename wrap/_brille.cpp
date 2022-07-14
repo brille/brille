@@ -75,6 +75,7 @@ PYBIND11_MODULE(_brille, m){
 
   )pbdoc";
   wrap_version(m);
+  wrap_basis(m);
   wrap_lattice(m);
   wrap_brillouinzone(m);
   wrap_mesh(m);
@@ -92,6 +93,5 @@ PYBIND11_MODULE(_brille, m){
   wrap_interpolator(m);
   wrap_debug(m);
   wrap_enums(m);
-  wrap_basis(m);
   wrap_approx(m);
 }

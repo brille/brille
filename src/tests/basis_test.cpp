@@ -33,9 +33,8 @@ TEST_CASE("CaHgO2 Lattice","[lattice][basis][issue63]"){
 
   auto bmv = brille::MatrixVectors::row;
 
-  // If no boolean flag is given (or if false is provided) the Lattic basis
-  // matches the input
-  auto bad_lat = Direct<double>(vectors, bmv,  symmetry, basis);
+  // If false provided to snap_to_symmetry the Lattice basis matches the input
+  auto bad_lat = Direct<double>(vectors, bmv,  symmetry, basis, false);
   auto bad_basis = bad_lat.basis();
   for (size_t i=0; i<4; ++i){
     for (size_t j=0; j<3; ++j){

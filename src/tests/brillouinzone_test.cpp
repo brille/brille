@@ -245,7 +245,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 imprecise failure","[bz_][mater
   //
   std::string hall_symbol = "-R 3";
   //
-  auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
+  auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol, Basis(), /*snap_to_symmetry=*/ false);
   auto ac = approx_float::Config().reciprocal(1e-11);
   REQUIRE_THROWS_AS(BrillouinZone(lat, ac), std::runtime_error);
 }
@@ -543,8 +543,8 @@ TEST_CASE("La2Zr2O7 BZ construction off-symmetry basis vector input","[bz_][la2z
   mots.reserve(W.size());
   for (size_t i=0; i<W.size(); ++i) mots.push_back(Motion<int,double>(W[i], w[i]));
   Symmetry sym(mots);
-  //
-  auto wrong = Direct<double>(latmat, MatrixVectors::row, sym);
+  // Without 'snap_to_symmetry' the basis vectors are off on the order of 2e-12
+  auto wrong = Direct<double>(latmat, MatrixVectors::row, sym, Basis(), false);
 
   // Without specifying a larger-than-normal tolerance the BrillouinZone
   // construction fails and a Runtime Error is thrown
@@ -556,7 +556,7 @@ TEST_CASE("La2Zr2O7 BZ construction off-symmetry basis vector input","[bz_][la2z
 
   // Or turning-on 'snap_to_symmetry' corrects the basis vectors to follow
   // the provided symmetry operations
-  auto lat = Direct<double>(latmat, MatrixVectors::row, sym, true);
+  auto lat = Direct<double>(latmat, MatrixVectors::row, sym, Basis(), true);
   // Such that the BrillouinZone construction succeeds with standard tolerances
   REQUIRE_NOTHROW(BrillouinZone(lat));
 }
