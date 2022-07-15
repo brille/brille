@@ -491,7 +491,13 @@ TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
   for (size_t i=0; i<rotations.size(); ++i) motions.emplace_back(rotations[i], translations[i]);
   auto sym = Symmetry(motions);
   auto bas = Basis(atom_positions, atom_types);
-  auto lat = Direct<double>(row_vectors, MatrixVectors::row, sym, bas);
+
+  auto make_lat = [&](bool snap){
+    return Direct<double>(row_vectors, MatrixVectors::row, sym, bas, snap);
+  };
+  info_update(make_lat(false).to_verbose_string());
+  auto lat = make_lat(true);
+  info_update(lat.to_verbose_string());
 
   auto bz = BrillouinZone(lat);
   auto goal_node_volume = bz.get_ir_polyhedron().volume() / static_cast<double>(1000);

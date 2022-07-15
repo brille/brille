@@ -178,15 +178,17 @@ TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2
 TEST_CASE("Basis vectors corrected","[limits][snap_to_symmetry]"){
   auto test = [](double eps){
     double a{3.95}, c{12.9};
-    std::array<double, 3> exact{a, a, c}, len{a+eps, a-eps, c}, ang{90.,90.,90.};
+    double two_pi_over_volume{math::two_pi / (a * a * c)};
+    std::array<double, 3> exact{a * c, a * c, a * a}, len{a+eps, a-eps, c}, ang{90.,90.,90.};
+    for (auto & x: exact) x *= two_pi_over_volume;
     // info_update("len=",len);
     auto lat = Direct<double>(len, ang, "I4/mmm", Basis(), true);
     // info_update(lat.to_string(LengthUnit::angstrom));
-    REQUIRE(approx_float::vector(exact.data(), lat.lengths(LengthUnit::angstrom).data()));
-    REQUIRE(approx_float::vector(ang.data(), lat.angles(LengthUnit::angstrom, AngleUnit::degree).data()));
+    REQUIRE(approx_float::vector(exact.data(), lat.lengths(LengthUnit::inverse_angstrom).data()));
+    REQUIRE(approx_float::vector(ang.data(), lat.angles(LengthUnit::inverse_angstrom, AngleUnit::degree).data()));
   };
 
-  for (int p=-17; p<0; ++p){
+  for (int p=-17; p<-9; ++p){
     for (int x=1; x<10; x+=2){
       auto eps = static_cast<double>(x) * std::pow(10.0, static_cast<double>(p));
       // std::cout << "p = " << p << ", eps = " << eps << std::endl;
