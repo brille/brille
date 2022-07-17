@@ -25,18 +25,20 @@ standard_orientation_matrix(const std::array<T, 9>& bv){
    *   Find the rotation matrix which takes us to the standard upper triangular
    *   form with flattened matrix {a, bx, cx, 0, by, cy, 0, 0, cz}
    * */
+	// Avoid (0, -1) -> pi in std::atan2:
+	auto arctan = [](T x, T y){return std::abs(x) ? std::atan2(x, y) : 0.;};
   // tan(mu) = -ay / az
-  S mu = std::atan2(-bv[3], bv[6]);
+  S mu = arctan(-bv[3], bv[6]);
   auto [c_mu, s_mu] = math::cos_and_sin(mu);
 
   // tan(nu) = -az / (ax * cos(mu))
-  S nu = std::atan2(-bv[6], bv[0] * c_mu);
+  S nu = arctan(-bv[6], bv[0] * c_mu);
   auto [c_nu, s_nu] = math::cos_and_sin(nu);
 
   // tan(xi) = (bx sin(nu) - by cos(nu) sin(mu) + bz cos(nu) cos(mu)) / (by cos(mu) + bz sin(mu))
   S num = bv[1] * s_nu - bv[4] * c_nu * s_mu + bv[7] * c_nu * c_mu;
   S den = bv[4] * c_mu + bv[7] * s_mu;
-  S xi = std::atan2(num, den);
+  S xi = arctan(num, den);
   auto [c_xi, s_xi] = math::cos_and_sin(xi);
 
   // Rotation matrix, verified 'by hand' multiple times.
@@ -386,26 +388,26 @@ private:
       for (size_t i=0; i<3u; ++i) {
         msg << " " << v[i] - orig_v[i];
       }
-      msg << " )Å, (";
+      msg << " )" << (is_real ? u8"Å" : u8"Å⁻¹") << ", (";
       for(size_t i=0; i<3u; ++i){
-        msg << " " << std::acos(c[i]) - std::acos(orig_cos[i]);
+        msg << " " << (std::acos(c[i]) - std::acos(orig_cos[i])) / math::pi * 180.;
       }
-      msg << ")°";
+      msg << u8")°";
       info_update(msg.str());
       return true;
     }
     return false;
   }
   void snap_basis_vectors_to_symmetry(){
-    // calculate lattice parameters from already-set _real_vectors:
-//    auto v = lengths(LengthUnit::angstrom);
-//    auto [c, s] = inter_facial_angles_to_cosines_sines(angles(LengthUnit::angstrom), AngleUnit::radian);
-    auto v = lengths(LengthUnit::inverse_angstrom);
-    auto [c, s] = inter_facial_angles_to_cosines_sines(angles(LengthUnit::inverse_angstrom), AngleUnit::radian);
-    if (snap_to_symmetry(false /*false == reciprocal parameters */, v, c, s)) {
+    // calculate lattice parameters from already-set _reciprocal_vectors
+		bool use_real{false};
+		auto lu = use_real ? LengthUnit::angstrom : LengthUnit::inverse_angstrom;
+    auto v = lengths(lu);
+    auto [c, s] = inter_facial_angles_to_cosines_sines(angles(lu), AngleUnit::radian);
+    if (snap_to_symmetry(use_real, v, c, s)) {
       // determine the re-orientation matrix necessary to align the real basis
       // vectors with the 'standard' orientation of a || x, b⋅z == 0, b⋅y > 0
-      auto R = standard_orientation_matrix(_real_vectors);
+      auto R = standard_orientation_matrix(use_real ? _real_vectors : _reciprocal_vectors);
       // build the upper-triangular basis vector column-vector matrix
       matrix_t ut {{
           v[0],  v[1] * c[2], v[2] * c[1],
@@ -413,11 +415,22 @@ private:
           T(0) , T(0)       , v[2] * unit_parallelpiped_volume(c) / s[2]
       }};
       // rotate the matrix back from the standard orientation to the user orientation
-//      _real_vectors = linear_algebra::mul_mat_mat(transpose(R), ut);
-//      _reciprocal_vectors = transpose(linear_algebra::mat_inverse(_real_vectors));
-//      for (auto & x: _reciprocal_vectors) x *= math::two_pi;
-      _reciprocal_vectors = linear_algebra::mul_mat_mat(transpose(R), ut);
-      _real_vectors = transpose(linear_algebra::mat_inverse(_reciprocal_vectors));
+			auto invR_ut = linear_algebra::mul_mat_mat(transpose(R), ut);
+			// provide a message to the user if the basis vectors have changed outside of approximate tolerance
+			if (!approx_float::matrix(3u, use_real ? _real_vectors.data() : _reciprocal_vectors.data(), invR_ut.data())){
+				std::ostringstream msg;
+				msg << "Basis vectors changed by [";
+				for (size_t i=0; i<3u; ++i){
+					msg << "(";
+					for (size_t j=0; j<3u; ++j) msg << " " << invR_ut[i + j*3u] -  _reciprocal_vectors[i + j*3u];
+					msg << " ), ";
+				}
+				msg << "] " << (use_real ? u8"Å" : u8"Å⁻¹");
+				info_update(msg.str());
+			}
+			// And actually update the stored parameters to the new reciprocal and real vectors
+			_reciprocal_vectors = invR_ut;
+			_real_vectors = transpose(linear_algebra::mat_inverse(_reciprocal_vectors));
       for (auto & x: _real_vectors) x *= math::two_pi;
     }
   }

@@ -166,12 +166,13 @@ TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2
   // snapping should improve the standard deviation in the parameters
   REQUIRE(std_dev(right_lengths) <= std_dev(wrong_lengths));
   REQUIRE(std_dev(right_angles) <= std_dev(wrong_angles));
-
-  auto wrong_mat = wrong_lat.to_xyz(lu);
-  auto right_mat = right_lat.to_xyz(lu);
+	//
+	auto rlu = LengthUnit::inverse_angstrom;
+  auto wrong_mat = wrong_lat.to_xyz(rlu);
+  auto right_mat = right_lat.to_xyz(rlu);
   for (size_t i=0; i<9u; ++i){
     // snapping to symmetry should preserve the basis vector orientation
-    REQUIRE(approx_float::scalar(wrong_mat[i], right_mat[i]));
+		REQUIRE(std::abs(wrong_mat[i] - right_mat[i]) < 1e-12);
   }
 }
 

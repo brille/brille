@@ -88,10 +88,13 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   for (auto i: diff.valItr()) REQUIRE(std::abs(i) < 2E-14);
 }
 
-TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
+TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest][nb]"){
   // The conventional cell for Nb
   std::array<double,3> len{3.2598, 3.2598, 3.2598}, ang{half_pi, half_pi, half_pi};
   auto lat = Direct(len, ang, "-I 4 2 3"); // was 529
+
+	info_update("Lattice \n",lat.to_verbose_string());
+
   BrillouinZone bz(lat);
   double max_volume = 0.01;
   BrillouinZoneNest3<double,double,double> bzn(bz, max_volume);
@@ -117,6 +120,9 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest]"){
   auto irp = bz.get_ir_polyhedron();
   auto Q = irp.rand_rejection(nQ); // already reciprocal lattice vectors
   // Q are now random points in the irreducible Brillouin zone polyhedron
+	
+	auto Q_in_irp = irp.contains(Q);
+	REQUIRE(std::find(Q_in_irp.begin(), Q_in_irp.end(), false) == Q_in_irp.end());
 
   // We may run into problems if any of the points are too close to the irBz
   // boundary where the components expressed in the primitive lattice are 0.5
