@@ -20,6 +20,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief A class holding a triangulated tetrahedral mesh and data for interpolation
 */
+#include <deque>
 // #include <set>
 // #include <vector>
 // #include <array>
@@ -39,8 +40,10 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 namespace brille {
 
 template<typename T,size_t N>
-static bool none_negative(const std::array<T,N>& x){
-  return !std::any_of(x.begin(), x.end(), [](T z){return z<0 && !brille::approx_float::scalar(z,0.);});
+static bool none_negative(const std::array<T,N>& x, const T t, const int n){
+  auto is_negative = [t, n](T z){return z<0 && !brille::approx_float::scalar(z, 0., t, t, n);};
+  auto any_negative = std::any_of(x.begin(), x.end(), is_negative);
+  return !any_negative;
 }
 
 /*! \brief A single tetrahedron
@@ -72,9 +75,9 @@ public:
   //
   [[nodiscard]] double volume() const {return volume_;}
   //
-  [[nodiscard]] std::array<double,4> weights(const bArray<double>& v, const bArray<double>& x) const {
+  [[nodiscard]] std::array<double,4> weights(const bArray<double>& v, const bArray<double>& x, const double t, const int n) const {
     std::array<double,4> w{{-1,-1,-1,-1}};
-    if (this->might_contain(x)){
+    if (this->might_contain(x,t,n)){
       double vol6 = volume_*6.0;
       w[0] = orient3d(x.ptr(0)    , v.ptr(vi[1]), v.ptr(vi[2]), v.ptr(vi[3])) / vol6;
       w[1] = orient3d(v.ptr(vi[0]), x.ptr(0)    , v.ptr(vi[2]), v.ptr(vi[3])) / vol6;
@@ -86,15 +89,17 @@ public:
   bool contains(
     const bArray<double>& v,
     const bArray<double>& x,
-    std::array<double,4>& w
+    std::array<double,4>& w,
+    const double t,
+    const int n
   ) const {
-    if (this->might_contain(x)){
+    if (this->might_contain(x,t,n)){
       double vol6 = volume_*6.0;
       w[0] = orient3d(x.ptr(0)    , v.ptr(vi[1]), v.ptr(vi[2]), v.ptr(vi[3])) / vol6;
       w[1] = orient3d(v.ptr(vi[0]), x.ptr(0)    , v.ptr(vi[2]), v.ptr(vi[3])) / vol6;
       w[2] = orient3d(v.ptr(vi[0]), v.ptr(vi[1]), x.ptr(0)    , v.ptr(vi[3])) / vol6;
       w[3] = orient3d(v.ptr(vi[0]), v.ptr(vi[1]), v.ptr(vi[2]), x.ptr(0)    ) / vol6;
-      return none_negative(w);
+      return none_negative(w, t, n);
     }
     return false;
   }
@@ -106,14 +111,14 @@ public:
     return msg;
   }
 private:
-  [[nodiscard]] bool might_contain(const bArray<double>& x) const {
+  [[nodiscard]] bool might_contain(const bArray<double>& x, const double t, const int n) const {
     std::array<double,3> d{0,0,0};
     d[0] = x.val(0,0) - centre_radius[0];
     d[1] = x.val(0,1) - centre_radius[1];
     d[2] = x.val(0,2) - centre_radius[2];
     double d2{0}, r2 = centre_radius[3]*centre_radius[3];
     for (size_t i=0; i<3u; ++i) d2 += d[i]*d[i];
-    return ( d2 < r2 || brille::approx_float::scalar(d2,r2) );
+    return ( d2 < r2 || brille::approx_float::scalar(d2,r2,t,t,n) );
   }
 };
 
@@ -156,11 +161,64 @@ public:
   template<typename... A> std::array<double,4> weights(A... args) {return boundary_.weights(args...);}
   //! Return the indexed vertices in addition to the relative interpolation weights
   [[nodiscard]] std::vector<std::pair<ind_t,double>> indices_weights(
-    const bArray<double>& v, const bArray<double>& x
+    const bArray<double>& v, const bArray<double>& x, const double t_tol, const int n_tol
   ) const
   {
-    std::array<double,4> w{0,0,0,0};
-    return _protected_indices_weights(v, x, w);
+    /* What if more than one branch 'contains' the point -- which happens any
+     * time the point is on an internal face of the tetrahedron nest.
+     * In this case we should follow all branches until we find all containing
+     * leaves, then pick the 'best' one.
+     * */
+    std::deque<NestNode> work;
+    for (const auto& b: branches_) work.emplace_back(b);
+    std::vector<std::vector<std::pair<ind_t, double>>> solutions;
+    while (!work.empty()) {
+      auto w = work.front().weights(v, x, t_tol, n_tol);
+      if (none_negative(w, t_tol, n_tol)) {
+        if (work.front().is_leaf()) {
+          auto vi = work.front().boundary().vertices();
+          std::vector<std::pair<ind_t, double>> solution;
+          for (size_t i = 0; i < 4u; ++i)
+              solution.emplace_back(vi[i], w[i]);
+          solutions.push_back(solution);
+        } else {
+          for (const auto &b : work.front().branches())
+            work.emplace_back(b);
+        }
+      }
+      work.pop_front();
+    }
+    // No solution found:
+    if (solutions.empty()) return {};
+    // More than one sol -- find the 'best' one:
+    size_t best{0};
+    if (solutions.size() > 1u) {
+      for (size_t i=0; i<solutions.size(); ++i){
+        bool better{true};
+        for (auto & j : solutions[i]) if (j.second <= 0) better = false;
+        if (better) best = i;
+      }
+    }
+    // (Attempt to) deal with slightly-negative weights by reducing maximum
+    auto is_zero = [t_tol, n_tol](double x){return approx_float::scalar(x, 0., t_tol, t_tol, n_tol);};
+    auto sol = solutions[best];
+    for (size_t i=0; i<4u; ++i){
+      // check this in the loop incase sol[i] modified in previous loop
+      if (is_zero(sol[i].second)) {
+        size_t max_at{0};
+        // same for max_at; previous loop may have modified maximum weight
+        for (size_t j=0; j<4u; ++j){
+          if (!is_zero(sol[j].second) && sol[j].second > sol[max_at].second) {
+            max_at = j;
+          }
+        }
+        sol[max_at].second += sol[i].second;
+      }
+    }
+    // Extract just the non-zero weight point(s)
+    std::vector<std::pair<ind_t, double>> out;
+    for (const auto & p: sol) if (!is_zero(p.second)) out.push_back(p);
+    return out;
   }
   //! Pull together all tetrahedra vertex indices at or below this level of the hierarchy
   [[nodiscard]] std::vector<std::array<ind_t,4>> tetrahedra() const {
@@ -191,29 +249,6 @@ public:
       }
     }
     return keys;
-  }
-protected:
-  std::vector<std::pair<ind_t,double>> _protected_indices_weights(
-    const bArray<double>& v, const bArray<double>& x, std::array<double,4>& w
-  ) const
-  {
-    // This node is either the root (in which case it contains all tetrahedra)
-    // or a tetrahedra below the root which definately contains the point x
-    // In the second case w has been set for us by the calling function.
-    if (this->is_leaf()){
-      std::array<ind_t,4> vi = boundary_.vertices();
-      std::vector<std::pair<ind_t,double>> iw;
-      for (size_t i=0; i<4u; ++i) if (!brille::approx_float::scalar(w[i], 0.))
-        iw.emplace_back(vi[i], w[i]);
-      return iw;
-    }
-    // This is not a leaf node. So continue down the tree
-    for (auto b: branches_){
-      w = b.weights(v,x);
-      if (none_negative(w)) return b._protected_indices_weights(v, x, w);
-    }
-    std::vector<std::pair<ind_t,double>> empty;
-    return empty;
   }
 };
 
@@ -305,8 +340,9 @@ public:
   indices_weights(const vert_t &x) const {
     if (x.ndim()!=2 || x.size(0) != 1u || x.size(1) != 3u)
       throw std::runtime_error("The indices and weights can only be found for one point at a time.");
-    // return root_.indices_weights(vertices_, map_, x);
-    return root_.indices_weights(vertices_, x);
+    auto t = approx_.reciprocal<double>();
+    auto n = approx_.digit();
+    return root_.indices_weights(vertices_, x, t, n);
   }
   unsigned check_before_interpolating(const vert_t& x) const{
     unsigned int mask = 0u;
@@ -332,9 +368,11 @@ public:
     // Interpolator2::interpolate_at through the constructor:
     brille::Array2<DataValues> vals2(vals);
     brille::Array2<DataVectors> vecs2(vecs);
+    auto t = approx_.reciprocal<double>();
+    auto n = approx_.digit();
     for (ind_t i=0; i<x.size(0); ++i){
       // auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
-      auto iw = root_.indices_weights(vertices_, x.extract(i));
+      auto iw = root_.indices_weights(vertices_, x.extract(i), t, n);
       data_.interpolate_at(iw, vals2, vecs2, i);
     }
     return std::make_tuple(vals, vecs);
@@ -358,12 +396,13 @@ public:
     brille::Array2<DataVectors> vecs2(vecs);
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     ind_t unfound=0;
+    auto t = approx_.reciprocal<double>();
+    auto n = approx_.digit();
     auto xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
-  #pragma omp parallel for default(none) shared(x, vals2, vecs2) reduction(+:unfound) firstprivate(xsize) schedule(dynamic)
+  #pragma omp parallel for default(none) shared(x, vals2, vecs2) reduction(+:unfound) firstprivate(xsize, t, n) schedule(dynamic)
     for (long long si=0; si<xsize; ++si){
       auto i = brille::utils::s2u<ind_t, long long>(si);
-      // auto iw = root_.indices_weights(vertices_, map_, x.extract(i));
-      auto iw = root_.indices_weights(vertices_, x.extract(i));
+      auto iw = root_.indices_weights(vertices_, x.extract(i), t, n);
       if (iw.size()){
         data_.interpolate_at(iw, vals2, vecs2, i);
       } else {

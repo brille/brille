@@ -113,13 +113,12 @@ public:
     // we always need the pointgroup operations to 'rotate'
     PointSymmetry psym = bz_.get_pointgroup_symmetry();
     // and might need the Phonon Gamma table
-    GammaTable pgt{GammaTable()};
-    if (RotatesLike::Gamma == this->data().vectors().rotateslike()){
-      auto cfg = this->approx_config();
-      auto s_tol = cfg.template direct<double>();
-      auto n_tol = cfg.digit();
-      pgt.construct(bz_.get_lattice(), bz_.add_time_reversal(), s_tol, n_tol);
-    }
+    auto cfg = this->approx_config();
+    auto s_tol = cfg.template direct<double>();
+    auto n_tol = cfg.digit();
+    bool needed = RotatesLike::Gamma == this->data().vectors().rotateslike();
+    auto pgt = GammaTable(needed, bz_.get_lattice(), bz_.add_time_reversal(), s_tol, n_tol);
+    //
     brille::Array2<T> vals2(vals);
     brille::Array2<S> vecs2(vecs);
     // actually perform the rotation to Q

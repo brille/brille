@@ -233,14 +233,18 @@ namespace brille::polyhedron{
     template<class T, template<class> class A>
     std::enable_if_t<isArray<T,A>, A<T>> rand_rejection(const A<T>& x, const ind_t n, const unsigned int seed) const {
       auto tics = std::chrono::system_clock::now().time_since_epoch().count();
-      std::default_random_engine generator(seed > 0 ? seed : static_cast<unsigned int>(tics));
-      std::uniform_real_distribution<T> distribution(T(0), T(1));
+      std::default_random_engine gen(seed > 0 ? seed : static_cast<unsigned int>(tics));
+      std::uniform_real_distribution<T> dst(T(0), T(1));
+      auto direction = [&](){
+        std::array<T,3> raw {{dst(gen), dst(gen), dst(gen)}};
+        return from_std_like(x, raw);
+      };
       auto min = x.min(0);
       auto delta = x.max(0) - min;
       auto points =  0 * x.view(0);
       points.resize(n);
       for (ind_t i=0; i < n; ){
-        points.set(i, min + delta * distribution(generator));
+        points.set(i, min + delta * direction());
         if (this->contains(x, points.view(i))[0]) ++i;
       }
       return points;

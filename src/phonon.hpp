@@ -103,12 +103,13 @@ private:
   lattice_t lattice_;
   bArray<double> vectors_; //! element v is (Rᵣ⁻¹ ⃗rₖ - ⃗rₗ)
 public:
-  explicit GammaTable(): n_atoms(0), n_sym_ops(0), lattice_(LengthUnit::angstrom, {1,1,1}, {90,90,90}, "P 1", ""){
-    l_mapping.resize(0);
-    v_mapping.resize(0);
-  }
-  GammaTable(const lattice_t& dlat, const int time_reversal=0): lattice_(dlat) {
-    this->construct(dlat, time_reversal);
+  GammaTable(bool init, const lattice_t& dlat, const int time_reversal=0, double e_tol=0., int n_tol=1): lattice_(dlat) {
+    if (init){
+      this->construct(dlat, time_reversal, e_tol, n_tol);
+    } else {
+      l_mapping.resize(0);
+      v_mapping.resize(0);
+    }
   }
   bool construct(const lattice_t& dlat, const int time_reversal=0, double e_tol=0., int n_tol=1){
     lattice_ = dlat;
