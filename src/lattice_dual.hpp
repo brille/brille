@@ -308,6 +308,9 @@ private:
     }
   }
   bool snap_to_symmetry(bool is_real, std::array<T, 3>& v, std::array<T, 3>& c, std::array<T, 3>& s){
+    /* Averaging is likely to reduce precision, so only do so if necessary */
+    auto equal2 = [](const T x, const T y){ return (x == y) ? x : (x + y) / T(2); };
+    auto equal3 = [](const T x, const T y, const T z){ return (x == y && y == z) ? x : (x + y + z) / T(3); };
     // check if centring can give us a hint:
     /* If the Lattice has spacegroup operations with centering is it *not*
      * primitive. If the centering indicates that it is Rhombohedral then
@@ -338,21 +341,21 @@ private:
     if (main[0] && main[1]) {
       /* All 'main' basis vectors are mapped to each other; so they must all  *
        * have the same length:                                                */
-      v[0] = v[1] = v[2] = (v[0] + v[1] + v[2]) / T(3);
+      v[0] = v[1] = v[2] = equal3(v[0], v[1], v[2]);
       if (dual[0] && dual[1]) {
         /* All 'dual' basis vectors are mapped, so the 'main' basis vector    *
          * angles must be the same as well. If the lattice is centred then
          * they all must be exactly 90 degrees, so the cos(angle)=0.0; !      */
-        c[0] = c[1] = c[2] = centring_hint ? T(0) : (c[0] + c[1] + c[2]) / T(3);
+        c[0] = c[1] = c[2] = centring_hint ? T(0) : equal3(c[0], c[1], c[2]);
         s[0] = s[1] = s[2] = centring_hint ? T(1) : std::sqrt(1 - c[0] * c[0]);
       } else for (size_t i=0; i<3u; ++i) if (dual[i]) {
         const auto j{(i + 1) % 3u};
-        c[i] = c[j] = second_hint ? T(0) : (c[i] + c[j]) / T(2);
+        c[i] = c[j] = second_hint ? T(0) : equal2(c[i], c[j]);
         s[i] = s[j] = second_hint ? T(1) : std::sqrt(1 - c[i] * c[i]);
       }
     } else for (size_t i=0; i<3u; ++i) if (main[i]) {
       const auto j{(i + 1) % 3u};
-      v[i] = v[j] = (v[i] + v[j]) / T(2);
+      v[i] = v[j] = equal2(v[i], v[j]);
       if (dual[0] && dual[1]){
         throw std::runtime_error("How can more than two dual-vectors be mapped when only two real-vectors are mapped?");
       }
@@ -364,7 +367,7 @@ private:
           const auto k{(i + 2) % 3u};
           std::tie(c[k], s[k]) = math::cos_and_sin_d(is_real ? T(120) : T(60));
         }
-        c[i] = c[j] = centring_hint ? T(0) : (c[i] + c[j]) / T(2);
+        c[i] = c[j] = centring_hint ? T(0) : equal2(c[i], c[j]);
         s[i] = s[j] = centring_hint ? T(1) : std::sqrt(1 - c[i] * c[i]);
       }
     }

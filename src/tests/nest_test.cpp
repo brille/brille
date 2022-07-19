@@ -30,6 +30,15 @@ TEST_CASE("BrillouinZoneNest3 vertex accessors","[nest]"){
   SECTION("get_all_hkl"){auto verts = bzn.get_all_hkl(); REQUIRE(verts.size(0) > 0u);}
 }
 
+
+/* This test is not very good since it attempts to verify that interpolating a vector-valued field with cubic symmetry
+ * works. The problem being that no real vector can 'rotate like' a reciprocal lattice vector *and* follow the symmetry
+ * of a cube. The operations need to map (x,y,z) to (-x, -y, z), (x, -y, -z), (-x, y, -z), (y, x, z), (y, z, x), etc.
+ * But a finite vector field can not obey the vast majority of the symmetries.
+ * This test can only ever work if the interpolation points stay within the irreducible Brillouin zone, which rounding
+ * errors can easily disrupt; otherwise a non-identity rotation matrix due to non-zero lattice translation will cause
+ * mixing of the components of the interpolated vector which will not work.
+ * */
 TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   std::array<double,3> len{3.2598, 3.2598, 3.2598}, ang{half_pi, half_pi, half_pi};
   auto lat = Direct(len, ang, "-I 4 2 3"); // was 529
@@ -40,8 +49,7 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
 
   auto Qmap = bzn.get_hkl();
   auto Qxyz = bzn.get_xyz();
-  // At present converting from Array2 to Array is not possible, so the
-  // original reshape will not work. Instead we must copy data by hand
+  // At present converting from Array2 to Array is not possible, we must copy data by hand
   brille::shape_t tostoreshape{Qmap.size(0), 1u, Qmap.size(1)};
   brille::Array<double> tostore(tostoreshape);
   for (auto i: tostore.subItr()) tostore[i] = Qxyz.val(i[0], i[2]);
@@ -52,10 +60,6 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   // If branches ≠ 1 then the vector is not treated as a vector!
   REQUIRE(bzn.data().branches() == 1u);
 
-  // In order to have easily-interpretable results we need to ensure we only
-  // interpolate at points within the irreducible meshed volume.
-  // So let's stick to points that are random linear interpolations between
-  // neighbouring mesh vertices
   std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> distribution(0.,1.);
 
@@ -80,9 +84,9 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
 
   if (!(diff.round().all(brille::cmp::eq, 0))) for (ind_t i = 0; i < nQ; ++i) {
       info_update_if(!(diff.view(i).round().all(0,0)),
-        "The interpolation point Q = ", Q.to_string(i),
-        "            returned result ", intres.to_string(i),
-        "                 instead of ", antres.to_string(i));
+        "The interpolation point Q = ", Q.to_string(i), "\n",
+        "           returned result ", intres.to_string(i), "\n",
+        "                instead of ", antres.to_string(i), "\n");
   }
   REQUIRE( diff.round().all(brille::cmp::eq, 0) ); // this is not a great test :(
   for (auto i: diff.valItr()) REQUIRE(std::abs(i) < 2E-14);

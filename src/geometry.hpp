@@ -411,10 +411,10 @@ namespace brille {
 
   template<class T, template<class> class A>
   std::enable_if_t<isArray<T,A>, bool>
-  point_inside_all_planes(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& x){
+  point_inside_all_planes(const A<T>& a, const A<T>& b, const A<T>& c, const A<T>& x, const T tol=T(0), const int no=1){
       auto o3d = pseudo_orient3d(a, b, c, x);
       auto v = std::min_element(o3d.begin(), o3d.end());
-      return *v > 0 || approx_float::scalar(*v, 0.);
+      return *v > 0 || approx_float::scalar(*v, T(0), tol, tol, no);
   }
 
   template<class T, class R, template<class> class A, template<class> class B>

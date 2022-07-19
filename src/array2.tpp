@@ -385,9 +385,12 @@ Array2<T>::resize(const I ns, const T init) {
 }
 
 template<class T>
-Array2<T>&
-Array2<T>::append(const ind_t dim, const Array2<T>& extra) {
-  assert(this != &extra);
+template<class R>
+std::enable_if_t<std::is_convertible_v<R,T>, Array2<T>&>
+Array2<T>::append(const ind_t dim, const Array2<R>& extra) {
+  if constexpr (std::is_same_v<T, R>) {
+      assert(this != &extra);
+  }
   ind_t ndim = this->ndim();
   assert(dim<ndim);
   auto eshape = extra.shape();
@@ -405,7 +408,7 @@ Array2<T>::append(const ind_t dim, const Array2<T>& extra) {
     auto y = x;
     y[dim] += tshapedim; // offset by the original shape along the dimension
     // and copying the contents
-    (*this)[y] = extra[x];
+    (*this)[y] = static_cast<T>(extra[x]);
   }
   return *this;
 }

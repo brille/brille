@@ -188,11 +188,11 @@ namespace brille::polyhedron{
     }
 
     // geometric properties in relation to another point or polyhedron
-    template<class R, template<class> class B>
-    [[nodiscard]] std::vector<bool> contains(const B<R>& x) const {return _faces.contains(_vertices, x);}
-    template<class R>
-    [[nodiscard]] std::vector<bool> contains(const std::vector<std::array<R,3>>& x) const{
-      return this->contains(from_std_like(_vertices, x));
+    template<class R, template<class> class B, class... P>
+    [[nodiscard]] std::vector<bool> contains(const B<R>& x, P... p) const {return _faces.contains(_vertices, x, p...);}
+    template<class R, class... P>
+    [[nodiscard]] std::vector<bool> contains(const std::vector<std::array<R,3>>& x, P... p) const{
+      return this->contains(from_std_like(_vertices, x), p...);
     }
 
     //FIXME

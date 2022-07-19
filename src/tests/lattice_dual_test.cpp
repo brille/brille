@@ -199,3 +199,24 @@ TEST_CASE("Basis vectors corrected","[limits][snap_to_symmetry]"){
 
 
 }
+
+TEST_CASE("snap_to_symmetry should not change parameters unnecessarily", "[lattice][snap_to_symmetry]"){
+    std::array<double,3> len{3.2598, 3.2598, 3.2598}, ang{half_pi, half_pi, half_pi};
+    auto n = Direct(len, ang, "-I 4 2 3", Basis(), false);
+    auto w = Direct(len, ang, "-I 4 2 3", Basis(), true);
+
+    const LengthUnit d{LengthUnit::angstrom}, r{LengthUnit::inverse_angstrom};
+    auto diff = [](const std::array<double, 9>& a, const std::array<double, 9>& b){
+        std::array<double,9> d{};
+        for (size_t i=0; i<9u; ++i) d[i] = a[i] - b[i];
+        return d;
+    };
+    auto sum = [](const std::array<double, 9> & d){
+        double s{0};
+        for (const auto & i: d) s += std::abs(i);
+        return s;
+    };
+
+    REQUIRE(n == w);
+    REQUIRE(sum(diff(n.metric(d), w.metric(d))) == 0.);
+}

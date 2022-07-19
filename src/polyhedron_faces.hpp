@@ -293,7 +293,7 @@ namespace brille::polyhedron{
 //  }
     template<class T, class R, template<class> class A, template<class> class B>
     [[nodiscard]] std::enable_if_t<isArray<T,A> && isArray<R,B>, std::vector<bool>>
-    contains(const A<T>& v, const B<R>& x) const {
+    contains(const A<T>& v, const B<R>& x, const T t=T(0), const int n=1) const {
       std::vector<std::atomic<int>> tmp(x.size(0));
       A<T> pa, pb, pc;
       std::tie(pa, pb, pc) = this->planes(v);
@@ -301,7 +301,7 @@ namespace brille::polyhedron{
       // making this parallel *also* makes it significantly slower!?
 //#pragma omp parallel for default(none) shared(tmp, pa, pb, pc, x, x_size) schedule(dynamic)
       for (long long i = 0; i < x_size; ++i) {
-        tmp[i] = point_inside_all_planes(pa, pb, pc, x.view(i)) ? 1 : 0;
+        tmp[i] = point_inside_all_planes(pa, pb, pc, x.view(i), t, n) ? 1 : 0;
       }
       std::vector<bool> out;
       out.reserve(tmp.size());

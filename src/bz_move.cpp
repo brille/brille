@@ -15,6 +15,9 @@ void BrillouinZone::_moveinto_prim(const LVec<double>& Q, LVec<double>& q, LVec<
   // ensure that q and tau can hold each q_i and tau_i
   q.resize(Q.size(0));
   tau.resize(Q.size(0));
+  //
+  // FIXME Add the tolernaces to moveinto?
+  //
   auto snQ = utils::u2s<long long, ind_t>(Q.size(0));
 #pragma omp parallel for default(none) shared(Q, tau, q, pa, pb, pc, normals, taus, tau_lens, snQ, max_count) schedule(dynamic)
   for (long long si=0; si<snQ; si++){
@@ -23,7 +26,7 @@ void BrillouinZone::_moveinto_prim(const LVec<double>& Q, LVec<double>& q, LVec<
     auto q_i = Q.view(i) - tau_i;
     auto last_shift = tau_i;
     size_t count{0};
-    while (count++ < max_count && !point_inside_all_planes(pa, pb, pc, q_i)){
+    while (count++ < max_count && !point_inside_all_planes(pa, pb, pc, q_i, float_tolerance, approx_tolerance)){
       auto qi_dot_normals = dot(q_i , normals);
       auto N_hkl = (qi_dot_normals/ tau_lens).round().to_std();
       if (std::any_of(N_hkl.begin(), N_hkl.end(), [](int a){return a > 0;})){

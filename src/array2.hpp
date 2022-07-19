@@ -407,7 +407,7 @@ public:
   bool set(ind_t i, const std::vector<T>& in);
   template<size_t Nel> bool set(ind_t i, const std::array<T,Nel>& in);
   T set(const shape_t& sub, T in);
-  Array2<T>& append(ind_t, const Array2<T>&);
+  template<class R> std::enable_if_t<std::is_convertible_v<R,T>, Array2<T>&> append(ind_t, const Array2<R>&);
   [[nodiscard]] std::string to_string() const;
   [[nodiscard]] std::string to_string(ind_t) const;
 
