@@ -35,31 +35,24 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #define PRINTING_PRECISION 16
 namespace brille {
-// brille::abs (defined here instead of approx to avoid circular referencing)
-#if defined(DOXYGEN_SHOULD_SKIP_THIS)
   /*! \brief Absolute value of signed or unsigned values
 
-  \param x A scalar value
+  \param x A value
   \returns |x|, the absolute value of x
 
   `std::abs()` is not guaranteed to be defined for unsigned integers.
-  This overloaded template function returns its input for unsigned `T` or
-  reutrns `std::abs(x)` for signed T.
+  This template function returns its input for unsigned `T` or non-scalar `T`
+  (like the element reference into a std::vector<bool> which is *not* a `bool`!)
+  and otherwise returns `std::abs(x)` for signed scalar T.
   */
-  template<class T> T abs(const T x);
-#endif
-#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
-  /* Absolute value of not-unsigned scalars */
   template<typename T>
-  inline std::enable_if_t<!std::is_unsigned_v<T>, T>
-  abs(const T x){
-    return std::abs(x);
-  }
-  /* Absolute value of unsigned scalars (non-op) */
-  template<typename T>
-  inline std::enable_if_t<std::is_unsigned_v<T>, T>
-  abs(const T x){ return x; }
-#endif
+  inline T abs(const T & x) {
+      if constexpr (std::is_unsigned_v<T>||!std::is_scalar_v<T>){
+          return x;
+      } else {
+          return std::abs(x);
+      }
+  };
 
 #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
   template<class T>
