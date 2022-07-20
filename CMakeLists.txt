@@ -98,6 +98,10 @@ endif()
 # With modern CMake, this find_package forces pybind11 to use FindPython instead of its custom tools
 find_package(Python3 COMPONENTS Interpreter Development)
 
+if (NOT DEFINED PYTHON_EXECUTABLE)
+  set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
+endif()
+
 include(fetcher.cmake)
 
 # Attempt to find catch2 to handle C++ testing
@@ -120,7 +124,7 @@ if (BRILLE_HDF5)
   set(HIGHFIVE_BUILD_DOCS OFF)
   git_fetch(highfive ${MINIMUM_HIGHFIVE_VERSION} ${FETCH_HIGHFIVE_REPO} ${REQUIRE_SYSTEM_HIGHFIVE})
   if (highfive_FOUND)
-		message(STATUS "Adding HighFive precompiler macro flag")
+    # message(STATUS "Adding HighFive precompiler macro flag")
     add_definitions(-DUSE_HIGHFIVE)
   endif()
 endif(BRILLE_HDF5)
@@ -139,7 +143,6 @@ add_custom_target(single_header
 )
 
 add_custom_target(library DEPENDS single_header ${BRILLE_LIBRARY_TARGET})
-
 
 # We will always build the python module
 list(APPEND CXX_TARGETS ${BRILLE_PYTHON_MODULE})
@@ -172,6 +175,7 @@ foreach(CXX_TARGET IN LISTS CXX_TARGETS)
 endforeach()
 
 if(BRILLE_BUILD_TESTING)
+  message(STATUS "Build testing target '${TESTING_TARGET}' and configure CTest")
   target_link_libraries(${TESTING_TARGET} PUBLIC Catch2::Catch2)
   include(CTest)
   include(Catch)
@@ -182,6 +186,7 @@ endif()
 find_package(OpenMP REQUIRED) # Change code to support missing OpenMP?
 if(OpenMP_CXX_FOUND)
   foreach(OMP_TARGET IN LISTS CXX_TARGETS)
+    # message(STATUS "Adding OpenMP library to ${OMP_TARGET}")
     target_link_libraries(${OMP_TARGET} PUBLIC OpenMP::OpenMP_CXX)
   endforeach(OMP_TARGET)
   if (MSVC AND MSVC_VERSION GREATER 1919)
@@ -191,7 +196,7 @@ endif()
 
 if(BRILLE_HDF5 AND highfive_FOUND)
   foreach(HF_TARGET IN LISTS CXX_TARGETS)
-    message(STATUS "Adding HighFive library to ${HF_TARGET}")
+    # message(STATUS "Adding HighFive library to ${HF_TARGET}")
     target_link_libraries(${HF_TARGET} PUBLIC HighFive)
   endforeach()
 endif()

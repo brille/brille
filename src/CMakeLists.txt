@@ -14,10 +14,6 @@ endif()
 #   )
 # endif()
 
-message(STATUS "Using interpreter: ${Python3_EXECUTABLE}")
-
-
-#set(CXX_SOURCES
 list(APPEND CXX_SOURCES
   approx_config.cpp
   bravais.cpp
@@ -36,7 +32,6 @@ list(APPEND CXX_SOURCES
   symmetry.cpp
 )
 if(BRILLE_HDF5 AND highfive_FOUND)
-    message(STATUS "Adding hdf_interface.cpp")
     list(APPEND CXX_SOURCES hdf_interface.cpp)
 endif()
 
