@@ -205,7 +205,6 @@ TEST_CASE("snap_to_symmetry should not change parameters unnecessarily", "[latti
     auto n = Direct(len, ang, "-I 4 2 3", Basis(), false);
     auto w = Direct(len, ang, "-I 4 2 3", Basis(), true);
 
-    const LengthUnit d{LengthUnit::angstrom}, r{LengthUnit::inverse_angstrom};
     auto diff = [](const std::array<double, 9>& a, const std::array<double, 9>& b){
         std::array<double,9> d{};
         for (size_t i=0; i<9u; ++i) d[i] = a[i] - b[i];
@@ -218,5 +217,5 @@ TEST_CASE("snap_to_symmetry should not change parameters unnecessarily", "[latti
     };
 
     REQUIRE(n == w);
-    REQUIRE(sum(diff(n.metric(d), w.metric(d))) == 0.);
+    REQUIRE(sum(diff(n.metric(LengthUnit::angstrom), w.metric(LengthUnit::angstrom))) == 0.);
 }

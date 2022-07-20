@@ -1,9 +1,6 @@
 set(CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
 
-if (NOT DEFINED Python3_EXECUTABLE)
-	message(STATUS "No pre-defined Python executable -- ensure 'python' on the path is right.")
-	set(Python3_EXECUTABLE python)
-endif()
+find_package(Python3 QUIET COMPONENTS Interpreter)
 
 if (NOT DEFINED pre_configure_dir)
   set(pre_configure_dir ${CMAKE_CURRENT_LIST_DIR})
