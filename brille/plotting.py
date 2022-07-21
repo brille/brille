@@ -33,6 +33,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 from matplotlib.colors import get_named_colors_mapping
 import brille
 
+
 def _check_axes(axs=None):
     if axs is None:
         if pp.get_fignums() and isinstance(pp.gca(), Axes3D):
@@ -40,6 +41,7 @@ def _check_axes(axs=None):
         else:
             axs = Axes3D(pp.figure())
     return axs
+
 
 def plot(*args, **kwds):
     """A gateway plotting function which infers intention from its input.
@@ -73,12 +75,8 @@ def plot(*args, **kwds):
         If the specialisation can not be inferred from ``*args`` then an
         exception is raised.
     """
-    bz_types = (brille.BrillouinZone,
-                #brille.BZMeshQdc   , brille.BZMeshQcc   , brille.BZMeshQdd,
-                #brille.BZNestQdc   , brille.BZNestQcc   , brille.BZNestQdd,
-                brille.BZTrellisQdc, brille.BZTrellisQcc, brille.BZTrellisQdd)
     if len(args) == 1:
-        if isinstance(args[0], bz_types):
+        if isinstance(args[0], brille.BrillouinZone, *brille.__grid_types__):
             return plot_bz(*args, **kwds)
         if isinstance(args[0], brille.Polyhedron):
             return plot_polyhedron(*args, **kwds)
@@ -118,6 +116,7 @@ def plot_points(x, axs=None, title=None, show=True):
     if show:
         pp.show()
 
+
 def plot_points_with_lines(x, y, axs=None, title=None, show=True):
     """Plot points with lines.
 
@@ -149,6 +148,7 @@ def plot_points_with_lines(x, y, axs=None, title=None, show=True):
         axs.set_title(title)
     if show:
         pp.show()
+
 
 # pylint: disable=r0912,r0913,r0914,r0915
 def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=True,
@@ -231,11 +231,7 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=True,
     """
     # pylint: disable=no-member
     axs = _check_axes(axs)
-    types_with_points = (#brille.BZMeshQdc, brille.BZMeshQcc, brille.BZMeshQdd,
-                         #brille.BZNestQdc, brille.BZNestQcc, brille.BZNestQdd,
-                         brille.BZTrellisQdc, brille.BZTrellisQcc,
-                         brille.BZTrellisQdd)
-    if isinstance(bz, types_with_points):
+    if isinstance(bz, brille.__grid_types__):
         if Q is None:
             if units == 'rlu':
                 Q = bz.rlu
@@ -309,6 +305,7 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=True,
         pp.show()
     return axs
 
+
 def _make_poly_collection(verts, vpf, origin=None, color='b', edgecolor='k',
                           linestyle='-', linewidth=1, alpha=0.5):
     # vpf lists the ordered vertices which make up each facet
@@ -333,6 +330,7 @@ def _make_poly_collection(verts, vpf, origin=None, color='b', edgecolor='k',
     collection.set_facecolor(color)
     return (collection, xyz_min, xyz_max)
 
+
 def __cube(p_0, p_1):
     """Return the patches of a cube bounded by points p_0 and p_1."""
     d_x = np.array((p_1[0]-p_0[0], 0, 0))
@@ -354,6 +352,7 @@ def __cube(p_0, p_1):
                     [2, 6, 7, 3]])  # (110)-(111)-(011)-(010)
     patches = [verts[x] for x in idx]
     return patches
+
 
 def plot_polyhedron(poly, axs=None, setlims=True, show=True, **kwds):
     """Plot a single polyhedron.
@@ -420,6 +419,7 @@ def plot_polyhedron(poly, axs=None, setlims=True, show=True, **kwds):
         pp.show()
     return axs
 
+
 def plot_tetrahedron(verts, axs=None, show=True, **kwds):
     """Plot a single tetrahedron.
 
@@ -474,6 +474,7 @@ def plot_tetrahedron(verts, axs=None, show=True, **kwds):
         pp.show()
     return axs
 
+
 def plot_tetrahedra(allverts, tetidx, axs=None, **kwds):
     """Plot a number of tetrahedra.
 
@@ -515,6 +516,7 @@ def plot_tetrahedra(allverts, tetidx, axs=None, **kwds):
     axs = _check_axes(axs)
     for tet, colour in zip(tetidx, colours):
         plot_tetrahedron(allverts[tet], color=colour, **kwds)
+
 
 def make_colours(n, color=None, **kwds):
     if color is None:

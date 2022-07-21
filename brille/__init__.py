@@ -32,13 +32,9 @@ connected point network.
 .. autosummary::
     :toctree: _generate
 """
-
-try:
-    from ._brille import *
-except ImportError:
-    # In build / tests, _brille might be in another folder on path
-    from _brille import *
-
+from pathlib import Path as _path
+from .lattice import wrap_lattice as _wrap_lattice
+from .load import load as _load
 from . import utils
 
 try:
@@ -46,3 +42,45 @@ try:
 except ModuleNotFoundError:
     # Build servers don't have Matplotlib installed; plotting not tested
     pass
+
+
+# Find and load the binary brille module
+_brille = _load(('_brille',), search=[_path(__file__).parent, _path('.')])
+
+# Store the grid type names for use in, e.g., the plotting routines
+__grid_types__ = [f'BZ{x}Q{y}' for x in ('Trellis', 'Mesh', 'Nest') for y in ('cc', 'dc', 'dd')]
+
+# emulate `from _brille import *`
+_attrs = [*__grid_types__,
+          'AngleUnit',
+          'LengthUnit',
+          'ApproxConfig',
+          'real_space_tolerance',
+          'reciprocal_space_tolerance',
+          '__version__',
+          'version',
+          'Basis',
+          'Bravais',
+          'BrillouinZone',
+          'HallSymbol',
+          'LPolyhedron',
+          'PointSymmetry',
+          'Pointgroup',
+          'Polyhedron',
+          'PrimitiveTransform',
+          'RotatesLike',
+          'SortingStatus',
+          'Spacegroup',
+          'Symmetry']
+for _attr in _attrs:
+    globals()[_attr] = getattr(_brille, _attr)
+del _attr, _attrs
+
+# Convert the grid names to their types for use by `isinstance(x, types)`
+__grid_types__ = tuple(getattr(_brille, x) for x in __grid_types__)
+
+# wrap _brille.Lattice
+Lattice = _wrap_lattice(_brille.Lattice, _brille.Symmetry, _brille.Basis)
+
+# clean-up temporary symbols to avoid accidental exports
+del _load, _wrap_lattice, _path
