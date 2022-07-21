@@ -1,5 +1,7 @@
 set(CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
 
+find_package(Python3 QUIET COMPONENTS Interpreter)
+
 if (NOT DEFINED pre_configure_dir)
   set(pre_configure_dir ${CMAKE_CURRENT_LIST_DIR})
 endif()
@@ -12,11 +14,32 @@ if (NOT EXISTS ${post_configure_dir})
   message(STATUS "Create ${post_configure_dir}")
   file(MAKE_DIRECTORY ${post_configure_dir})
 else()
-  message(STATUS "Use ${post_configure_dir}")
+  message(STATUS "Use ${post_configure_dir} for generated header output")
 endif()
 
 set(pre_configure_file ${pre_configure_dir}/version.hpp.in)
 set(post_configure_file ${post_configure_dir}/version.hpp)
+
+function (checkPythonModule module)
+  execute_process(
+          COMMAND ${Python3_EXECUTABLE} -c "import ${module}"
+          WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+          RESULT_VARIABLE module_missing
+          ERROR_QUIET
+  )
+  if (${module_missing} GREATER 0)
+    message(STATUS "Installing Python module ${module} using pip for interpreter ${Python3_EXECUTABLE}")
+    execute_process(
+            COMMAND ${Python3_EXECUTABLE} -m pip install ${module}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+            RESULT_VARIABLE pip_failed
+            OUTPUT_QUIET
+    )
+    if (${pip_failed} GREATER 0)
+      message(FATAL_ERROR "Installing ${module} via pip failed. Please install module ${module} before re-running CMake.")
+    endif()
+  endif()
+endfunction()
 
 function(checkGitWrite git_hash)
   file(WRITE ${CMAKE_BINARY_DIR}/git-state ${git_hash})
@@ -45,25 +68,25 @@ function(checkGitVersion git_version)
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   execute_process(
-    COMMAND python -c "from datetime import datetime; print(datetime.now().isoformat(timespec='minutes'))"
+    COMMAND ${Python3_EXECUTABLE} -c "from datetime import datetime; print(datetime.now().isoformat(timespec='minutes'))"
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     OUTPUT_VARIABLE GIT_CONFIGURE_TIME
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   execute_process(
-    COMMAND python -c "import setuptools_scm as s; print(s.get_version())"
+    COMMAND ${Python3_EXECUTABLE} -c "import setuptools_scm as s; print(s.get_version())"
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     OUTPUT_VARIABLE GIT_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   execute_process(
-    COMMAND python -c "import setuptools_scm as s; print('.'.join(s.get_version().split('.')[:3]))"
+    COMMAND ${Python3_EXECUTABLE} -c "import setuptools_scm as s; print('.'.join(s.get_version().split('.')[:3]))"
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     OUTPUT_VARIABLE GIT_SAFE_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   execute_process(
-    COMMAND python -c "import platform; print(platform.node())"
+    COMMAND ${Python3_EXECUTABLE} -c "import platform; print(platform.node())"
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     OUTPUT_VARIABLE GIT_HOSTNAME
     OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -91,9 +114,10 @@ function(checkGitSetup)
     -P ${CURRENT_LIST_DIR}/checkgit.cmake
     BYPRODUCTS ${post_configure_file}
   )
+  checkPythonModule(setuptools_scm)
   checkGitVersion(GIT_VERSION)
   if (NOT DEFINED GIT_VERSION)
-    set(GIT_VERSION "UNKNONW")
+    set(GIT_VERSION "UNKNOWN")
   endif()
   set(GIT_VERSION ${GIT_VERSION} PARENT_SCOPE)
   #add_library(git_version ${post_configure_dir}/version.hpp)

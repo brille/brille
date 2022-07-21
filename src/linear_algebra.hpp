@@ -3,6 +3,23 @@
 #include <vector>
 #include <array>
 #include "math.hpp"
+
+namespace brille{
+/*! \brief Transpose a flattened matrix
+
+A square matrix can be indexed by its row and column or by a linear index
+starting from the first row and first column. This function takes an array
+of the linear-indexed elements of a 3x3 square matrix and returns another
+such array with the row and column indices switched.
+
+\param a the flattened-3x3 matrix to transpose
+\returns aᵀ in flattened form
+*/
+template<class T> std::array<T,9> transpose(const std::array<T,9>& a){
+  return std::array<T,9>({a[0],a[3],a[6],a[1],a[4],a[7],a[2],a[5],a[8]});
+}
+}
+
 namespace brille::linear_algebra {
   template<class S, class I1, class I2>
     S dot(I1 a, const I1& end, I2 b){
@@ -26,26 +43,29 @@ namespace brille::linear_algebra {
     return std::sqrt(dot<T>(a.begin(), a.end(), a.begin()));
   }
 
-  template<class T, size_t N, size_t M> std::array<T,M> mul_mat_vec(const std::array<T,N>& A, const std::array<T,M>& x){
+  template<class T, size_t N, class S=std::common_type_t<T,double>>
+  std::array<S,N> hat(const std::array<T,N>& v){
+    std::array<S,N> vhat;
+    auto length = static_cast<S>(norm(v));
+    for (size_t i=0; i<N; ++i) vhat[i] = v[i] / length;
+    return vhat;
+  }
+
+  template<class T, class R, size_t N, size_t M, class S=std::common_type_t<T,R>>
+  std::array<S,M> mul_mat_vec(const std::array<T,N>& A, const std::array<R,M>& x){
     // multiply a matrix (stored as a row-ordered std::array) and a vector: Matrix * Vector
     assert(N == M * M);
-    std::array<T,M> b;
+    std::array<S,M> b;
     auto row = A.begin();
     for (size_t i=0; i<M; ++i) {
-      b[i] = dot<T>(x.begin(), x.end(), row); // row takes 0--(M-1), then M--(2M-1), then ...
+      b[i] = dot<S>(x.begin(), x.end(), row+i*M); // row takes 0--(M-1), then M--(2M-1), then ...
     }
     return b;
   }
-  template<class T, size_t N, size_t M> std::array<T,M> mul_vec_mat(const std::array<T,N>& A, const std::array<T,M>& x){
+  template<class T, class R, size_t N, size_t M, class S=std::common_type_t<T,R>>
+  std::array<S,M> mul_vec_mat(const std::array<R,M>& x, const std::array<T,N>& A){
     // multiply a vector and a matrix (stored as a row-ordered std::array): (row)-Vector * Matrix
-    assert(N == M * M);
-    std::array<T,M> b;
-    auto At = transpose(A);
-    auto row = At.begin();
-    for (size_t i=0; i<M; ++i) {
-      b[i] = dot<T>(x.begin(), x.end(), row); // row takes 0--(M-1), then M--(2M-1), then ...
-    }
-    return b;
+    return mul_mat_vec(transpose(A), x);
   }
 
   template<class T, class R, size_t N, class S=std::common_type_t<T,R>>

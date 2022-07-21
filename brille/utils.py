@@ -61,7 +61,7 @@ import brille
 import numpy as np
 
 def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
-              time_reversal_symmetry=False, wedge_search=True, **kwargs):
+              time_reversal_symmetry=False, wedge_search=True, snap_to_symmetry=True, **kwargs):
     """
     Construct a BrillouinZone object. 
 
@@ -147,10 +147,11 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
         e1.__suppress_context__ = True
         raise e1
 
+    real_space = not is_reciprocal
     if lattice_vectors is not None:
-        lattice = brille.Lattice(lattice_vectors, spacegroup, real_space=not is_reciprocal)
+        lattice = brille.Lattice(lattice_vectors, spacegroup, real_space=real_space, snap_to_symmetry=snap_to_symmetry)
     else:
-        lattice = brille.Lattice(lens, angs, spacegroup, real_space=not is_reciprocal)
+        lattice = brille.Lattice(lens, angs, spacegroup, real_space=real_space, snap_to_symmetry=snap_to_symmetry)
 
     try:
         return brille.BrillouinZone(lattice, use_primitive=use_primitive,

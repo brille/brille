@@ -636,7 +636,7 @@ public:
     inner &= PT.does_anything();
     if (inner)
       pp = transform_from_primitive(_outer, p);
-    return _first.contains(inner ? pp : p);
+    return _first.contains(inner ? pp : p, float_tolerance, approx_tolerance);
   }
   /*! \brief Determine whither points are inside the irreducible reciprocal
   space wedge

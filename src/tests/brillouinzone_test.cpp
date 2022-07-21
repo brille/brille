@@ -245,7 +245,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 imprecise failure","[bz_][mater
   //
   std::string hall_symbol = "-R 3";
   //
-  auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol);
+  auto lat = Direct<double>(lattice_vectors, MatrixVectors::row, hall_symbol, Basis(), /*snap_to_symmetry=*/ false);
   auto ac = approx_float::Config().reciprocal(1e-11);
   REQUIRE_THROWS_AS(BrillouinZone(lat, ac), std::runtime_error);
 }
@@ -515,4 +515,48 @@ TEST_CASE("Find limiting tolerance", "[.][bz_][aflow]"){
     info_update("10^", static_cast<int>(powers[i]), " : ", counts[i]);
   }
 
+}
+
+
+
+TEST_CASE("La2Zr2O7 BZ construction off-symmetry basis vector input","[bz_][la2zr2o7][64]"){
+  // Basis vectors from https://github.com/pace-neutrons/Euphonic/blob/aa3cc28786797bb3052f898dd63d4928d6f27ee2/tests_and_analysis/test/data/force_constants/LZO_force_constants.json#L186
+  std::array<double,9> latmat {7.583912824349999, 1.8412792137035698e-32, 0.,
+                               3.791956412170034, 3.791956412170034, 5.362636186024768,
+                               3.791956412170034,-3.791956412170034, 5.362636186024768};
+  // Symmetry information from CASTEP file via brilleu
+  // the generators are: 4-fold [1 -1 1], 2-fold [-1 1 1], 3-fold [1 1 -3], -𝟙
+  std::vector<std::array<int,9>> W {
+      {{ 0,-1, 0,  1, 1, 1, -1, 0, 0}},
+      {{ 0, 0, 1, -1,-1,-1,  1, 0, 0}},
+      {{ 0, 0, 1,  1, 0, 0,  0, 1, 0}},
+      {{-1, 0, 0,  0,-1, 0,  0, 0,-1}}
+  };
+  std::vector<std::array<double,3>> w{
+      {{0.0, 0.5, 0.0}},
+      {{0.0, 0.5, 0.0}},
+      {{0.0, 0.0, 0.0}},
+      {{0.0, 0.0, 0.0}}
+  };
+
+  Symmetry::Motions mots;
+  mots.reserve(W.size());
+  for (size_t i=0; i<W.size(); ++i) mots.push_back(Motion<int,double>(W[i], w[i]));
+  Symmetry sym(mots);
+  // Without 'snap_to_symmetry' the basis vectors are off on the order of 2e-12
+  auto wrong = Direct<double>(latmat, MatrixVectors::row, sym, Basis(), false);
+
+  // Without specifying a larger-than-normal tolerance the BrillouinZone
+  // construction fails and a Runtime Error is thrown
+  REQUIRE_THROWS_AS(BrillouinZone(wrong), std::runtime_error);
+
+  // With a non-standard tolerance BrillouinZone construction succeeds
+  auto ac = approx_float::Config().reciprocal(2e-12);
+  REQUIRE_NOTHROW(BrillouinZone(wrong, ac));
+
+  // Or turning-on 'snap_to_symmetry' corrects the basis vectors to follow
+  // the provided symmetry operations
+  auto lat = Direct<double>(latmat, MatrixVectors::row, sym, Basis(), true);
+  // Such that the BrillouinZone construction succeeds with standard tolerances
+  REQUIRE_NOTHROW(BrillouinZone(lat));
 }

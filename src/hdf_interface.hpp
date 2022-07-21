@@ -85,7 +85,7 @@ namespace brille {
     auto group = obj.createGroup(entry);
     std::vector<Key> keys; keys.reserve(map.size());
     std::vector<Value> values; values.reserve(map.size());
-    for (const auto [key, value]: map){
+    for (const auto & [key, value]: map){
       keys.push_back(key);
       values.push_back(value);
     }

@@ -122,18 +122,17 @@ is initialized as part of the static namespace global `pointgroup_data`.
 */
 class Pointgroup{
 public:
-  int number;              //!< A serial number
+  int number = 0;              //!< A serial number
   std::string symbol;      //!< The Hermann-Mauguin notation symbol
   std::string schoenflies; //!< The Schoenflies notation symbol
-  Holohedry holohedry;     //!< The geometric class of the pointgroup
-  Laue laue;               //!< The Laue class of the pointgroup
+  Holohedry holohedry = Holohedry::_;     //!< The geometric class of the pointgroup
+  Laue laue = Laue::_;               //!< The Laue class of the pointgroup
   // Initializers:
-  //! empty constructor
-  Pointgroup(): number(0), holohedry(Holohedry::_), laue(Laue::_){}
+  Pointgroup() = default;
   //! Construct from a 'serial number'
-  explicit Pointgroup(const int no): number(no) {setup();}
+  explicit Pointgroup(int no): number(no) {setup();}
   //! Construct from all required information
-  Pointgroup(const int no, std::string  sym, std::string  sch, const Holohedry& h, const Laue& l):
+  Pointgroup(int no, std::string  sym, std::string  sch, Holohedry h, Laue l):
     number(no), symbol(std::move(sym)), schoenflies(std::move(sch)), holohedry(h), laue(l) {}
   //! Return a string representation of the contained information
   [[nodiscard]] std::string to_string() const {
@@ -175,5 +174,7 @@ int rotation_order(const int *rot);
 std::array<std::array<int,3>,3> rotation_axis_and_perpendicular_vectors(const int* rot);
 //! Remove duplicates from a list of pointgroup operations in matrix form
 std::vector<std::array<int,9>> get_unique_rotations(const std::vector<std::array<int,9>>&, int);
+//! Determine and return the Pointgroup from its symmetry operations
+Pointgroup get_pointgroup(const PointSymmetry& ps);
 } // namespace brille
 #endif

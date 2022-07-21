@@ -233,14 +233,18 @@ namespace brille::polyhedron{
     template<class T, template<class> class A>
     std::enable_if_t<isArray<T,A>, A<T>> rand_rejection(const A<T>& x, const ind_t n, const unsigned int seed) const {
       auto tics = std::chrono::system_clock::now().time_since_epoch().count();
-      std::default_random_engine generator(seed > 0 ? seed : static_cast<unsigned int>(tics));
-      std::uniform_real_distribution<T> distribution(T(0), T(1));
+      std::default_random_engine gen(seed > 0 ? seed : static_cast<unsigned int>(tics));
+      std::uniform_real_distribution<T> dst(T(0), T(1));
+      auto direction = [&](){
+        std::array<T,3> raw {{dst(gen), dst(gen), dst(gen)}};
+        return from_std_like(x, raw);
+      };
       auto min = x.min(0);
       auto delta = x.max(0) - min;
       auto points =  0 * x.view(0);
       points.resize(n);
       for (ind_t i=0; i < n; ){
-        points.set(i, min + delta * distribution(generator));
+        points.set(i, min + delta * direction());
         if (this->contains(x, points.view(i))[0]) ++i;
       }
       return points;
@@ -289,7 +293,7 @@ namespace brille::polyhedron{
 //  }
     template<class T, class R, template<class> class A, template<class> class B>
     [[nodiscard]] std::enable_if_t<isArray<T,A> && isArray<R,B>, std::vector<bool>>
-    contains(const A<T>& v, const B<R>& x) const {
+    contains(const A<T>& v, const B<R>& x, const T t=T(0), const int n=1) const {
       std::vector<std::atomic<int>> tmp(x.size(0));
       A<T> pa, pb, pc;
       std::tie(pa, pb, pc) = this->planes(v);
@@ -297,7 +301,7 @@ namespace brille::polyhedron{
       // making this parallel *also* makes it significantly slower!?
 //#pragma omp parallel for default(none) shared(tmp, pa, pb, pc, x, x_size) schedule(dynamic)
       for (long long i = 0; i < x_size; ++i) {
-        tmp[i] = point_inside_all_planes(pa, pb, pc, x.view(i)) ? 1 : 0;
+        tmp[i] = point_inside_all_planes(pa, pb, pc, x.view(i), t, n) ? 1 : 0;
       }
       std::vector<bool> out;
       out.reserve(tmp.size());
