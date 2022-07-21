@@ -108,7 +108,7 @@ class Lattice(unittest.TestCase):
         self.assertRaises(ValueError, br_py.Lattice, self.cmo_vectors, 'HMSymbol', 'HMChoice', symmetry=st)
 
         # Providing Symmetry and Basis as positional arguments works
-        lat = br_py.Lattice(self.cmo_vectors, br_py.Symmetry(*st), br_py.Basis(*bt))
+        lat = br_py.Lattice(self.cmo_vectors, br_mod.Symmetry(*st), br_mod.Basis(*bt))
         self.assertTrue(np.allclose(lat.basis.positions, self.cmo_positions))
 
         # But we must use the keyword syntax if we want the objects to be created for us

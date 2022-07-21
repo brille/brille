@@ -31,7 +31,6 @@ import matplotlib.pyplot as pp
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 from matplotlib.colors import get_named_colors_mapping
-import brille
 
 
 def _check_axes(axs=None):
@@ -75,10 +74,11 @@ def plot(*args, **kwds):
         If the specialisation can not be inferred from ``*args`` then an
         exception is raised.
     """
+    from .bound import BrillouinZone, Polyhedron, __grid_types__
     if len(args) == 1:
-        if isinstance(args[0], brille.BrillouinZone, *brille.__grid_types__):
+        if isinstance(args[0], (BrillouinZone, *__grid_types__)):
             return plot_bz(*args, **kwds)
-        if isinstance(args[0], brille.Polyhedron):
+        if isinstance(args[0], Polyhedron):
             return plot_polyhedron(*args, **kwds)
         else:
             return plot_points(*args, **kwds)
@@ -229,9 +229,9 @@ def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=True,
     :py:class:`matplotlib:axes:Axes`
         The value of `axs` after plotting.
     """
-    # pylint: disable=no-member
+    from .bound import __grid_types__
     axs = _check_axes(axs)
-    if isinstance(bz, brille.__grid_types__):
+    if isinstance(bz, __grid_types__):
         if Q is None:
             if units == 'rlu':
                 Q = bz.rlu
