@@ -12,6 +12,33 @@ if(NOT CMAKE_BUILD_TYPE)
           )
 endif()
 
+# scikit-build claims to support FindPython, but doesn't fully?
+# https://github.com/scikit-build/scikit-build/issues/506#issuecomment-706791791
+if(SKBUILD)
+  message(STATUS "SciKit-Build PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE}")
+  message(STATUS "SciKit-Build PYTHON_INCLUDE_DIR ${PYTHON_INCLUDE_DIR}")
+  message(STATUS "SciKit-Build PYTHON_LIBRARY ${PYTHON_LIBRARY}")
+  set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
+  set(Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
+  set(Python_LIBRARY "${PYTHON_LIBRARY}")
+else()
+  if (PYTHON_EXECUTABLE)
+    # Ensure the provided Python interpreter is used
+    set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
+  endif()
+endif()
+
+# Attempt to find full development Python3
+find_package(Python3 COMPONENTS Interpreter Development QUIET)
+if (NOT DEFINED Python3_Development_FOUND OR NOT ${Python3_Development_FOUND})
+  # Fall-back to Development.Module which is present for SciKit-Build under manylinux, but not Windows?
+  find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
+endif()
+
+if (NOT DEFINED PYTHON_EXECUTABLE)
+  set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
+endif()
+
 # Read the version of brille
 include(checkgit.cmake)
 checkGitSetup("BRILLE") # defines/creates version.hpp; and library 'git_version'
@@ -51,16 +78,6 @@ endif()
 # Special option for profiling runs
 option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
 
-if (PYTHON_EXECUTABLE)
-  # Ensure the provided Python interpreter is used
-  set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
-endif()
-# With modern CMake, this find_package forces pybind11 to use FindPython instead of its custom tools
-find_package(Python3 COMPONENTS Interpreter Development)
-
-if (NOT DEFINED PYTHON_EXECUTABLE)
-  set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
-endif()
 
 # Use conan to fetch/configure/build pybind11, catch2 and hdf5
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")

@@ -1,0 +1,57 @@
+{
+  "version": 2,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 18,
+    "patch": 2
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "description": "Base options",
+      "binaryDir": "${sourceDir}/build",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/install",
+        "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "OFF"
+      }
+    },
+    {
+      "name": "gha-test-ubuntu",
+      "inherits": "base",
+      "description": "Ubuntu options for GHA build (Main push & Pull Request)"
+    },
+    {
+      "name": "gha-test-macos",
+      "inherits": "base",
+      "description": "macOS options for GHA build (Main push & Pull Request)",
+      "cacheVariables": {
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15"
+      }
+    },
+    {
+      "name": "gha-test-windows",
+      "inherits": "base",
+      "description": "Windows options for GHA build (Main push & Pull Request)"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build",
+      "configurePreset": "base",
+      "configuration": "Release",
+      "targets": ["install"]
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "test",
+      "configurePreset": "base",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

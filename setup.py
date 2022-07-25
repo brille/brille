@@ -4,7 +4,7 @@ from setuptools import find_packages
 with open("README.md", "r") as fh:
     LONG_DESCRIPTION = fh.read()
 
-KEYWORDARGS = dict(
+setup(
     name='brille',
     author='Greg Tucker',
     author_email='gregory.tucker@ess.eu',
@@ -12,10 +12,9 @@ KEYWORDARGS = dict(
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     packages=find_packages(),
-    install_requires=['numpy'],
+    include_package_data=True,
     extras_require={'interactive': ['matplotlib>=2.2.0', ], },
     url="https://github.com/brille/brille",
-    zip_safe=False,
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Science/Research",
@@ -27,5 +26,3 @@ KEYWORDARGS = dict(
         "Topic :: Scientific/Engineering :: Physics",
     ]
 )
-
-setup(**KEYWORDARGS)

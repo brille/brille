@@ -1,15 +1,30 @@
 [build-system]
 # Minimum requirements for the build system to execute.
 requires =[
-	"setuptools>='45'",
-	"setuptools_scm[toml]>='6.2'",
-	"wheel",
-	"cmake>=3.18.2",
-	"numpy==1.13.3; python_version<'3.5'",
-	"oldest-supported-numpy; python_version>='3.5'",
+  "setuptools>='45'",
+  "setuptools_scm[toml]>='6.2'",
+  "wheel",
+  "cmake>=3.18.2",
+  "numpy==1.13.3; python_version<'3.5'",
+  "oldest-supported-numpy; python_version>='3.5'",
   "ninja; platform_system!='Windows'",
   "scikit-build",
 ]
 build-backend = 'setuptools.build_meta'
 
 [tool.setuptools_scm]
+
+[tool.cibuildwheel]
+archs = ["auto64"]
+test-command = "python -m unittest discover -s {package}/wrap/tests"
+before-test = "pip install numpy"
+build-verbosity = 1
+
+[tools.cibuildwheel.windows]
+before-build = "pip install delvewheel"
+repair-wheel-command = "delvewheel repair -w {dest_dir} -v {wheel}"
+
+[[tool.cibuildhweel.overrides]]
+select = "*musl*"
+before-test = "echo 'Override building numpy since no wheels are provided'"
+test-command = "echo 'Override test command under musl libc until we can install a numpy wheel"

@@ -1,0 +1,9 @@
+name: macos-11
+channels:
+  - conda-forge
+dependencies:
+  - cmake=3.23.2
+  - conan=1.48.1
+  - ninja=1.11.0
+  - numpy
+
