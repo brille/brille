@@ -1,6 +1,15 @@
 cmake_minimum_required(VERSION 3.18.2) 
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+# With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
+SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
+
+
+
 # Set build type
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE
@@ -28,12 +37,13 @@ else()
   endif()
 endif()
 
-# Attempt to find full development Python3
-find_package(Python3 COMPONENTS Interpreter Development QUIET)
-if (NOT DEFINED Python3_Development_FOUND OR NOT ${Python3_Development_FOUND})
-  # Fall-back to Development.Module which is present for SciKit-Build under manylinux, but not Windows?
-  find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
-endif()
+# Find a Python3 interpreter -- hopefully this is the same as the development version
+# Maybe it is okay if this is a different version; finding the Development files too early is a problem
+find_package(Python3 COMPONENTS Interpreter)
+#if (NOT DEFINED Python3_Development_FOUND OR NOT ${Python3_Development_FOUND})
+#  # Fall-back to Development.Module which is present for SciKit-Build under manylinux, but not Windows?
+#  find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
+#endif()
 
 if (NOT DEFINED PYTHON_EXECUTABLE)
   set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
@@ -55,12 +65,8 @@ SET(BRILLE_BIN_DESTINATION bin)
 SET(BRILLE_INCLUDE_DESTINATION include)
 set(TESTING_TARGET tester)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-# With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
-SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
+# Attempt to find full development Python3
+find_package(Python3 COMPONENTS Interpreter Development)
 
 if (SKBUILD)
   set(BRILLE_BUILD_TESTING OFF)
@@ -78,60 +84,28 @@ endif()
 # Special option for profiling runs
 option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
 
-
-# Use conan to fetch/configure/build pybind11, catch2 and hdf5
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/0.18.1/conan.cmake"
-       "${CMAKE_BINARY_DIR}/conan.cmake"
-       EXPECTED_HASH SHA256=5cdb3042632da3efff558924eecefd580a0e786863a857ca097c3d1d43df5dcd
-       TLS_VERIFY ON)
-endif()
-include(${CMAKE_BINARY_DIR}/conan.cmake)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
-
-conan_cmake_configure(
-        REQUIRES
-        pybind11/2.6.2
-        catch2/2.13.9
-        hdf5/1.12.0
-#        highfive/2.4.1
-        GENERATORS
-        cmake_find_package
-        OPTIONS
-        hdf5:shared=True
-#        highfive:with_boost=False
-#        highfive:with_eigen=False
-#        highfive:with_xtensor=False
-#        highfive:with_opencv=False
-)
-
-conan_cmake_autodetect(conan_settings)
-
-conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_CURRENT_BINARY_DIR}
-        BUILD outdated
-        REMOTE conancenter
-        SETTINGS ${conan_settings}
-        OUTPUT_QUIET)
-
-find_package(Catch2 REQUIRED)
-find_package(pybind11 REQUIRED)
-#find_package(HighFive REQUIRED)
-#set(HF_LIBRARY HighFive::HighFive)
-
 include(fetcher.cmake)
-# Support of HDF5-based IO via the HighFive header-only library (which doesn't work via Conan for brille)
-option(REQUIRE_SYSTEM_HIGHFIVE "Never attempt to fetch HighFive" OFF)
-mark_as_advanced(REQUIRE_SYSTEM_HIGHFIVE)
+set(PREFERRED_PYBIND11_VERSION 2.8.1)
+set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
+option(REQUIRE_SYSTEM_PYBIND11 "Never attempt to fetch pybind11" OFF)
 
-set(MINIMUM_HIGHFIVE_VERSION 2.4.1)
+set(PREFERRED_CATCH2_VERSION 2.13.9)
+set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
+option(REQUIRE_SYSTEM_CATCH2 "Never attempt to fetch Catch2" OFF)
+
+set(PREFERRED_HIGHFIVE_VERSION 2.4.1)
 SET(FETCH_HIGHFIVE_REPO https://github.com/BlueBrain/HighFive)
+option(REQUIRE_SYSTEM_HIGHFIVE "Never attempt to fetch HighFive" OFF)
+
+git_fetch(pybind11 ${PREFERRED_PYBIND11_VERSION} ${FETCH_PYBIND11_REPO} ${REQUIRE_SYSTEM_PYBIND11})
+git_fetch(catch2 ${PREFERRED_CATCH2_VERSION} ${FETCH_CATCH2_REPO} ${REQUIRE_SYSTEM_CATCH2})
+list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
+
 set(HIGHFIVE_USE_BOOST OFF)
 set(HIGHFIVE_UNIT_TESTS OFF)
 set(HIGHFIVE_EXAMPLES OFF)
 set(HIGHFIVE_BUILD_DOCS OFF)
-git_fetch(highfive ${MINIMUM_HIGHFIVE_VERSION} ${FETCH_HIGHFIVE_REPO} ${REQUIRE_SYSTEM_HIGHFIVE})
+git_fetch(highfive ${PREFERRED_HIGHFIVE_VERSION} ${FETCH_HIGHFIVE_REPO} ${REQUIRE_SYSTEM_HIGHFIVE})
 set(HF_LIBRARY HighFive)
 add_definitions(-DUSE_HIGHFIVE)
 

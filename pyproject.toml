@@ -20,6 +20,12 @@ test-command = "python -m unittest discover -s {package}/wrap/tests"
 before-test = "pip install numpy"
 build-verbosity = 1
 
+[tool.cibuildwheel.linux]
+before-all = "yum install -y hdf5-devel"
+
+[tool.cibuildwheel.macos]
+before-all = "brew install hdf5"
+
 [tools.cibuildwheel.windows]
 before-build = "pip install delvewheel"
 repair-wheel-command = "delvewheel repair -w {dest_dir} -v {wheel}"
@@ -28,3 +34,4 @@ repair-wheel-command = "delvewheel repair -w {dest_dir} -v {wheel}"
 select = "*musl*"
 before-test = "echo 'Override building numpy since no wheels are provided'"
 test-command = "echo 'Override test command under musl libc until we can install a numpy wheel"
+before-all = "apk update; apk add hdf5-dev"
