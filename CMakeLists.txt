@@ -1,124 +1,148 @@
 cmake_minimum_required(VERSION 3.18.2) 
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-# With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
-SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
-
-# Set build type
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the build type: Debug, Release, RelWithDebInfo, MinSizeRel" FORCE)
-endif()
-
-# scikit-build claims to support FindPython, but doesn't fully?
-# https://github.com/scikit-build/scikit-build/issues/506#issuecomment-706791791
-if(SKBUILD)
-  message(STATUS "SciKit-Build PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE}")
-  message(STATUS "SciKit-Build PYTHON_INCLUDE_DIR ${PYTHON_INCLUDE_DIR}")
-  message(STATUS "SciKit-Build PYTHON_LIBRARY ${PYTHON_LIBRARY}")
-  set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
-  set(Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
-  set(Python_LIBRARY "${PYTHON_LIBRARY}")
-else()
-  if (PYTHON_EXECUTABLE)
-    # Ensure the provided Python interpreter is used
-    set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
-  endif()
-endif()
-
-# Find a Python3 interpreter -- hopefully this is the same as the development version
-# Maybe it is okay if this is a different version; finding the Development files too early is a problem
-find_package(Python3 COMPONENTS Interpreter)
-
-if (NOT DEFINED PYTHON_EXECUTABLE)
-  set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
-endif()
-
-# Read the version of brille
-include(checkgit.cmake)
-checkGitSetup("BRILLE") # defines/creates version.hpp; and library 'git_version'
-# So that we can print it to the console along with the specified build type
-message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
-
-project(brille VERSION ${BRILLE_SAFE_VERSION} LANGUAGES CXX)
+project(brille)
 set(BRILLE_LIBRARY_TARGET brille)
 set(BRILLE_PYTHON_MODULE _brille)
-set(BRILLE_PYTHON_DESTINATION brille)
 set(BRILLE_SINGLE_HEADER brille.h) # must match template file in project root
 SET(BRILLE_LIB_DESTINATION lib)
 SET(BRILLE_BIN_DESTINATION bin)
 SET(BRILLE_INCLUDE_DESTINATION include)
 set(TESTING_TARGET tester)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
 
-if (SKBUILD)
-  set(BRILLE_BUILD_TESTING OFF)
-  set(BRILLE_LOGLEVEL "INFO")
-endif()
-
-if (NOT DEFINED BRILLE_BUILD_TESTING)
-  # Make the availability of testing optional
-  option(BRILLE_BUILD_TESTING "Build tests for brille" ON)
-endif()
-if (NOT DEFINED BRILLE_LOGLEVEL)
-  # Allow the log level to be set by cmake
-  set(BRILLE_LOGLEVEL "INFO" CACHE STRING "Emit log messages to standard out (DEBUG|VERBOSE)")
-endif()
+# Make the availability of testing optional
+option(BRILLE_BUILD_TESTING "Build tests for brille" ON)
+# Allow system pybind11 to be required
+option(REQUIRE_SYSTEM_PYBIND11 "Never attempt to fetch pybind11" OFF)
+mark_as_advanced(REQUIRE_SYSTEM_PYBIND11)
+# Allow system catch2 to be required
+option(REQUIRE_SYSTEM_CATCH2 "Never attempt to fetch catch2" OFF)
+mark_as_advanced(REQUIRE_SYSTEM_CATCH2)
+# Allow the log level to be set by cmake
+set(BRILLE_LOGLEVEL "INFO" CACHE STRING "Emit log messages to standard out (DEBUG|VERBOSE)")
 # Special option for profiling runs
 option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
 
+# Define the minimum version of libraries needed
+set(MINIMUM_PYBIND11_VERSION 2.8.1)
+set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
+set(MINIMUM_CATCH2_VERSION 2.13.9)
+set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
+
+# Optional support of HDF5-based IO
+option(BRILLE_HDF5 "Add HDF5 file-based IO" ON)
+option(REQUIRE_SYSTEM_HIGHFIVE "Never attempt to fetch HighFive" OFF)
+mark_as_advanced(REQUIRE_SYSTEM_HIGHFIVE)
+set(MINIMUM_HIGHFIVE_VERSION 2.4.1)
+SET(FETCH_HIGHFIVE_REPO https://github.com/BlueBrain/HighFive)
+
+# find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
+# if (CMAKE_CXX_CPPCHECK)
+#     list(
+#         APPEND CMAKE_CXX_CPPCHECK
+#             "--enable=warning"
+#             "--inconclusive"
+#             "--force"
+#             "--inline-suppr"
+#             # "--template=gcc" # uncomment to get suppression error ids in brackets
+#     )
+# endif()
+
 if (MSVC)
-  # warning level 4 -- add /WX for all warnings as errors
-  add_compile_options(/W4)
-  # suppress MSVC warning C4996 about 'localtime' vs 'localtime_s'
-  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-  # Allow UTF-8 identifiers https://stackoverflow.com/a/47704050
-  add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+    # warning level 4 -- add /WX for all warnings as errors
+    add_compile_options(/W4)
+    # suppress MSVC warning C4996 about 'localtime' vs 'localtime_s'
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    # Allow UTF-8 identifiers https://stackoverflow.com/a/47704050
+    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 else()
-  # lots of warnings -- add -Werror for  all warnings as errors
-  add_compile_options(-Wall -Wextra -pedantic)
+    # lots of warnings -- add -Werror for  all warnings as errors
+    add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-# Attempt to find full development Python3
+set(CMAKE_MACOSX_RPATH OFF)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif(NOT CMAKE_BUILD_TYPE)
+
+if (${BRILLE_LOGLEVEL} STREQUAL "VERBOSE")
+  message(STATUS "Verbose logging emitted at runtime")
+  add_definitions(-DVERBOSE)
+else()
+  if (${BRILLE_LOGLEVEL} STREQUAL "DEBUG")
+    message(STATUS "Debug logging emitted at runtime")
+    add_definitions(-DDEBUG)
+  else()
+    message(STATUS "Informational logging emitted at runtime")
+  endif()
+endif()
+if (BRILLE_PROFILING)
+  message(STATUS "Profiling output emitted at runtime")
+  add_definitions(-DPROFILING)
+endif (BRILLE_PROFILING)
+
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
+SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
+
+if (PYTHON_EXECUTABLE)
+  # Ensure the provided Python interpreter is used
+  set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
+endif()
+# With modern CMake, this find_package forces pybind11 to use FindPython instead of its custom tools
 find_package(Python3 COMPONENTS Interpreter Development)
 
+if (NOT DEFINED PYTHON_EXECUTABLE)
+  set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
+endif()
 
 include(fetcher.cmake)
-set(PREFERRED_PYBIND11_VERSION 2.8.1)
-set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
-option(REQUIRE_SYSTEM_PYBIND11 "Never attempt to fetch pybind11" OFF)
 
-set(PREFERRED_CATCH2_VERSION 2.13.9)
-set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
-option(REQUIRE_SYSTEM_CATCH2 "Never attempt to fetch Catch2" OFF)
-
-set(PREFERRED_HIGHFIVE_VERSION 2.4.1)
-SET(FETCH_HIGHFIVE_REPO https://github.com/BlueBrain/HighFive)
-option(REQUIRE_SYSTEM_HIGHFIVE "Never attempt to fetch HighFive" OFF)
-
-git_fetch(pybind11 ${PREFERRED_PYBIND11_VERSION} ${FETCH_PYBIND11_REPO} ${REQUIRE_SYSTEM_PYBIND11})
-git_fetch(catch2 ${PREFERRED_CATCH2_VERSION} ${FETCH_CATCH2_REPO} ${REQUIRE_SYSTEM_CATCH2})
-list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
-
-set(HIGHFIVE_USE_BOOST OFF)
-set(HIGHFIVE_UNIT_TESTS OFF)
-set(HIGHFIVE_EXAMPLES OFF)
-set(HIGHFIVE_BUILD_DOCS OFF)
-git_fetch(highfive ${PREFERRED_HIGHFIVE_VERSION} ${FETCH_HIGHFIVE_REPO} ${REQUIRE_SYSTEM_HIGHFIVE})
-set(HF_LIBRARY HighFive)
-add_definitions(-DUSE_HIGHFIVE)
-
-if (NOT SKBUILD)
-  # Create a single header by contatenating all headers in src/
-  add_custom_target(single_header
-    COMMAND ${Python3_EXECUTABLE} acme.py ${BRILLE_SINGLE_HEADER} -o ${CMAKE_BINARY_DIR}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    DEPENDS git_version
-  )
-  add_custom_target(library DEPENDS single_header ${BRILLE_LIBRARY_TARGET})
+# Attempt to find catch2 to handle C++ testing
+if(BRILLE_BUILD_TESTING)
+  git_fetch(catch2 ${MINIMUM_CATCH2_VERSION} ${FETCH_CATCH2_REPO} ${REQUIRE_SYSTEM_CATCH2})
+  list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
+else()
+  # Since no testing is to be built, fake that we've found Catch2.
+  set(Catch2_FOUND ON)
 endif()
+# Attempt to find pybind11 to handle CPython bindings
+git_fetch(pybind11 ${MINIMUM_PYBIND11_VERSION} ${FETCH_PYBIND11_REPO} ${REQUIRE_SYSTEM_PYBIND11})
+
+# HighFive is used to simplify the interface with HDF5:
+# Override some default settings
+if (BRILLE_HDF5)
+  set(HIGHFIVE_USE_BOOST OFF)
+  set(HIGHFIVE_UNIT_TESTS OFF)
+  set(HIGHFIVE_EXAMPLES OFF)
+  set(HIGHFIVE_BUILD_DOCS OFF)
+  git_fetch(highfive ${MINIMUM_HIGHFIVE_VERSION} ${FETCH_HIGHFIVE_REPO} ${REQUIRE_SYSTEM_HIGHFIVE})
+  if (highfive_FOUND)
+    # message(STATUS "Adding HighFive precompiler macro flag")
+    add_definitions(-DUSE_HIGHFIVE)
+  endif()
+endif(BRILLE_HDF5)
+
+# Read the version of brille
+include(checkgit.cmake)
+checkGitSetup(BRILLE) # defines/creates version.hpp; and library 'git_version'
+# So that we can print it to the console along with the specified build type
+message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
+
+# Create a single header by contatenating all headers in src/
+add_custom_target(single_header
+  COMMAND ${Python3_EXECUTABLE} acme.py ${BRILLE_SINGLE_HEADER} -o ${CMAKE_BINARY_DIR}
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  DEPENDS git_version
+)
+
+add_custom_target(library DEPENDS single_header ${BRILLE_LIBRARY_TARGET})
 
 # We will always build the python module
 list(APPEND CXX_TARGETS ${BRILLE_PYTHON_MODULE})
@@ -137,11 +161,9 @@ if(BRILLE_BUILD_TESTING)
   add_executable(${TESTING_TARGET})
 endif()
 
-if (NOT SKBUILD)
 # target for C++ shared library
-add_library(${BRILLE_LIBRARY_TARGET} src/hdf_interface.hpp src/is_musl.h)
+add_library(${BRILLE_LIBRARY_TARGET} src/hdf_interface.hpp)
 list(APPEND CXX_TARGETS ${BRILLE_LIBRARY_TARGET})
-endif()
 
 add_subdirectory(lib)
 
@@ -164,6 +186,7 @@ endif()
 find_package(OpenMP REQUIRED) # Change code to support missing OpenMP?
 if(OpenMP_CXX_FOUND)
   foreach(OMP_TARGET IN LISTS CXX_TARGETS)
+    # message(STATUS "Adding OpenMP library to ${OMP_TARGET}")
     target_link_libraries(${OMP_TARGET} PUBLIC OpenMP::OpenMP_CXX)
   endforeach(OMP_TARGET)
   if (MSVC AND MSVC_VERSION GREATER 1919)
@@ -171,11 +194,22 @@ if(OpenMP_CXX_FOUND)
   endif()
 endif()
 
-foreach(HF_TARGET IN LISTS CXX_TARGETS)
-  message(STATUS "Add HighFive library to ${HF_TARGET}")
-  target_link_libraries(${HF_TARGET} PUBLIC HighFive)
-endforeach()
+if(BRILLE_HDF5 AND highfive_FOUND)
+  foreach(HF_TARGET IN LISTS CXX_TARGETS)
+    # message(STATUS "Adding HighFive library to ${HF_TARGET}")
+    target_link_libraries(${HF_TARGET} PUBLIC HighFive)
+  endforeach()
+endif()
 
+
+# if(MSVC)
+# 	if(CMAKE_BUILD_TYPE STREQUAL "Matlab")
+# 		find_package(Matlab)
+# 		target_link_libraries(_brille PUBLIC "${Matlab_ROOT_DIR}/bin/win64/libiomp5md.lib")
+# 		set_property(TARGET _brille APPEND PROPERTY LINK_FLAGS /nodefaultlib:vcomp)
+# 	endif()
+# else()
+# endif()
 
 # first we can indicate the documentation build as an option (default OFF)
 option(BUILD_DOC "Build documentation" OFF)
@@ -207,17 +241,13 @@ else (DOXYGEN_FOUND)
 endif (DOXYGEN_FOUND)
 endif()
 
-if (NOT SKBUILD)
-  install(
-    TARGETS ${BRILLE_LIBRARY_TARGET}
-    ARCHIVE DESTINATION ${BRILLE_LIB_DESTINATION}
-    LIBRARY DESTINATION ${BRILLE_LIB_DESTINATION}
-    RUNTIME DESTINATION ${BRILLE_BIN_DESTINATION}
-  )
-  install(
-    FILES "${CMAKE_BINARY_DIR}/${BRILLE_SINGLE_HEADER}"
-    DESTINATION ${BRILLE_INCLUDE_DESTINATION}
-  )
-endif()
-
-install(TARGETS ${BRILLE_PYTHON_MODULE} LIBRARY DESTINATION ${BRILLE_PYTHON_DESTINATION})
+install(
+  TARGETS ${BRILLE_LIBRARY_TARGET}
+  ARCHIVE DESTINATION ${BRILLE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${BRILLE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${BRILLE_BIN_DESTINATION}
+)
+install(
+  FILES "${CMAKE_BINARY_DIR}/${BRILLE_SINGLE_HEADER}"
+  DESTINATION ${BRILLE_INCLUDE_DESTINATION}
+)

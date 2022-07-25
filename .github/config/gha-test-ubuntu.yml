@@ -3,8 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - cmake=3.23.2
-  - gxx_linux-64=11.1.*
-  - ninja=1.11.0
-  - pandoc=2.18
+  - gcc
+  - gxx
   - numpy
   - hdf5

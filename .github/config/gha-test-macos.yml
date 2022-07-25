@@ -3,7 +3,6 @@ channels:
   - conda-forge
 dependencies:
   - cmake=3.23.2
-  - ninja=1.11.0
   - numpy
   - llvm-openmp==11.1.0
   - hdf5
