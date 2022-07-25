@@ -8,17 +8,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
 SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 
-
-
 # Set build type
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE
-          "Debug"
-          CACHE
-          STRING
-          "Choose the type of build, including: Debug, Release, RelWithDebInfo, MinSizeRel, etc."
-          FORCE
-          )
+  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the build type: Debug, Release, RelWithDebInfo, MinSizeRel" FORCE)
 endif()
 
 # scikit-build claims to support FindPython, but doesn't fully?
@@ -40,10 +32,6 @@ endif()
 # Find a Python3 interpreter -- hopefully this is the same as the development version
 # Maybe it is okay if this is a different version; finding the Development files too early is a problem
 find_package(Python3 COMPONENTS Interpreter)
-#if (NOT DEFINED Python3_Development_FOUND OR NOT ${Python3_Development_FOUND})
-#  # Fall-back to Development.Module which is present for SciKit-Build under manylinux, but not Windows?
-#  find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
-#endif()
 
 if (NOT DEFINED PYTHON_EXECUTABLE)
   set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
@@ -65,9 +53,6 @@ SET(BRILLE_BIN_DESTINATION bin)
 SET(BRILLE_INCLUDE_DESTINATION include)
 set(TESTING_TARGET tester)
 
-# Attempt to find full development Python3
-find_package(Python3 COMPONENTS Interpreter Development)
-
 if (SKBUILD)
   set(BRILLE_BUILD_TESTING OFF)
   set(BRILLE_LOGLEVEL "INFO")
@@ -83,6 +68,22 @@ if (NOT DEFINED BRILLE_LOGLEVEL)
 endif()
 # Special option for profiling runs
 option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
+
+if (MSVC)
+  # warning level 4 -- add /WX for all warnings as errors
+  add_compile_options(/W4)
+  # suppress MSVC warning C4996 about 'localtime' vs 'localtime_s'
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  # Allow UTF-8 identifiers https://stackoverflow.com/a/47704050
+  add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+else()
+  # lots of warnings -- add -Werror for  all warnings as errors
+  add_compile_options(-Wall -Wextra -pedantic)
+endif()
+
+# Attempt to find full development Python3
+find_package(Python3 COMPONENTS Interpreter Development)
+
 
 include(fetcher.cmake)
 set(PREFERRED_PYBIND11_VERSION 2.8.1)
@@ -172,7 +173,7 @@ endif()
 
 foreach(HF_TARGET IN LISTS CXX_TARGETS)
   message(STATUS "Add HighFive library to ${HF_TARGET}")
-  target_link_libraries(${HF_TARGET} PUBLIC ${HF_LIBRARY})
+  target_link_libraries(${HF_TARGET} PUBLIC HighFive)
 endforeach()
 
 
