@@ -104,14 +104,21 @@ class Lattice(unittest.TestCase):
         # Providing both a spacegroup string (or strings) and Symmetry information should raise an error
         self.assertRaises(ValueError, br_py.Lattice, self.cmo_vectors, spacegroup='ITName', symmetry=st)
         self.assertRaises(ValueError, br_py.Lattice, self.cmo_vectors, spacegroup=('HMSymbol', 'HMChoice'), symmetry=st)
-        self.assertRaises(ValueError, br_py.Lattice, self.cmo_vectors, 'ITName', symmetry=st)
-        self.assertRaises(ValueError, br_py.Lattice, self.cmo_vectors, 'HMSymbol', 'HMChoice', symmetry=st)
 
-        # Providing Symmetry and Basis as positional arguments works
-        lat = br_py.Lattice(self.cmo_vectors, br_mod.Symmetry(*st), br_mod.Basis(*bt))
+        # Providing Symmetry and Basis as positional arguments raises an error
+        self.assertRaises(TypeError, br_py.Lattice, self.cmo_vectors, br_mod.Symmetry(*st), br_mod.Basis(*bt))
+
+        # The single required argument can not be provided as a keyword
+        self.assertRaises(TypeError, br_py.Lattice, values=self.cmo_vectors)
+
+        # And none of kwargs can have the same name 'values'
+        self.assertRaises(TypeError, br_py.Lattice, self.cmo_vectors, values=True)
+
+        # Providing Symmetry and Basis as keyword arguments works
+        lat = br_py.Lattice(self.cmo_vectors, symmetry=br_mod.Symmetry(*st), basis=br_mod.Basis(*bt))
         self.assertTrue(np.allclose(lat.basis.positions, self.cmo_positions))
 
-        # But we must use the keyword syntax if we want the objects to be created for us
+        # The objects can be created for us from tuple arguments if we wish:
         lat = br_py.Lattice(self.cmo_vectors, symmetry=st, basis=bt)
         self.assertTrue(np.allclose(lat.basis.positions, self.cmo_positions))
 

@@ -160,11 +160,8 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
         e1.__suppress_context__ = True
         raise e1
 
-    real_space = not is_reciprocal
-    if lattice_vectors is not None:
-        lattice = Lattice(lattice_vectors, spacegroup, real_space=real_space, snap_to_symmetry=snap_to_symmetry)
-    else:
-        lattice = Lattice(lens, angs, spacegroup, real_space=real_space, snap_to_symmetry=snap_to_symmetry)
+    keywords = dict(spacegroup=spacegroup, real_space=not is_reciprocal, snap_to_symmetry=snap_to_symmetry)
+    lattice = Lattice((lens, angs), **keywords) if lattice_vectors is None else Lattice(lattice_vectors, **keywords)
 
     try:
         return _BrillouinZone(lattice, use_primitive=use_primitive, search_length=search_length,

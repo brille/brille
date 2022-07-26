@@ -16,7 +16,7 @@ def _make(to_type, args):
     return args if isinstance(args, to_type) else to_type(*_t(args))
 
 
-def Lattice(*args, spacegroup=None, symmetry=None, basis=None, **kwargs):
+def Lattice(values, /, spacegroup=None, symmetry=None, basis=None, **kwargs):
     """  Construct a space-spanning lattice in three dimensions
 
     A space-spanning lattice in :math:`N` dimensions has :math:`N` basis vectors
@@ -29,24 +29,24 @@ def Lattice(*args, spacegroup=None, symmetry=None, basis=None, **kwargs):
     Examples
     --------
 
-        lat = brille.Lattice([3.95, 3.95, 12.9], [90, 90, 90], 'I4/mmm',
+        lat = brille.Lattice(([3.95, 3.95, 12.9], [90, 90, 90]), spacegroup='I4/mmm',
                              basis=([[0, 0, 0], [0.5, 0.5, 0.5], [0.25, 0.25, 0.3]], [0, 0, 1]))
-        lat = brille.Lattice([3.95, 3.95, 12.9], [90, 90, 90], spacegroup='I4/mmm',
+        lat = brille.Lattice(([[3.95, 0, 0], [0, 3.95, 0], [0, 0, 12.9]],), symmetry=(rotations, translations),
                              basis=([[0, 0, 0], [0.5, 0.5, 0.5], [0.25, 0.25, 0.3]], [0, 0, 1]))
-        lat = brille.Lattice([3.95, 3.95, 12.9], [90, 90, 90], symmetry=(rotations, translations),
-                             basis=([[0, 0, 0], [0.5, 0.5, 0.5], [0.25, 0.25, 0.3]], [0, 0, 1]))
-        lat = brille.Lattice([[3.95, 0, 0], [0, 3.95, 0], [0, 0, 12.9]], 'I4/mmm',
+        lat = brille.Lattice([[3.95, 0, 0], [0, 3.95, 0], [0, 0, 12.9]], spacegroup='I4/mmm',
                              basis=([[0, 0, 0], [0.5, 0.5, 0.5], [0.25, 0.25, 0.3]], [0, 0, 1]))
 
     Note
     ----
-    The parameters packed into `args` are position-based and should be *either* `(lengths, angles)`
-    *or* `(vectors)` [which also requires setting `row_vectors=False` if the matrix represents column vectors].
+    The parameters packed into `values` are position-based and should be *either* `(lengths, angles)`
+    *or* `(vectors,)` [which also requires setting `row_vectors=False` if the matrix represents column vectors].
+    The lengths or vector components are interpreted in angstrom or inverse angstrom for real or reciprocal lattice
+    parameters, respectively, and are assumed to be angstrom if the keyword `real_space` is missing or True.
 
 
     Parameters
     ----------
-    args:
+    values: (lengths, angles), vectors
         lengths : list, tuple, numpy.ndarray
             The three basis vector lengths in angstrom for real lattice, or inverse angstrom for reciprocal lattices
         angles : list, tuple, numpy.ndarray
@@ -61,6 +61,18 @@ def Lattice(*args, spacegroup=None, symmetry=None, basis=None, **kwargs):
         The International Tables name, Hermann-Mauguin symbol with optional choice, or Hall symbol for the
         spacegroup of the lattice. The spacegroup may be provided as positional argument(s) or by keyword.
         If present, the `symmetry` keyword must not be used.
+        Valid syntax for (Hermann-Mauguin, choice) input depends on the spacegroup but is generally one of:
+            a single letter ('a', 'b', or 'c') with possible prepended '-', denoting unique-axis choice
+            a single digit ('1', '2', or '3'), denoting origin choice
+            a letter and digit, denoting unique-axis and origin choice
+            a permutation of 'abc' with possible '-' before one of the letters, denoting axis permutation
+            or 'R' or 'H' for trigonal systems with Rhombohedral or Hexagonal lattice settings, respectively.
+        Acceptable values are contained in the C++ source code in the seventh column of the table
+        https://github.com/brille/brille/blob/eecb4cb28227665908793abc47e88c69518c09fc/src/spg_database.cpp#L63-L610
+        with each line representing one spacegroup with values, in order, defined by the class signature at
+        https://github.com/brille/brille/blob/eecb4cb28227665908793abc47e88c69518c09fc/src/spg_database.hpp#L80-L91
+        These values come from spglib, which likely obtained them from Seto's now defunct Home Page,
+        https://web.archive.org/web/20210621195003/http://pmsl.planet.sci.kobe-u.ac.jp/~seto/?page_id=37&lang=en
     symmetry: brille.Symmetry, tuple(matrices, vectors), str
         The spacegroup symmetry operations as an object, a tuple of the (pseudo)rotation matrices and translation
         vectors, or a CIF xyz encoded string. The symmetry information must be provided by keyword.
@@ -70,27 +82,37 @@ def Lattice(*args, spacegroup=None, symmetry=None, basis=None, **kwargs):
         must be integer and are used only to identify equivalent atoms -- they should probably be contiguous from
         zero to 1-N where N is the number of unique atoms in the atom basis.
         If present, either spacegroup or symmetry information must be provided.
+    kwargs:
+        Keyword arguments are passed to the :py:class:`brille._brille.Lattice` constructor,
+        see its documentation for details.
     """
+    if isinstance(spacegroup, str):
+        spacegroup = spacegroup,
     if spacegroup is None:
-        # look for a string (or two!) on the end of the position arguments
-        if len(args) > 2 and isinstance(args[-1], str) and isinstance(args[-2], str):
-            spacegroup = args[-2], args[-1]
-            args = args[:-2]
-        elif len(args) > 1 and isinstance(args[-1], str):
-            spacegroup = args[-1],
-            args = args[:-1]
-        else:
-            spacegroup = tuple()
+        spacegroup = tuple()
+    if len(spacegroup) and not all([isinstance(x, str) for x in spacegroup]):
+        raise ValueError("Keyword argument spacegroup should be one of: str, (str,), or (str, str)")
+
+    if basis is not None and symmetry is None and len(spacegroup) == 0:
+        raise ValueError("Providing basis without symmetry or spacegroup is not allowed")
+    if symmetry is not None and len(spacegroup):
+        raise ValueError("Providing both spacegroup and symmetry is not allowed")
+
+    # The pybind11 wrapper has overloads which accept:
+    #   3-tuple-like, 3-tuple-like : 3-element arrays of lengths and angles
+    #   3-tuple(3-tuple-like)-like : 3 3-element arrays of basis vectors
+    #
+    # with the basis vectors ((ax, ay, az), (bx, by, bz), (cx, cy, cz)) or ((ax, bx, cx), (ay, by, cy), (az, bz, cz))
+    #
+    # If the user provided a 2-tuple then it must be (lengths, angles), otherwise it must be vectors
+    # We use less-than to allow a user to provide (vectors,) as the first input
+    args = values if len(values) < 3 else (values, )
 
     if symmetry is None and basis is None:
         return _Lattice(*args, *spacegroup, **kwargs)
     elif symmetry is None:
-        if len(spacegroup) == 0:
-            raise ValueError("Providing a Basis without Symmetry or Spacegroup is not allowed")
         return _Lattice(*args, *spacegroup, _make(_Basis, basis), **kwargs)
 
-    if len(spacegroup):
-        raise ValueError("Providing both Spacegroup and Symmetry is not allowed")
     if basis is None:
         return _Lattice(*args, _make(_Symmetry, symmetry), **kwargs)
     else:
