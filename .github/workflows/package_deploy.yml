@@ -36,7 +36,12 @@ jobs:
           - {os: ubuntu-20.04, platform: 'musllinux', config: 'ubuntu'}
           - {os: macos-11, platform: 'macosx', config: 'macos'}
           - {os: windows-2019, platform: 'win', config: 'windows'}
-        python: ['cp36', 'cp37', 'cp38', 'cp39', 'cp310']
+        python:
+          - {version: '3.6', tag: 'cp36'}
+          - {version: '3.7', tag: 'cp37'}
+          - {version: '3.8', tag: 'cp38'}
+          - {version: '3.9', tag: 'cp39'}
+          - {version: '3.10', tag: 'cp310'}
 
     steps:
     - uses: actions/checkout@v3
@@ -49,11 +54,11 @@ jobs:
         micromamba-version: 0.23.0
         environment-file: .github/config/gha-build-${{ matrix.variant.config }}.yml
         cache-env: true
-        extra-specs: python=${{ matrix.python }}
+        extra-specs: python=${{ matrix.python.version }}
 
     - uses: pypa/cibuildwheel@v2.8.0
       env:
-        CIBW_BUILD: ${{ matrix.python }}-${{ matrix.variant.platform }}*
+        CIBW_BUILD: ${{ matrix.python.tag }}-${{ matrix.variant.platform }}*
         MACOSX_DEPLOYMENT_TARGET: "10.15"
 
     - name: Verify clean directory
