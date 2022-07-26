@@ -4,6 +4,7 @@ cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 project(brille)
 set(BRILLE_LIBRARY_TARGET brille)
 set(BRILLE_PYTHON_MODULE _brille)
+set(BRILLE_PYTHON_DESTINATION brille)
 set(BRILLE_SINGLE_HEADER brille.h) # must match template file in project root
 SET(BRILLE_LIB_DESTINATION lib)
 SET(BRILLE_BIN_DESTINATION bin)
@@ -131,18 +132,19 @@ endif(BRILLE_HDF5)
 
 # Read the version of brille
 include(checkgit.cmake)
-checkGitSetup() # defines/creates version.hpp; and library 'git_version'
+checkGitSetup(BRILLE) # defines/creates version.hpp; and library 'git_version'
 # So that we can print it to the console along with the specified build type
-message(STATUS "Build brille v${GIT_VERSION} with type ${CMAKE_BUILD_TYPE}")
+message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
 
+if (NOT SKBUILD)
 # Create a single header by contatenating all headers in src/
 add_custom_target(single_header
   COMMAND ${Python3_EXECUTABLE} acme.py ${BRILLE_SINGLE_HEADER} -o ${CMAKE_BINARY_DIR}
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   DEPENDS git_version
 )
-
 add_custom_target(library DEPENDS single_header ${BRILLE_LIBRARY_TARGET})
+endif()
 
 # We will always build the python module
 list(APPEND CXX_TARGETS ${BRILLE_PYTHON_MODULE})
@@ -161,9 +163,11 @@ if(BRILLE_BUILD_TESTING)
   add_executable(${TESTING_TARGET})
 endif()
 
+if(NOT SKBUILD)
 # target for C++ shared library
 add_library(${BRILLE_LIBRARY_TARGET} src/hdf_interface.hpp)
 list(APPEND CXX_TARGETS ${BRILLE_LIBRARY_TARGET})
+endif()
 
 add_subdirectory(lib)
 
@@ -241,6 +245,7 @@ else (DOXYGEN_FOUND)
 endif (DOXYGEN_FOUND)
 endif()
 
+if (NOT SKBUILD)
 install(
   TARGETS ${BRILLE_LIBRARY_TARGET}
   ARCHIVE DESTINATION ${BRILLE_LIB_DESTINATION}
@@ -251,3 +256,6 @@ install(
   FILES "${CMAKE_BINARY_DIR}/${BRILLE_SINGLE_HEADER}"
   DESTINATION ${BRILLE_INCLUDE_DESTINATION}
 )
+endif()
+
+install(TARGETS ${BRILLE_PYTHON_MODULE} DESTINATION ${BRILLE_PYTHON_DESTINATION})

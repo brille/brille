@@ -1,3 +1,34 @@
+if (MSVC)
+    # warning level 4 -- add /WX for all warnings as errors
+    add_compile_options(/W4)
+    # suppress MSVC warning C4996 about 'localtime' vs 'localtime_s'
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    # Allow UTF-8 identifiers https://stackoverflow.com/a/47704050
+    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+else()
+    # lots of warnings -- add -Werror for  all warnings as errors
+    add_compile_options(-Wall -Wextra -pedantic)
+endif()
+
+set(CMAKE_MACOSX_RPATH OFF)
+
+if (${BRILLE_LOGLEVEL} STREQUAL "VERBOSE")
+    message(STATUS "Verbose logging emitted at runtime")
+    add_definitions(-DVERBOSE)
+else()
+    if (${BRILLE_LOGLEVEL} STREQUAL "DEBUG")
+        message(STATUS "Debug logging emitted at runtime")
+        add_definitions(-DDEBUG)
+    else()
+        message(STATUS "Informational logging emitted at runtime")
+    endif()
+endif()
+if (BRILLE_PROFILING)
+    message(STATUS "Profiling output emitted at runtime")
+    add_definitions(-DPROFILING)
+endif (BRILLE_PROFILING)
+
 # Directory specific compilation flags
 if (MSVC)
     # warning level 4 -- add /WX for all warnings as errors
