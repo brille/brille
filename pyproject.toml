@@ -31,7 +31,7 @@ before-build = "pip install delvewheel"
 repair-wheel-command = "delvewheel repair -w {dest_dir} -v {wheel}"
 
 [[tool.cibuildhweel.overrides]]
-select = "*musl*"
+select = "*-musllinux*"
+before-all = "apk add hdf5-dev"
 before-test = "echo 'Override building numpy since no wheels are provided'"
 test-command = "echo 'Override test command under musl libc until we can install a numpy wheel"
-before-all = "apk update; apk add hdf5-dev"
