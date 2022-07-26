@@ -32,13 +32,22 @@ jobs:
       fail-fast: false
       matrix:
         variant:
-          - {os: ubuntu-20.04, platform: 'manylinux'}
-          - {os: ubuntu-20.04, platform: 'musllinux'}
-          - {os: macos-11, platform: 'macosx'}
-          - {os: windows-2019, platform: 'win'}
+          - {os: ubuntu-20.04, platform: 'manylinux', config: 'ubuntu'}
+          - {os: ubuntu-20.04, platform: 'musllinux', config: 'ubuntu'}
+          - {os: macos-11, platform: 'macosx', config: 'macos'}
+          - {os: windows-2019, platform: 'win', config: 'windows'}
         python: ['cp36', 'cp37', 'cp38', 'cp39', 'cp310']
 
     steps:
+    # Windows and macOS CIBuildwheel builds use system libraries, and need HDF5 installed ahead of time:
+    - name: Setup micromamba environment
+      uses: mamba-org/provision-with-micromamba@main
+      with:
+        micromamba-version: 0.23.0
+        environment-file: .github/config/gha-build-${{ matrix.variant.config }}.yml
+        cache-env: true
+        extra-specs: python=${{ matrix.python }}
+
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0

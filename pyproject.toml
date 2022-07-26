@@ -7,10 +7,7 @@ requires =[
   "cmake>=3.18.2",
   "numpy==1.13.3; python_version<'3.5'",
   "oldest-supported-numpy; python_version>='3.5'",
-  "ninja; platform_system!='Windows'",
-  "scikit-build",
 ]
-build-backend = 'setuptools.build_meta'
 
 [tool.setuptools_scm]
 
@@ -30,7 +27,7 @@ before-all = "brew install hdf5"
 before-build = "pip install delvewheel"
 repair-wheel-command = "delvewheel repair -w {dest_dir} -v {wheel}"
 
-[[tool.cibuildhweel.overrides]]
+[[tool.cibuildwheel.overrides]]
 select = "*-musllinux*"
 before-all = "apk add hdf5-dev"
 before-test = "echo 'Override building numpy since no wheels are provided'"
