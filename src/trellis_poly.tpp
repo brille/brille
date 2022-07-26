@@ -18,6 +18,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <cassert>
 #endif
 
+#include "is_musl.h"
+
 
 //  auto add_to_maps = [&](const ind_t i, std::vector<ind_t> &map) {
 //    if (map_idx[i] > n_points) {
@@ -450,6 +452,10 @@ PolyTrellis<T,R,S,A>::part_two(
     const S s_tol,
     const int d_tol
 ) {
+#ifdef __MUSL__
+  info_update("musl libc and OpenMP cause a segmentation violation in tests -- forcing single-threaded triangulation");
+  omp_set_num_threads(1);
+#endif
   // go through all cells again and construct the actual nodes:
 
   /* You might be tempted to do this in parallel, but the way NodeContainer

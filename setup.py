@@ -3,7 +3,7 @@ import re
 import sys
 import pkgutil
 from sysconfig import get_platform
-from subprocess import CalledProcessError, check_output, check_call
+from subprocess import check_output, check_call
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
@@ -16,7 +16,7 @@ else:
 # We can use cmake provided from pip which (normally) gets installed at /bin
 # Except that in the manylinux builds it's placed at /opt/python/[version]/bin/
 # (as a symlink at least) which is *not* on the path.
-# If cmake is a known module, import it and use it tell us its binary directory
+# If cmake is a known module, import it and use it to tell us its binary directory
 if pkgutil.find_loader('cmake') is not None:
     import cmake
 
@@ -28,9 +28,10 @@ else:
 def get_cmake():
     return CMAKE_BIN
 
+
 # We want users to be able to specify to *not* use HDF5 for object IO.
 # Disable HDF5 IO by passing `--no-hdf` when calling python setup.py.
-USE_HDF5=True
+USE_HDF5 = True
 
 
 def is_vsc():
@@ -119,7 +120,14 @@ class CMakeBuild(build_ext):
 with open("README.md", "r") as fh:
     LONG_DESCRIPTION = fh.read()
 
-KEYWORDARGS = dict(
+if "--use-hdf5" in sys.argv:
+    USE_HDF5 = True
+    sys.argv.remove("--use-hdf5")
+if "--no-hdf5" in sys.argv:
+    USE_HDF5 = False
+    sys.argv.remove("--no-hdf5")
+
+setup(
     name='brille',
     author='Greg Tucker',
     author_email='gregory.tucker@ess.eu',
@@ -143,14 +151,3 @@ KEYWORDARGS = dict(
         "Topic :: Scientific/Engineering :: Physics",
     ]
 )
-
-try:
-    if "--use-hdf5" in sys.argv:
-        USE_HDF5 = True
-        sys.argv.remove("--use-hdf5")
-    if "--no-hdf5" in sys.argv:
-        USE_HDF5 = False
-        sys.argv.remove("--no-hdf5")
-    setup(**KEYWORDARGS)
-except CalledProcessError:
-    print("Failed to build the extension!")

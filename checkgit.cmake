@@ -53,7 +53,7 @@ function(checkGitRead git_hash)
   endif()
 endfunction()
 
-function(checkGitVersion git_version)
+function(checkGitVersion git_version safe_version)
 
   execute_process(
     COMMAND git rev-parse HEAD
@@ -92,6 +92,7 @@ function(checkGitVersion git_version)
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   set(${git_version} ${GIT_VERSION} PARENT_SCOPE)
+  set(${safe_version} ${GIT_SAFE_VERSION} PARENT_SCOPE)
   checkGitRead(GIT_HASH_CACHE)
 
   if (NOT DEFINED GIT_HASH_CACHE)
@@ -105,7 +106,7 @@ function(checkGitVersion git_version)
 
 endfunction()
 
-function(checkGitSetup)
+function(checkGitSetup name)
   add_custom_target(AlwaysCheckGit COMMAND ${CMAKE_COMMAND}
     -DRUN_CHECK_GIT_VERSION=1
     -Dpre_configure_dir=${pre_configure_dir}
@@ -115,11 +116,15 @@ function(checkGitSetup)
     BYPRODUCTS ${post_configure_file}
   )
   checkPythonModule(setuptools_scm)
-  checkGitVersion(GIT_VERSION)
+  checkGitVersion(GIT_VERSION SAFE_VERSION)
   if (NOT DEFINED GIT_VERSION)
     set(GIT_VERSION "UNKNOWN")
   endif()
-  set(GIT_VERSION ${GIT_VERSION} PARENT_SCOPE)
+  if (NOT DEFINED SAFE_VERSION)
+    set(SAFE_VERSION "0.0.0")
+  endif()
+  set("${name}_VERSION" ${GIT_VERSION} PARENT_SCOPE)
+  set("${name}_SAFE_VERSION" ${SAFE_VERSION} PARENT_SCOPE)
   #add_library(git_version ${post_configure_dir}/version.hpp)
   #target_include_directories(git_version PUBLIC ${post_configure_dir})
   #add_dependencies(git_version AlwaysCheckGit)
@@ -133,8 +138,11 @@ endfunction()
 
 
 if (RUN_CHECK_GIT_VERSION)
-  checkGitVersion(GIT_VERSION)
+  checkGitVersion(GIT_VERSION SAFE_VERSION)
   if (NOT DEFINED GIT_VERSION)
     set(GIT_VERSION "UNKNOWN")
+  endif()
+  if (NOT DEFINED SAFE_VERSION)
+    set(SAFE_VERSION "0.0.0")
   endif()
 endif()
