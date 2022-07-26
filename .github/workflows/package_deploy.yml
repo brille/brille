@@ -108,7 +108,7 @@ jobs:
 
   sphinx:
     runs-on: ubuntu-latest
-    needs: [wheel]
+    needs: [cibuildwheel]
     steps:
     - name: Checkout brille repository
       uses: actions/checkout@v2
