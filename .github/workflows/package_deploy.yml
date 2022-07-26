@@ -66,14 +66,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-2019 ]
+        variant:
+          - {os: windows-2019, name: "windows", config: "gha-test-windows"}
         python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
     steps:
-      - uses: brille/python-hdf5-buildwheel-action@v1
+      - uses: brille/python-hdf5-buildwheel-action@v2
         with:
-          os: ${{ matrix.os }}
+          os: ${{ matrix.variant.os }}
           python-version: ${{ matrix.python-version }}
           arch: auto64
+          environment-file: .github/config/${{ matrix.variant.config }}.yml
+          environment-name: ${{ matrix.variant.name }}
 
   draft:
     name: Deploy packages
@@ -125,11 +128,11 @@ jobs:
       uses: actions/download-artifact@v2
       id: path
       with:
-        name: cp39-musllinux
+        name: Object-musllinux
         path: wheelhouse
     - name: Get downloaded wheel name
       id: wheel
-      run: echo "::set-output name=wheel::wheelhouse/$(ls)"
+      run: echo "::set-output name=wheel::wheelhouse/$(ls *cp39*)"
       working-directory: wheelhouse
     - run: echo "${{ steps.wheel.outputs.wheel }}"
     - name: Sphinx Docker build
