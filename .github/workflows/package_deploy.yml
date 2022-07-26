@@ -25,17 +25,16 @@ jobs:
         name: dist
         path: dist/*.tar.gz
 
-  wheel:
+  cibuildwheel:
     name: Build ${{ matrix.python }} ${{ matrix.variant.platform }} wheel on ${{ matrix.variant.os }}
     runs-on: ${{ matrix.variant.os }}
     strategy:
       fail-fast: false
       matrix:
         variant:
-          - {os: ubuntu-20.04, platform: 'manylinux', config: 'ubuntu'}
-          - {os: ubuntu-20.04, platform: 'musllinux', config: 'ubuntu'}
-          - {os: macos-11, platform: 'macosx', config: 'macos'}
-          - {os: windows-2019, platform: 'win', config: 'windows'}
+          - {os: ubuntu-20.04, platform: 'manylinux'}
+          - {os: ubuntu-20.04, platform: 'musllinux'}
+          - {os: macos-11, platform: 'macosx'}
         python:
           - {version: '3.6', tag: 'cp36'}
           - {version: '3.7', tag: 'cp37'}
@@ -47,15 +46,6 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    # Windows and macOS CIBuildwheel builds use system libraries, and need HDF5 installed ahead of time:
-    - name: Setup micromamba environment
-      if: ${{ matrix.variant.config != 'ubuntu' }}
-      uses: mamba-org/provision-with-micromamba@main
-      with:
-        micromamba-version: 0.23.0
-        environment-file: .github/config/gha-build-${{ matrix.variant.config }}.yml
-        cache-env: true
-        extra-specs: python=${{ matrix.python.version }}
 
     - uses: pypa/cibuildwheel@v2.8.0
       env:
@@ -71,9 +61,23 @@ jobs:
         name: "${{ matrix.python }}-${{ matrix.variant.platform }}"
         path: wheelhouse/*.whl
 
+  buildwheel:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-2019 ]
+        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
+    steps:
+      - uses: brille/python-hdf5-buildwheel-action@v1
+        with:
+          os: ${{ matrix.os }}
+          python-version: ${{ matrix.python-version }}
+          arch: auto64
+
   draft:
     name: Deploy packages
-    needs: [source, wheel]
+    needs: [source, cibuildwheel, buildwheel]
     runs-on: ubuntu-20.04
     if: github.event_name == 'release'
 

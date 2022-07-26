@@ -1,8 +1,0 @@
-name: macos-11
-channels:
-  - conda-forge
-dependencies:
-  - cmake=3.23.2
-  - numpy
-  - llvm-openmp==11.1.0
-

@@ -1,7 +1,0 @@
-name: windows-2019
-channels:
-  - conda-forge
-dependencies:
-  - cmake=3.23.2
-  - numpy
-  - hdf5
