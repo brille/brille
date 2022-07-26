@@ -49,6 +49,7 @@ jobs:
         fetch-depth: 0
     # Windows and macOS CIBuildwheel builds use system libraries, and need HDF5 installed ahead of time:
     - name: Setup micromamba environment
+      if: ${{ matrix.variant.config != 'ubuntu' }}
       uses: mamba-org/provision-with-micromamba@main
       with:
         micromamba-version: 0.23.0

@@ -1,5 +1,0 @@
-name: ubuntu-20.04
-channels:
-  - conda-forge
-dependencies:
-

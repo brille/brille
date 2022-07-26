@@ -5,5 +5,4 @@ dependencies:
   - cmake=3.23.2
   - numpy
   - llvm-openmp==11.1.0
-  - hdf5
 
