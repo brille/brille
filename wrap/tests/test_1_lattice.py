@@ -102,8 +102,9 @@ class Lattice(unittest.TestCase):
         # Providing Symmetry and Basis as positional arguments raises an error
         self.assertRaises(TypeError, br_py.Lattice, self.cmo_vectors, br_mod.Symmetry(*st), br_mod.Basis(*bt))
 
-        # The single required argument can not be provided as a keyword
-        self.assertRaises(TypeError, br_py.Lattice, values=self.cmo_vectors)
+        # Until we can stop using Python 3.6 and 3.7 the first argument *can not* be position-only
+        # # The single required argument can not be provided as a keyword
+        # self.assertRaises(TypeError, br_py.Lattice, values=self.cmo_vectors)
 
         # And none of kwargs can have the same name 'values'
         self.assertRaises(TypeError, br_py.Lattice, self.cmo_vectors, values=True)

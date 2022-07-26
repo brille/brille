@@ -6,7 +6,8 @@ def _make(to_type, args):
     return args if isinstance(args, to_type) else to_type(*_t(args))
 
 
-def Lattice(values, /, spacegroup=None, symmetry=None, basis=None, **kwargs):
+# def Lattice(values, /, *, spacegroup=None, symmetry=None, basis=None, **kwargs):
+def Lattice(values, spacegroup=None, symmetry=None, basis=None, **kwargs):
     """  Construct a space-spanning lattice in three dimensions
 
     A space-spanning lattice in :math:`N` dimensions has :math:`N` basis vectors
