@@ -20,9 +20,6 @@ build-verbosity = 1
 [tool.cibuildwheel.linux]
 before-all = "yum install -y hdf5-devel"
 
-[tool.cibuildwheel.macos]
-before-all = "brew install hdf5"
-
 [tools.cibuildwheel.windows]
 before-build = "pip install delvewheel"
 repair-wheel-command = "delvewheel repair -w {dest_dir} -v {wheel}"

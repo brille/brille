@@ -39,6 +39,9 @@ jobs:
         python: ['cp36', 'cp37', 'cp38', 'cp39', 'cp310']
 
     steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
     # Windows and macOS CIBuildwheel builds use system libraries, and need HDF5 installed ahead of time:
     - name: Setup micromamba environment
       uses: mamba-org/provision-with-micromamba@main
@@ -47,10 +50,6 @@ jobs:
         environment-file: .github/config/gha-build-${{ matrix.variant.config }}.yml
         cache-env: true
         extra-specs: python=${{ matrix.python }}
-
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
 
     - uses: pypa/cibuildwheel@v2.8.0
       env:
