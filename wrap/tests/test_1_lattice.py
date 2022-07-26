@@ -1,14 +1,8 @@
 #!/usr/bin/env python3
-import os
-import sys
 import unittest
 import numpy as np
-from pathlib import Path
-
-from load_local import load
-
-br_mod = load(('_brille', 'brille._brille'), prefer_installed=True, search=[Path(), Path('..')])
-br_py = load(('brille.utils',), prefer_installed=True, search=[Path(), Path('..'), Path('../..')])
+import brille as br_py
+from brille import _brille as br_mod
 
 
 class Lattice(unittest.TestCase):

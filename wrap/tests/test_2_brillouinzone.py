@@ -2,11 +2,9 @@
 """Run tests of Brillouin zone creation."""
 import unittest
 import numpy as np
-from pathlib import Path
 from importlib.util import find_spec
+import brille as br_py
 
-from load_local import load
-s = load(('_brille', 'brille._brille'), prefer_installed=True, search=[Path(), Path('..')])
 
 HASMPL = find_spec('matplotlib') is not None
 HASMPL &= find_spec('mpl_toolkits') is not None
@@ -51,7 +49,7 @@ def plot_2d_points(x, title=''):
 
 def make_dr(a, b, c, al=np.pi / 2, be=np.pi / 2, ga=np.pi / 2):
     """Make a Direct and Reciprocal lattice from Direct lattice parameters."""
-    return s.Lattice([a, b, c], [al, be, ga])
+    return br_py.Lattice(([a, b, c], [al, be, ga]))
 
 
 def norm(x):
@@ -72,7 +70,7 @@ class BrillouinZone(unittest.TestCase):
         lat = make_dr(1, 1, 1)
         # creating a BrillouinZone objects requires that we pass the lattice
         # its first Brillouin zone is a cube in reciprocal space
-        bz = s.BrillouinZone(lat)
+        bz = br_py.BrillouinZone(lat)
         # with six faces, defined by: (00̄1),(0̄10),(̄100),(100),(010),(001)
         p = bz.points
         self.assertEqual(p.ndim, 2)
@@ -100,7 +98,7 @@ class BrillouinZone(unittest.TestCase):
 
     def test_b_isinside_unit_cube(self):
         lat = make_dr(1, 1, 1)
-        bz = s.BrillouinZone(lat)
+        bz = br_py.BrillouinZone(lat)
         # the first Brillouin zone of this unit-cube is bounded by
         # {(00̄1),(0̄10),(̄100),(100),(010),(001)}/2
         face_centres = np.array([[-1, 0, 0], [0, -1, 0], [0, 0, -1], [0, 0, 1], [0, 1, 0], [1, 0, 0]],
@@ -117,7 +115,7 @@ class BrillouinZone(unittest.TestCase):
 
     def test_c_moveinto_unit_cube(self):
         lat = make_dr(1, 1, 1)
-        bz = s.BrillouinZone(lat)
+        bz = br_py.BrillouinZone(lat)
         Q = (np.random.rand(100, 3) - 0.5) * 10  # this is a uniform distribution over [-5, 5)
         if np.all(bz.isinside(Q)):  # this is vanishingly-unlikely
             Q += 100.0
@@ -133,7 +131,7 @@ class BrillouinZone(unittest.TestCase):
         # instantiate a hexagonal lattice and its reciprocal lattice, still hexagonal
         lat = make_dr(3, 3, 9, np.pi / 2, np.pi / 2, np.pi * 2 / 3)
         # creating a BrillouinZone objects requires that we pass the lattice object
-        bz = s.BrillouinZone(lat)
+        bz = br_py.BrillouinZone(lat)
         # with eight faces, defined by: (̄100),(̄110),(0̄10),(001),(001),(010),(1̄10),(100)
         p = bz.points
         self.assertEqual(p.ndim, 2)
@@ -165,7 +163,7 @@ class BrillouinZone(unittest.TestCase):
 
     def test_b_isinside_hexagonal(self):
         lat = make_dr(3, 3, 9, np.pi / 2, np.pi / 2, np.pi * 2 / 3)
-        bz = s.BrillouinZone(lat)
+        bz = br_py.BrillouinZone(lat)
         # Q = (np.random.rand(1000, 3)-0.5) * 2 # this is a uniform distribution over [-1, 1)
         x = np.linspace(-1, 1, 100)
         X, Y, Z = np.meshgrid(x, x, 0)
@@ -178,7 +176,7 @@ class BrillouinZone(unittest.TestCase):
 
     def test_c_moveinto_hexagonal(self):
         lat = make_dr(3, 3, 9, np.pi / 2, np.pi / 2, np.pi * 2 / 3)
-        bz = s.BrillouinZone(lat)
+        bz = br_py.BrillouinZone(lat)
         Q = (np.random.rand(100, 3) - 0.5) * 10  # this is a uniform distribution over [-5, 5)
         if np.all(bz.isinside(Q)):  # this is vanishingly-unlikely
             Q += 100.0
@@ -204,8 +202,8 @@ class BrillouinZone(unittest.TestCase):
         errored_arg = []
         print()
         for i in range(1, 531):
-            spacegroup = s.Spacegroup(i)
-            pointgroup = s.Pointgroup(spacegroup.pointgroup_number)
+            spacegroup = br_py.Spacegroup(i)
+            pointgroup = br_py.Pointgroup(spacegroup.pointgroup_number)
             a, b, c, al, be, ga = 5, 5, 5, np.pi/2, np.pi/2, np.pi/2
             # nothing to do for cubic spacegroups
             if 'hexa' in pointgroup.holohedry:
@@ -246,22 +244,22 @@ class BrillouinZone(unittest.TestCase):
                 ang = lambda: np.pi / 3 * (1 + np.random.rand())
                 a, b, c, al, be, ga = 5, 10, 15, ang(), ang(), ang()
 
-            lat = s.Lattice([a, b, c], [al, be, ga], spacegroup.hall_symbol)
+            lat = br_py.Lattice(([a, b, c], [al, be, ga]), spacegroup=spacegroup.hall_symbol)
 
             # print("Hall ", i, " ", dlat)
             # print(spacegroup,pointgroup)
             try:
-                bz = s.BrillouinZone(lat)
+                bz = br_py.BrillouinZone(lat)
                 vol_bz = bz.polyhedron.volume
                 vol_ir = bz.ir_polyhedron.volume
                 tested += 1
-                if not np.isclose(vol_ir, vol_bz / s.PointSymmetry(i).size):
-                    # print(dlat,": ",vol_ir," != ",vol_bz/s.PointSymmetry(i).size)
+                if not np.isclose(vol_ir, vol_bz / br_py.PointSymmetry(i).size):
+                    # print(dlat,": ",vol_ir," != ",vol_bz/br_py.PointSymmetry(i).size)
                     failed += 1
                     failed_spg.append(spacegroup)
                     failed_ptg.append(pointgroup)
                     failed_lat.append(lat)
-                    failed_ratio.append(vol_ir / vol_bz * s.PointSymmetry(i).size)
+                    failed_ratio.append(vol_ir / vol_bz * br_py.PointSymmetry(i).size)
             except Exception as err:
                 errored += 1
                 errored_spg.append(spacegroup)

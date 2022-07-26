@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 import unittest
 import numpy as np
-from pathlib import Path
-
-from load_local import load
-s = load(('_brille', 'brille._brille'), prefer_installed=True, search=[Path(), Path('..')])
 
 def fetchLoad(loader, fetchfile, **kwds):
     """Fetch remote binary file from the :py:mod:`brille` repository
@@ -69,20 +65,21 @@ def getLoad(loader, file, **kwds):
 
 class GammaTest(unittest.TestCase):
     def test_nacl(self):
+        from brille import Basis, Symmetry, Lattice, BrillouinZone, BZTrellisQdc
         # load numpy arrays from the compressed binary pack
         nacl = getLoad(np.load, 'test_5_gamma.npz')
         # construct the NaCl direct lattice
-        bas = s.Basis(nacl['atom_positions'], nacl['atom_index']);
-        sym = s.Symmetry(nacl['spacegroup_mat'], nacl['spacegroup_vec'])
-        lat = s.Lattice(nacl['basis_vectors'], sym, bas)
+        bas = Basis(nacl['atom_positions'], nacl['atom_index'])
+        sym = Symmetry(nacl['spacegroup_mat'], nacl['spacegroup_vec'])
+        lat = Lattice(nacl['basis_vectors'], symmetry=sym, basis=bas)
 
         # use it to construct an irreducible Brillouin zone
-        bz = s.BrillouinZone(lat)
+        bz = BrillouinZone(lat)
         # and use that to produce a hybrid interpolation grid
         # with parameters stored in the binary pack
         max_volume = float(nacl['grid_max_volume'])
         always_triangulate = bool(nacl['grid_always_triangulate'])
-        grid = s.BZTrellisQdc(bz, max_volume, always_triangulate)
+        grid = BZTrellisQdc(bz, max_volume, always_triangulate)
 
         # verify the stored grid points to ensure we have the same irreducible
         # wedge and grid

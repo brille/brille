@@ -90,6 +90,8 @@ void wrap_symmetry(pybind11::module & m){
 
   cls.def_property_readonly("size",&Symmetry::size);
 
+  cls.def("__len__", &Symmetry::size);
+
   cls.def_property_readonly("W",[](Symmetry& ps){
     std::vector<ssize_t> sz={static_cast<ssize_t>(ps.size()), 3u, 3u};
     return sva2np(sz, ps.getallr());

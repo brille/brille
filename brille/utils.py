@@ -58,16 +58,6 @@ phonon eigenvectors.
 """
 
 import numpy as np
-try:
-    from ._brille import BrillouinZone as _BrillouinZone
-    from . import _brille
-except ModuleNotFoundError:
-    # This allows CTest-based testing which is done before creating/installing the wheel
-    from pathlib import Path
-    from .load import load
-    _brille = load(['_brille'], search=[Path(), Path('..')])
-    _BrillouinZone = getattr(_brille, 'BrillouinZone')
-
 
 def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
               time_reversal_symmetry=False, wedge_search=True, snap_to_symmetry=True, **kwargs):
@@ -121,7 +111,7 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
 
     E.g. you cannot mix specifing `a`, `b`, `c`, and `angs` etc.
     """
-    from brille import Lattice
+    from brille import Lattice, BrillouinZone
     # Take keyword arguments in preference to positional ones
     a, b, c, alpha, beta, gamma, lens, angs = (kwargs.pop(pname, None)
                                                for pname in ['a', 'b', 'c', 'alpha', 'beta', 'gamma', 'lens', 'angs'])
@@ -164,8 +154,8 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
     lattice = Lattice((lens, angs), **keywords) if lattice_vectors is None else Lattice(lattice_vectors, **keywords)
 
     try:
-        return _BrillouinZone(lattice, use_primitive=use_primitive, search_length=search_length,
-                              time_reversal_symmetry=time_reversal_symmetry, wedge_search=wedge_search)
+        return BrillouinZone(lattice, use_primitive=use_primitive, search_length=search_length,
+                             time_reversal_symmetry=time_reversal_symmetry, wedge_search=wedge_search)
     except RuntimeError as e0:
         # We set wedge_search=True by default so add a hint here.
         if 'Failed to find an irreducible Brillouin zone' in str(e0):
@@ -266,7 +256,8 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
     Note that one of either the **max_volume** or **number_density**
     parameters must be provided to construct a ``BZNestQ``.
     """
-    if not isinstance(bz, _BrillouinZone):
+    from brille import BrillouinZone, _brille
+    if not isinstance(bz, BrillouinZone):
         raise ValueError('The `bz` input parameter is not a BrillouinZone object')
     if nest and mesh:
         raise ValueError('Both nest=True and mesh=True is set. Please use one or the other')

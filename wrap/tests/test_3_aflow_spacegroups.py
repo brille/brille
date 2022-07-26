@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
 """Run tests of Brillouin zone creation."""
 import unittest
-import numpy as np
-from pathlib import Path
-from load_local import load
-s = load(('_brille', 'brille._brille'), prefer_installed=True, search=[Path(), Path('..')])
 
 def get_local_JSON(filename):
     import os
     import pathlib
     import json
-    dir = os.path.dirname(os.path.abspath(__file__))
-    with open(str(pathlib.Path(dir, filename)), 'r') as f:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    with open(str(pathlib.Path(current_dir, filename)), 'r') as f:
         data = json.load(f)
     return data
 
@@ -26,6 +22,8 @@ def n2chr(n):
 
 class AflowTest(unittest.TestCase):
     def test_aflow_crystaldatabase(self):
+        from numpy import zeros, isclose
+        from brille import Lattice, BrillouinZone, PointSymmetry
         tested = 0
         failed = 0
         errored = 0
@@ -33,20 +31,20 @@ class AflowTest(unittest.TestCase):
         failed_ratio = []
         errored_afl = []
         errored_arg = []
-        hall_groups_passed = np.zeros(530, dtype='int')
-        hall_groups_failed = np.zeros(530, dtype='int')
+        hall_groups_passed = zeros(530, dtype='int')
+        hall_groups_failed = zeros(530, dtype='int')
         for afl in get_aflow_lattices():
             # afl == [hall_number, basis_vector_lengths, basis_vector_angles, Hall_symbol]
-            lat = s.Lattice(afl[1], afl[2], afl[3])
+            lat = Lattice((afl[1], afl[2]), spacegroup=afl[3])
             tested += 1
             try:
-                bz = s.BrillouinZone(lat)
+                bz = BrillouinZone(lat)
                 vol_bz = bz.polyhedron.volume
                 vol_ir = bz.ir_polyhedron.volume
-                if not np.isclose(vol_ir, vol_bz / s.PointSymmetry(afl[0]).size):
+                if not isclose(vol_ir, vol_bz / PointSymmetry(afl[0]).size):
                     failed += 1
                     failed_afl.append(afl)
-                    failed_ratio.append(vol_ir / vol_bz * s.PointSymmetry(afl[0]).size)
+                    failed_ratio.append(vol_ir / vol_bz * PointSymmetry(afl[0]).size)
                     hall_groups_failed[afl[0] - 1] += 1
                 else:
                     hall_groups_passed[afl[0] - 1] += 1

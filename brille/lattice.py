@@ -1,13 +1,3 @@
-try:
-    from ._brille import Lattice as _Lattice, Symmetry as _Symmetry, Basis as _Basis
-except ModuleNotFoundError:
-    # This allows CTest-based testing which is done before creating/installing the wheel
-    from pathlib import Path
-    from .load import load
-    _brille = load(['_brille'], search=[Path(), Path('..')])
-    _Lattice, _Symmetry, _Basis = [getattr(_brille, x) for x in ('Lattice', 'Symmetry', 'Basis')]
-
-
 def _t(args):
     return args if isinstance(args, tuple) else tuple(args)
 
@@ -86,6 +76,8 @@ def Lattice(values, /, spacegroup=None, symmetry=None, basis=None, **kwargs):
         Keyword arguments are passed to the :py:class:`brille._brille.Lattice` constructor,
         see its documentation for details.
     """
+    from ._brille import Lattice as _Lattice, Symmetry as _Symmetry, Basis as _Basis
+
     if isinstance(spacegroup, str):
         spacegroup = spacegroup,
     if spacegroup is None:
