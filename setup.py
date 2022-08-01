@@ -4,6 +4,7 @@ import sys
 import pkgutil
 from sysconfig import get_platform
 from subprocess import check_output, check_call
+from pathlib import Path
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
@@ -49,6 +50,11 @@ class CMakeExtension(Extension):
         Extension.__init__(self, name, sources=[])
         self.sourcedir = os.path.abspath(sourcedir)
 
+PACKAGE_ROOT = Path(__file__).absolute().parent
+
+if PACKAGE_ROOT != Path(os.getcwd()):
+    raise RuntimeError(f"{PACKAGE_ROOT} != {os.getcwd()}")
+    raise RuntimeError("This build script only works properly from the same directory as setup.py")
 
 class CMakeBuild(build_ext):
     def run(self):
@@ -103,21 +109,13 @@ class CMakeBuild(build_ext):
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
             build_args += ['--', '-j']
 
-        env = os.environ.copy()
-        cxxflags = '{} -DVERSION_INFO=\\"{}\\"'.format(
-            env.get('CXXFLAGS', ''), self.distribution.get_version())
-        env['CXXFLAGS'] = cxxflags
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
-        check_call(
-            [get_cmake(), ext.sourcedir] + cmake_args,
-            cwd=self.build_temp, env=env)
-        check_call(
-            [get_cmake(), '--build', '.', '--target', "_brille"] + build_args,
-            cwd=self.build_temp)
+        check_call([get_cmake(), PACKAGE_ROOT] + cmake_args, cwd=self.build_temp)
+        check_call([get_cmake(), '--build', '.', '--target', "_brille"] + build_args, cwd=self.build_temp)
 
 
-with open("README.md", "r") as fh:
+with open(PACKAGE_ROOT.joinpath('README.md'), 'r') as fh:
     LONG_DESCRIPTION = fh.read()
 
 if "--use-hdf5" in sys.argv:
@@ -135,7 +133,7 @@ setup(
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     ext_modules=[CMakeExtension('brille._brille')],
-    packages=find_packages(),
+    packages=find_packages(PACKAGE_ROOT),
     extras_require={'interactive': ['matplotlib>=2.2.0', ], },
     cmdclass=dict(build_ext=CMakeBuild),
     url="https://github.com/brille/brille",

@@ -1,50 +1,5 @@
 # Build and test the CMake project in a manylinux container using a persistent mounted folder
 
-
-def get_client_name():
-    from shutil import which
-    # python_on_whales supported clients, sorted by our preference
-    commands = ('podman', 'docker', 'nerdctl')
-    for command in commands:
-        if which(command) is not None:
-            return command
-    raise RuntimeError("One of [docker, podman, nerdctl] required to use virtual-image based builder")
-
-
-def get_client():
-    from python_on_whales import DockerClient
-    return DockerClient(client_call=[get_client_name()])
-
-
-def get_image(client):
-    IMAGE = 'quay.io/pypa/manylinux2014_x86_64'
-    quiet = client.image.exists(IMAGE)
-    img = client.image.pull(IMAGE, quiet=quiet)
-    return img
-
-
-def get_build_folder():
-    from pathlib import Path
-    build_folder = Path(__file__).parent.joinpath('cmake_build')
-    if not build_folder.exists():
-        build_folder.mkdir()
-    return build_folder
-
-
-def get_volumes(client):
-    from pathlib import Path
-    # ensure the cmake directory exists, relative to this file path
-    source_folder = Path(__file__).parent.parent
-    volumes = [[get_build_folder(), '/build'], [source_folder, '/source']]
-
-    name = client.client_config.client_call[0]
-    if 'podman' in name:
-        for volume in volumes:
-            volume.append('Z')
-    # the python_on_whales volumes keyword requires list(tuple(...)):    
-    return [tuple(volume) for volume in volumes]
-
-
 ENTRYPOINT="""#!/bin/bash
 set -eu
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -67,6 +22,7 @@ export PATH={path}:$PATH
 echo_run {python} -m pip install setuptools_scm conan
 
 # Configure the project, specifying which python interpreter and library to use
+echo_run export CONAN_USER_HOME=/conan
 echo_run cmake -S /source -B /build -DPYTHON_EXECUTABLE={python}
 
 # Build the testing project
@@ -77,24 +33,16 @@ echo_run ctest --test-dir /build --parallel {count} --rerun-failed --output-on-f
 """
 
 
-def write_entrypoint():
-    from os import cpu_count
-    path = "/opt/python/cp310-cp310/bin"
-    python = "/opt/python/cp310-cp310/bin/python" 
-    count = cpu_count()
-    filepath = get_build_folder().joinpath('entrypoint.sh')
-    with open(filepath, 'w') as file:
-        file.writelines(ENTRYPOINT.format(path=path, python=python, count=1 if count is None else count >> 1))
-
-
 def main():
+    from config import get_client, get_image, get_volumes, get_folder, write_entrypoint
     from python_on_whales import exceptions
-    write_entrypoint()
 
     client = get_client()
     image = get_image(client)
-    volumes = get_volumes(client)
+    folder = get_folder('cmake_build')
+    volumes = get_volumes(client, folder)
     
+    write_entrypoint(ENTRYPOINT, folder)
     try:
         result = client.run(image, ['sh', '/build/entrypoint.sh'], volumes=volumes, tty=True)
         print(result)
