@@ -61,10 +61,10 @@ function echo_run {{
 export PATH={path}:$PATH
 
 # Install HDF5 development files
-echo_run yum install -y hdf5-devel
+# echo_run yum install -y hdf5-devel
 
 # Ensure the python interpreter has setuptools_scm for versioning 
-echo_run {python} -m pip install setuptools_scm
+echo_run {python} -m pip install setuptools_scm conan
 
 # Configure the project, specifying which python interpreter and library to use
 echo_run cmake -S /source -B /build -DPYTHON_EXECUTABLE={python}

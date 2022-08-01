@@ -6,4 +6,5 @@ dependencies:
   - gcc
   - gxx
   - numpy
-  - hdf5
+  - conan
+#  - hdf5 # use hdf5-1.12 via conan
