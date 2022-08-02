@@ -15,28 +15,28 @@ def get_client():
     return DockerClient(client_call=[get_client_name()])
 
 
-def get_image(client):
-    IMAGE = 'quay.io/pypa/manylinux2014_x86_64'
-    quiet = client.image.exists(IMAGE)
-    img = client.image.pull(IMAGE, quiet=quiet)
-    return img
+def get_image(client, image=None):
+    if image is None:
+        image = 'quay.io/pypa/manylinux2014_x86_64'
+    quiet = client.image.exists(image)
+    return client.image.pull(image, quiet=quiet)
 
 
 def get_folder(name):
     from pathlib import Path
-    build_folder = Path(__file__).parent.joinpath(name)
-    if not build_folder.exists():
-        build_folder.mkdir()
-    return build_folder
+    folder = Path(__file__).parent.joinpath(name)
+    if not folder.exists():
+        folder.mkdir()
+    return folder
 
 
-def get_volumes(client, build_folder):
+def get_volumes(client, folders: dict):
     from pathlib import Path
     # ensure the cmake directory exists, relative to this file path
-    source_folder = Path(__file__).parent.parent
-    conan_folder = get_folder('conan')
-    volumes = [[build_folder, '/build'], [source_folder, '/source'], [conan_folder, '/conan']]
-
+    folders['source'] = Path(__file__).parent.parent
+    for key in [k for k, v in folders.items() if v is None]:
+        folders[key] = get_folder(key)
+    volumes = [[v, f"/{k}"] for k, v in folders.items()]
     name = client.client_config.client_call[0]
     if 'podman' in name:
         for volume in volumes:
@@ -45,13 +45,17 @@ def get_volumes(client, build_folder):
     return [tuple(volume) for volume in volumes]
 
 
-def write_entrypoint(entrypoint_string, folder):
+def write_entrypoint(entrypoint_string, folder, variant=None, sub=None):
     from os import cpu_count
-    path = "/opt/python/cp310-cp310/bin"
-    python = "/opt/python/cp310-cp310/bin/python" 
+    if variant is None:
+        variant = 'cp310-cp310'
+    if sub is None:
+        sub = {}
+    path = f"/opt/python/{variant}/bin"
+    python = f"{path}/python" 
     count = cpu_count()
     filepath = folder.joinpath('entrypoint.sh')
     with open(filepath, 'w') as file:
-        file.writelines(entrypoint_string.format(path=path, python=python, count=1 if count is None else count >> 1))
+        file.writelines(entrypoint_string.format(path=path, python=python, count=1 if count is None else count >> 1, **sub))
 
 

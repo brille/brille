@@ -40,7 +40,7 @@ def main():
     client = get_client()
     image = get_image(client)
     folder = get_folder('cmake_build')
-    volumes = get_volumes(client, folder)
+    volumes = get_volumes(client, {'build': folder, 'conan': None})
     
     write_entrypoint(ENTRYPOINT, folder)
     try:

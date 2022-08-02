@@ -67,18 +67,19 @@ values_data : :py:class:`numpy.ndarray`
   dimensional array it will be used in place, otherwise a copy will be made.
 values_elements: integer vector-like
   A multi-purpose vector containing, in order:
-    - the number of scalar-like eigenvalue elements,
-    - the number of vector-like eigenvalue *elements* (must be :math:`3\times N`),
-    - the number of matrix-like eigenvalue *elements* (must be :math:`9\times N`),
-    - an integer :py:class:`RotatesLike` value denoting
-      *how* the vector-like and matrix-like parts transform under application
-      of a symmetry operation (see note below).
+
+  * the number of scalar-like eigenvalue elements,
+  * the number of vector-like eigenvalue *elements* (must be :math:`3\times N`),
+  * the number of matrix-like eigenvalue *elements* (must be :math:`9\times N`),
+  * an integer :py:class:`RotatesLike` value denoting
+    *how* the vector-like and matrix-like parts transform under application
+    of a symmetry operation (see note below).
 
 vectors_data : :py:class:`numpy.ndarray`
   The eigenvector data to be stored in the grid. Same shape restrictions as
-  **values_data**
+  ``values_data``
 vectors_elements:
-  Like **values_elements** but for the eigenvectors
+  Like ``values_elements`` but for the eigenvectors
 sort : logical (default ``False``)
   Whether the equivalent-mode permutations should be (re)determined following
   the update to the flags and weights.
@@ -88,17 +89,17 @@ Note
 ----
   Mapping of integers to :py:class:`RotatesLike` values:
 
-  +-------+---------------------------------------+
-  | value |        :py:class:`RotatesLike`        |
-  +=======+=======================================+
-  |   0   |                 `Real`                |
-  +-------+---------------------------------------+
-  |   1   |              `Reciprocal`             |
-  +-------+---------------------------------------+
-  |   2   |                `Axial`                |
-  +-------+---------------------------------------+
-  |   3   |                `Gamma`                |
-  +-------+---------------------------------------+
+  +-------+------------------------------------+
+  | value | :py:class:`RotatesLike`            |
+  +=======+====================================+
+  |   0   |                `Real`              |
+  +-------+------------------------------------+
+  |   1   |             `Reciprocal`           |
+  +-------+------------------------------------+
+  |   2   |               `Axial`              |
+  +-------+------------------------------------+
+  |   3   |               `Gamma`              |
+  +-------+------------------------------------+
 
   Integer values outside of the mapped range (or missing) are replaced by 0.
 
@@ -143,16 +144,17 @@ values_data : :py:class:`numpy.ndarray`
   dimensional array it will be used in place, otherwise a copy will be made.
 values_elements: integer vector-like
   A multi-purpose vector containing, in order:
-    - the number of scalar-like eigenvalue elements,
-    - the number of vector-like eigenvalue *elements* (must be :math:`3\times N`),
-    - the number of matrix-like eigenvalue *elements* (must be :math:`9\times N`),
-    - an integer :py:class:`RotatesLike` value denoting
-      *how* the vector-like and matrix-like parts transform under application
-      of a symmetry operation (see note below),
-    - which scalar cost function should be used (see below),
-    - which vector cost function should be used (see below).
 
-  See the note below fore the meaning of the last three values.
+  * the number of scalar-like eigenvalue elements,
+  * the number of vector-like eigenvalue *elements* (must be :math:`3\times N`),
+  * the number of matrix-like eigenvalue *elements* (must be :math:`9\times N`),
+  * an integer :py:class:`RotatesLike` value denoting
+    *how* the vector-like and matrix-like parts transform under application
+    of a symmetry operation (see note below),
+  * which scalar cost function should be used (see below),
+  * which vector cost function should be used (see below).
+
+  See the note below for the meaning of the last three values.
 values_weights : float, vector-like
   The relative cost weights between scalar-, vector-, and matrix- like
   eigenvalue elements stored in the grid
@@ -173,25 +175,25 @@ Note
 ----
   Mapping of integers to :py:class:`RotatesLike` values:
 
-  +-------+---------------------------------------+
-  | value |       :py:class:`RotatesLike`         |
-  +=======+=======================================+
-  |   0   |                `Real`                 |
-  +-------+---------------------------------------+
-  |   1   |             `Reciprocal`              |
-  +-------+---------------------------------------+
-  |   2   |               `Axial`                 |
-  +-------+---------------------------------------+
-  |   3   |               `Gamma`                 |
-  +-------+---------------------------------------+
+  +-------+------------------------------------+
+  | value | :py:class:`RotatesLike`            |
+  +=======+====================================+
+  |   0   |                `Real`              |
+  +-------+------------------------------------+
+  |   1   |             `Reciprocal`           |
+  +-------+------------------------------------+
+  |   2   |               `Axial`              |
+  +-------+------------------------------------+
+  |   3   |               `Gamma`              |
+  +-------+------------------------------------+
 
   Mapping of integers to scalar cost function:
 
-  +-------+----------------+
-  | value | function(x,y)  |
-  +=======+================+
-  |   0   | magnitude(x-y) |
-  +-------+----------------+
+  +-------+------------------------------------+
+  | value | function(x,y)                      |
+  +=======+====================================+
+  |   0   | magnitude(x-y)                     |
+  +-------+------------------------------------+
 
   Mapping of integers to vector cost function:
 
@@ -493,28 +495,28 @@ void def_grid_sort(py::class_<Grid<T,R,S>>& cls){
   ----
     Mapping of integers to :py:class:`~brille._brille.RotatesLike` values:
 
-    +-------+---------------------------------------+
-    | value |:py:class:`~brille._brille.RotatesLike`|
-    +=======+=======================================+
-    |   0   |                `Real`                 |
-    +-------+---------------------------------------+
-    |   1   |             `Reciprocal`              |
-    +-------+---------------------------------------+
-    |   2   |               `Axial`                 |
-    +-------+---------------------------------------+
-    |   3   |               `Gamma`                 |
-    +-------+---------------------------------------+
-
+    +-------+------------------------------------+
+    | value | :py:class:`RotatesLike`            |
+    +=======+====================================+
+    |   0   |                `Real`              |
+    +-------+------------------------------------+
+    |   1   |             `Reciprocal`           |
+    +-------+------------------------------------+
+    |   2   |               `Axial`              |
+    +-------+------------------------------------+
+    |   3   |               `Gamma`              |
+    +-------+------------------------------------+
+  
     Mapping of integers to scalar cost function:
-
-    +-------+----------------+
-    | value | function(x,y)  |
-    +=======+================+
-    |   0   | magnitude(x-y) |
-    +-------+----------------+
-
+  
+    +-------+------------------------------------+
+    | value | function(x,y)                      |
+    +=======+====================================+
+    |   0   | magnitude(x-y)                     |
+    +-------+------------------------------------+
+  
     Mapping of integers to vector cost function:
-
+  
     +-------+------------------------------------+
     | value | function(vec_x, vec_y)             |
     +=======+====================================+
