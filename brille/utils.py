@@ -57,7 +57,6 @@ phonon eigenvectors.
     :toctree: _generate
 """
 
-import brille
 import numpy as np
 
 def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
@@ -99,6 +98,9 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
     wedge_search : bool, keyword-only optional (default: True)
         If true, return an irreducible first Brillouin zone,
         otherwise just return the first Brillouin zone
+    snap_to_symmetry: bool, keyword-only optional (default: True)
+        Enforces that provided lattice parameters / basis vectors / atom-basis
+        positions conform to the provided symmetry operations, if present.
 
     Note
     ----
@@ -109,9 +111,10 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
 
     E.g. you cannot mix specifing `a`, `b`, `c`, and `angs` etc.
     """
+    from brille import Lattice, BrillouinZone
     # Take keyword arguments in preference to positional ones
     a, b, c, alpha, beta, gamma, lens, angs = (kwargs.pop(pname, None)
-        for pname in ['a', 'b', 'c', 'alpha', 'beta', 'gamma', 'lens', 'angs'])
+                                               for pname in ['a', 'b', 'c', 'alpha', 'beta', 'gamma', 'lens', 'angs'])
     no_lat_kw_s = any([v is None for v in [a, b, c, alpha, beta, gamma]])
     no_lat_kw_v = any([v is None for v in [lens, angs]])
     if no_lat_kw_v and not no_lat_kw_s:
@@ -127,12 +130,12 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
         elif np.shape(args[0]) == (3,):
             lens, angs = tuple(args[:2])
             spg_id = 2
-        elif np.shape(args[0]) == (3,1) or np.shape(args[0]) == (1,3):
+        elif np.shape(args[0]) == (3, 1) or np.shape(args[0]) == (1, 3):
             lens, angs = tuple(args[:2])
             lens = np.squeeze(np.array(lens))
             angs = np.squeeze(np.array(angs))
             spg_id = 2
-        elif np.shape(args[0]) == (3,3):
+        elif np.shape(args[0]) == (3, 3):
             lattice_vectors = args[0]
             spg_id = 1
         else:
@@ -147,22 +150,17 @@ def create_bz(*args, is_reciprocal=False, use_primitive=True, search_length=1,
         e1.__suppress_context__ = True
         raise e1
 
-    real_space = not is_reciprocal
-    if lattice_vectors is not None:
-        lattice = brille.Lattice(lattice_vectors, spacegroup, real_space=real_space, snap_to_symmetry=snap_to_symmetry)
-    else:
-        lattice = brille.Lattice(lens, angs, spacegroup, real_space=real_space, snap_to_symmetry=snap_to_symmetry)
+    keywords = dict(spacegroup=spacegroup, real_space=not is_reciprocal, snap_to_symmetry=snap_to_symmetry)
+    lattice = Lattice((lens, angs), **keywords) if lattice_vectors is None else Lattice(lattice_vectors, **keywords)
 
     try:
-        return brille.BrillouinZone(lattice, use_primitive=use_primitive,
-                                    search_length=search_length,
-                                    time_reversal_symmetry=time_reversal_symmetry,
-                                    wedge_search=wedge_search)
+        return BrillouinZone(lattice, use_primitive=use_primitive, search_length=search_length,
+                             time_reversal_symmetry=time_reversal_symmetry, wedge_search=wedge_search)
     except RuntimeError as e0:
         # We set wedge_search=True by default so add a hint here.
         if 'Failed to find an irreducible Brillouin zone' in str(e0):
             e1 = RuntimeError(str(e0) + ' You can try again with wedge_search=False ' \
-                            'to calculate with just the first Brillouin zone')
+                                        'to calculate with just the first Brillouin zone')
             e1.__suppress_context__ = True
             e1.__traceback__ = e0.__traceback__
             raise e1
@@ -258,19 +256,20 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
     Note that one of either the **max_volume** or **number_density**
     parameters must be provided to construct a ``BZNestQ``.
     """
-    if not isinstance(bz, brille.BrillouinZone):
+    from brille import BrillouinZone, _brille
+    if not isinstance(bz, BrillouinZone):
         raise ValueError('The `bz` input parameter is not a BrillouinZone object')
     if nest and mesh:
         raise ValueError('Both nest=True and mesh=True is set. Please use one or the other')
 
     def constructor(grid_type):
         if complex_values and complex_vectors:
-            return getattr(brille, grid_type+'cc')
+            return getattr(_brille, grid_type + 'cc')
         elif complex_vectors:
-            return getattr(brille, grid_type+'dc')
+            return getattr(_brille, grid_type + 'dc')
         else:
-            return getattr(brille, grid_type+'dd')
- 
+            return getattr(_brille, grid_type + 'dd')
+
     if nest:
         if any([v in kwargs for v in ['node_volume_fraction', 'always_triangulate']]):
             raise ValueError('Parameters given are consistent with a trellis grid but nest=True')
@@ -280,7 +279,7 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
             return constructor('BZNestQ')(bz, float(kwargs['max_volume']),
                                           kwargs.pop('max_branchings', 5))
         elif 'number_density' in kwargs:
-            return constructor('BZNestQ')(bz, int(kwargs['number_density']), 
+            return constructor('BZNestQ')(bz, int(kwargs['number_density']),
                                           kwargs.pop('max_branchings', 5))
         else:
             raise ValueError('Neither `max_volume` nor `number_density` provided')
@@ -299,4 +298,3 @@ def create_grid(bz, complex_values=False, complex_vectors=False,
             raise ValueError('Parameters given are consistent with a mesh grid but mesh=False')
         return constructor('BZTrellisQ')(bz, float(kwargs.pop('node_volume_fraction', 1.e-5)),
                                          bool(kwargs.pop('always_triangulate', False)))
-

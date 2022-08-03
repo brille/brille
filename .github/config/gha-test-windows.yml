@@ -4,4 +4,5 @@ channels:
 dependencies:
   - cmake=3.23.2
   - numpy
-  - hdf5
+  - conan
+    #  - hdf5

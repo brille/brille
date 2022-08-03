@@ -33,7 +33,7 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
   std::string pyclass_name = std::string("BZMeshQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());
   // Initializer (BrillouinZone, max-volume, is-volume-rlu)
-  cls.def(py::init<BrillouinZone,double,int,int>(), "bz_"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1);
+  cls.def(py::init<BrillouinZone,double,int,int>(), "brillouin_zone"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1);
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
   cls.def_property_readonly("rlu",[](const Class& cobj){
     return brille::a2py(cobj.get_mesh_hkl());

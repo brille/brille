@@ -52,3 +52,7 @@ Pipfile.lock
 
 # CLion
 .idea/
+
+# devtools generated directories
+devtools/conan
+devtools/wheelhouse

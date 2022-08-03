@@ -52,7 +52,7 @@ namespace brille {
       } else {
           return std::abs(x);
       }
-  };
+  }
 
 #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
   template<class T>

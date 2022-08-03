@@ -32,13 +32,8 @@ connected point network.
 .. autosummary::
     :toctree: _generate
 """
-
-try:
-    from ._brille import *
-except ImportError:
-    # In build / tests, _brille might be in another folder on path
-    from _brille import *
-
+from .bound import *
+from .lattice import Lattice
 from . import utils
 
 try:
