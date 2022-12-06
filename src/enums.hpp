@@ -40,7 +40,7 @@ enum class LengthUnit { none, angstrom, inverse_angstrom};
 
 \see NullNode, CubeNode, PolyNode
 */
-enum class NodeType {null, cube, poly};
+enum class NodeType {assumed_null, found_null, null, cube, poly};
 
 
 enum class MatrixVectors{ row, column };

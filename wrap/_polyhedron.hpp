@@ -30,6 +30,9 @@ void define_polyhedron_lvec(py::class_<A> & cls){
   cls.def("rotate", [](const A &p, const PointSymmetry &s, const size_t i) {
     return p.apply(s, i);
   });
+  cls.def("to_Cartesian", [](const A & p){
+    return Poly<T,bArray>(p.vertices().xyz(), p.faces());
+  });
 }
 
 template<class T, class A>

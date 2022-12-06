@@ -25,12 +25,11 @@ Plotting utilities for ``brille``
     :toctree: _generate
 """
 
-import collections
 import numpy as np
 import matplotlib.pyplot as pp
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
-from matplotlib.colors import get_named_colors_mapping
+
 
 
 def _check_axes(axs=None):
@@ -39,6 +38,7 @@ def _check_axes(axs=None):
             axs = pp.gca()
         else:
             axs = Axes3D(pp.figure())
+        pp.gcf().add_axes(axs)
     return axs
 
 
@@ -408,7 +408,7 @@ def plot_polyhedron(poly, axs=None, setlims=True, show=True, **kwds):
     axs = _check_axes(axs)
     # the 1st Brillouin zone has on-face points equal to half the normals
     coll, xyz_min, xyz_max = _make_poly_collection(poly.vertices,
-                                                   poly.vertices_per_face,
+                                                   poly.faces,
                                                    **kwds)
     axs.add_collection3d(coll)
     if setlims:
@@ -520,8 +520,11 @@ def plot_tetrahedra(allverts, tetidx, axs=None, **kwds):
 
 def make_colours(n, color=None, **kwds):
     if color is None:
+        from matplotlib.colors import get_named_colors_mapping
         color = get_named_colors_mapping().keys()
-    if isinstance(color, collections.Iterable):
+
+    from collections.abc import Iterable
+    if isinstance(color, Iterable):
         color = list(color)
     if isinstance(color, str) or (isinstance(color, (list, tuple)) and len(color)==3):
         color = [color]

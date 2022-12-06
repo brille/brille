@@ -138,7 +138,7 @@ void PolyTrellis<T,R,S,A>::construct(const polyhedron::Poly<S,A>& poly,
   std::vector<NodeType> node_type;
   auto is_null = norm(node_centres - poly.centroid()).is(brille::cmp::gt, max_dist).to_std();
   std::transform(is_null.begin(), is_null.end(), std::back_inserter(node_type),
-               [](const auto & b){return b ? NodeType::null : NodeType::cube;});
+               [](const auto & b){return b ? NodeType::assumed_null : NodeType::cube;});
 
   // pull together the trellis knots
   auto all_points = from_xyz_like(v_hkl, from_std_like(pv, this->trellis_intersections()));
@@ -225,11 +225,11 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
   }
 
   debug_update_if(
-    std::find(node_type.begin(), node_type.end(), NodeType::null) == node_type.end(),
+    std::find(node_type.begin(), node_type.end(), NodeType::assumed_null) == node_type.end(),
     "No null nodes!");
 
   for (ind_t i = 0; i < nNodes; ++i)
-    if (node_type[i] != NodeType::null) {
+    if (node_type[i] == NodeType::cube) {
       auto this_node_faces = trellis_node_faces(i);
       // this limits all_points to have the knots *first*
       auto this_node_poly = polyhedron::Poly(all_points, this_node_faces);
@@ -255,7 +255,7 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
           add_to_maps(n_points, n_kept, map_idx, node_index_map[i], idx); // modifies n_kept, map_index & map
       } else {
         if (intersection.face_count() < 4 || intersection.volume() <= 0.){
-          node_type[i] = NodeType::null;
+          node_type[i] = NodeType::found_null;
           continue; // we don't want to re-wrap the following code block
         }
         debug_update("Intersection of node", i, " is \n",

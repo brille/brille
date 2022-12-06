@@ -458,6 +458,12 @@ namespace brille {
       if (poly_nodes_ != other.poly_nodes_) return true;
       return false;
     }
+    std::vector<NodeType> all_node_types() const {
+      std::vector<NodeType> types;
+      types.reserve(nodes_.size());
+      for (const auto & n: nodes_) types.push_back(n.first);
+      return types;
+    }
     //
     //! Return the total number of index nodes
     [[nodiscard]] size_t size() const {return nodes_.size();}
@@ -512,7 +518,16 @@ namespace brille {
     //! Return whether the indexed node is a PolyNode
     [[nodiscard]] bool is_poly(const ind_t i) const {return NodeType::poly == nodes_[i].first;}
     //! Return whether the indexed node is a NullNode
-    [[nodiscard]] bool is_null(const ind_t i) const {return NodeType::null == nodes_[i].first;}
+    [[nodiscard]] bool is_null(const ind_t i) const {
+      const auto & f = nodes_[i].first;
+      return NodeType::null == f || NodeType::assumed_null == f || NodeType::found_null == f;
+    }
+    [[nodiscard]] bool is_assumed_null(const ind_t i) const {
+      return NodeType::assumed_null == nodes_[i].first;
+    }
+    [[nodiscard]] bool is_found_null(const ind_t i) const {
+      return NodeType::found_null == nodes_[i].first;
+    }
     //! Return the CubeNode at index i
     [[nodiscard]] const CubeNode& cube_at(const ind_t i) const {
       return cube_nodes_[nodes_[i].second];
@@ -571,6 +586,10 @@ namespace brille {
         return poly_nodes_[nodes_[i].second].indices_weights(v,x,iw,sc);
         case NodeType::null:
           throw std::logic_error("attempting to access null node!");
+        case NodeType::assumed_null:
+          throw std::logic_error("attempting to access Assumed-null node!");
+        case NodeType::found_null:
+          throw std::logic_error("attempting to access found-null node!");
         default:
         return false;
       }
@@ -591,6 +610,19 @@ namespace brille {
         default:
         return 0.;
       }
+    }
+    [[nodiscard]] NodeType node_type(const ind_t i) const {
+      return nodes_[i].first;
+    }
+    [[nodiscard]] std::string node_type_string(const ind_t i) const {
+      switch (nodes_[i].first){
+      case NodeType::cube: return "cube";
+      case NodeType::poly: return "polyhedron";
+      case NodeType::null: return "null";
+      case NodeType::assumed_null: return "assumed null";
+      case NodeType::found_null: return "found null";
+      }
+      return "unknown node type";
     }
 #ifdef USE_HIGHFIVE
   public:
