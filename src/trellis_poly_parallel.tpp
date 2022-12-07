@@ -131,7 +131,7 @@ void PolyTrellis<T,R,S,A>::construct(const polyhedron::Poly<S,A>& poly,
   auto n_lost = vertex_set.pristine_count() - n_kept;
 
   // allocates and fills the NodeContainer
-  part_two(stash, node_type, node_index_map, n_kept, n_lost, s_tol, d_tol);
+  part_two(stash, node_type, node_index_map, s_tol, d_tol);
   // Now all non-null nodes have been populated with the indices of their vertices
 
   // create the Faces object too:
@@ -203,7 +203,6 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
                                 VertexIndexMap());
       }
   };
-  std::cout << thread_pairs.size() << " threads will be used" << std::endl;
 
   auto test0 = !always_triangulate;
   auto s_count = utils::u2s<long long>(cube_indexes.size());
@@ -217,24 +216,14 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
 #pragma omp for
     for (long long s_i = 0; s_i < s_count; ++s_i) {
       auto i = cube_indexes[utils::s2u<ind_t>(s_i)];
-
-//      auto Gamma = vertex_set.origin();
       auto this_node_faces = trellis_node_faces(i);
       // this limits all_points to have the knots *first*
       auto this_node_poly = polyhedron::Poly(all_points, this_node_faces);
-      //    verbose_update("Look for intersection of\n", poly.python_string(), "
-      //    and node\n", this_node_poly.python_string());
       auto intersection = poly.intersection(this_node_poly, s_tol, d_tol);
       /* FIXME A less-strict comparison might be useful but, at present, causes
-       * not-in-trellis errors */
-      // auto test1 = approx_float::scalar(this_node_poly.volume(),
-      // intersection.volume());
+       *       not-in-trellis errors */
       auto test1 = this_node_poly.volume() == intersection.volume();
       auto test2 = !this_node_poly.contains(Gamma)[0];
-      //    verbose_update_if(test1 && !test2, "Node would be cubic but contains
-      //    Gamma"); verbose_update_if(test1, "Node is cubic because ",
-      //    my_to_string(this_node_poly.volume() - intersection.volume()), " is
-      //    zero");
       node_type[i] =
           (test0 && test1 && test2) ? NodeType::cube : NodeType::poly;
       auto indexes = this_node_faces.indexes();
@@ -243,9 +232,6 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
         node_map.resize(indexes.size());
         for (ind_t j = 0; j < indexes.size(); j++)
           node_map[j] = thread_pairs[thread].first.preserve(indexes[j]);
-        //      node_index_map[i].reserve(indexes.size());
-        //      for (auto idx : indexes)
-        //      node_index_map[i].push_back(vertex_set.preserve(idx));
       } else {
         if (intersection.face_count() < 4 || intersection.volume() <= 0.) {
           node_type[i] = NodeType::found_null;
@@ -268,11 +254,8 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
         node_map.resize(iv.size(0));
         for (ind_t iv_index = 0; iv_index < iv.size(0); ++iv_index) {
           if (auto search = i2p.find(iv_index); search != i2p.end()) {
-            //          node_index_map[i].push_back(vertex_set.preserve(search->second));
             node_map[iv_index] = thread_pairs[thread].first.preserve(search->second);
           } else {
-            //          node_index_map[i].push_back(vertex_set.add(iv.view(iv_index),
-            //          AddVertexType::Crafted));
             node_map[iv_index] = thread_pairs[thread].first.add(iv.view(iv_index), AddVertexType::Crafted);
           }
         }
@@ -282,16 +265,12 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
       // for a guard
       auto gamma_in = intersection.contains(Gamma);
       if (std::count(gamma_in.begin(), gamma_in.end(), true)) {
-        //      verbose_update("Intersection contains the Gamma point");
         auto int_vertices_are_gamma = intersection.vertices().row_is(
             brille::cmp::eq, Gamma, s_tol, s_tol, d_tol);
         auto no = int_vertices_are_gamma.count();
-        //      verbose_update(no == 0, "Gamma point not a vertex of the
-        //      Intersection");
         // if the gamma point *is* an intersection point
         // it is already in the node_index map.
         if (no == 0) thread_pairs[thread].second.append(i, thread_pairs[thread].first.origin_index());
-        // if (no == 0) node_index_map[i].push_back(vertex_set.origin_index());
       }
       // Storing the intersection into the std::map is likely not thread safe
       stash_mutex.lock();
@@ -300,15 +279,8 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
     } // end parallel for-loop
   } // end parallel region -- back to single-thread execution
   /* Now combine the per-thread VertexMapSets and VertexIndexMaps */
-//  auto n_pairs = thread_pairs.size();
-//  auto combination = (n_pairs > 1) ? vertex_maps::combine(thread_pairs[0], thread_pairs[1]) : std::move(thread_pairs[0]);
-//  for (size_t i=2; i<n_pairs; ++i) {
-//    auto pair = vertex_maps::combine(combination, thread_pairs[i]);
-//    combination = std::make_pair(pair.first, pair.second);
-//  }
   profile_update(" Start vertex maps reduction");
   auto comb = vertex_maps::reduce(thread_pairs);
-  std::cout << comb.first << comb.second << "\n";
   profile_update("  End of PolyTrellis part_one");
   return std::make_tuple(poly_stash, comb.first, comb.second);
 }
@@ -319,8 +291,6 @@ PolyTrellis<T,R,S,A>::part_two(
     const std::map<size_t, poly_t>& poly_stash,
     const std::vector<NodeType>& node_type,
     const VertexIndexMap& node_index_map,
-    const ind_t n_kept,
-    const ind_t n_lost,
     const S s_tol,
     const int d_tol
 ) {
@@ -385,20 +355,13 @@ PolyTrellis<T,R,S,A>::part_two(
   profile_update("Cube node vertices stored");
 
   // Handle all polyhedron nodes (this almost certainly needs to be parallel)
-  ind_t fatal_errors{0}, errors{0}, hiccups{0};
+  ind_t fatal_errors{0}, hiccups{0};
   auto p_count = utils::u2s<long long>(poly_indexes.size());
-#pragma omp parallel for default(none) shared(poly_stash, poly_indexes, p_count, node_index_map, n_kept, n_lost, s_tol, d_tol) reduction(+:fatal_errors, errors, hiccups)
+#pragma omp parallel for default(none) shared(poly_stash, poly_indexes, p_count, node_index_map, s_tol, d_tol) reduction(+:fatal_errors, hiccups)
   for (long long s_i=0; s_i<p_count; ++s_i) {
     auto i = poly_indexes[utils::s2u<ind_t>(s_i)];
     //
     auto Gamma = 0 * vertices_.view(0);
-//    std::vector<ind_t> poly_vert_idx;
-//    for (const auto & idx: node_index_map.get(i)) {
-//      if (idx > n_kept && idx + n_kept < n_kept + n_lost) errors += 1;
-//      poly_vert_idx.push_back(idx < n_kept ? idx : idx - n_lost);
-//    }
-//    auto node_verts = vertices_.extract(poly_vert_idx);
-
     // the knitting function already adjusted vertex indices for removed ones:
     auto node_verts = vertices_.extract(node_index_map.get(i));
 

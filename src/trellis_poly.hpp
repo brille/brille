@@ -187,8 +187,7 @@ private:
 
   void
   part_two(const std::map<size_t, poly_t>&, const std::vector<NodeType>& ,
-           const VertexIndexMap&, ind_t, ind_t,
-           VertexComponents, int);
+           const VertexIndexMap&, VertexComponents, int);
 public:
   //! Explicit empty constructor
   explicit PolyTrellis(): vertices_(0,3) {}

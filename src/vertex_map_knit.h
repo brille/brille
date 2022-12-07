@@ -45,34 +45,45 @@ combine(const std::pair<VertexMapSet<T,A>, VertexIndexMap>& one,
         const std::pair<VertexMapSet<T,A>, VertexIndexMap>& two){
   auto no = one.first.pristine_count();
 
-  std::cout << "Combine\n" << one.first << one.second << "with\n" << two.first << two.second << "\n";
-
   // copy the preserved vectors to avoid modifying the inputs
   typename VertexMapSet<T,A>::preserve_t one_prev, two_prev;
-  one_prev.reserve(no);
-  two_prev.reserve(no);
-  for (const auto & x: one.first.preserved()) one_prev.emplace_back(x);
-  for (const auto & x: two.first.preserved()) two_prev.emplace_back(x);
+  for (const auto & x: one.first.preserved()) one_prev.emplace(x);
+  for (const auto & x: two.first.preserved()) two_prev.emplace(x);
 
   // Check if there are any preserved indexes that show up in both one and two
-  std::vector<int> differ;
-  differ.reserve(no);
-  std::transform(one_prev.begin(), one_prev.end(),
-                 two_prev.begin(), std::back_inserter(differ),
-                 [no](ind_t a, ind_t b){return (a<no && b<no && a!=b) ? 1 : 0;});
+  // but which differ in their assigned index:
+  std::map<ind_t, std::pair<ind_t, ind_t>> differ;
+  const auto & tp{two_prev};
+  for (const auto& p: one_prev) {
+    if (auto s = tp.find(p.first); s != tp.end() && s->second != p.second)
+      differ.emplace(p.first, std::make_pair(p.second, s->second));
+  }
 
   // Copy-construct new maps to avoid modifying input
   VertexIndexMap one_second(one.second.data()), two_second(two.second.data());
   // Move the appended vertex indices to account for the total number preserved
   // and, in the case of `two`, the vertices in one.first.appended
-  auto duplicate_count = std::count(differ.begin(), differ.end(), true);
-  auto total_preserved = one.first.preserved_count() + two.first.preserved_count() - duplicate_count;
-  profile_update(duplicate_count, " differ pristine vertices -- ", total_preserved, " preserved in total");
-  // Use a lambda to avoid (minimal) duplication
-//  auto offset_appended = [no, total_preserved](auto & map, ind_t upto, ind_t appended){
-//    for (ind_t i=no; i < no + upto; ++i)
-//      map.replace(i, i + (total_preserved + appended - no));
-//  };
+//  auto different_count = std::count(differ.begin(), differ.end(), true); // required if a vector
+  auto different_count = differ.size(); // the map *only* has the different vertexes
+  auto total_preserved = one.first.preserved_count() + two.first.preserved_count() - different_count;
+  profile_update(different_count, " differently indexed pristine vertices -- ", total_preserved, " preserved in total");
+
+  // Collect the preserved indices that appeared only in the second view
+  std::vector<std::pair<ind_t, ind_t>> os_vector;
+  os_vector.reserve(std::max(one_prev.size(), two_prev.size()));
+  const auto & op{one_prev};
+  std::set_difference(tp.cbegin(), tp.cend(),
+                      op.cbegin(), op.cend(), std::back_inserter(os_vector),
+                      [](const auto & a, const auto &b){return a.first < b.first;});
+
+  // Sort these by their mapped value
+  std::sort(os_vector.begin(), os_vector.end(), [](auto & a, auto & b){return a.second < b.second;});
+
+  // Create an updated map with their 'correct' index in it:
+  std::map<ind_t, std::pair<ind_t, ind_t>> only_second;
+  ind_t os_new_val{one.first.preserved_count()};
+  for (const auto & x: os_vector) only_second.emplace(x.first, std::make_pair(x.second, os_new_val++));
+
   // we need to keep the indexes beyond the end of pristine for now
   auto offset_appended = [no, total_preserved](auto & map, ind_t upto, ind_t appended){
     for (ind_t i=no; i < no + upto; ++i)
@@ -80,63 +91,21 @@ combine(const std::pair<VertexMapSet<T,A>, VertexIndexMap>& one,
   };
   auto one_appended_count = one.first.appended_count();
   auto two_appended_count = two.first.appended_count();
-  //offset_appended(one_second, one_appended_count, no);
   offset_appended(two_second, two_appended_count, one_appended_count);
   profile_update("appended vertex counts: ", one_appended_count, " ", two_appended_count);
 
-  // Replace seen second indices by their seen first equivalents
-  if (duplicate_count){
-    for (ind_t i=0; i<no; ++i) if (differ[i]) {
-      two_second.replace(two_prev[i], one_prev[i]);
-    }
-  }
-
-  // Handle preserved indexes that appear only in the second
-  std::vector<int> only_second;
-  only_second.reserve(no);
-  std::transform(one_prev.begin(), one_prev.end(),
-                 two_prev.begin(), std::back_inserter(only_second),
-                 [no](ind_t a, ind_t b){return (a >= no && b < no) ? 1 : 0;});
-
-
-  profile_update("we now know which",std::count(only_second.begin(), only_second.end(), true)," pristine vertices appear only in the second");
-
-//  profile_update(only_second);
-//  profile_update(two_prev);
-
-  // Build up the partial sum of preceding vertex indices which are in both
-  ind_t os_max{0};
-  for (ind_t i=0; i<no; ++i) if (only_second[i] && two_prev[i]>os_max) os_max = two_prev[i];
-  std::vector<ind_t> os_partial(os_max+2, 0);
-  // If the preserved index differs *or* is the same and is not only in two
-  // the vertex index should be included in the partial sum
-  for (ind_t i=0; i<no; ++i)
-    if (!only_second[i] && two_prev[i] <= no)
-    //if (differ[i] || (!only_second[i] && one_prev[i] < no && one_prev[i] == two_prev[i]))
-      os_partial[two_prev[i]] = 1;
-
-  profile_update(os_partial);
-  std::partial_sum(os_partial.begin(), os_partial.end(), os_partial.begin());
-  profile_update(os_partial);
-
-  std::vector<ind_t> os_value(os_max+1, 0); //no+1);
-  for (ind_t i=0; i<no; ++i) if (only_second[i]) os_value[two_prev[i]] = two_prev[i] - os_partial[two_prev[i]];
-
-  profile_update(os_value);
+  // Replace second seen indices by their first seen equivalents
+  for (const auto & ifs: differ) two_second.replace(ifs.second.second, ifs.second.first);
 
   profile_update("We now have the cumulative sum of sorted only second");
-//  auto two_into_one_offset = one.first.preserved_count();
+  //  auto two_into_one_offset = one.first.preserved_count();
   auto two_into_one_offset = no + one.first.preserved_count();
-  for (ind_t i=0; i<no; ++i) if (only_second[i]) {
-    auto updated = os_value[two_prev[i]];
-    if (two_prev[i] != updated) {
-      // earlier vertices were removed; so update the map *and* the preserved list
-      two_second.replace(two_prev[i], updated);
-    }
-    // plus update one_prev[i], which *is* currently no+1 but should be
-    // the reduced two-preserved index plus the one-preserved count
-    one_prev[i] = updated + two_into_one_offset;
-    debug_update_if(one_prev[i] > no+1, i, " -> ", one_prev[i], " (from two_prev[i]=",two_prev[i]," -> ", updated ," + ", two_into_one_offset,")");
+
+  for (const auto & p: only_second) {
+    // if earlier vertices were removed, update the map and the preserved list
+    if (p.second.first != p.second.second) two_second.replace(p.second.first, p.second.second);
+    // And update on_prev since we'll use it again:
+    one_prev[p.first] = p.second.second + two_into_one_offset;
   }
 
   profile_update("All mapped indices are correct");
@@ -153,31 +122,32 @@ combine(const std::pair<VertexMapSet<T,A>, VertexIndexMap>& one,
   // Reuse the VertexMapSet machinery to sort this out for us!
   // We're done with one_prev, so it's safe to move
   VertexMapSet<T,A> out_vms(one.first.pristine(), one.first.appended(), std::move(one_prev), one.first.relative(), one.first.digits());
+
   profile_update("Output VertexMapSet created");
   auto appended = two.first.appended();
-  ind_t two_app_no = appended.size(0);
+  auto two_app_no = appended.size(0);
+  auto ono = out_vms.preserved_count();
   // reserve space now to avoid doubling out_vms.appended (multiple times)
-  out_vms.reserve_appended(out_vms.appended_count() + appended.size(0));
-
-  std::vector<std::pair<ind_t, ind_t>> a_map;
-  a_map.reserve(two_app_no);
-  ind_t a_skipped{0};
+  out_vms.reserve_appended(out_vms.appended_count() + two_app_no);
+  std::vector<std::pair<ind_t, ind_t>> app_from_to;
+  app_from_to.reserve(two_app_no);
   for (ind_t i=0; i<two_app_no; ++i){
-    // what would have been the mapped index for this one?
-    // [new_kept_pristine_count] + i
-    auto j = out_vms.add(appended.view(i), AddVertexType::Crafted);
-    auto x = i + total_preserved + one_appended_count;
-    if (j != x) ++a_skipped;
-    a_map.emplace_back(x, (j!=x ? j : x - a_skipped));
+    // what is the index assigned for this vertex above?
+    // its [length original pristine] + [length appended in one] + i
+    auto from = no + one_appended_count + i;
+    // Find an already appended equivalent vertex, or append this one
+    // return the index in the appended array offset by the number of pristine
+    // vertices, either way
+    // *and convert it to the index *after* condensing the end result!*
+    auto to = out_vms.add(appended.view(i), AddVertexType::Crafted) + ono - no;
+    app_from_to.emplace_back(from, to);
   }
   // out_vms now *has* all of our vertices!
 
   profile_update("Output VertexMapSet given all vertices");
 
-  // The second map *might* have to be updated _again_
-  for (const auto & pair: a_map) if (pair.first != pair.second) {
-    two_second.replace(pair.first, pair.second);
-  }
+  // Update the second map to account fo condensing the output:
+  for (const auto &x: app_from_to) two_second.replace(x.first, x.second);
 
   profile_update("Second map indexes updated");
 
@@ -189,9 +159,6 @@ combine(const std::pair<VertexMapSet<T,A>, VertexIndexMap>& one,
   }
 
   profile_update("Output maps merged");
-
-  std::cout << "Resulting in\n" << out_vms << one_second << "\n";
-
   return std::make_pair(out_vms, one_second);
 }
 

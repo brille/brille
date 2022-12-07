@@ -21,13 +21,14 @@ enum class AddVertexType {Unknown, Pristine, Crafted};
 template <class T, template<class> class A>
 class VertexMapSet {
 public:
-  using preserve_t = std::vector<ind_t>;
+//  using preserve_t = std::vector<ind_t>;
+  using preserve_t = std::map<ind_t, ind_t>;
 private:
   A<T> pristine_;
   A<T> appended_;
-  preserve_t preserved_;
+  preserve_t preserve_;
   ind_t appended_count_ = 0;
-  ind_t preserved_count_ = 0;
+  ind_t preserve_count_ = 0;
 //  std::mutex append_lock_;
 //  std::mutex preserve_lock_;
   T relative_ = T(0);
@@ -43,19 +44,20 @@ public:
     construct_preserved_appended();
   }
   VertexMapSet(A<T>&& p, preserve_t && pr, T r, int d):
-    pristine_(std::move(p)), preserved_(std::move(pr)), relative_(r), digits_(d)
+    pristine_(std::move(p)), preserve_(std::move(pr)), relative_(r), digits_(d)
   {
     construct_appended();
   }
   VertexMapSet(A<T> && p, A<T> && a, preserve_t && pr, T r, int d):
-    pristine_(std::move(p)), appended_(std::move(a)), preserved_(std::move(pr)),
+    pristine_(std::move(p)), appended_(std::move(a)), preserve_(std::move(pr)),
     relative_(r), digits_(d)
   {
     appended_count_ = appended_.size(0);
-    preserved_count_ = static_cast<ind_t>(
-        std::count_if(preserved_.begin(), preserved_.end(),
-                      [no=pristine_.size(0)](ind_t x){return x < no;}
-                      ));
+    preserve_count_ = preserve_.size();
+//    preserved_count_ = static_cast<ind_t>(
+//        std::count_if(preserved_.begin(), preserved_.end(),
+//                      [no=pristine_.size(0)](ind_t x){return x < no;}
+//                      ));
   }
 
   T relative() const {return relative_;}
@@ -67,7 +69,7 @@ public:
   A<T> appended() const {return appended_.view(0, appended_count_);}
 
   [[nodiscard]] ind_t pristine_count() const { return pristine_.size(0);}
-  [[nodiscard]] ind_t preserved_count() const{ return preserved_count_;}
+  [[nodiscard]] ind_t preserved_count() const{ return static_cast<ind_t>(preserve_.size());}
   [[nodiscard]] ind_t appended_count() const { return appended_count_; }
 
   bool reserve_appended(ind_t total) {
@@ -81,9 +83,20 @@ public:
   [[nodiscard]] std::tuple<bool, ind_t> pristine_origin() const {
     return is_pristine(origin());
   }
-  [[nodiscard]] bool is_preserved(ind_t i) const {return preserved_[i] < pristine_.size(0);}
-  [[nodiscard]] ind_t preserved_value(ind_t i) const {return preserved_[i];}
-  [[nodiscard]] const preserve_t& preserved() const {return preserved_;}
+  [[nodiscard]] bool is_preserved(ind_t i) const {
+    const auto & p{preserve_}; // force the use of const_iterator
+    auto search = p.find(i);
+    return search != p.end();
+  }
+  [[nodiscard]] ind_t preserved_value(ind_t i) const {
+    const auto & p{preserve_}; // force the use of const_iterator
+    if(auto search = p.find(i); search != p.end())
+      return search->second;
+    throw std::runtime_error("Out-of-bounds preserved valued");
+  }
+//  [[nodiscard]] bool is_preserved(ind_t i) const {return preserved_[i] < pristine_.size(0);}
+//  [[nodiscard]] ind_t preserved_value(ind_t i) const {return preserved_[i];}
+  [[nodiscard]] const preserve_t& preserved() const {return preserve_;}
 
   std::tuple<bool, ind_t> is_pristine(const A<T>& vertex) const {
     // pristine can not change; so no need to lock its mutex:
@@ -105,8 +118,10 @@ public:
 
   ind_t preserve(ind_t index) {
 //    std::lock_guard<std::mutex> guard(preserve_lock_);
-    if (preserved_[index] > pristine_count()) preserved_[index] = preserved_count_++;
-    return preserved_[index];
+//    if (preserved_[index] > pristine_count()) preserved_[index] = preserved_count_++;
+//    return preserved_[index];
+    if (!is_preserved(index)) preserve_[index] = preserve_.size();
+    return preserve_[index];
   }
 
   ind_t add(const A<T>& vertex, AddVertexType type = AddVertexType::Unknown) {
@@ -136,17 +151,27 @@ public:
     return add(origin());
   }
 
+
+
   VertexMapSet<T,A> consolidate() const {
     std::vector<size_t> extract;
-    extract.reserve(preserved_count_);
-    for (size_t i = 0; i < preserved_count_; ++i){
-      auto itr = std::find(preserved_.begin(), preserved_.end(), i);
-      debug_update_if(itr == preserved_.end(), "Could not find index with preserved value ", i, "?!");
-      if (itr != preserved_.end())
-      extract.push_back(std::distance(preserved_.begin(), itr));
-      else
-      throw std::runtime_error("Could not find the value!");
+    extract.reserve(preserve_.size());
+    // Pull out vertices based on the order in which they were preserved
+    for (const auto & pair: key_sorted_preserve()){
+      extract.push_back(pair.first);
     }
+//    for (size_t i = 0; i < preserved_count_; ++i){
+//      auto itr = std::find(preserved_.begin(), preserved_.end(), i);
+//      debug_update_if(itr == preserved_.end(), "Could not find index with preserved value ", i, "?!");
+//      if (itr != preserved_.end())
+//      extract.push_back(std::distance(preserved_.begin(), itr));
+//      else
+//      throw std::runtime_error("Could not find the value!");
+//    }
+    // preserve_ {{0,0}, {1,3}, {2,1}, {5,2}, {6,4}, {7,5}, …}
+    // is sorted to [{0,0}, {2,1}, {5,2}, {1,3}, {6,4}, {7,5}, …]
+    // which then extracts [0, 2, 5, 1, 6, 7, …] from pristine_
+
     // preserved_ [0, 3, 1, x, x, 2, 4, 5, …] extracts [0, 2, 5, 1, 6, 7, …]
     // from pristine_;
     // combine the retained vertices and the appended vertices,
@@ -155,22 +180,25 @@ public:
       auto nv = cat(0, pristine_.extract(extract), appended());
       preserve_t pr;
       auto no = nv.size(0);
-      pr.resize(no);
-      std::iota(pr.begin(), pr.end(), 0);
+      for (ind_t i=0; i<no; ++i) pr[i] = i;
+//      pr.resize(no);
+//      std::iota(pr.begin(), pr.end(), 0);
       return {std::move(nv), std::move(pr), relative_, digits_};
     } else {
       auto nv = pristine_.extract(extract);
       preserve_t pr;
       auto no = nv.size(0);
-      pr.resize(no);
-      std::iota(pr.begin(), pr.end(), 0);
+      for (ind_t i=0; i<no; ++i) pr[i] = i;
+//      pr.resize(no);
+//      std::iota(pr.begin(), pr.end(), 0);
       return {std::move(nv), std::move(pr), relative_, digits_};
     }
   }
 
   [[nodiscard]] bool is_consolidated() const {
     if (appended_.size(0) > 0) return false;
-    for (ind_t i=0; i<preserved_.size(); ++i) if (preserved_[i] != i) return false;
+//    for (ind_t i=0; i<preserved_.size(); ++i) if (preserved_[i] != i) return false;
+    for (const auto & pr: preserve_) if (pr.first != pr.second) return false;
     return true;
   }
 
@@ -179,14 +207,14 @@ public:
     os << "\tpristine: (" << v.pristine().size(0) << "->" << v.preserved_count() << ")\n";
     os << "\tappended: (" << v.appended_count() << ")\n";
     os << "\tpreserved:\n";
-    for (const auto & p: v.preserved()) os << p << " ";
+    for (const auto & p: v.preserved()) os << "{" << p.first << ":" << p.second << "} ";
     os << "\n";
     return os;
   }
 
 private:
   void construct_preserved_appended() {
-    preserved_ = std::vector<ind_t>(pristine_.size(0), pristine_.size(0)+1u);
+//    preserved_ = std::vector<ind_t>(pristine_.size(0), pristine_.size(0)+1u);
     construct_appended();
   }
   void construct_appended() {
@@ -199,6 +227,13 @@ private:
     if (appended_.size(0) < appended_count_ + 1u) appended_.resize(2 * appended_count_);
     appended_.set(appended_count_, vertex);
     return pristine_count() + appended_count_++;
+  }
+
+  std::vector<std::pair<ind_t, ind_t>> key_sorted_preserve() const {
+    std::vector<std::pair<ind_t, ind_t>> ksp;
+    for (auto & pair: preserve_) ksp.push_back(pair);
+    std::sort(ksp.begin(), ksp.end(), [](auto & a, auto & b){return a.second < b.second;});
+    return ksp;
   }
 };
 
