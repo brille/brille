@@ -98,15 +98,12 @@ bool Interpolator<T>::rip_gamma_complex(
       // Rotate, permute, and apply the phase factor simultaneously into a temporary array
       // Convert rot matrix to Cartesian
       Matrix<T> rot_cart;
-//      std::copy(pgt.lattice().real_basis_vectors(), ind_t 9, latvec.data());
-      for (ind_t k=0; k<9; k++) {
-        t1[k] = ptsym.get(iRii).data()[k];
-      }
-
-      brille::utils::matrix_inverse<T>(t0, t1); // t0 = Rinv
-      brille::utils::mul_mat_mat(t1, 3u, pgt.lattice().real_basis_vectors().data(), t0); // t1 = lattice*t0 = lattice*Rinv
-      brille::utils::matrix_inverse<T>(t0, t1); // t0 = latticeinv
-      brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, t0); // Rcart = t1*t0 = lattice*Rinv*latticeinv
+      Matrix<double> tdbl;
+      std::vector<double> iRii_dbl(ptsym.get(iRii).begin(), ptsym.get(iRii).end());
+      brille::utils::matrix_inverse<double>(tdbl.data(), iRii_dbl.data()); // tdbl = Rinv
+      brille::utils::mul_mat_mat(t1, 3u, pgt.lattice().real_basis_vectors().data(), tdbl.data()); // t1 = lattice*tint = lattice*Rinv
+      brille::utils::matrix_inverse<double>(tdbl.data(), pgt.lattice().real_basis_vectors().data()); // tdbl = latticeinv
+      brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, tdbl.data()); // Rcart = t1*tdbl = lattice*Rinv*latticeinv
 
       if (no[1]>0){
         ind_t o0 = o;
