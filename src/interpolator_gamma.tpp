@@ -96,6 +96,18 @@ bool Interpolator<T>::rip_gamma_complex(
       // to make this calculation more straightforward.
       //
       // Rotate, permute, and apply the phase factor simultaneously into a temporary array
+      // Convert rot matrix to Cartesian
+      Matrix<T> rot_cart;
+//      std::copy(pgt.lattice().real_basis_vectors(), ind_t 9, latvec.data());
+      for (ind_t k=0; k<9; k++) {
+        t1[k] = ptsym.get(iRii).data()[k];
+      }
+
+      brille::utils::matrix_inverse<T>(t0, t1); // t0 = Rinv
+      brille::utils::mul_mat_mat(t1, 3u, pgt.lattice().real_basis_vectors().data(), t0); // t1 = lattice*t0 = lattice*Rinv
+      brille::utils::matrix_inverse<T>(t0, t1); // t0 = latticeinv
+      brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, t0); // Rcart = t1*t0 = lattice*Rinv*latticeinv
+
       if (no[1]>0){
         ind_t o0 = o;
         if (tA.size() < no[1]*3u) tA.resize(no[1]*3u);
@@ -103,19 +115,9 @@ bool Interpolator<T>::rip_gamma_complex(
           // is q already expressed in the right lattice? hopefully!
           // if the vector rotates by Γ is *must* be complex, so T is a complex type
           // use its constructor to make i q⋅[R⁻¹xₖ - xᵥ] and calculate the (k,R) phase
-          // mul_mat_vec(out matrix, n dimensions, in vector, in matrix)
-          // use Matrix<int>??
-          Matrix<double> rot_cart{0,0,0,0,0,0,0,0,0};
-          Matrix<double> tmp1{0,0,0,0,0,0,0,0,0};
-          Matrix<double> tmp2{0,0,0,0,0,0,0,0,0};
-          Matrix<double> rot_frac_dbl(ptsym.get(iRii).begin(), ptsym.get(iRii).end());
-          brille::utils::matrix_inverse(tmp1.data(), rot_frac_dbl.data()); // tmp1 = Rinv
-          brille::utils::mul_mat_mat(tmp2.data(), 3u, pgt.lattice().vectors().data(), tmp1.data()); // tmp2 = lattice*tmp1 = lattice*Rinv
-          brille::utils::matrix_inverse(tmp1.data(), pgt.lattice().vectors().data()); // tmp1 = latticeinv
-          brille::utils::mul_mat_mat(rot_cart.data(), 3u, tmp2.data(), tmp1.data()); // Rcart = tmp2*tmp1 = lattice*Rinv*latticeinv
 
           //brille::utils::mul_mat_vec(t0, 3u, ptsym.get(iRii).data(), xi+o);
-          brille::utils::mul_mat_vec(t0, 3u, rot_cart, xi+o);
+          brille::utils::mul_mat_vec(t0, 3u, rot_cart.data(), xi+o);
           auto v0idx = 3u*pgt.F0(k, iRii); // ×3u to account for stride
           T phase = e_iqd_gt(i, k, iRii);
           for (int j=0; j<3; ++j) tA[v0idx+j] = phase*t0[j];
@@ -133,10 +135,11 @@ bool Interpolator<T>::rip_gamma_complex(
             ind_t k = static_cast<ind_t>(pgt.F0(m, iRii));
             // Calculate R⁻¹*M*R in two steps
             // first calculate M*R, storing in t0
-            brille::utils::mul_mat_mat(t0, 3u, xi+o+9u*(n*Nmat+m), ptsym.get(Rii).data());
+            //brille::utils::mul_mat_mat(t0, 3u, xi+o+9u*(n*Nmat+m), ptsym.get(Rii).data());
+            brille::utils::mul_mat_mat(t0, 3u, xi+o+9u*(n*Nmat+m), rot_cart.data());
             // next calculate R⁻¹*t0, storing in the temporary all matrix array
             //brille::utils::mul_mat_mat(t1, 3u, ptsym.get(iRii).data(), t0);
-            brille::utils::mul_mat_mat(t1, 3u, Rcart, t0);
+            brille::utils::mul_mat_mat(t1, 3u, rot_cart.data(), t0);
             // include the R R⁻¹ phase factor
             for (int j=0; j<9; ++j) tA[(v*Nmat+k)*9u+j] = Rph*iRph*t1[j];
           }
