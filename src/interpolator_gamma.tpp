@@ -105,16 +105,17 @@ bool Interpolator<T>::rip_gamma_complex(
           // use its constructor to make i q⋅[R⁻¹xₖ - xᵥ] and calculate the (k,R) phase
           // mul_mat_vec(out matrix, n dimensions, in vector, in matrix)
           // use Matrix<int>??
-          Matrix<int> Rcart{0,0,0,0,0,0,0,0,0};
-          Matrix<int> tmp1{0,0,0,0,0,0,0,0,0};
-          Matrix<int> tmp2{0,0,0,0,0,0,0,0,0};
-          brille::utils::matrix_inverse(tmp1, pysym.get(iRii).data()); // tmp1 = Rinv
-          brille::utils::mul_mat_mat(tmp2, 3u, pgt.lattice(), tmp1); // tmp2 = lattice*tmp1 = lattice*Rinv
-          brille::utils::matrix_inverse(tmp1, pgt.lattice()); // tmp1 = latticeinv
-          brille::utils::mul_mat_mat(Rcart, 3u, tmp2, tmp1); // Rcart = tmp2*tmp1 = lattice*Rinv*latticeinv
+          Matrix<double> rot_cart{0,0,0,0,0,0,0,0,0};
+          Matrix<double> tmp1{0,0,0,0,0,0,0,0,0};
+          Matrix<double> tmp2{0,0,0,0,0,0,0,0,0};
+          Matrix<double> rot_frac_dbl(ptsym.get(iRii).begin(), ptsym.get(iRii).end());
+          brille::utils::matrix_inverse(tmp1.data(), rot_frac_dbl.data()); // tmp1 = Rinv
+          brille::utils::mul_mat_mat(tmp2.data(), 3u, pgt.lattice().vectors().data(), tmp1.data()); // tmp2 = lattice*tmp1 = lattice*Rinv
+          brille::utils::matrix_inverse(tmp1.data(), pgt.lattice().vectors().data()); // tmp1 = latticeinv
+          brille::utils::mul_mat_mat(rot_cart.data(), 3u, tmp2.data(), tmp1.data()); // Rcart = tmp2*tmp1 = lattice*Rinv*latticeinv
 
           //brille::utils::mul_mat_vec(t0, 3u, ptsym.get(iRii).data(), xi+o);
-          brille::utils::mul_mat_vec(t0, 3u, Rcart, xi+o);
+          brille::utils::mul_mat_vec(t0, 3u, rot_cart, xi+o);
           auto v0idx = 3u*pgt.F0(k, iRii); // ×3u to account for stride
           T phase = e_iqd_gt(i, k, iRii);
           for (int j=0; j<3; ++j) tA[v0idx+j] = phase*t0[j];
