@@ -170,14 +170,15 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
 
   REQUIRE(bzt.data().branches() == n_modes);
 
-  size_t nQ = 10000;//10000;
+  size_t nQ = 40000;//10000;
   auto Q = LVec<double>(LengthUnit::inverse_angstrom, lat, nQ);
   for (auto& i: Q.valItr()) i = distribution(generator);
 
   brille::Array<double> intvals;
   brille::Array<std::complex<double>> intvecs;
   auto timer = Stopwatch<>();
-  for (int threads=1; threads<7; ++threads){
+  int max_threads = omp_get_max_threads()+1;
+  for (int threads=1; threads<max_threads; ++threads){
     bool again = true;
     timer.tic();
     while (again && timer.elapsed()<10000){
@@ -281,8 +282,10 @@ TEST_CASE("PolyhedronTrellis creation","[polyhedron][trellis]"){
   polyhedron::Faces face(verts_per_face);
   polyhedron::Poly<double, bArray> poly(verts, face);
 
-  for (auto x: {0.1, 0.01, 0.001, 0.0001})
-    REQUIRE_NOTHROW(polytrellis::PolyTrellis<double,std::complex<double>,double,bArray>(poly, x));
+  for (auto x: {0.1, 0.01, 0.001, 0.0001}) {
+    profile_update("=================== polytrellis::PolyTrellis for x = ",x);
+    REQUIRE_NOTHROW(polytrellis::PolyTrellis<double, std::complex<double>, double, bArray>(poly, x));
+  }
 }
 
 

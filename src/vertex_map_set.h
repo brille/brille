@@ -9,10 +9,12 @@
 #include "comparisons.hpp"
 #include <vector>
 #include <mutex>
+#include <map>
 
 namespace brille {
 
 enum class AddVertexType {Unknown, Pristine, Crafted};
+enum class MapVertexType {Pristine, Appended, SecondPristine, SecondAppended};
 
 // Originally intended to be used with multi-threaded access
 // Re-worked for each thread to have its own; so the mutexes would be
@@ -22,6 +24,7 @@ template <class T, template<class> class A>
 class VertexMapSet {
 public:
 //  using preserve_t = std::vector<ind_t>;
+  using rel_t = std::pair<MapVertexType, ind_t>;
   using preserve_t = std::map<ind_t, ind_t>;
 private:
   A<T> pristine_;
@@ -35,6 +38,7 @@ private:
   int digits_ = 0;
 
 public:
+  explicit VertexMapSet() = default;
   VertexMapSet(const A<T>& p, T s, int d): pristine_(p), relative_(s), digits_(d)
   {
     construct_preserved_appended();
@@ -61,7 +65,7 @@ public:
   }
 
   T relative() const {return relative_;}
-  int digits() const {return digits_;}
+  [[nodiscard]] int digits() const {return digits_;}
 
   A<T> pristine() const {return pristine_;}
   A<T> origin() const {return T(0) * pristine_.view(0);}
@@ -72,14 +76,13 @@ public:
   [[nodiscard]] ind_t preserved_count() const{ return static_cast<ind_t>(preserve_.size());}
   [[nodiscard]] ind_t appended_count() const { return appended_count_; }
 
-  bool reserve_appended(ind_t total) {
-    if (total > appended_.size(0)){
-      appended_.resize(total);
-      return true;
-    }
-    return false;
+  [[nodiscard]] const preserve_t& preserved() const {return preserve_;}
+
+  void reserve_appended(ind_t total) {
+    if (total > appended_.size(0)) appended_.resize(total);
   }
 
+private:
   [[nodiscard]] std::tuple<bool, ind_t> pristine_origin() const {
     return is_pristine(origin());
   }
@@ -96,7 +99,6 @@ public:
   }
 //  [[nodiscard]] bool is_preserved(ind_t i) const {return preserved_[i] < pristine_.size(0);}
 //  [[nodiscard]] ind_t preserved_value(ind_t i) const {return preserved_[i];}
-  [[nodiscard]] const preserve_t& preserved() const {return preserve_;}
 
   std::tuple<bool, ind_t> is_pristine(const A<T>& vertex) const {
     // pristine can not change; so no need to lock its mutex:
@@ -111,28 +113,30 @@ public:
 //    std::lock_guard<std::mutex> guard(append_lock_);
 
     auto equals = appended_.row_is(brille::cmp::eq, vertex, relative_, relative_, digits_);
-    auto count = equals.count(appended_count_); // avoid matching uninitialized entries beyond appended_count_
-    if (count > 1) throw std::runtime_error("Too many extra matches to vertex!");
-    return count ? std::make_tuple(true, pristine_count() + equals.first(appended_count_)) : std::make_tuple(false, ind_t(0));
+    auto count = (appended_count_ > 0 ? equals.count(appended_count_) : 0); // avoid matching uninitialized entries beyond appended_count_
+    if (count > 1) {
+      std::cout << vertex << " has " << count << " matches in first " << appended_count_ << " entries of \n" << appended_ << " but only 1 expected" << std::endl;
+      throw std::runtime_error("Too many extra matches to vertex!");
+    }
+//    return count ? std::make_tuple(true, pristine_count() + equals.first(appended_count_)) : std::make_tuple(false, ind_t(0));
+    return count ? std::make_tuple(true, equals.first(appended_count_)) : std::make_tuple(false, ind_t(0));
   }
 
-  ind_t preserve(ind_t index) {
-//    std::lock_guard<std::mutex> guard(preserve_lock_);
-//    if (preserved_[index] > pristine_count()) preserved_[index] = preserved_count_++;
-//    return preserved_[index];
+public:
+  rel_t preserve(ind_t index) {
     if (!is_preserved(index)) preserve_[index] = preserve_.size();
-    return preserve_[index];
+    return std::make_pair(MapVertexType::Pristine, preserve_[index]);
   }
 
-  ind_t add(const A<T>& vertex, AddVertexType type = AddVertexType::Unknown) {
-    if (type != AddVertexType::Crafted){
+  rel_t add(const A<T>& vertex, AddVertexType add_type = AddVertexType::Unknown) {
+    if (add_type != AddVertexType::Crafted){
       auto [pristine_present, pristine_index] = is_pristine(vertex);
       if (pristine_present) return preserve(pristine_index);
     }
     // If the user *thought* the point was pristine, but it was not
     // it will be added to here ... Maybe not great.
     auto [present, index] = is_crafted(vertex);
-    return present ? index : insert(vertex);
+    return present ? std::make_pair(MapVertexType::Appended, index) : insert(vertex);
   }
 
 //  ind_t add(A<T>&& vertex, AddVertexType type = AddVertexType::Unknown){
@@ -146,7 +150,7 @@ public:
 //    return present ? index : insert(vertex);
 //  }
 
-  ind_t origin_index() {
+  rel_t origin_index() {
     // Return the index of the origin, add it to appended_ if necessary
     return add(origin());
   }
@@ -181,16 +185,12 @@ public:
       preserve_t pr;
       auto no = nv.size(0);
       for (ind_t i=0; i<no; ++i) pr[i] = i;
-//      pr.resize(no);
-//      std::iota(pr.begin(), pr.end(), 0);
       return {std::move(nv), std::move(pr), relative_, digits_};
     } else {
       auto nv = pristine_.extract(extract);
       preserve_t pr;
       auto no = nv.size(0);
       for (ind_t i=0; i<no; ++i) pr[i] = i;
-//      pr.resize(no);
-//      std::iota(pr.begin(), pr.end(), 0);
       return {std::move(nv), std::move(pr), relative_, digits_};
     }
   }
@@ -204,11 +204,14 @@ public:
 
   friend std::ostream & operator<<(std::ostream & os, const VertexMapSet<T,A>& v){
     os << "VertexMapSet\n";
-    os << "\tpristine: (" << v.pristine().size(0) << "->" << v.preserved_count() << ")\n";
-    os << "\tappended: (" << v.appended_count() << ")\n";
-    os << "\tpreserved:\n";
+    os << "  pristine: (" << v.pristine().size(0) << "->" << v.preserved_count() << ")\n";
+//    os << v.pristine();
+    os << "  appended: (" << v.appended_count() << ")\n";
+//    os << v.appended();
+//    os << "\tpreserved:\n    ";
+    os << "  preserved: ";
     for (const auto & p: v.preserved()) os << "{" << p.first << ":" << p.second << "} ";
-    os << "\n";
+//    os << "\n";
     return os;
   }
 
@@ -222,21 +225,22 @@ private:
     appended_.resize(pristine_.size(0) >> 1u);
   }
 
-  ind_t insert(const A<T>& vertex){
-//    std::lock_guard<std::mutex> guard(append_lock_);
+  rel_t insert(const A<T>& vertex){
     if (appended_.size(0) < appended_count_ + 1u) appended_.resize(2 * appended_count_);
     appended_.set(appended_count_, vertex);
-    return pristine_count() + appended_count_++;
+    //return pristine_count() + appended_count_++;
+    return std::make_pair(MapVertexType::Appended, appended_count_++);
   }
 
-  std::vector<std::pair<ind_t, ind_t>> key_sorted_preserve() const {
+  [[nodiscard]] std::vector<std::pair<ind_t, ind_t>> key_sorted_preserve() const {
     std::vector<std::pair<ind_t, ind_t>> ksp;
     for (auto & pair: preserve_) ksp.push_back(pair);
     std::sort(ksp.begin(), ksp.end(), [](auto & a, auto & b){return a.second < b.second;});
     return ksp;
   }
 };
-
 } // namespace brille
+
+std::ostream & operator<<(std::ostream & os, brille::MapVertexType t);
 
 #endif // BRILLE_VERTEX_MAP_SET_H

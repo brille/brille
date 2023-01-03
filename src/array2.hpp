@@ -581,6 +581,11 @@ public:
   to_hdf(R& obj, const std::string& entry) const;
   bool to_hdf(const std::string& filename, const std::string& datasetname, const unsigned permissions=HighFive::File::OpenOrCreate) const;
 #endif //USE_HIGHFIVE
+
+  friend std::ostream & operator<<(std::ostream & os, const Array2<T>& a){
+    os << a.to_string();
+    return os;
+  }
 };
 
 /*!\brief An iterator for the Array2 class

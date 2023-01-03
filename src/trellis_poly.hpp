@@ -186,8 +186,8 @@ private:
            std::vector<NodeType>&, bool, VertexComponents, int);
 
   void
-  part_two(const std::map<size_t, poly_t>&, const std::vector<NodeType>& ,
-           const VertexIndexMap&, VertexComponents, int);
+  part_two(const std::map<size_t, poly_t>&, const std::vector<NodeType>&,
+           const ind_t, const VertexIndexMap&, VertexComponents, int);
 public:
   //! Explicit empty constructor
   explicit PolyTrellis(): vertices_(0,3) {}
@@ -309,7 +309,7 @@ public:
   interpolate_at(const vert_t& x, const int threads) const {
     this->check_before_interpolating(x);
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
-    info_update("Interpolate at ", x.to_string());
+//    info_update("Interpolate at ", x.to_string());
     profile_update("Parallel interpolation at ",x.size(0)," points with ",threads," threads");
     auto valsh = data_.values().shape();
     auto vecsh = data_.vectors().shape();

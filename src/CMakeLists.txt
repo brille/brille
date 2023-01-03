@@ -61,6 +61,7 @@ list(APPEND CXX_SOURCES
   process_id.cpp
   spg_database.cpp
   symmetry.cpp
+  vertex_map_set.cpp
 )
 if(BRILLE_HDF5 AND highfive_FOUND)
     list(APPEND CXX_SOURCES hdf_interface.cpp)

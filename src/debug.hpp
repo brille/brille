@@ -32,7 +32,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <chrono>
 //#define VERBOSE_DEBUG
 //#define DEBUG // comment-out for no debugging output
-#define PROFILING
+//#define PROFILING
 
 #define PRINTING_PRECISION 16
 namespace brille {

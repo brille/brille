@@ -127,10 +127,10 @@ namespace brille {
       std::vector<T> out;
       out.reserve(broadcaster.size());
       for (auto [outerSub, aSub, dSub]: broadcaster){
-        const auto ar{a.view(aSub[0])};
-        const auto br{b.view(aSub[0])};
-        const auto cr{c.view(aSub[0])};
-        const auto dr{d.view(dSub[0])};
+        const auto & ar{a.view(aSub[0])};
+        const auto & br{b.view(aSub[0])};
+        const auto & cr{c.view(aSub[0])};
+        const auto & dr{d.view(dSub[0])};
         auto tp = dot(ar-dr, cross(br-dr, cr-dr)).sum();
         out.push_back(tp);
       }

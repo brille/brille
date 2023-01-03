@@ -119,26 +119,28 @@ void PolyTrellis<T,R,S,A>::construct(const polyhedron::Poly<S,A>& poly,
   auto [stash, vertex_set, node_index_map] = part_one(poly, all_points, node_type, always_triangulate, s_tol, d_tol);
 
   // find the bounding polyhedra vertices in the knots or extra points
-  std::vector<ind_t> boundary_map;
+  std::vector<std::pair<MapVertexType, ind_t>> boundary_map;
   boundary_map.reserve(v_hkl.size(0));
-  for (ind_t i = 0; i < v_hkl.size(0); ++i) boundary_map.push_back(vertex_set.add(v_hkl.view(i)));
-
+  for (ind_t i = 0; i < v_hkl.size(0); ++i) {
+    boundary_map.push_back(vertex_set.add(v_hkl.view(i)));
+  }
 
   //auto consolidated_vertex_set = vertex_set.consolidate();
   vertices_ = vertex_set.consolidate().pristine();
 
   auto n_kept = vertex_set.preserved_count();
-  auto n_lost = vertex_set.pristine_count() - n_kept;
+//  auto n_lost = vertex_set.pristine_count() - n_kept;
 
   // allocates and fills the NodeContainer
-  part_two(stash, node_type, node_index_map, s_tol, d_tol);
+  part_two(stash, node_type, n_kept, node_index_map, s_tol, d_tol);
   // Now all non-null nodes have been populated with the indices of their vertices
 
   // create the Faces object too:
   // update the boundary map to account for point extraction:
   std::vector<ind_t> update_boundary_map;
-  for (auto idx: boundary_map){
-    update_boundary_map.push_back(idx < n_kept ? idx : idx - n_lost);
+  for (auto x: boundary_map){
+//    update_boundary_map.push_back(idx < n_kept ? idx : idx - n_lost);
+    update_boundary_map.push_back(x.first == MapVertexType::Pristine ? x.second : n_kept + x.second);
   }
   auto p_faces = poly.faces(); // Faces(std::vector<std::vector>>)
   auto pf_faces = p_faces.faces(); // std::vector<std::vector>>
@@ -161,7 +163,6 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
   info_update("musl libc and OpenMP cause a segmentation violation in tests -- forcing single-threaded triangulation");
   omp_set_num_threads(1);
 #endif
-  omp_set_num_threads(2);
   profile_update("Starting PolyTrellis part_one");
   //  info_update("Using tolerance ", s_tol, " and digits ", d_tol);
   ind_t nNodes = this->node_count();
@@ -279,9 +280,12 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
     } // end parallel for-loop
   } // end parallel region -- back to single-thread execution
   /* Now combine the per-thread VertexMapSets and VertexIndexMaps */
+//  for (const auto & x: thread_pairs) std::cout << x.first << "\n" << x.second;
+
   profile_update(" Start vertex maps reduction");
-  auto comb = vertex_maps::reduce(thread_pairs);
+  auto comb = vertex_maps::parallel_reduce(thread_pairs);
   profile_update("  End of PolyTrellis part_one");
+//  std::cout << comb.second;
   return std::make_tuple(poly_stash, comb.first, comb.second);
 }
 
@@ -290,6 +294,7 @@ void
 PolyTrellis<T,R,S,A>::part_two(
     const std::map<size_t, poly_t>& poly_stash,
     const std::vector<NodeType>& node_type,
+    const ind_t n_kept,
     const VertexIndexMap& node_index_map,
     const S s_tol,
     const int d_tol
@@ -334,12 +339,12 @@ PolyTrellis<T,R,S,A>::part_two(
 
   // Handle all cubic nodes (this probably doesn't need a parallel loop)
   auto c_count = utils::u2s<long long>(cube_indexes.size());
-#pragma omp parallel for default(none) shared(poly_stash, cube_indexes, c_count, node_index_map)
+#pragma omp parallel for default(none) shared(n_kept, poly_stash, cube_indexes, c_count, node_index_map)
   for (long long s_i=0; s_i<c_count; ++s_i) {
     auto i = static_cast<ind_t>(cube_indexes[utils::s2u<ind_t>(s_i)]);
     // we already ensured we don't need to worry about Γ if this is a cube
     std::array<ind_t,8> fvi;
-    for (ind_t j=0; j<8u; ++j) fvi[j] = node_index_map.get(i, j);
+    for (ind_t j=0; j<8u; ++j) fvi[j] = node_index_map.decode(n_kept, i, j);
     // FIXME trellis_node_faces and CubeNode do not agree on vertex ordering!
     // CubeNode requires: [0,0,0], [1,0,0], [1,1,0], [0,1,0], [1,0,1], [0,0,1], [0,1,1], [1,1,1]
     //     faces assumes: [0,0,0], [0,1,0], [0,1,1], [0,0,1], [1,0,0], [1,1,0], [1,1,1], [1,0,1]
@@ -355,15 +360,15 @@ PolyTrellis<T,R,S,A>::part_two(
   profile_update("Cube node vertices stored");
 
   // Handle all polyhedron nodes (this almost certainly needs to be parallel)
-  ind_t fatal_errors{0}, hiccups{0};
+  ind_t fatal_tri{0}, fatal_miss{0}, fatal_match{0}, hiccups{0};
   auto p_count = utils::u2s<long long>(poly_indexes.size());
-#pragma omp parallel for default(none) shared(poly_stash, poly_indexes, p_count, node_index_map, s_tol, d_tol) reduction(+:fatal_errors, hiccups)
+#pragma omp parallel for default(none) shared(std::cout, n_kept, poly_stash, poly_indexes, p_count, node_index_map, s_tol, d_tol) reduction(+:fatal_tri, fatal_miss, fatal_match, hiccups)
   for (long long s_i=0; s_i<p_count; ++s_i) {
     auto i = poly_indexes[utils::s2u<ind_t>(s_i)];
     //
     auto Gamma = 0 * vertices_.view(0);
-    // the knitting function already adjusted vertex indices for removed ones:
-    auto node_verts = vertices_.extract(node_index_map.get(i));
+    // combine the vertex indexes for preserved (kept pristine) and appended
+    auto node_verts = vertices_.extract(node_index_map.decode(n_kept, i));
 
     // get a reference the stashed Polyhedron from before:
     const auto & this_node{poly_stash.at(i)};
@@ -380,7 +385,7 @@ PolyTrellis<T,R,S,A>::part_two(
       the input polyhedron and then re-triangulate.*/
       tri_cut = polyhedron::LQPolyTet(this_node.convex_hull(), contains_Gamma);
       if (tri_cut.get_vertices().size(0)<4)
-        fatal_errors += 1;
+        fatal_tri += 1;
       else
         hiccups += 1;
     }
@@ -395,10 +400,13 @@ PolyTrellis<T,R,S,A>::part_two(
       auto no = known.count();
       if (no){
         if (no > 1){
-          fatal_errors += 1;
+          std::cout << trij << " matches\n" << cat(1, known, node_verts) << no << " times?!" << std::endl;
+          for (const auto & x: node_index_map.get(i)) std::cout << " " << x.first << x.second;
+          std::cout << std::endl;
+          fatal_match += 1;
         }
         //local_map.push_back(poly_vert_idx[known.first()]);
-        local_map.push_back(node_index_map.get(i, known.first()));
+        local_map.push_back(node_index_map.decode(n_kept, i, known.first()));
       } else {
         auto punt = vertices_.row_is(brille::cmp::eq, trij, s_tol, s_tol, d_tol);
         if (punt.count() < 1 && added_in_triangulation > 0){
@@ -409,7 +417,7 @@ PolyTrellis<T,R,S,A>::part_two(
           --added_in_triangulation;
         } else {
           if (punt.count() < 1) {
-            fatal_errors += 1;
+            fatal_miss += 1;
           }
           local_map.push_back(punt.first());
         }
@@ -439,16 +447,14 @@ PolyTrellis<T,R,S,A>::part_two(
 
   profile_update("Poly node vertexes stored");
 
-  if (fatal_errors){
-    std::string msg = std::to_string(fatal_errors) + " fatal errors encountered.";
-    msg += "\nWhich may have been:";
-    msg += "\n\tError determining cut cube triangulation";
-    msg += "\n\tMultiple matches of a triangulated vertex to a known vertex";
-    msg += "\n\tNo match for a triangulated vertex to the known vertices";
-    msg += "\n\tA triangulated poly node resulted in a null node";
-    throw std::runtime_error(msg);
+  if (fatal_tri + fatal_miss + fatal_match){
+    std::stringstream msg;
+    if (fatal_tri) msg << fatal_tri << " Error(s) determining cut cube triangulation; ";
+    if (fatal_match) msg << fatal_match << " Multiple matches of a triangulated vertex; ";
+    if (fatal_miss) msg << fatal_miss << " Missing known vertex for triangulated vertex";
+    throw std::runtime_error(msg.str());
   }
-  debug_update_if(errors, "Bad vertex indexing occurred ", errors, " times");
+  debug_update_if(hiccups, "Bad vertex indexing occurred ", hiccups, " times");
   profile_update("  End of PolyTrellis part_two");
 }
 
