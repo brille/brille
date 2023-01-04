@@ -254,7 +254,7 @@ Matrix<int> SeitzSymbol::inner_getr(const char ax, const char pax) const {
     default: throw std::runtime_error("Impossible rotation order in Seitz symbol");
   }
   // space invert the rotation if necessary
-  if (N<0) for (int i=0; i<9; ++i) out[i] *= -1;
+  if (N<0) for (size_t i=0; i<9; ++i) out[i] *= -1;
   return out;
 }
 
@@ -295,13 +295,13 @@ Vector<double> SeitzSymbol::inner_gett(const int an, const char ax, const char p
     case 'v': t[1] += q; break;
     case 'w': t[2] += q; break;
     case 'd': t[0] += q; t[1] += q; t[2] += q; break;
-    case '1': for (int i=0; i < 3; ++i) t[i] +=   a[i]/static_cast<double>(an); break;
-    case '2': for (int i=0; i < 3; ++i) t[i] += 2*a[i]/static_cast<double>(an); break;
-    case '3': for (int i=0; i < 3; ++i) t[i] += 3*a[i]/static_cast<double>(an); break;
-    case '4': for (int i=0; i < 3; ++i) t[i] += 4*a[i]/static_cast<double>(an); break;
-    case '5': for (int i=0; i < 3; ++i) t[i] += 5*a[i]/static_cast<double>(an); break;
+    case '1': for (size_t i=0; i < 3; ++i) t[i] +=   a[i]/static_cast<double>(an); break;
+    case '2': for (size_t i=0; i < 3; ++i) t[i] += 2*a[i]/static_cast<double>(an); break;
+    case '3': for (size_t i=0; i < 3; ++i) t[i] += 3*a[i]/static_cast<double>(an); break;
+    case '4': for (size_t i=0; i < 3; ++i) t[i] += 4*a[i]/static_cast<double>(an); break;
+    case '5': for (size_t i=0; i < 3; ++i) t[i] += 5*a[i]/static_cast<double>(an); break;
   }
   // translations are bounded by [0,1)
-  for (int i=0; i < 3; ++i) t[i] -= std::floor(t[i]);
+  for (size_t i=0; i < 3; ++i) t[i] -= std::floor(t[i]);
   return t;
 }

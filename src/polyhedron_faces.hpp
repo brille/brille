@@ -177,7 +177,7 @@ namespace brille::polyhedron{
       }
       auto p = 0 * x.view(0);
       p.resize(size());
-      size_t idx{0};
+      ind_t idx{0};
       for (const auto & face: _faces){
         p.set(idx++, x.extract(face).sum(0) / static_cast<T>(face.size()));
       }
@@ -191,7 +191,7 @@ namespace brille::polyhedron{
       }
       auto p = 0 * x.view(0);
       p.resize(size());
-      size_t idx{0};
+      ind_t idx{0};
       for (const auto & face: _faces){
         p.set(idx++, three_point_normal(x, face));
       }
@@ -297,10 +297,13 @@ namespace brille::polyhedron{
       std::vector<std::atomic<int>> tmp(x.size(0));
       A<T> pa, pb, pc;
       std::tie(pa, pb, pc) = this->planes(v);
-      const auto x_size = utils::u2s<long long>(x.size(0));
-      // making this parallel *also* makes it significantly slower!?
+//      const auto x_size = utils::u2s<long long>(x.size(0));
+//      // making this parallel *also* makes it significantly slower!?
 //#pragma omp parallel for default(none) shared(tmp, pa, pb, pc, x, x_size) schedule(dynamic)
-      for (long long i = 0; i < x_size; ++i) {
+//      for (long long i = 0; i < x_size; ++i) {
+//        tmp[i] = point_inside_all_planes(pa, pb, pc, x.view(static_cast<ind_t>(i)), t, n) ? 1 : 0;
+//      }
+      for (ind_t i=0; i < x.size(0); ++i){
         tmp[i] = point_inside_all_planes(pa, pb, pc, x.view(i), t, n) ? 1 : 0;
       }
       std::vector<bool> out;

@@ -498,7 +498,7 @@ TEST_CASE("Find limiting tolerance", "[.][bz_][aflow]"){
       BrillouinZone bz(lat, ac);
       auto fbz = bz.get_polyhedron();
       n = fbz.vertices().size(0);
-    } catch (const std::runtime_error & ex) {
+    } catch (const std::runtime_error &) {
       n = 0;
     } catch (...) {
       n = 1;

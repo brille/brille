@@ -5,6 +5,8 @@
 #ifndef BRILLE_VERTEX_INDEX_MAP_H
 #define BRILLE_VERTEX_INDEX_MAP_H
 
+#include "vertex_map_set.h"
+
 namespace brille {
 
 class VertexIndexMap{

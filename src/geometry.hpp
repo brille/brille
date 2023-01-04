@@ -340,7 +340,7 @@ namespace brille {
   face_has_area(const A<T> &points, const bool strict = false) {
     // first verify that all points are coplanar
     // pick the first three points to define a plane, then ensure all points are in it
-    if (points.size(0) < 3) return -2; // can't be a face
+    if (points.size(0) < 3) return false; // can't be a face
     // move to the 2-D face coordinate system so that we can use orient2d
     auto centre = points.sum(0) / static_cast<T>(points.size(0));
     auto facet = points - centre;
@@ -775,7 +775,7 @@ namespace brille {
     angles[0] = (std::numeric_limits<T>::max)();
     for (ind_t i=1; i < pruned.size(); ++i){
       auto itr = std::min_element(angles.begin(), angles.end());
-      perm[i] = std::distance(angles.begin(), itr);
+      perm[i] = static_cast<ind_t>(std::distance(angles.begin(), itr));
       *itr = angles[0];
     }
 
@@ -817,9 +817,9 @@ namespace brille {
 
     // finally, go through sorted to ensure there are no extraneous points hanging about
     for (ind_t i=0, j; sorted.size() > 3 && i < sorted.size();){
-      j = (sorted.size() + i - 1) % sorted.size(); // why not just (i-1) % sorted.size()?
+      j = static_cast<ind_t>((sorted.size() + i - 1) % sorted.size()); // why not just (i-1) % sorted.size()?
       auto prev = points.view(sorted[i]) - points.view(sorted[j]);
-      j = (sorted.size() + i + 1) % sorted.size();
+      j = static_cast<ind_t>((sorted.size() + i + 1) % sorted.size());
       auto next = points.view(sorted[j]) - points.view(sorted[i]);
       if (dot(normal, cross(prev, next)).all(cmp::gt, 0.)){ // FIXME add tolerance?
         // left turn; we keep this point
@@ -892,7 +892,7 @@ namespace brille {
         break;
       }
     }
-    auto total = std::count(keep.begin(), keep.end(), true);
+    auto total = static_cast<ind_t>(std::count(keep.begin(), keep.end(), true));
     if (total < points.size(0)){
       ind_t count{0};
       std::vector<ind_t> nim;

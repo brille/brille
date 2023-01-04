@@ -57,7 +57,7 @@ public:
     relative_(r), digits_(d)
   {
     appended_count_ = appended_.size(0);
-    preserve_count_ = preserve_.size();
+    preserve_count_ = static_cast<ind_t>(preserve_.size());
 //    preserved_count_ = static_cast<ind_t>(
 //        std::count_if(preserved_.begin(), preserved_.end(),
 //                      [no=pristine_.size(0)](ind_t x){return x < no;}
@@ -124,7 +124,7 @@ private:
 
 public:
   rel_t preserve(ind_t index) {
-    if (!is_preserved(index)) preserve_[index] = preserve_.size();
+    if (!is_preserved(index)) preserve_[index] = static_cast<ind_t>(preserve_.size());
     return std::make_pair(MapVertexType::Pristine, preserve_[index]);
   }
 

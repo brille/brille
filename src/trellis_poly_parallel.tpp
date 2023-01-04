@@ -89,7 +89,7 @@ void PolyTrellis<T,R,S,A>::construct(const polyhedron::Poly<S,A>& poly,
 
   // build-up the trellis intersection-point knots:
   for (int i = 0; i < 3; ++i) {
-    knots_[i].reserve(std::ceil((max[i] - min[i]) / nl[i]) + 1);
+    knots_[i].reserve(static_cast<size_t>(std::ceil((max[i] - min[i]) / nl[i]) + 1));
     knots_[i].push_back(min[i]);
     while (knots_[i].back() < max[i])
       knots_[i].push_back(knots_[i].back() + nl[i]);
@@ -191,19 +191,23 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
   cube_indexes.reserve(nNodes);
   for (ind_t i=0; i < nNodes; ++i) if (NodeType::cube == node_type[i]) cube_indexes.push_back(i);
 
-#pragma omp parallel master default(none) shared(all_points, s_tol, d_tol, thread_pairs)
+//#pragma omp parallel master default(none) shared(all_points, s_tol, d_tol, thread_pairs)
+#pragma omp parallel default(none) shared(all_points, s_tol, d_tol, thread_pairs)
   {
     // Perform per-thread initialization *inside* a parallel region, because
     // we don't know how many threads the pool will have outside.
     // Annoyingly this can't be done in the following parallel region
     // because the non-master threads pass by a master region as if it isn't
     // there, so they may not wait for their storage to actually be initialized!
-      int n_threads = omp_get_num_threads();
-      for (int i = 0; i < n_threads; ++i) {
-      thread_pairs.emplace_back(VertexMapSet(all_points, s_tol, d_tol),
-                                VertexIndexMap());
+#pragma omp master
+    {
+    int n_threads = omp_get_num_threads();
+    for (int i = 0; i < n_threads; ++i) {
+      thread_pairs.push_back(std::make_pair(VertexMapSet<S,A>(all_points, s_tol, d_tol),
+                              VertexIndexMap()));
       }
-  };
+    }
+  }
 
   auto test0 = !always_triangulate;
   auto s_count = utils::u2s<long long>(cube_indexes.size());
@@ -401,7 +405,8 @@ PolyTrellis<T,R,S,A>::part_two(
       if (no){
         if (no > 1){
           std::cout << trij << " matches\n" << cat(1, known, node_verts) << no << " times?!" << std::endl;
-          for (const auto & x: node_index_map.get(i)) std::cout << " " << x.first << x.second;
+//          for (const auto & x: node_index_map.get(i)) std::cout << " " << x.first << x.second;
+          for (const auto & x: node_index_map.get(i)) std::cout << " " << x.second;
           std::cout << std::endl;
           fatal_match += 1;
         }

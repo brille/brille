@@ -42,7 +42,7 @@ operations.
             // ouput translation-part is W0*w1
             brille::utils::multiply_matrix_vector(outw.data(), this->W.data(), m.gett().data());
             // *plus* w0
-            for (int i=0; i<3; ++i) outw[i] += this->w[i];
+            for (size_t i=0; i<3; ++i) outw[i] += this->w[i];
             // we want the output translation elements to be ∈ [0,1)
             for (int i=0; i<3; ++i) outw[i] -= std::floor(outw[i]);
             return Motion(outW, outw);
@@ -174,7 +174,7 @@ operations.
         // ∑ₙiₙαₙ + f where each iₙ is an integer, αₙ∈{x,y,z}
         // and f one of 0, ±1/12, ±1/6, ±1/4, ±1/3, ±1/2
         // but we should support any rational or floating point value for f
-        int n{0};
+        size_t n{0};
         R i{1};
         T f{0}; // always floating point
         char c{' '};
