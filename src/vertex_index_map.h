@@ -131,8 +131,10 @@ public:
   friend std::ostream & operator<<(std::ostream & os, const VertexIndexMap& v){
     for (auto it = v.cbegin(); it != v.cend(); ++it){
       os << it->first << ": [ ";
-      for (auto vit = it->second.cbegin(); vit != it->second.cend(); ++vit)
-        os << vit->first << vit->second << " ";
+      for (auto vit = it->second.cbegin(); vit != it->second.cend(); ++vit){
+        //os << vit->first << vit->second << " ";
+				os << vit->second << " ";
+			}
       os << "]\n";
     }
     os << "\n";
