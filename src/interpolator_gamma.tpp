@@ -108,16 +108,16 @@ bool Interpolator<T>::rip_gamma_complex(
       }
       info_update(msg.str());
 
-      std::vector<double> iRii_dbl(ptsym.get(iRii).begin(), ptsym.get(iRii).end());
+      Matrix<double> iRii_dbl;
+      for (size_t j=0; j<9; ++j) {
+        iRii_dbl[j] = (double) ptsym.get(iRii)[j];
+      }
       msg << "\nptsym iRii double " << iRii;
       info_update(msg.str());
       for (size_t j=0; j<3u; ++j){
           msg << "(";
-          for (size_t k=0; k<3u; ++k) {
-              msg << " " << iRii_dbl[j + k*3u];
-              info_update(msg.str());
-          }
-          msg << " ), ";
+          for (size_t k=0; k<3u; ++k) msg << " " << iRii_dbl[j + k*3u];
+              msg << " ), ";
       }
       info_update(msg.str());
 
