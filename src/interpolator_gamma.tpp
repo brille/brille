@@ -99,11 +99,70 @@ bool Interpolator<T>::rip_gamma_complex(
       // Convert rot matrix to Cartesian
       Matrix<T> rot_cart;
       Matrix<double> tdbl;
+      std::ostringstream msg;
+      msg << "\nptsym iRii " << iRii;
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << ptsym.get(iRii)[j + k*3u];
+              msg << " ), ";
+      }
+      info_update(msg.str());
+
       std::vector<double> iRii_dbl(ptsym.get(iRii).begin(), ptsym.get(iRii).end());
+      msg << "\nptsym iRii double " << iRii;
+      info_update(msg.str());
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) {
+              msg << " " << iRii_dbl[j + k*3u];
+              info_update(msg.str());
+          }
+          msg << " ), ";
+      }
+      info_update(msg.str());
+
       brille::utils::matrix_inverse<double>(tdbl.data(), iRii_dbl.data()); // tdbl = Rinv
+      msg << "\nptsym iRii double inv" << iRii;
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << tdbl[j + k*3u];
+              msg << " ), ";
+      }
+      info_update(msg.str());
+
       brille::utils::mul_mat_mat(t1, 3u, pgt.lattice().real_basis_vectors().data(), tdbl.data()); // t1 = lattice*tint = lattice*Rinv
+      msg << "\nlattice ";
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << pgt.lattice().real_basis_vectors()[j + k*3u];
+              msg << " ), ";
+      }
+      info_update(msg.str());
+      msg << "\nlattice*iRii_inv ";
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << t1[j + k*3u];
+              msg << " ), ";
+      }
+      info_update(msg.str());
+
       brille::utils::matrix_inverse<double>(tdbl.data(), pgt.lattice().real_basis_vectors().data()); // tdbl = latticeinv
+      msg << "\nlattice inv ";
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << tdbl[j + k*3u];
+              msg << " ), ";
+      }
+      info_update(msg.str());
+
       brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, tdbl.data()); // Rcart = t1*tdbl = lattice*Rinv*latticeinv
+      msg << "\nRcart ";
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << rot_cart[j + k*3u];
+              msg << " ), ";
+      }
+      info_update(msg.str());
 
       if (no[1]>0){
         ind_t o0 = o;
