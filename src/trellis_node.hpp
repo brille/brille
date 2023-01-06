@@ -584,12 +584,24 @@ namespace brille {
         return cube_nodes_[nodes_[i].second].indices_weights(v,x,iw,sc);
         case NodeType::poly:
         return poly_nodes_[nodes_[i].second].indices_weights(v,x,iw,sc);
-        case NodeType::null:
-          throw std::logic_error("attempting to access null node!");
-        case NodeType::assumed_null:
-          throw std::logic_error("attempting to access Assumed-null node!");
-        case NodeType::found_null:
-          throw std::logic_error("attempting to access found-null node!");
+        case NodeType::null: {
+        std::ostringstream oss;
+        oss << "Attempting to access null node at index " << i;
+        oss << " for point " << x.to_string(0);
+        throw std::logic_error(oss.str());
+        }
+        case NodeType::assumed_null: {
+        std::ostringstream oss;
+        oss << "Attempting to access assumed-null node at index " << i;
+        oss << " for point " << x.to_string(0);
+        throw std::logic_error(oss.str());
+        }
+        case NodeType::found_null: {
+        std::ostringstream oss;
+        oss << "Attempting to access found-null node at index " << i;
+        oss << " for point " << x.to_string(0);
+        throw std::logic_error(oss.str());
+        }
         default:
         return false;
       }

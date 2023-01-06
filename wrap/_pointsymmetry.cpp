@@ -38,6 +38,10 @@ void wrap_pointsymmetry(pybind11::module & m){
     return Spacegroup(hall).get_pointgroup_symmetry(time_reversal);}),
     "Hall_number"_a,"time_reversal"_a=0);
 
+  cls.def(pybind11::init([](const Symmetry & sym){
+       return PointSymmetry(get_unique_rotations(sym.getallr(), 0));
+     }),"Symmetry"_a);
+
   cls.def_property_readonly("size",&PointSymmetry::size);
 
   cls.def_property_readonly("W",[](PointSymmetry& ps){

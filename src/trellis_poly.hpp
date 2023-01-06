@@ -38,6 +38,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <functional>
 #include <queue>
 #include <utility>
+#include "thread_exception.h"
 
 namespace brille::polytrellis {
 
@@ -187,7 +188,7 @@ private:
 
   void
   part_two(const std::map<size_t, poly_t>&, const std::vector<NodeType>&,
-           const ind_t, const VertexIndexMap&, VertexComponents, int);
+           ind_t, const VertexIndexMap&, VertexComponents, int);
 public:
   //! Explicit empty constructor
   explicit PolyTrellis(): vertices_(0,3) {}
@@ -324,19 +325,27 @@ public:
     typename data_t::vector_in_t vecs2(vecs_out);
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     auto xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
-    size_t n_unfound{0};
-  #pragma omp parallel for default(none) shared(x,vals2,vecs2,xsize) reduction(+:n_unfound) schedule(dynamic)
+    size_t missing{0};
+    ThreadException thread_ex;
+  #pragma omp parallel for default(none) shared(x,vals2,vecs2,xsize,thread_ex) reduction(+:missing) schedule(dynamic)
     for (long long si=0; si<xsize; ++si){
-      auto i = brille::utils::s2u<ind_t, long long>(si);
-      auto indwghts = this->indices_weights(x.view(i));
-      if (indwghts.size()>0) {
-        data_.interpolate_at(indwghts, vals2, vecs2, i);
-      } else {
-        ++n_unfound;
-      }
+      thread_ex.run(
+      [&]{
+            auto i = brille::utils::s2u<ind_t, long long>(si);
+            auto i_w = indices_weights(x.view(i)); // this might throw an error!
+            if (i_w.size()>0) {
+              data_.interpolate_at(i_w, vals2, vecs2, i);
+            } else {
+              ++missing;
+            }
+          }
+      );
     }
-    if (n_unfound){
-      throw std::runtime_error("interpolate at failed to find "+std::to_string(n_unfound)+" point"+(n_unfound>1?"s.":"."));
+    thread_ex.rethrow(); // only throws if error(s) were caught
+    if (missing){
+      std::ostringstream oss;
+      oss << "interpolate_at failed to find" << missing << "point" << (missing > 1 ? "s." : ".");
+      throw std::runtime_error(oss.str());
     }
     return std::make_tuple(vals_out, vecs_out);
   }
@@ -451,7 +460,7 @@ public:
   template <class S> poly_t point_in_node_poly(const S& p) const {
     return subscripted_node_poly(node_subscript(p));
   }
-  NodeType node_at_type(const std::array<ind_t, 3>& ijk) const {
+  [[nodiscard]] NodeType node_at_type(const std::array<ind_t, 3>& ijk) const {
     return nodes_.node_type(sub2idx(ijk));
   }
   template <class S>
@@ -459,7 +468,7 @@ public:
     return node_at_type(node_subscript(p));
   }
 
-  std::vector<NodeType> all_node_types() const { return nodes_.all_node_types(); }
+  [[nodiscard]] std::vector<NodeType> all_node_types() const { return nodes_.all_node_types(); }
 
   // return a list of non-null neighbouring nodes
   /*! \brief Return a list of all non-null nodes neighbouring a trellis node
@@ -684,7 +693,7 @@ public:
     auto cfg = approx_t::from_hdf(group, "approx");
     return PolyTrellis(p, d, v, n, b, cfg);
   }
-  bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
+  [[nodiscard]] bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
     HighFive::File file(filename, perm);
     return this->to_hdf(file, entry);
   }
