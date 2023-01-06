@@ -97,9 +97,10 @@ bool Interpolator<T>::rip_gamma_complex(
       //
       // Rotate, permute, and apply the phase factor simultaneously into a temporary array
       // Convert rot matrix to Cartesian
-      Matrix<T> rot_cart;
+      Matrix<T> irot_cart, rot_cart;
       Matrix<double> tdbl1, tdbl2;
       std::ostringstream msg;
+      // Calculate iRii cart
       msg << "\nptsym iRii " << iRii;
       for (size_t j=0; j<3u; ++j){
           msg << "(";
@@ -108,7 +109,7 @@ bool Interpolator<T>::rip_gamma_complex(
       }
 
       for (size_t j=0; j<9; ++j) {
-        tdbl2[j] = (double) ptsym.get(iRii)[j]; // tdbl2 = R
+        tdbl2[j] = (double) ptsym.get(iRii)[j]; // tdbl2 = iRii
       }
       msg << "\nptsym iRii double " << iRii;
       for (size_t j=0; j<3u; ++j){
@@ -117,7 +118,7 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::matrix_inverse<double>(tdbl1.data(), tdbl2.data()); // tdbl1 = inv(tdbl2) = inv(R)
+      brille::utils::matrix_inverse<double>(tdbl1.data(), tdbl2.data()); // tdbl1 = inv(tdbl2) = inv(iRii)
       msg << "\nptsym iRii double inv" << iRii;
       for (size_t j=0; j<3u; ++j){
           msg << "(";
@@ -125,7 +126,7 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(t1, 3u, pgt.lattice().real_basis_vectors().data(), tdbl1.data()); // t1 = lattice*tdbl1 = lattice*inv(R)
+      brille::utils::mul_mat_mat(t1, 3u, pgt.lattice().real_basis_vectors().data(), tdbl1.data()); // t1 = lattice*tdbl1 = lattice*inv(iRii)
       msg << "\nlattice*iRii_inv ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
@@ -141,13 +142,64 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, tdbl1.data()); // Rcart = t1*tdbl1 = lattice*inv(R)*inv(lattice)
+      brille::utils::mul_mat_mat(irot_cart.data(), 3u, t1, tdbl1.data()); // Rcart = t1*tdbl1 = lattice*inv(iRii)*inv(lattice)
+      msg << "\niRcart ";
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << irot_cart[j*3u + k];
+              msg << " ), ";
+      }
+
+      // Calculate Rii cart
+      msg << "\nptsym Rii " << iRii;
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << ptsym.get(Rii)[j*3u + k];
+              msg << " ), ";
+      }
+
+      for (size_t j=0; j<9; ++j) {
+        tdbl2[j] = (double) ptsym.get(Rii)[j]; // tdbl2 = Rii
+      }
+      msg << "\nptsym Rii double " << iRii;
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << tdbl2[j*3u + k];
+              msg << " ), ";
+      }
+
+      brille::utils::matrix_inverse<double>(tdbl1.data(), tdbl2.data()); // tdbl1 = inv(tdbl2) = inv(Rii)
+      msg << "\nptsym Rii double inv" << iRii;
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << tdbl1[j*3u + k];
+              msg << " ), ";
+      }
+
+      brille::utils::mul_mat_mat(t1, 3u, pgt.lattice().real_basis_vectors().data(), tdbl1.data()); // t1 = lattice*tdbl1 = lattice*inv(Rii)
+      msg << "\nlattice*Rii_inv ";
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << t1[j*3u + k];
+              msg << " ), ";
+      }
+
+      brille::utils::matrix_inverse<double>(tdbl1.data(), pgt.lattice().real_basis_vectors().data()); // tdbl1 = inv(lattice)
+      msg << "\nlattice inv ";
+      for (size_t j=0; j<3u; ++j){
+          msg << "(";
+          for (size_t k=0; k<3u; ++k) msg << " " << tdbl1[j*3u + k];
+              msg << " ), ";
+      }
+
+      brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, tdbl1.data()); // Rcart = t1*tdbl1 = lattice*inv(Rii)*inv(lattice)
       msg << "\nRcart ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
           for (size_t k=0; k<3u; ++k) msg << " " << rot_cart[j*3u + k];
               msg << " ), ";
       }
+
       info_update(msg.str());
 
       if (no[1]>0){
@@ -159,7 +211,7 @@ bool Interpolator<T>::rip_gamma_complex(
           // use its constructor to make i q⋅[R⁻¹xₖ - xᵥ] and calculate the (k,R) phase
 
           //brille::utils::mul_mat_vec(t0, 3u, ptsym.get(iRii).data(), xi+o);
-          brille::utils::mul_mat_vec(t0, 3u, rot_cart.data(), xi+o);
+          brille::utils::mul_mat_vec(t0, 3u, irot_cart.data(), xi+o);
           auto v0idx = 3u*pgt.F0(k, iRii); // ×3u to account for stride
           T phase = e_iqd_gt(i, k, iRii);
           for (int j=0; j<3; ++j) tA[v0idx+j] = phase*t0[j];
@@ -181,7 +233,7 @@ bool Interpolator<T>::rip_gamma_complex(
             brille::utils::mul_mat_mat(t0, 3u, xi+o+9u*(n*Nmat+m), rot_cart.data());
             // next calculate R⁻¹*t0, storing in the temporary all matrix array
             //brille::utils::mul_mat_mat(t1, 3u, ptsym.get(iRii).data(), t0);
-            brille::utils::mul_mat_mat(t1, 3u, rot_cart.data(), t0);
+            brille::utils::mul_mat_mat(t1, 3u, irot_cart.data(), t0);
             // include the R R⁻¹ phase factor
             for (int j=0; j<9; ++j) tA[(v*Nmat+k)*9u+j] = Rph*iRph*t1[j];
           }
