@@ -125,17 +125,7 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      // Lattice is column-order whereas R is row-order
-      // Transpose lattice to row-order
-      brille::utils::matrix_transpose(tdbl2.data(), pgt.lattice().real_basis_vectors().data()); // tdbl2 = tranpose(lattice)
-      msg << "\nlattice ";
-      for (size_t j=0; j<3u; ++j){
-          msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << tdbl2[j*3u + k];
-              msg << " ), ";
-      }
-
-      brille::utils::mul_mat_mat(t1, 3u, tdbl2.data(), tdbl1.data()); // t1 = tdbl2*tdbl1 = transpose(lattice)*inv(R)
+      brille::utils::mul_mat_mat(t1, 3u, pgt.lattice().real_basis_vectors().data(), tdbl1.data()); // t1 = lattice*tdbl1 = lattice*inv(R)
       msg << "\nlattice*iRii_inv ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
@@ -143,7 +133,7 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::matrix_inverse<double>(tdbl1.data(), tdbl2.data()); // tdbl1 = inv(tdbl2) = inv(tranpose(lattice))
+      brille::utils::matrix_inverse<double>(tdbl1.data(), pgt.lattice().real_basis_vectors().data()); // tdbl1 = inv(lattice)
       msg << "\nlattice inv ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
@@ -151,7 +141,7 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, tdbl1.data()); // Rcart = t1*tdbl1 = transpose(lattice)*inv(R)*inv(transpose(lattice))
+      brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, tdbl1.data()); // Rcart = t1*tdbl1 = lattice*inv(R)*inv(lattice)
       msg << "\nRcart ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
