@@ -98,68 +98,71 @@ bool Interpolator<T>::rip_gamma_complex(
       // Rotate, permute, and apply the phase factor simultaneously into a temporary array
       // Convert rot matrix to Cartesian
       Matrix<T> rot_cart;
-      Matrix<double> tdbl;
+      Matrix<double> tdbl1, tdbl2;
       std::ostringstream msg;
       msg << "\nptsym iRii " << iRii;
       for (size_t j=0; j<3u; ++j){
           msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << ptsym.get(iRii)[j + k*3u];
+          for (size_t k=0; k<3u; ++k) msg << " " << ptsym.get(iRii)[j*3u + k];
               msg << " ), ";
       }
       info_update(msg.str());
 
-      Matrix<double> iRii_dbl;
       for (size_t j=0; j<9; ++j) {
-        iRii_dbl[j] = (double) ptsym.get(iRii)[j];
+        tdbl2[j] = (double) ptsym.get(iRii)[j]; // tdbl2 = R
       }
       msg << "\nptsym iRii double " << iRii;
       info_update(msg.str());
       for (size_t j=0; j<3u; ++j){
           msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << iRii_dbl[j + k*3u];
+          for (size_t k=0; k<3u; ++k) msg << " " << tdbl2[j*3u + k];
               msg << " ), ";
       }
       info_update(msg.str());
 
-      brille::utils::matrix_inverse<double>(tdbl.data(), iRii_dbl.data()); // tdbl = Rinv
+      brille::utils::matrix_inverse<double>(tdbl1.data(), tdbl2.data()); // tdbl1 = inv(tdbl2) = inv(R)
       msg << "\nptsym iRii double inv" << iRii;
       for (size_t j=0; j<3u; ++j){
           msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << tdbl[j + k*3u];
+          for (size_t k=0; k<3u; ++k) msg << " " << tdbl1[j*3u + k];
               msg << " ), ";
       }
       info_update(msg.str());
 
-      brille::utils::mul_mat_mat(t1, 3u, pgt.lattice().real_basis_vectors().data(), tdbl.data()); // t1 = lattice*tint = lattice*Rinv
+      // Lattice is column-order whereas R is row-order
+      // Transpose lattice to row-order
+      brille::utils::matrix_transpose(tdbl2.data(), pgt.lattice().real_basis_vectors().data()); // tdbl2 = tranpose(lattice)
       msg << "\nlattice ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << pgt.lattice().real_basis_vectors()[j + k*3u];
+          for (size_t k=0; k<3u; ++k) msg << " " << tdbl2[j*3u + k];
               msg << " ), ";
       }
       info_update(msg.str());
+
+      brille::utils::mul_mat_mat(t1, 3u, tdbl2.data(), tdbl1.data()); // t1 = tdbl2*tdbl1 = transpose(lattice)*inv(R)
       msg << "\nlattice*iRii_inv ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << t1[j + k*3u];
+          for (size_t k=0; k<3u; ++k) msg << " " << t1[j*3u + k];
               msg << " ), ";
       }
       info_update(msg.str());
 
-      brille::utils::matrix_inverse<double>(tdbl.data(), pgt.lattice().real_basis_vectors().data()); // tdbl = latticeinv
+      brille::utils::matrix_inverse<double>(tdbl1.data(), tdbl2.data()); // tdbl1 = inv(tdbl2) = inv(tranpose(lattice))
       msg << "\nlattice inv ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << tdbl[j + k*3u];
+          for (size_t k=0; k<3u; ++k) msg << " " << tdbl1[j*3u + k];
               msg << " ), ";
       }
       info_update(msg.str());
 
-      brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, tdbl.data()); // Rcart = t1*tdbl = lattice*Rinv*latticeinv
+      brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, tdbl1.data()); // Rcart = t1*tdbl1 = transpose(lattice)*inv(R)*inv(transpose(lattice))
       msg << "\nRcart ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << rot_cart[j + k*3u];
+          for (size_t k=0; k<3u; ++k) msg << " " << rot_cart[j*3u + k];
               msg << " ), ";
       }
       info_update(msg.str());
