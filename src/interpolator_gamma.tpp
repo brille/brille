@@ -106,19 +106,16 @@ bool Interpolator<T>::rip_gamma_complex(
           for (size_t k=0; k<3u; ++k) msg << " " << ptsym.get(iRii)[j*3u + k];
               msg << " ), ";
       }
-      info_update(msg.str());
 
       for (size_t j=0; j<9; ++j) {
         tdbl2[j] = (double) ptsym.get(iRii)[j]; // tdbl2 = R
       }
       msg << "\nptsym iRii double " << iRii;
-      info_update(msg.str());
       for (size_t j=0; j<3u; ++j){
           msg << "(";
           for (size_t k=0; k<3u; ++k) msg << " " << tdbl2[j*3u + k];
               msg << " ), ";
       }
-      info_update(msg.str());
 
       brille::utils::matrix_inverse<double>(tdbl1.data(), tdbl2.data()); // tdbl1 = inv(tdbl2) = inv(R)
       msg << "\nptsym iRii double inv" << iRii;
@@ -127,7 +124,6 @@ bool Interpolator<T>::rip_gamma_complex(
           for (size_t k=0; k<3u; ++k) msg << " " << tdbl1[j*3u + k];
               msg << " ), ";
       }
-      info_update(msg.str());
 
       // Lattice is column-order whereas R is row-order
       // Transpose lattice to row-order
@@ -138,7 +134,6 @@ bool Interpolator<T>::rip_gamma_complex(
           for (size_t k=0; k<3u; ++k) msg << " " << tdbl2[j*3u + k];
               msg << " ), ";
       }
-      info_update(msg.str());
 
       brille::utils::mul_mat_mat(t1, 3u, tdbl2.data(), tdbl1.data()); // t1 = tdbl2*tdbl1 = transpose(lattice)*inv(R)
       msg << "\nlattice*iRii_inv ";
@@ -147,7 +142,6 @@ bool Interpolator<T>::rip_gamma_complex(
           for (size_t k=0; k<3u; ++k) msg << " " << t1[j*3u + k];
               msg << " ), ";
       }
-      info_update(msg.str());
 
       brille::utils::matrix_inverse<double>(tdbl1.data(), tdbl2.data()); // tdbl1 = inv(tdbl2) = inv(tranpose(lattice))
       msg << "\nlattice inv ";
@@ -156,7 +150,6 @@ bool Interpolator<T>::rip_gamma_complex(
           for (size_t k=0; k<3u; ++k) msg << " " << tdbl1[j*3u + k];
               msg << " ), ";
       }
-      info_update(msg.str());
 
       brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, tdbl1.data()); // Rcart = t1*tdbl1 = transpose(lattice)*inv(R)*inv(transpose(lattice))
       msg << "\nRcart ";
