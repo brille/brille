@@ -211,11 +211,11 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
 
   auto test0 = !always_triangulate;
   auto s_count = utils::u2s<long long>(cube_indexes.size());
-	auto s_tol_3 = s_tol * s_tol * s_tol;
+  ThreadException thread_ex;
 #pragma omp parallel default(none)\
                      shared(poly, poly_stash, stash_mutex, test0, node_type,\
-                     s_count, cube_indexes, s_tol, s_tol_3, d_tol,\
-                     all_points, thread_pairs, Gamma)
+                     s_count, cube_indexes, s_tol, d_tol,\
+                     all_points, thread_pairs, Gamma, thread_ex)
   {
     // stash our thread number to access this thread's pair
     int thread = omp_get_thread_num();
@@ -225,14 +225,12 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
       auto this_node_faces = trellis_node_faces(i);
       // this limits all_points to have the knots *first*
       auto this_node_poly = polyhedron::Poly(all_points, this_node_faces);
-			// s_tol_3 == s_tol^3; used since the intersection compares the remaining *volume* with zero
-      auto intersection = poly.intersection(this_node_poly, s_tol_3, d_tol);
+      auto intersection = poly.intersection(this_node_poly, s_tol, d_tol);
       /* FIXME A less-strict comparison might be useful but, at present, causes
        *       not-in-trellis errors */
       auto test1 = this_node_poly.volume() == intersection.volume();
       auto test2 = !this_node_poly.contains(Gamma)[0];
-      node_type[i] =
-          (test0 && test1 && test2) ? NodeType::cube : NodeType::poly;
+      node_type[i] = (test0 && test1 && test2) ? NodeType::cube : NodeType::poly;
       auto indexes = this_node_faces.indexes();
       if (NodeType::cube == node_type[i]) {
         auto & node_map = thread_pairs[thread].second.get(i);
@@ -247,8 +245,7 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
         // find which of the vertices of the intersection are knots as well.
         const auto &iv{intersection.vertices()};
 
-        // Determine which of the intersection vertices are from the pristine
-        // set
+        // Determine which of the intersection vertices are from the pristine set
         std::map<ind_t, ind_t> i2p;
         for (auto idx : indexes) {
           if (auto ip = iv.row_is(brille::cmp::eq, all_points.view(idx), s_tol, s_tol, d_tol); ip.count() == 1) {
@@ -260,11 +257,14 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
         auto & node_map = thread_pairs[thread].second.get(i);
         node_map.resize(iv.size(0));
         for (ind_t iv_index = 0; iv_index < iv.size(0); ++iv_index) {
+          thread_ex.run([&]{
           if (auto search = i2p.find(iv_index); search != i2p.end()) {
             node_map[iv_index] = thread_pairs[thread].first.preserve(search->second);
           } else {
+					  // might-throw:
             node_map[iv_index] = thread_pairs[thread].first.add(iv.view(iv_index), AddVertexType::Crafted);
           }
+					}); // end might-throw handler ThreadException runner
         }
       }
       // this was protected by a not-null check; but now if the node is null
@@ -272,8 +272,7 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
       // for a guard
       auto gamma_in = intersection.contains(Gamma);
       if (std::count(gamma_in.begin(), gamma_in.end(), true)) {
-        auto int_vertices_are_gamma = intersection.vertices().row_is(
-            brille::cmp::eq, Gamma, s_tol, s_tol, d_tol);
+        auto int_vertices_are_gamma = intersection.vertices().row_is(brille::cmp::eq, Gamma, s_tol, s_tol, d_tol);
         auto no = int_vertices_are_gamma.count();
         // if the gamma point *is* an intersection point
         // it is already in the node_index map.
@@ -285,6 +284,8 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
       stash_mutex.unlock();
     } // end parallel for-loop
   } // end parallel region -- back to single-thread execution
+  thread_ex.rethrow(); //Now handle any encountered errors if they exist
+
   /* Now combine the per-thread VertexMapSets and VertexIndexMaps */
 //  for (const auto & x: thread_pairs) std::cout << x.first << "\n" << x.second;
 
