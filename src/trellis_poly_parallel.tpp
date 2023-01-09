@@ -211,9 +211,10 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
 
   auto test0 = !always_triangulate;
   auto s_count = utils::u2s<long long>(cube_indexes.size());
+	auto s_tol_3 = s_tol * s_tol * s_tol;
 #pragma omp parallel default(none)\
                      shared(poly, poly_stash, stash_mutex, test0, node_type,\
-                     s_count, cube_indexes, s_tol, d_tol,\
+                     s_count, cube_indexes, s_tol, s_tol_3, d_tol,\
                      all_points, thread_pairs, Gamma)
   {
     // stash our thread number to access this thread's pair
@@ -224,7 +225,8 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
       auto this_node_faces = trellis_node_faces(i);
       // this limits all_points to have the knots *first*
       auto this_node_poly = polyhedron::Poly(all_points, this_node_faces);
-      auto intersection = poly.intersection(this_node_poly, s_tol, d_tol);
+			// s_tol_3 == s_tol^3; used since the intersection compares the remaining *volume* with zero
+      auto intersection = poly.intersection(this_node_poly, s_tol_3, d_tol);
       /* FIXME A less-strict comparison might be useful but, at present, causes
        *       not-in-trellis errors */
       auto test1 = this_node_poly.volume() == intersection.volume();
