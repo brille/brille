@@ -97,7 +97,7 @@ bool Interpolator<T>::rip_gamma_complex(
       //
       // Rotate, permute, and apply the phase factor simultaneously into a temporary array
       // Convert rot matrix to Cartesian
-      Matrix<T> irot_cart, rot_cart;
+      Matrix<double> irot_cart, rot_cart;
       Matrix<double> tdbl1, tdbl2;
       std::ostringstream msg;
       // Calculate iRii cart
@@ -126,11 +126,11 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(t1, 3u, pgt.lattice().real_basis_vectors().data(), tdbl1.data()); // t1 = lattice*tdbl1 = lattice*inv(iRii)
+      brille::utils::mul_mat_mat(tdbl2.data(), 3u, pgt.lattice().real_basis_vectors().data(), tdbl1.data()); // tdbl2 = lattice*tdbl1 = lattice*inv(iRii)
       msg << "\nlattice*iRii_inv ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << t1[j*3u + k];
+          for (size_t k=0; k<3u; ++k) msg << " " << tdbl2[j*3u + k];
               msg << " ), ";
       }
 
@@ -142,7 +142,7 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(irot_cart.data(), 3u, t1, tdbl1.data()); // Rcart = t1*tdbl1 = lattice*inv(iRii)*inv(lattice)
+      brille::utils::mul_mat_mat(irot_cart.data(), 3u, tdbl2.data(), tdbl1.data()); // Rcart = tdbl2*tdbl1 = lattice*inv(iRii)*inv(lattice)
       msg << "\niRcart ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
@@ -176,11 +176,11 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(t1, 3u, pgt.lattice().real_basis_vectors().data(), tdbl1.data()); // t1 = lattice*tdbl1 = lattice*inv(Rii)
+      brille::utils::mul_mat_mat(tdbl2.data(), 3u, pgt.lattice().real_basis_vectors().data(), tdbl1.data()); // tdbl2 = lattice*tdbl1 = lattice*inv(Rii)
       msg << "\nlattice*Rii_inv ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << t1[j*3u + k];
+          for (size_t k=0; k<3u; ++k) msg << " " << tdbl2[j*3u + k];
               msg << " ), ";
       }
 
@@ -192,7 +192,7 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(rot_cart.data(), 3u, t1, tdbl1.data()); // Rcart = t1*tdbl1 = lattice*inv(Rii)*inv(lattice)
+      brille::utils::mul_mat_mat(rot_cart.data(), 3u, tdbl2.data(), tdbl1.data()); // Rcart = tdbl2*tdbl1 = lattice*inv(Rii)*inv(lattice)
       msg << "\nRcart ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
