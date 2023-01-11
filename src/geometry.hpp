@@ -947,21 +947,19 @@ namespace brille {
   template<class T, template<class> class A>
   std::enable_if_t<isArray<T,A>, std::vector<ind_t>>
   remove_middle_colinear_points_from_one_face(const A<T>& points, const std::vector<ind_t>& face, const T t_tol, const int i_tol){
-    std::vector<ind_t> updated;
-    updated.reserve(face.size());
-    updated.push_back(face[0]);
     const auto s{face.size()};
-    for (ind_t i=1; i < s; ++i){
-      auto a = points.view(face[(i-1) % s]);
-      auto b = points.view(face[i]);
-      auto c = points.view(face[(i+1) % s]);
-      // switched from !cross(,).all(cmp::eq, 0.) to take advantage of short-cutting in any/all
-      // Normalizing the difference vectors makes this check more robust?
-      auto ba = b-a;
-      auto cb = c-b;
-//      if (cross(ba/norm(ba), cb/norm(cb)).any(cmp::neq, 0., t_tol, i_tol)) updated.push_back(face[i]);
-//      if (cross(ba, cb).any(cmp::neq, 0., t_tol, i_tol)) updated.push_back(face[i]); // equivalent to original
-      if (dot(ba/norm(ba), cb/norm(cb)).any(cmp::lt, 1., t_tol, i_tol)) updated.push_back(face[i]);
+    std::vector<ind_t> updated;
+    updated.reserve(s);
+    if (s > 2) {
+      updated.push_back(face[0]);
+      auto e0 = points.view(face[1]) - points.view(face[0]);
+      e0 /= norm(e0);
+      for (ind_t i = 1; i < s; ++i) {
+        auto e1 = points.view(face[(i + 1) % s]) - points.view(face[i]);
+        e1 /= norm(e1);
+        if (dot(e0, e1).any(cmp::lt, 1., t_tol, i_tol)) updated.push_back(face[i]);
+        std::swap(e0, e1);
+      }
     }
     return updated;
   }
