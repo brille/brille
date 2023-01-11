@@ -4,6 +4,7 @@
 #include <atomic>
 #include <random>
 #include <utility>
+#include <set>
 
 #include "lattice_dual.hpp"
 #include "array_.hpp"
@@ -267,6 +268,25 @@ namespace brille::polyhedron{
       return volume / T(6);
     }
     template<class T, template<class> class A>
+    std::enable_if_t<isArray<T,A>, T> minimum_distance(const A<T>& x) const {
+      // For all pairs of (different) vertices, find the minimum distance
+      // between any two:
+      std::set<ind_t> index_set;
+      for (const auto & face: _faces) for (const auto & idx: face) index_set.insert(idx);
+      std::vector<ind_t> indexes;
+      indexes.reserve(index_set.size());
+      std::copy(index_set.cbegin(), index_set.cend(), std::back_inserter(indexes));
+      if (indexes.size() < 2) return T(0);
+      auto dist = (std::numeric_limits<T>::max)();
+      for (ind_t i=0; i<x.size(0)-1; ++i){
+        for (ind_t j=i+1; j<x.size(0); ++j){
+          auto dij = norm(x.view(indexes[i]) - x.view(indexes[j])).sum();
+          if (dij < dist) dist = dij;
+        }
+      }
+      return dist;
+    }
+    template<class T, template<class> class A>
     std::enable_if_t<isArray<T,A>, T> circumsphere_radius(const A<T>& x) const{
       auto c2v = x - this->centroid(x);
       return norm(c2v).max(0).sum();
@@ -434,7 +454,7 @@ namespace brille::polyhedron{
 //          info_update("comparison tolerance ", Rtol, " digits ", tol);
           msg += "\n\nconsider increasing tolerances from ";
           msg += my_to_string(Rtol) + " and " + std::to_string(tol);
-          throw std::logic_error(msg);
+          throw std::runtime_error(msg);
         }
         if (index == v.size(0)) {
 //          debug_update("Edge ", my_to_string(edge), " intersection ", at.to_string(0), " which is a new vertex at ", index);
@@ -492,7 +512,6 @@ namespace brille::polyhedron{
       debug_update("Start cutting with ", a.size(0), " planes\nnp.array(", get_xyz(ov).to_string(),"),", of.python_string());
       for (ind_t i=0; i < a.size(0); ++i){
         std::tie(ov, of) = of.one_cut(ov, a.view(i), b.view(i), c.view(i), Rtol, tol);
-        if (approx_float::scalar(of.volume(ov), R(0), Rtol, Rtol, tol)) break;
         debug_update("After cut ", i, "\nnp.array(", get_xyz(ov).to_string(),"),", of.python_string());
       }
       return std::make_tuple(ov, of);

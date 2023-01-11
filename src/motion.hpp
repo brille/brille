@@ -29,9 +29,10 @@ operations.
         Vector<T> w;
     public:
         Motion() = default;
+        Motion(Matrix<R> X, Vector<T> x): W(std::move(X)), w(std::move(x)) {}
+        explicit Motion(std::pair<Matrix<R>, Vector<T>> p): W(p.first), w(p.second) {}
         explicit Motion(Matrix<R> X): W(X), w({0,0,0}) {}
         explicit Motion(Vector<T> x): W({1,0,0, 0,1,0, 0,0,1}), w(x) {}
-        Motion(Matrix<R> X, Vector<T> x): W(X), w(x) {}
         explicit Motion(const std::string& x, bool change_of_basis=false) {this->from_ascii(x,change_of_basis);}
         Motion<R,T> operator*(const Motion<R,T>& m) const {
             // {W0, w0} * {W1, w1} == {W0*W1, (W0*w1 + w0)%1}

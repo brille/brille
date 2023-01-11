@@ -442,7 +442,6 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
   SECTION("8 thread") {run(8);}
 }
 
-
 TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
   std::array<double,9> row_vectors{
     1.7797736800000001, 1.027552813333333, 6.219738366666666,
@@ -495,39 +494,136 @@ TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
   auto sym = Symmetry(motions);
   auto bas = Basis(atom_positions, atom_types);
 
-  auto make_lat = [&](bool snap){
-    return Direct<double>(row_vectors, MatrixVectors::row, sym, bas, snap);
-  };
-  info_update(make_lat(false).to_verbose_string());
-  auto lat = make_lat(true);
-  info_update(lat.to_verbose_string());
+  auto lat = Direct<double>(row_vectors, MatrixVectors::row, sym, bas);
 
   auto bz = BrillouinZone(lat);
   auto goal_node_volume = bz.get_ir_polyhedron().volume() / static_cast<double>(1000);
-
-  // create a local configuration
-  auto cfg = approx_float::Config().direct(2.1e-8).reciprocal(5e-10);
-  auto bzt = BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, goal_node_volume, false, cfg);
-
-//  // or modify the global one, which annoyingly has to be done in two steps
-//  approx_float::config.direct(2.1e-8);
-//  approx_float::config.reciprocal(5e-10);
-//  auto bzt = BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, goal_node_volume, false);
-
   auto n_modes = static_cast<ind_t>(3u * atom_types.size());
-  std::vector<ind_t> val_shape{bzt.get_hkl().size(0), n_modes, 1u};
-  Array<double> values(val_shape, 1.0);
-  std::vector<ind_t> vec_shape{bzt.get_hkl().size(0), n_modes, n_modes};
-  Array<std::complex<double>> vectors(vec_shape, std::complex<double>(1.0));
 
-  std::array<ind_t,3> val_elements{{1, 0, 0}};
-  Interpolator<double> val(values, val_elements, RotatesLike::Real);
-  std::array<ind_t,3> vec_elements{{0, n_modes, 0}};
-  Interpolator<std::complex<double>> vec(vectors, vec_elements, RotatesLike::Gamma);
-  bzt.replace_data(val, vec);
 
   std::vector<std::array<double,3>> std_qpts {{0.05, 0.05, 0.05}};
   auto qpts = LQVec<double>(lat, bArray<double>::from_std(std_qpts));
 
-  REQUIRE_NOTHROW(bzt.ir_interpolate_at(qpts, 1));
+  auto run_tests = [&](auto trellis){
+    std::vector<ind_t> val_shape{trellis.get_hkl().size(0), n_modes, 1u};
+    Array<double> values(val_shape, 1.0);
+    std::vector<ind_t> vec_shape{trellis.get_hkl().size(0), n_modes, n_modes};
+    Array<std::complex<double>> vectors(vec_shape, std::complex<double>(1.0));
+
+    std::array<ind_t,3> val_elements{{1, 0, 0}};
+    Interpolator<double> val(values, val_elements, RotatesLike::Real);
+    std::array<ind_t,3> vec_elements{{0, n_modes, 0}};
+    Interpolator<std::complex<double>> vec(vectors, vec_elements, RotatesLike::Gamma);
+    trellis.replace_data(val, vec);
+
+    REQUIRE_NOTHROW(trellis.ir_interpolate_at(qpts, 1));
+  };
+
+
+
+
+  SECTION("Use default floating point tolerances for Trellis construction"){
+    run_tests(BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, goal_node_volume));
+  }
+  SECTION("Use coarse local floating point tolerances for Trellis construction"){
+    auto cfg = approx_float::Config().direct(2.1e-8).reciprocal(5e-10);
+    run_tests(BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, goal_node_volume, false, cfg));
+  }
+  SECTION("Use coarse global floating point tolerances for Trellis construction"){
+    approx_float::config.direct(2.1e-8);
+    approx_float::config.reciprocal(5e-10);
+    run_tests(BrillouinZoneTrellis3<double,std::complex<double>,double>(bz, goal_node_volume));
+  }
+}
+
+TEST_CASE("La2Zr2O7 Trellis incorrect node type","[la2zr2o7][85]"){
+  // translated from La2Zr2O7.castep_bin and
+  // https://github.com/brille/brille/issues/85 script
+  std::array<double, 9> latmat
+      {{7.583912824349999, 1.8412792137035698e-32, 0.0,
+        3.791956412170034, 3.791956412170034, 5.362636186024768,
+        3.791956412170034, -3.791956412170034, 5.362636186024768}};
+  // Symmetry information from CASTEP file via euphonic & spglib
+  //  numpy can help concatenating flattened 3x3 matrix and vector arrays
+  //  through the Record Arrays library unstructured_to_structured function
+  //    https://numpy.org/doc/stable/user/basics.rec.html#numpy.lib.recfunctions.unstructured_to_structured
+  //  numpy.lib.recfunctions.unstructured_to_structured(numpy.hstack((W.reshape(-1,9), w)), dtype=numpy.dtype('9int, 3float'))
+  //  nearly gives the initializer list below just requiring judicious use of
+  //  find and replace {'[':'{{', ']':'}}', '(':'{', ')':'}', ...}
+  Symmetry sym({{{{ 1,  0,  0,  0,  1,  0,  0,  0,  1}}, {{ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00}}},
+                {{{ 0, -1,  0,  1,  1,  1, -1,  0,  0}}, {{-2.22044605e-16,  5.00000000e-01,  0.00000000e+00}}},
+                {{{-1, -1, -1,  0,  0,  1,  0,  1,  0}}, {{ 5.00000000e-01,  0.00000000e+00,  2.22044605e-16}}},
+                {{{ 0,  0, -1, -1,  0,  0,  1,  1,  1}}, {{-4.44089210e-16,  2.22044605e-16,  5.00000000e-01}}},
+                {{{ 0,  0,  1, -1, -1, -1,  1,  0,  0}}, {{-2.22044605e-16,  5.00000000e-01,  0.00000000e+00}}},
+                {{{-1,  0,  0,  0,  0, -1,  0, -1,  0}}, {{ 0.00000000e+00, -2.22044605e-16, -2.22044605e-16}}},
+                {{{ 0,  1,  0,  1,  0,  0, -1, -1, -1}}, {{ 2.77555756e-16, -2.22044605e-16,  5.00000000e-01}}},
+                {{{ 1,  1,  1,  0, -1,  0,  0,  0, -1}}, {{ 5.00000000e-01, -4.44089210e-16, -2.22044605e-16}}},
+                {{{ 0,  0,  1,  1,  0,  0,  0,  1,  0}}, {{-2.22044605e-16,  0.00000000e+00,  2.22044605e-16}}},
+                {{{-1,  0,  0,  0, -1,  0,  1,  1,  1}}, {{-2.22044605e-16, -2.22044605e-16,  5.00000000e-01}}},
+                {{{ 0,  1,  0, -1, -1, -1,  0,  0,  1}}, {{ 5.55111512e-17,  5.00000000e-01,  0.00000000e+00}}},
+                {{{ 1,  1,  1,  0,  0, -1, -1,  0,  0}}, {{ 5.00000000e-01, -6.66133815e-16,  0.00000000e+00}}},
+                {{{ 1,  0,  0,  0,  0,  1, -1, -1, -1}}, {{ 1.11022302e-16, -4.44089210e-16,  5.00000000e-01}}},
+                {{{ 0, -1,  0, -1,  0,  0,  0,  0, -1}}, {{-4.44089210e-16,  0.00000000e+00,  0.00000000e+00}}},
+                {{{-1, -1, -1,  0,  1,  0,  1,  0,  0}}, {{ 5.00000000e-01,  4.44089210e-16,  0.00000000e+00}}},
+                {{{ 0,  0, -1,  1,  1,  1,  0, -1,  0}}, {{ 1.11022302e-16,  5.00000000e-01, -2.22044605e-16}}},
+                {{{ 0,  1,  0,  0,  0,  1,  1,  0,  0}}, {{ 1.11022302e-16, -2.22044605e-16, -1.11022302e-16}}},
+                {{{ 1,  1,  1, -1,  0,  0,  0, -1,  0}}, {{ 5.00000000e-01, -2.22044605e-16, -2.22044605e-16}}},
+                {{{ 0,  0,  1,  0,  1,  0, -1, -1, -1}}, {{ 5.55111512e-17, -5.81625969e-17,  5.00000000e-01}}},
+                {{{-1,  0,  0,  1,  1,  1,  0,  0, -1}}, {{-2.22044605e-16,  5.00000000e-01,  0.00000000e+00}}},
+                {{{-1, -1, -1,  1,  0,  0,  0,  0,  1}}, {{ 5.00000000e-01, -2.22044605e-16,  0.00000000e+00}}},
+                {{{ 0,  0, -1,  0, -1,  0, -1,  0,  0}}, {{ 0.00000000e+00, -4.44089210e-16,  0.00000000e+00}}},
+                {{{ 1,  0,  0, -1, -1, -1,  0,  1,  0}}, {{ 0.00000000e+00,  5.00000000e-01,  0.00000000e+00}}},
+                {{{ 0, -1,  0,  0,  0, -1,  1,  1,  1}}, {{-4.44089210e-16,  0.00000000e+00,  5.00000000e-01}}},
+                {{{-1,  0,  0,  0, -1,  0,  0,  0, -1}}, {{-2.22044605e-16, -2.22044605e-16,  0.00000000e+00}}},
+                {{{ 0,  1,  0, -1, -1, -1,  1,  0,  0}}, {{ 5.55111512e-17,  5.00000000e-01,  0.00000000e+00}}},
+                {{{ 1,  1,  1,  0,  0, -1,  0, -1,  0}}, {{ 5.00000000e-01, -3.33066907e-16, -2.22044605e-16}}},
+                {{{ 0,  0,  1,  1,  0,  0, -1, -1, -1}}, {{-2.22044605e-16,  0.00000000e+00,  5.00000000e-01}}},
+                {{{ 0,  0, -1,  1,  1,  1, -1,  0,  0}}, {{ 0.00000000e+00,  5.00000000e-01,  0.00000000e+00}}},
+                {{{ 1,  0,  0,  0,  0,  1,  0,  1,  0}}, {{-1.11022302e-16, -1.05719411e-16,  2.22044605e-16}}},
+                {{{ 0, -1,  0, -1,  0,  0,  1,  1,  1}}, {{-4.44089210e-16,  0.00000000e+00,  5.00000000e-01}}},
+                {{{-1, -1, -1,  0,  1,  0,  0,  0,  1}}, {{ 5.00000000e-01,  0.00000000e+00,  0.00000000e+00}}},
+                {{{ 0,  0, -1, -1,  0,  0,  0, -1,  0}}, {{ 0.00000000e+00, -2.22044605e-16, -2.22044605e-16}}},
+                {{{ 1,  0,  0,  0,  1,  0, -1, -1, -1}}, {{ 5.55111512e-17, -5.81625969e-17,  5.00000000e-01}}},
+                {{{ 0, -1,  0,  1,  1,  1,  0,  0, -1}}, {{-4.44089210e-16,  5.00000000e-01,  0.00000000e+00}}},
+                {{{-1, -1, -1,  0,  0,  1,  1,  0,  0}}, {{ 5.00000000e-01,  0.00000000e+00, -1.11022302e-16}}},
+                {{{-1,  0,  0,  0,  0, -1,  1,  1,  1}}, {{-4.44089210e-16,  2.22044605e-16,  5.00000000e-01}}},
+                {{{ 0,  1,  0,  1,  0,  0,  0,  0,  1}}, {{ 1.11022302e-16, -1.05719411e-16,  0.00000000e+00}}},
+                {{{ 1,  1,  1,  0, -1,  0, -1,  0,  0}}, {{ 5.00000000e-01, -4.44089210e-16,  0.00000000e+00}}},
+                {{{ 0,  0,  1, -1, -1, -1,  0,  1,  0}}, {{-2.22044605e-16,  5.00000000e-01,  2.22044605e-16}}},
+                {{{ 0, -1,  0,  0,  0, -1, -1,  0,  0}}, {{-2.22044605e-16, -2.22044605e-16,  0.00000000e+00}}},
+                {{{-1, -1, -1,  1,  0,  0,  0,  1,  0}}, {{ 5.00000000e-01,  0.00000000e+00,  2.22044605e-16}}},
+                {{{ 0,  0, -1,  0, -1,  0,  1,  1,  1}}, {{-2.22044605e-16, -2.22044605e-16,  5.00000000e-01}}},
+                {{{ 1,  0,  0, -1, -1, -1,  0,  0,  1}}, {{ 0.00000000e+00,  5.00000000e-01,  0.00000000e+00}}},
+                {{{ 1,  1,  1, -1,  0,  0,  0,  0, -1}}, {{ 5.00000000e-01,  0.00000000e+00, -1.11022302e-16}}},
+                {{{ 0,  0,  1,  0,  1,  0,  1,  0,  0}}, {{-1.11022302e-16,  1.16325194e-16,  0.00000000e+00}}},
+                {{{-1,  0,  0,  1,  1,  1,  0, -1,  0}}, {{ 0.00000000e+00,  5.00000000e-01, -2.22044605e-16}}},
+                {{{ 0,  1,  0,  0,  0,  1, -1, -1, -1}}, {{ 1.66533454e-16, -2.22044605e-16,  5.00000000e-01}}}});
+
+  // Use snap_to_symmetry to correct slightly-incorrect lattice vectors
+  auto lat = Direct<double>(latmat, MatrixVectors::row, sym, Basis(), true);
+  auto bz = BrillouinZone(lat);
+  auto goal_volume = bz.get_ir_polyhedron().volume() / 1e4;
+  // Define the special Q point
+  std::vector<std::array<double,3>> p{{{0.71056334, 0.87427782, 0.70768662}}};
+  auto pa = Array2<double>::from_std(p);
+  auto Q = LVec<double>(LengthUnit::inverse_angstrom, lat, pa);
+  // And find its irreducible equivalent's Cartesian representation:
+  LVec<double> q{};
+  LVec<int> tau{};
+  std::vector<size_t> R, invR;
+  bz.ir_moveinto(Q, q, tau, R, invR);
+  auto x = brille::get_xyz(q);
+
+  auto run_tests = [&](const auto & trellis){
+    REQUIRE_NOTHROW(trellis.node_subscript(x));
+    REQUIRE(trellis.point_in_node_type(x) == NodeType::poly);
+  };
+
+  SECTION("Use the standard tolerances for Trellis construction"){
+    run_tests(BrillouinZoneTrellis3<double,double,double>(bz, goal_volume));
+  }
+  SECTION("Use 1e-8 (coarse) floating point tolerance for Trellis construction"){
+    auto ac = approx_float::Config().reciprocal(1e-8);
+    run_tests(BrillouinZoneTrellis3<double,double,double>(bz, goal_volume, /*always_triangulate*/ false, ac));
+  }
 }
