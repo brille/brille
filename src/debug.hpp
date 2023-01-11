@@ -169,31 +169,30 @@ template<class T, class R> std::string my_to_string(const std::pair<T,R>& p, con
 
 template<typename T>
 [[nodiscard]] std::string list_to_string(const std::vector<T>& v){
-  std::string s{"["};
-  for (const auto & x: v) s += my_to_string(x) + ", ";
-  if (v.size()) {
-    s.pop_back();
-    s.pop_back();
-  }
-  return s + "]";
+  std::ostringstream s;
+  s << "[";
+  bool o{};
+  for (const auto & x: v) s << (o ? ", " : (o=1, "")) << my_to_string(x);
+  s << "]";
+  return s.str();
 }
 template<typename T, size_t N>
 [[nodiscard]] std::string list_to_string(const std::array<T,N>& v){
-  std::string s{"["};
-  for (const auto & x: v) s += my_to_string(x) + ", ";
-  s.pop_back();
-  s.pop_back();
-  return s + "]";
+  std::ostringstream s;
+  s << "[";
+  bool o{};
+  for (const auto & x: v) s << (o ? ", " : (o=1, "")) << my_to_string(x);
+  s << "]";
+  return s.str();
 }
 template<typename T>
 [[nodiscard]] std::string lists_to_string(const std::vector<std::vector<T>>& vv){
- std::string s{"["};
- for (const auto & v: vv) s += list_to_string(v) + ",\n";
- if (vv.size()){
-   s.pop_back();
-   s.pop_back();
- }
- return s + "]";
+  std::ostringstream s;
+  s << "[";
+  bool o{};
+  for (const auto & v: vv) s << (o ? ",\n " : (o=1, "")) << list_to_string(v);
+  s << "]";
+  return s.str();
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -331,45 +330,61 @@ private:
     if (static_cast<int>(_before) < w) w -= static_cast<int>(_before);
     if (l) w /= static_cast<int>(l)+1;
     int count = 0;
-    std::string s;
-    // // if (x.size() == n*n){
-    // if (3u == n){
-    //   for (auto y: x){
-    //     s += " " + my_to_string(y, l);
-    //     ++count;
-    //     if (!(count % w)||!(count % n)){
-    //       s += "\n" + this->lead_in();
-    //       count = 0;
-    //     }
-    //   }
-    // } else {
-      for (auto y: x){
-        s += " " + my_to_string(y, l) + ",";
-        if (!(++count % w)) s += "\n" + this->lead_in();
-      }
-    // }
-    this->inner_print(s, args...);
+    std::ostringstream s;
+    bool o{false};
+    for (const auto & y: x){
+      s << (o ? ", " : (o=true, "")) << my_to_string(y, l) << (++count % w ? "" : "\n" + this->lead_in());
+    }
+    this->inner_print(s.str(), args...);
+   // std::string s;
+   // // // if (x.size() == n*n){
+   // // if (3u == n){
+   // //   for (auto y: x){
+   // //     s += " " + my_to_string(y, l);
+   // //     ++count;
+   // //     if (!(count % w)||!(count % n)){
+   // //       s += "\n" + this->lead_in();
+   // //       count = 0;
+   // //     }
+   // //   }
+   // // } else {
+   //   for (auto y: x){
+   //     s += " " + my_to_string(y, l) + ",";
+   //     if (!(++count % w)) s += "\n" + this->lead_in();
+   //   }
+   // // }
+   // this->inner_print(s, args...);
   }
   template<typename T, size_t N, typename... L>
   enable_if_t<!is_container<T>::value, void> inner_print(const std::array<T,N>& x, L... args){
     size_t l= max_element_length(x);
-    std::string s;
-    // if (N==9){
-    //   for (int a=0; a<3; ++a){
-    //     for (int b=0; b<3; ++b) s += " " + my_to_string(x[a*3+b], l);
-    //     s += "\n" + this->lead_in();
-    //   }
-    // } else {
-      auto w = static_cast<size_t>(terminal_width());
-      if (_before < w) w -= _before;
-      if (l) w /= l+1;
-      size_t count = 0;
-      for (size_t i=0; i<N; ++i){
-        s += " " + my_to_string(x[i], l) + ",";
-        if (!(++count % w)) s += "\n" + this->lead_in();
-      }
-    // }
-    this->inner_print(s, args...);
+   // std::string s;
+   // // if (N==9){
+   // //   for (int a=0; a<3; ++a){
+   // //     for (int b=0; b<3; ++b) s += " " + my_to_string(x[a*3+b], l);
+   // //     s += "\n" + this->lead_in();
+   // //   }
+   // // } else {
+   //   auto w = static_cast<size_t>(terminal_width());
+   //   if (_before < w) w -= _before;
+   //   if (l) w /= l+1;
+   //   size_t count = 0;
+   //   for (size_t i=0; i<N; ++i){
+   //     s += " " + my_to_string(x[i], l) + ",";
+   //     if (!(++count % w)) s += "\n" + this->lead_in();
+   //   }
+   // // }
+   // this->inner_print(s, args...);
+    auto w = static_cast<size_t>(terminal_width());
+    if (_before < w) w -= _before;
+    if (l) w /= l+1;
+    size_t count = 0;
+    std::ostringstream s;
+    bool o{false};
+    for (const auto & y: x){
+      s << (o ? ", " : (o=true, "")) << my_to_string(y, l) << (++count % w ? "" : "\n" + this->lead_in());
+    }
+    this->inner_print(s.str(), args...);
   }
   template<typename T, typename... L>
   void inner_print(const std::vector<std::vector<T>>& vv, L... args){

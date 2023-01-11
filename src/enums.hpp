@@ -38,7 +38,7 @@ enum class LengthUnit { none, angstrom, inverse_angstrom};
 
 /*! \brief An enumeration to differentiate betwee Node types
 
-\see NullNode, CubeNode, PolyNode
+\see AssumedNullNode, FoundNullNode, NullNode, CubeNode, PolyNode
 */
 enum class NodeType {assumed_null, found_null, null, cube, poly};
 

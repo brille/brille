@@ -186,7 +186,7 @@ public:
 //        info_update("First Brillouin zone\n", _first.python_string(),
 //                    "\nand 'irreducible' Brillouin zone\n",
 //                    _irreducible.python_string());
-        std::string msg = "Failed to find an irreducible Brillouin zone.";
+        std::string msg = "Failed to find an irreducible Brillouin zone.\n";
         msg += "First Brillouin zone\n" + _first.python_string();
         msg += "Last tried candidate\n" + _irreducible.python_string();
         msg += " Consider increasing tolerances from ";
