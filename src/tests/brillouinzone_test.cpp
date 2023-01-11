@@ -539,8 +539,11 @@ TEST_CASE("La2Zr2O7 BZ construction off-symmetry basis vector input","[bz_][la2z
   auto wrong = Direct<double>(latmat, MatrixVectors::row, sym, Basis(), false);
 
   // Without specifying a larger-than-normal tolerance the BrillouinZone
-  // construction fails and a Runtime Error is thrown
-  REQUIRE_THROWS_AS(BrillouinZone(wrong), std::runtime_error);
+  // One of two things happens on different OS/machines:
+  // linux & windows: construction fails and a Runtime Error is thrown
+  // macOS: construction succeeds, no error is thrown
+  // For this reason we CHECK instead of REQUIRE:
+  CHECK_THROWS_AS(BrillouinZone(wrong), std::runtime_error);
 
   // With a non-standard tolerance BrillouinZone construction succeeds
   auto ac = approx_float::Config().reciprocal(2e-12);
