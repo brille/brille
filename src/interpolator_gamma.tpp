@@ -98,7 +98,7 @@ bool Interpolator<T>::rip_gamma_complex(
       // Rotate, permute, and apply the phase factor simultaneously into a temporary array
       // Convert rot matrix to Cartesian
       Matrix<double> irot_cart, rot_cart;
-      Matrix<double> tdbl1, tdbl2;
+      double tdbl[9];
       std::vector<double> irot_dbl(ptsym.get(iRii).begin(), ptsym.get(iRii).end());
       std::ostringstream msg;
       // Calculate iRii cart
@@ -112,11 +112,11 @@ bool Interpolator<T>::rip_gamma_complex(
       msg << "\nptsym iRii double " << iRii;
       for (size_t j=0; j<3u; ++j){
           msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << tdbl1[j*3u + k];
+          for (size_t k=0; k<3u; ++k) msg << " " << irot_dbl[j*3u + k];
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(tdbl2.data(), 3u, pgt.lattice().to_xyz(LengthUnit::angstrom).data(), irot_dbl.data()); // tdbl2 = lattice*tdbl1 = lattice*iRii
+      brille::utils::mul_mat_mat(tdbl2, 3u, pgt.lattice().to_xyz(LengthUnit::angstrom).data(), irot_dbl.data()); // tdbl = lattice*t0 = lattice*iRii
       msg << "\nlattice*iRii_inv ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
@@ -124,7 +124,7 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(irot_cart.data(), 3u, tdbl2.data(), pgt.lattice().from_xyz(LengthUnit::angstrom).data()); // Rcart = tdbl2*inv(lattice) = lattice*iRii*inv(lattice)
+      brille::utils::mul_mat_mat(irot_cart.data(), 3u, tdbl, pgt.lattice().from_xyz(LengthUnit::angstrom).data()); // Rcart = tdbl*inv(lattice) = lattice*iRii*inv(lattice)
       msg << "\niRcart ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
