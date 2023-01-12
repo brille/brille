@@ -99,6 +99,7 @@ bool Interpolator<T>::rip_gamma_complex(
       // Convert rot matrix to Cartesian
       Matrix<double> irot_cart, rot_cart;
       Matrix<double> tdbl1, tdbl2;
+      std::vector<double> irot_dbl(ptsym.get(iRii).begin(), ptsym.get(iRii).end());
       std::ostringstream msg;
       // Calculate iRii cart
       msg << "\nptsym iRii " << iRii;
@@ -108,9 +109,6 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      for (size_t j=0; j<9; ++j) {
-        tdbl1[j] = (double) ptsym.get(iRii)[j]; // tdbl1 = iRii
-      }
       msg << "\nptsym iRii double " << iRii;
       for (size_t j=0; j<3u; ++j){
           msg << "(";
@@ -118,7 +116,7 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(tdbl2.data(), 3u, pgt.lattice().to_xyz(LengthUnit::angstrom).data(), tdbl1.data()); // tdbl2 = lattice*tdbl1 = lattice*iRii
+      brille::utils::mul_mat_mat(tdbl2.data(), 3u, pgt.lattice().to_xyz(LengthUnit::angstrom).data(), irot_dbl.data()); // tdbl2 = lattice*tdbl1 = lattice*iRii
       msg << "\nlattice*iRii_inv ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
