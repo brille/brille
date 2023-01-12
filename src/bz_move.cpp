@@ -3,60 +3,19 @@
 using namespace brille;
 using namespace brille::lattice;
 
-//void BrillouinZone::_moveinto_prim(const LVec<double>& Q, LVec<double>& q, LVec<int>& tau, const LVec<double>& pa, const LVec<double>& pb, const LVec<double>& pc) const {
-//  // Q, q, tau *must* be in the primitive lattice already
-//
-//  // the face centre points and normals in the primitive lattice
-//  auto normals = this->get_primitive_normals();
-//  normals = normals/norm(normals); // ensure they're normalised
-//  auto taus = (2.0*this->get_primitive_points()).round(); // the points *must* be the face center vectors!
-//  auto tau_lens = norm(taus);
-//  size_t max_count = taus.size(0);
-//  // ensure that q and tau can hold each q_i and tau_i
-//  q.resize(Q.size(0));
-//  tau.resize(Q.size(0));
-//  //
-//  // FIXME Add the tolernaces to moveinto?
-//  //
-//  auto snQ = utils::u2s<long long, ind_t>(Q.size(0));
-////#pragma omp parallel for default(none) shared(Q, tau, q, pa, pb, pc, normals, taus, tau_lens, snQ, max_count) schedule(dynamic)
-//#pragma omp parallel for default(none) shared(Q, tau, q, pa, pb, pc, normals, taus, tau_lens, snQ, max_count)
-//  for (long long si=0; si<snQ; si++){
-//    auto i = utils::s2u<ind_t, long long>(si);
-//    auto tau_i = Q.view(i).round();
-//    auto q_i = Q.view(i) - tau_i;
-//    auto last_shift = tau_i;
-//    size_t count{0};
-//    while (count++ < max_count && !point_inside_all_planes(pa, pb, pc, q_i, float_tolerance, approx_tolerance)){
-//      auto qi_dot_normals = dot(q_i , normals);
-//      auto N_hkl = (qi_dot_normals/ tau_lens).round().to_std();
-//      if (std::any_of(N_hkl.begin(), N_hkl.end(), [](int a){return a > 0;})){
-//        int max_nm{0};
-//        ind_t max_at{0};
-//        for (ind_t j=0; j<N_hkl.size(); ++j) {
-//          // protect against oscillating by ±τ
-//          if (N_hkl[j] > 0 && N_hkl[j] >= max_nm &&
-//              (0 == max_nm ||
-//               (norm(taus.view(j) + last_shift).all(brille::cmp::gt, 0.) &&
-//                qi_dot_normals[j] > qi_dot_normals[max_at]))
-//          ) {
-//            max_nm = N_hkl[max_at = j];
-//          }
-//        }
-//        q_i -= taus.view(max_at) * static_cast<double>(max_nm); // ensure we subtract LVec<double>
-//        tau_i += taus.view(max_at) * max_nm; // but add LVec<int>
-//        last_shift = taus.view(max_at) * max_nm;
-//      }
-//    }
-//    q.set(i, q_i);
-//    tau.set(i, tau_i);
-//  }
-//}
-
-std::pair<LVec<double>, LVec<int>> part_moveinto_prim(const LVec<double> & Q,
-                                                       const LVec<double> & normals, const LVec<int> & taus, const Array2<double> & tau_lens,
-                                                       double ftol, int atol,
-                                                       const LVec<double> pa, const LVec<double> pb, const LVec<double> pc) {
+/*!\brief Run the primitive lattice move into routine
+ *
+ * Initially wrwitten to operate on a subset of the provided Q array
+ * from `start` to `stop` (exclusive) such that it could be called in a parallel
+ * loop. However, something makes serial execution faster than even 12-core
+ * parallel execution -- likely something with memory access in the underpinning
+ * `Array2` class?
+ * */
+std::pair<LVec<double>, LVec<int>>
+part_moveinto_prim(const LVec<double> & Q, const LVec<double> & normals,
+                   const LVec<int> & taus, const Array2<double> & tau_lens,
+                   double ftol, int atol, const LVec<double> & pa,
+                   const LVec<double> & pb, const LVec<double> & pc) {
   LVec<double> q(Q.type(), Q.lattice(), Q.size(0));
   LVec<int> tau(Q.type(), Q.lattice(), Q.size(0));
   auto max_count = taus.size(0);
@@ -93,46 +52,53 @@ std::pair<LVec<double>, LVec<int>> part_moveinto_prim(const LVec<double> & Q,
   return std::make_pair(q, tau);
 }
 
+/*\brief Run the move into routine in parallel with each thread getting a subset
+ *
+ * This method is no longer used since it is slower in parallel than calling the
+ * internal function once for the whole array. Future developments may make it
+ * worthwhile again.
+ * */
+/*
+void BrillouinZone::_moveinto_prim(const LVec<double>& Q, LVec<double>& q, LVec<int>& tau, const LVec<double>& pa, const LVec<double>& pb, const LVec<double>& pc, int threads) const {
+  profile_update("BrillouinZone::_moveinto_prim called with ",threads," threads");
+//  if (threads < 1) threads = omp_get_max_threads();
+  threads = 1;
+  omp_set_num_threads( threads );
+  // Q, q, tau *must* be in the primitive lattice already
 
-//void BrillouinZone::_moveinto_prim(const LVec<double>& Q, LVec<double>& q, LVec<int>& tau, const LVec<double>& pa, const LVec<double>& pb, const LVec<double>& pc, int threads) const {
-//  profile_update("BrillouinZone::_moveinto_prim called with ",threads," threads");
-////  if (threads < 1) threads = omp_get_max_threads();
-//  threads = 1;
-//  omp_set_num_threads( threads );
-//  // Q, q, tau *must* be in the primitive lattice already
-//
-//  // the face centre points and normals in the primitive lattice
-//  auto normals = this->get_primitive_normals();
-//  normals = normals/norm(normals); // ensure they're normalised
-//  auto taus = (2.0*this->get_primitive_points()).round(); // the points *must* be the face center vectors!
-//  auto tau_lens = norm(taus);
-//
-//  std::vector<std::pair<LVec<double>, LVec<int>>> pairs;
-//  pairs.resize(threads);
-//
-//  std::vector<ind_t> bounds;
-//  bounds.reserve(threads+1);
-//  ind_t chunk = Q.size(0) / static_cast<ind_t>(threads);
-//  for (int i=0; i<threads; ++i) bounds.push_back(static_cast<ind_t>(i) * chunk);
-//  bounds.push_back(Q.size(0));
-//#pragma omp parallel default(none) shared(pairs, normals, taus, tau_lens, Q, pa, pb, pc, bounds)
-//  {
-//    auto index = omp_get_thread_num();
-//    pairs[index] = part_moveinto_prim(
-//        Q.view(bounds[index], bounds[index+1]).decouple(),
-//        normals, taus, tau_lens, float_tolerance, approx_tolerance,
-//        pa, pb, pc);
-//  }
-//  profile_update("BrillouinZone::_moveinto_prim parallel section done");
-//
-//  q = std::move(pairs[0].first);
-//  tau = std::move(pairs[0].second);
-//  for (int i=1; i<threads; ++i){
-//    q = cat(0, q, pairs[i].first);
-//    tau = cat(0, tau, pairs[i].second);
-//  }
-//  profile_update("BrillouinZone::_moveinto_prim finished with ",threads," threads");
-//}
+  // the face centre points and normals in the primitive lattice
+  auto normals = this->get_primitive_normals();
+  normals = normals/norm(normals); // ensure they're normalised
+  auto taus = (2.0*this->get_primitive_points()).round(); // the points *must* be the face center vectors!
+  auto tau_lens = norm(taus);
+
+  std::vector<std::pair<LVec<double>, LVec<int>>> pairs;
+  pairs.resize(threads);
+
+  std::vector<ind_t> bounds;
+  bounds.reserve(threads+1);
+  ind_t chunk = Q.size(0) / static_cast<ind_t>(threads);
+  for (int i=0; i<threads; ++i) bounds.push_back(static_cast<ind_t>(i) * chunk);
+  bounds.push_back(Q.size(0));
+#pragma omp parallel default(none) shared(pairs, normals, taus, tau_lens, Q, pa, pb, pc, bounds)
+  {
+    auto index = omp_get_thread_num();
+    pairs[index] = part_moveinto_prim(
+        Q.view(bounds[index], bounds[index+1]).decouple(),
+        normals, taus, tau_lens, float_tolerance, approx_tolerance,
+        pa, pb, pc);
+  }
+  profile_update("BrillouinZone::_moveinto_prim parallel section done");
+
+  q = std::move(pairs[0].first);
+  tau = std::move(pairs[0].second);
+  for (int i=1; i<threads; ++i){
+    q = cat(0, q, pairs[i].first);
+    tau = cat(0, tau, pairs[i].second);
+  }
+  profile_update("BrillouinZone::_moveinto_prim finished with ",threads," threads");
+}
+*/
 
 bool BrillouinZone::moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int>& tau, const int threads) const {
   profile_update("BrillouinZone::moveinto called with ",threads," threads");

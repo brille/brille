@@ -336,45 +336,10 @@ private:
       s << (o ? ", " : (o=true, "")) << my_to_string(y, l) << (++count % w ? "" : "\n" + this->lead_in());
     }
     this->inner_print(s.str(), args...);
-   // std::string s;
-   // // // if (x.size() == n*n){
-   // // if (3u == n){
-   // //   for (auto y: x){
-   // //     s += " " + my_to_string(y, l);
-   // //     ++count;
-   // //     if (!(count % w)||!(count % n)){
-   // //       s += "\n" + this->lead_in();
-   // //       count = 0;
-   // //     }
-   // //   }
-   // // } else {
-   //   for (auto y: x){
-   //     s += " " + my_to_string(y, l) + ",";
-   //     if (!(++count % w)) s += "\n" + this->lead_in();
-   //   }
-   // // }
-   // this->inner_print(s, args...);
   }
   template<typename T, size_t N, typename... L>
   enable_if_t<!is_container<T>::value, void> inner_print(const std::array<T,N>& x, L... args){
     size_t l= max_element_length(x);
-   // std::string s;
-   // // if (N==9){
-   // //   for (int a=0; a<3; ++a){
-   // //     for (int b=0; b<3; ++b) s += " " + my_to_string(x[a*3+b], l);
-   // //     s += "\n" + this->lead_in();
-   // //   }
-   // // } else {
-   //   auto w = static_cast<size_t>(terminal_width());
-   //   if (_before < w) w -= _before;
-   //   if (l) w /= l+1;
-   //   size_t count = 0;
-   //   for (size_t i=0; i<N; ++i){
-   //     s += " " + my_to_string(x[i], l) + ",";
-   //     if (!(++count % w)) s += "\n" + this->lead_in();
-   //   }
-   // // }
-   // this->inner_print(s, args...);
     auto w = static_cast<size_t>(terminal_width());
     if (_before < w) w -= _before;
     if (l) w /= l+1;
@@ -419,28 +384,14 @@ private:
     if (_before < w) w -= _before;
     size_t num;
     std::string s;
-    // if (N==9){
-    //   num = (l) ? w/(3*l+4) : w/3;
-    //   for (size_t i=0; i<x.size(); i+=num){
-    //     for (int a=0; a<3; ++a){
-    //       for (size_t j=0; j<num && (i+j)<x.size(); ++j){
-    //         for (int b=0; b<3; ++b) s += my_to_string(x[i+j][a*3+b], l);
-    //         s += " ";
-    //       }
-    //       s += "\n" + this->lead_in();
-    //     }
-    //     s += "\n" + this->lead_in();
-    //   }
-    // } else {
-      if (l) w /= l+1;
-      for (size_t i=0; i<x.size(); num=0, ++i){
-        for (auto y: x[i]){
-          s += my_to_string(y, l) + ",";
-          if (!(++num % w)) s += "\n" + this->lead_in();
-        }
-        s += "\n" + this->lead_in();
+    if (l) w /= l+1;
+    for (size_t i=0; i<x.size(); num=0, ++i){
+      for (auto y: x[i]){
+        s += my_to_string(y, l) + ",";
+        if (!(++num % w)) s += "\n" + this->lead_in();
       }
-    // }
+      s += "\n" + this->lead_in();
+    }
     this->inner_print(s, args...);
   }
   void inner_print(){};
