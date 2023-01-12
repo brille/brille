@@ -109,24 +109,16 @@ bool Interpolator<T>::rip_gamma_complex(
       }
 
       for (size_t j=0; j<9; ++j) {
-        tdbl2[j] = (double) ptsym.get(iRii)[j]; // tdbl2 = iRii
+        tdbl1[j] = (double) ptsym.get(iRii)[j]; // tdbl1 = iRii
       }
       msg << "\nptsym iRii double " << iRii;
-      for (size_t j=0; j<3u; ++j){
-          msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << tdbl2[j*3u + k];
-              msg << " ), ";
-      }
-
-      brille::utils::matrix_inverse<double>(tdbl1.data(), tdbl2.data()); // tdbl1 = inv(tdbl2) = inv(iRii)
-      msg << "\nptsym iRii double inv" << iRii;
       for (size_t j=0; j<3u; ++j){
           msg << "(";
           for (size_t k=0; k<3u; ++k) msg << " " << tdbl1[j*3u + k];
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(tdbl2.data(), 3u, pgt.lattice().to_xyz(LengthUnit::angstrom).data(), tdbl1.data()); // tdbl2 = lattice*tdbl1 = lattice*inv(iRii)
+      brille::utils::mul_mat_mat(tdbl2.data(), 3u, pgt.lattice().to_xyz(LengthUnit::angstrom).data(), tdbl1.data()); // tdbl2 = lattice*tdbl1 = lattice*iRii
       msg << "\nlattice*iRii_inv ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
@@ -134,7 +126,7 @@ bool Interpolator<T>::rip_gamma_complex(
               msg << " ), ";
       }
 
-      brille::utils::mul_mat_mat(irot_cart.data(), 3u, tdbl2.data(), pgt.lattice().from_xyz(LengthUnit::angstrom).data()); // Rcart = tdbl2*inv(lattice) = lattice*inv(iRii)*inv(lattice)
+      brille::utils::mul_mat_mat(irot_cart.data(), 3u, tdbl2.data(), pgt.lattice().from_xyz(LengthUnit::angstrom).data()); // Rcart = tdbl2*inv(lattice) = lattice*iRii*inv(lattice)
       msg << "\niRcart ";
       for (size_t j=0; j<3u; ++j){
           msg << "(";
