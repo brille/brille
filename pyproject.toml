@@ -7,7 +7,7 @@ requires =[
   "cmake>=3.18.2",
 #  "numpy==1.13.3; python_version<'3.5'",
 #  "oldest-supported-numpy; python_version>='3.5'",
-  "conan",
+  "conan==1.57.0",
 ]
 
 [tool.setuptools_scm]
