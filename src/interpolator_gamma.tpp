@@ -78,17 +78,17 @@ bool Interpolator<T>::rip_gamma_complex(
   // Calculate Cartesian rotation matrix
   std::vector<std::array<double,9>> rot_cart;
   std::array<double,9> tdbl0, tdbl1;
-  for (ind_t i; i<ptsym.size(); i++){
-    std::vector<double> rotdbl(ptsym.get(i).begin(), ptsym.get(i).end());
+  for (size_t j=0; j<ptsym.size(); j++){
+    std::vector<double> rotdbl(ptsym.get(j).begin(), ptsym.get(j).end());
     brille::utils::mul_mat_mat(tdbl0.data(), 3u, pgt.lattice().to_xyz(LengthUnit::angstrom).data(), rotdbl.data()); // tdbl = lattice*rot
     brille::utils::mul_mat_mat(tdbl1.data(), 3u, tdbl0.data(), pgt.lattice().from_xyz(LengthUnit::angstrom).data()); // rot_cart = tdbl*inv(lattice) = lattice*rot*inv(lattice)
     rot_cart.push_back(tdbl1);
   }
 
 #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
-#pragma omp parallel for default(none) shared(x,q,pgt,ptsym,ridx,invRidx,e_iqd_gt) private(t0,t1,tA) firstprivate(no,Nmat,xsize) schedule(static)
+#pragma omp parallel for default(none) shared(x,q,pgt,rot_cart,ridx,invRidx,e_iqd_gt) private(t0,t1,tA) firstprivate(no,Nmat,xsize) schedule(static)
 #else
-#pragma omp parallel for default(none) shared(b_,s_,x,q,pgt,ptsym,ridx,invRidx,e_iqd_gt) private(t0,t1,tA) firstprivate(no,Nmat,xsize) schedule(static)
+#pragma omp parallel for default(none) shared(b_,s_,x,q,pgt,rot_cart,ridx,invRidx,e_iqd_gt) private(t0,t1,tA) firstprivate(no,Nmat,xsize) schedule(static)
 #endif
   for (long long si=0; si<xsize; ++si){
     ind_t i = brille::utils::s2u<ind_t, long long>(si);
