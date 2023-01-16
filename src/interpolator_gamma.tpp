@@ -76,12 +76,11 @@ bool Interpolator<T>::rip_gamma_complex(
   T t0[9], t1[9];
 
   // Calculate Cartesian rotation matrix
-  std::vector<std::array<double,9>> rot_cart;
-  std::array<double,9> tdbl0, tdbl1;
+  std::vector<std::array<double,9>> rot_cart(ptsym.size());
+  std::array<double,9> tdbl0;
   for (size_t j=0; j<ptsym.size(); j++){
     brille::utils::mul_mat_mat(tdbl0.data(), 3u, pgt.lattice().to_xyz(LengthUnit::angstrom).data(), ptsym.data(j)); // tdbl0 = lattice*rot
-    brille::utils::mul_mat_mat(tdbl1.data(), 3u, tdbl0.data(), pgt.lattice().from_xyz(LengthUnit::angstrom).data()); // rot_cart = tdbl0*inv(lattice) = lattice*rot*inv(lattice)
-    rot_cart.push_back(tdbl1);
+    brille::utils::mul_mat_mat(rot_cart[j].data(), 3u, tdbl0.data(), pgt.lattice().from_xyz(LengthUnit::angstrom).data()); // rot_cart = tdbl0*inv(lattice) = lattice*rot*inv(lattice)
   }
 
 #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
