@@ -76,30 +76,13 @@ bool Interpolator<T>::rip_gamma_complex(
   T t0[9], t1[9];
 
   // Calculate Cartesian rotation matrix
-  std::ostringstream msg;
-  msg << "\nCreating rot_cart";
-  info_update(msg.str());
   std::vector<std::array<double,9>> rot_cart;
   std::array<double,9> tdbl0, tdbl1;
-  msg << "\nCreated rot_cart";
-  info_update(msg.str());
-  msg << "\nptsym.size()" << ptsym.size();
-  info_update(msg.str());
   for (size_t j=0; j<ptsym.size(); j++){
-    msg << "\npytsym.size() j " << j;
-    info_update(msg.str());
     std::vector<double> rotdbl(ptsym.get(j).begin(), ptsym.get(j).end());
-    msg << "\ncreated rotdbl";
-    info_update(msg.str());
     brille::utils::mul_mat_mat(tdbl0.data(), 3u, pgt.lattice().to_xyz(LengthUnit::angstrom).data(), rotdbl.data()); // tdbl0 = lattice*rot
-    msg << "\ndone lattice*rot";
-    info_update(msg.str());
     brille::utils::mul_mat_mat(tdbl1.data(), 3u, tdbl0.data(), pgt.lattice().from_xyz(LengthUnit::angstrom).data()); // rot_cart = tdbl0*inv(lattice) = lattice*rot*inv(lattice)
-    msg << "\ndont lattice*rot*inv(lattice)";
-    info_update(msg.str());
     rot_cart.push_back(tdbl1);
-    msg << "\nadded to rot_cart";
-    info_update(msg.str());
   }
 
 #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
@@ -124,28 +107,6 @@ bool Interpolator<T>::rip_gamma_complex(
       // to make this calculation more straightforward.
       //
       // Rotate, permute, and apply the phase factor simultaneously into a temporary array
-
-      std::ostringstream msg;
-      msg << "\nptsym iRii " << iRii;
-      msg << "\niRcart ";
-      info_update(msg.str());
-      for (size_t j=0; j<3u; ++j){
-          msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << rot_cart[Rii][j*3u + k];
-              msg << " ), ";
-      }
-      info_update(msg.str());
-
-      msg << "\nptsym Rii " << Rii;
-      msg << "\nRcart ";
-      info_update(msg.str());
-      for (size_t j=0; j<3u; ++j){
-          msg << "(";
-          for (size_t k=0; k<3u; ++k) msg << " " << rot_cart[Rii][j*3u + k];
-              msg << " ), ";
-      }
-      info_update(msg.str());
-
       if (no[1]>0){
         ind_t o0 = o;
         if (tA.size() < no[1]*3u) tA.resize(no[1]*3u);
