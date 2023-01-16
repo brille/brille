@@ -79,8 +79,7 @@ bool Interpolator<T>::rip_gamma_complex(
   std::vector<std::array<double,9>> rot_cart;
   std::array<double,9> tdbl0, tdbl1;
   for (size_t j=0; j<ptsym.size(); j++){
-    std::vector<double> rotdbl(ptsym.get(j).begin(), ptsym.get(j).end());
-    brille::utils::mul_mat_mat(tdbl0.data(), 3u, pgt.lattice().to_xyz(LengthUnit::angstrom).data(), rotdbl.data()); // tdbl0 = lattice*rot
+    brille::utils::mul_mat_mat(tdbl0.data(), 3u, pgt.lattice().to_xyz(LengthUnit::angstrom).data(), ptsym.data(j)); // tdbl0 = lattice*rot
     brille::utils::mul_mat_mat(tdbl1.data(), 3u, tdbl0.data(), pgt.lattice().from_xyz(LengthUnit::angstrom).data()); // rot_cart = tdbl0*inv(lattice) = lattice*rot*inv(lattice)
     rot_cart.push_back(tdbl1);
   }
