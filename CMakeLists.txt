@@ -1,5 +1,8 @@
-cmake_minimum_required(VERSION 3.18.2) 
+cmake_minimum_required(VERSION 3.24.0)
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
+cmake_policy(SET CMP0017 NEW) # Prefer cmake's own files for include/find_package before CMAKE_MODULE_PATH
+
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 project(brille)
 set(BRILLE_LIBRARY_TARGET brille)
@@ -86,30 +89,11 @@ if (BRILLE_PROFILING)
   add_definitions(-DPROFILING)
 endif (BRILLE_PROFILING)
 
-
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 # With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
 SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 
-
-# Use Conan to fetch/build HDF5, the manylinux2014 image has HDF5 v1.8 which causes errors in testing
-if (NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/0.18.1/conan.cmake"
-       "${CMAKE_BINARY_DIR}/conan.cmake"
-       EXPECTED_HASH SHA256=5cdb3042632da3efff558924eecefd580a0e786863a857ca097c3d1d43df5dcd
-       TLS_VERIFY ON)
-endif()
-include("${CMAKE_BINARY_DIR}/conan.cmake")
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
-if (DEFINED ENV{CONAN_USER_HOME})
-  message(STATUS "Use $ENV{CONAN_USER_HOME} as CONAN_USER_HOME")
-endif()
-conan_cmake_configure(REQUIRES hdf5/1.12.0 GENERATORS cmake_find_package OPTIONS hdf5:shared=False hdf5:hl=False hdf5:with_zlib=False)
-conan_cmake_autodetect(conan_settings)
-conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_CURRENT_BINARY_DIR} BUILD outdated REMOTE conancenter SETTINGS ${conan_settings})
+include(conan-deps)
 
 if (PYTHON_EXECUTABLE)
   # Ensure the provided Python interpreter is used
@@ -122,7 +106,7 @@ if (NOT DEFINED PYTHON_EXECUTABLE)
   set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
 endif()
 
-include(fetcher.cmake)
+include(fetcher)
 
 # Attempt to find catch2 to handle C++ testing
 if(BRILLE_BUILD_TESTING)
@@ -150,7 +134,7 @@ if (BRILLE_HDF5)
 endif(BRILLE_HDF5)
 
 # Read the version of brille
-include(checkgit.cmake)
+include(checkgit)
 checkGitSetup(BRILLE) # defines/creates version.hpp; and library 'git_version'
 # So that we can print it to the console along with the specified build type
 message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
