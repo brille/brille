@@ -357,9 +357,9 @@ TEST_CASE("PolyNode inclusion rounding error","[trellis][quartz][polynode][61]")
 
   Array<double> zeros(quartz_bzt.get_hkl().size(0), 1u);
   std::array<ind_t,3> elements{{1, 0, 0}};
-  //RotatesLike rl{RotatesLike::Reciprocal};
   RotatesLike rl{RotatesLike::vector};
-  Interpolator<double> val(zeros, elements, rl);
+  LengthUnit lu{LengthUnit::inverse_angstrom};
+  Interpolator<double> val(zeros, elements, rl, lu);
   quartz_bzt.replace_data(val, val);
 
   // error identified for delta=1e-9
@@ -411,9 +411,10 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
 
   Array<double> zeros(bzt.get_hkl().size(0), 1u);
   std::array<ind_t,3> elements{{1, 0, 0}};
-  //RotatesLike rl{RotatesLike::Reciprocal};
   RotatesLike rl{RotatesLike::vector};
-  Interpolator<double> val(zeros, elements, rl);
+  LengthUnit lu{LengthUnit::inverse_angstrom};
+
+  Interpolator<double> val(zeros, elements, rl, lu);
   bzt.replace_data(val, val);
 
   int n{5000};
@@ -523,9 +524,9 @@ TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
   Array<std::complex<double>> vectors(vec_shape, std::complex<double>(1.0));
 
   std::array<ind_t,3> val_elements{{1, 0, 0}};
-  Interpolator<double> val(values, val_elements, RotatesLike::vector);
+  Interpolator<double> val(values, val_elements, RotatesLike::vector, LengthUnit::angstrom);
   std::array<ind_t,3> vec_elements{{0, n_modes, 0}};
-  Interpolator<std::complex<double>> vec(vectors, vec_elements, RotatesLike::Gamma);
+  Interpolator<std::complex<double>> vec(vectors, vec_elements, RotatesLike::Gamma, LengthUnit::real_lattice);
   bzt.replace_data(val, vec);
 
   std::vector<std::array<double,3>> std_qpts {{0.05, 0.05, 0.05}};

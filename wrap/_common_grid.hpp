@@ -491,9 +491,10 @@ void def_grid_sort(py::class_<Grid<T,R,S>>& cls){
     py::array_t<int> pyvecfnc, py::array_t<double> pyvecwght, bool sort){
     std::array<double,3> val_wght{{1,1,1}}, vec_wght{{1,1,1}};
     RotatesLike val_rl, vec_rl;
+    LengthUnit val_lu, vec_lu;
     int val_sf{0}, val_vf{0}, vec_sf{0}, vec_vf{0};
-    std::tie(val_rl,val_sf,val_vf,val_wght)=set_check(pyvalfnc,pyvalwght);
-    std::tie(vec_rl,vec_sf,vec_vf,vec_wght)=set_check(pyvecfnc,pyvecwght);
+    std::tie(val_rl,val_lu,val_sf,val_vf,val_wght)=set_check(pyvalfnc,pyvalwght);
+    std::tie(vec_rl,vec_lu,vec_sf,vec_vf,vec_wght)=set_check(pyvecfnc,pyvecwght);
     cobj.set_value_cost_info(val_sf, val_vf, val_wght);
     cobj.set_vector_cost_info(vec_sf, vec_vf, vec_wght);
     if (sort) cobj.sort();
@@ -501,24 +502,25 @@ void def_grid_sort(py::class_<Grid<T,R,S>>& cls){
   "values_flags"_a, "values_weights"_a, "vectors_flags"_a, "vectors_weights"_a,
   "sort"_a=false,
   R"pbdoc(
-  Set :py:class:`~brille._brille.RotatesLike` and cost functions plus
-  relative cost weights for the values and vectors stored in the object
+  Set :py:class:`~brille._brille.RotatesLike`, `~brille._brille.LengthUnit`
+  and cost functions plus relative cost weights for the values and vectors
+  stored in the object
 
   Parameters
   ----------
   values_flags : integer, vector-like
     One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-    value for the eigenvalues stored in the object, plus which cost function
-    to use when comparing stored eigenvalues at neighbouring grid points for
-    scalar- and vector-like eigenvalues.
+    value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+    value, plus which cost function to use when comparing stored eigenvalues at
+    neighbouring grid points for scalar- and vector-like eigenvalues.
   values_weights : float, vector-like
     The relative cost weights between scalar-, vector-, and matrix- like
     eigenvalue elements stored in the grid
   vectors_flags : integer, vector-like
     One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-    value for the eigenvectors stored in the object, plus which cost function
-    to use when comparing stored eigenvectors at neighbouring grid points for
-    scalar- and vector-like eigenvectors.
+    value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+    value, plus which cost function to use when comparing stored eigenvectors at
+    neighbouring grid points for scalar- and vector-like eigenvectors.
   vectors_weights : float, vector-like
     The relative cost weights between scalar-, vector-, and matrix- like
     eigenvector elements stored in the grid
@@ -541,6 +543,22 @@ void def_grid_sort(py::class_<Grid<T,R,S>>& cls){
     |   2   |               `Gamma`              |
     +-------+------------------------------------+
   
+    Mapping of integers to :py:class:`LengthUnit` values:
+
+    +-------+------------------------------------+
+    | value | :py:class:`LengthUnit`             |
+    +=======+====================================+
+    |   0   |               `none`               |
+    +-------+------------------------------------+
+    |   1   |             `angstrom`             |
+    +-------+------------------------------------+
+    |   2   |         `inverse_angstrom`         |
+    +-------+------------------------------------+
+    |   3   |           `real_lattice`           |
+    +-------+------------------------------------+
+    |   4   |        `reciprocal_lattice`        |
+    +-------+------------------------------------+
+
     Mapping of integers to scalar cost function:
   
     +-------+------------------------------------+

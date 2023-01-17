@@ -39,7 +39,7 @@ void wrap_interpolator(py::module &m){
   enm.value("Gamma", RotatesLike::Gamma, R"pbdoc(Rotates like a (real space) phonon eigenvector)pbdoc");
 }
 
-std::tuple<br::RotatesLike, int, int, std::array<double,3>>
+std::tuple<br::RotatesLike, br::LengthUnit, int, int, std::array<double,3>>
 set_check(
   py::array_t<int> pyflg, py::array_t<double> pywght
 ){
@@ -77,5 +77,5 @@ set_check(
   auto *dblwght = (double*) bi.ptr;
   for (pybind11::ssize_t i=0; i<bi.shape[0] && i<3; ++i) wght[i] = dblwght[i];
   // tie everything up
-  return std::make_tuple(rl, csf, cvf, wght);
+  return std::make_tuple(rl, lu, csf, cvf, wght);
 }

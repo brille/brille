@@ -47,7 +47,7 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, const size_t count){
   }
   // tie everything up
   // return std::make_tuple(data, el, rl);
-  return Interpolator(data, el, rl);
+  return Interpolator(data, el, rl, lu);
 }
 
 template<class T>
@@ -105,10 +105,10 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, py::array_t<double> py
   for (pybind11::ssize_t i=0; i<bi.shape[0] && i<3; ++i) wght[i] = dblwght[i];
   // tie everything up
   // return std::make_tuple(data, el, rl, csf, cvf, wght);
-  return Interpolator(data, el, rl, csf, cvf, wght);
+  return Interpolator(data, el, rl, lu, csf, cvf, wght);
 }
 
-std::tuple<br::RotatesLike, int, int, std::array<double,3>>
+std::tuple<br::RotatesLike, br::LengthUnit, int, int, std::array<double,3>>
 set_check(py::array_t<int> pyflg, py::array_t<double> pywght);
 
 #endif

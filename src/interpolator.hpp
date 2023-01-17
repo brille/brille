@@ -95,6 +95,7 @@ protected:
   shape_t shape_;       //!< The shape of the input Array (or Array2)
   element_t<ind_t> _elements; //!< The number of each element type per point and per mode
   RotatesLike rotlike_;   //!< How the elements of `data_` rotate
+  LengthUnit lenunit_;   //!< The units of `data_`
   element_t<double> _costmult; //!< The relative (multiplicative) cost for differences in each element type
   element_t<ind_t> _funtype;
   costfun_t _scalarfun; //!< A function to calculate differences between the scalars at two stored points
@@ -106,6 +107,7 @@ public:
     if (shape_ != other.shape_) return true;
     if (_elements != other._elements) return true;
     if (rotlike_ != other.rotlike_) return true;
+    if (lenunit_ != other.lenunit_) return true;
     if (_costmult != other._costmult) return true;
     if (_funtype != other._funtype) return true;
     return false;
@@ -117,7 +119,7 @@ public:
   \see set_cost_info
   */
   explicit Interpolator(int scf_type=0, int vcf_type=0)
-  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector}, _costmult({{1,1,1}})
+  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector}, lenunit_{LengthUnit::none}, _costmult({{1,1,1}})
   {
     this->set_cost_info(scf_type, vcf_type);
   }
@@ -128,7 +130,7 @@ public:
   \see CostFunction
   */
   Interpolator(costfun_t scf, costfun_t vcf)
-  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector},
+  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector}, lenunit_{LengthUnit::none},
     _costmult({{1,1,1}}), _scalarfun(scf), _vectorfun(vcf)
   {}
   /*! \brief Partial constructor with default cost functions
@@ -137,10 +139,11 @@ public:
   \param sh The \f$N\f$-dimensional shape of the data array
   \param el The sub-array character specifier
   \param rl How any vectors or tensors transform under application of a symmetry operation
-  \see RotatesLike
+  \param lu Units of vectors/tensors
+  \see RotatesLike, LengthUnit
   */
-  Interpolator(bArray<T>& d, shape_t sh, element_t<ind_t> el, RotatesLike rl)
-  : data_(d), shape_(sh), _elements(el), rotlike_{rl}, _costmult({{1,1,1}})
+  Interpolator(bArray<T>& d, shape_t sh, element_t<ind_t> el, RotatesLike rl, LengthUnit lu)
+  : data_(d), shape_(sh), _elements(el), rotlike_{rl}, lenunit_{lu}, _costmult({{1,1,1}})
   {
     this->set_cost_info(0,0);
     this->check_elements();
@@ -151,13 +154,14 @@ public:
   \param sh The \f$N\f$-dimensional shape of the data array
   \param el The sub-array character specifier
   \param rl How any vectors or tensors transform under application of a symmetry operation
+  \param lu Units of vectors/tensors
   \param csf The scalar cost function type
   \param cvf The vector cost function type
   \param wg The relative scalar, vector, and matrix cost scaling values
-  \see RotatesLike, set_cost_info
+  \see RotatesLike, LengthUnit, set_cost_info
   */
-  Interpolator(bArray<T>& d, shape_t sh, element_t<ind_t> el, RotatesLike rl, int csf, int cvf, element_t<double> wg)
-  : data_(d), shape_(sh), _elements(el), rotlike_{rl}, _costmult(wg)
+  Interpolator(bArray<T>& d, shape_t sh, element_t<ind_t> el, RotatesLike rl, LengthUnit lu, int csf, int cvf, element_t<double> wg)
+  : data_(d), shape_(sh), _elements(el), rotlike_{rl}, lenunit_{lu}, _costmult(wg)
   {
     this->set_cost_info(csf, cvf);
     this->check_elements();
@@ -167,11 +171,12 @@ public:
   \param d The \f$N\f$-dimensional data to be interpolated, will be flattend to 2-D
   \param el The sub-array character specifier
   \param rl How any vectors or tensors transform under application of a symmetry operation
-  \see RotatesLike
+  \param lu Units of vectors/tensors
+  \see RotatesLike, LengthUnit
   */
   // use the Array2<T>(const Array<T>&) constructor
-  Interpolator(brille::Array<T>& d, element_t<ind_t> el, RotatesLike rl)
-  : data_(d), shape_(d.shape()), _elements(el), rotlike_{rl}, _costmult({{1,1,1}})
+  Interpolator(brille::Array<T>& d, element_t<ind_t> el, RotatesLike rl, LengthUnit lu)
+  : data_(d), shape_(d.shape()), _elements(el), rotlike_{rl}, lenunit_{lu}, _costmult({{1,1,1}})
   {
     this->set_cost_info(0,0);
     this->check_elements();
@@ -181,13 +186,14 @@ public:
   \param d The \f$N\f$-dimensional data to be interpolated, will be flattend to 2-D
   \param el The sub-array character specifier
   \param rl How any vectors or tensors transform under application of a symmetry operation
+  \param lu Units of vectors/tensors
   \param csf The scalar cost function type
   \param cvf The vector cost function type
   \param wg The relative scalar, vector, and matrix cost scaling values
-  \see RotatesLike, set_cost_info
+  \see RotatesLike, LengthUnit, set_cost_info
   */
   // use the Array2<T>(const Array<T>&) constructor
-  Interpolator(brille::Array<T>& d, element_t<ind_t> el, RotatesLike rl, int csf, int cvf, element_t<double> wg)
+  Interpolator(brille::Array<T>& d, element_t<ind_t> el, RotatesLike rl, LengthUnit lu, int csf, int cvf, element_t<double> wg)
   : data_(d), shape_(d.shape()), _elements(el), rotlike_{rl}, _costmult(wg)
   {
     this->set_cost_info(csf, cvf);
@@ -406,17 +412,20 @@ public:
   \param sh The \f$N\f$-dimensional shape of the data to be interpolated
   \param ne The new sub-array character specification
   \param rl How the new data transforms under application of a symmetry operation
+  \param lu Units of new data
   */
   template<class I>
   void replace_data(
       const bArray<T>& nd,
       const shape_t sh,
       const std::array<I,3>& ne,
-      const RotatesLike rl = RotatesLike::vector)
+      const RotatesLike rl = RotatesLike::vector,
+      const LengthUnit lu = LengthUnit::none)
   {
     data_ = nd;
     shape_ = sh;
     rotlike_ = rl;
+    lenunit_ = lu;
     // convert the elements datatype as necessary
     if (ne[1]%3)
       throw std::logic_error("Vectors must have 3N elements per branch");
@@ -430,6 +439,7 @@ public:
   \param nd The new \f$N\f$-dimensional data to be interpolated
   \param ne The new sub-array character specification
   \param rl How the new data transforms under application of a symmetry operation
+  \param lu Units of new data
 
   \note The provided data will only be used in-place if it is a contiguous
         row-ordered array. In all other cases a copy will be made before
@@ -439,11 +449,13 @@ public:
   void replace_data(
       const brille::Array<T>& nd,
       const std::array<I,3>& ne,
-      const RotatesLike rl = RotatesLike::vector)
+      const RotatesLike rl = RotatesLike::vector,
+      const LengthUnit lu = LengthUnit::none)
   {
     data_ = bArray<T>(nd);
     shape_ = nd.shape();
     rotlike_ = rl;
+    lenunit_ = lu;
     // convert the elements datatype as necessary
     if (ne[1]%3)
       throw std::logic_error("Vectors must have 3N elements per branch");
@@ -595,6 +607,7 @@ private:
     group.createDataSet("shape", shape_);
     group.createDataSet("elements", _elements);
     group.createDataSet("rotlike", rotlike_);
+    group.createDataSet("lenunit", lenunit_);
     group.createDataSet("costmult", _costmult);
     group.createDataSet("funtype", _funtype);
     return ok;
@@ -611,15 +624,17 @@ private:
     shape_t s;
     element_t<ind_t> e, f;
     RotatesLike r;
+    LengthUnit l;
     element_t<double> c;
     //
     group.getDataSet("shape").read(s);
     group.getDataSet("elements").read(e);
     group.getDataSet("rotlike").read(r);
+    group.getDataSet("lenunit").read(l);
     group.getDataSet("costmult").read(c);
     group.getDataSet("funtype").read(f);
     //
-    return {d, s, e, r, static_cast<int>(f[0]), static_cast<int>(f[1]), c};
+    return {d, s, e, r, l, static_cast<int>(f[0]), static_cast<int>(f[1]), c};
   }
   static Interpolator<T> from_hdf(const std::string& filename, const std::string& dataset){
     HighFive::File file(filename, HighFive::File::ReadOnly);
