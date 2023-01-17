@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24.0)
+cmake_minimum_required(VERSION 3.18.2)
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 cmake_policy(SET CMP0017 NEW) # Prefer cmake's own files for include/find_package before CMAKE_MODULE_PATH
 
@@ -93,7 +93,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
 SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 
-include(conan-deps)
+include(brille-conan)
 
 if (PYTHON_EXECUTABLE)
   # Ensure the provided Python interpreter is used
@@ -173,7 +173,6 @@ list(APPEND CXX_TARGETS ${BRILLE_LIBRARY_TARGET})
 endif()
 
 add_subdirectory(lib)
-
 # add the dependencies and include directories for all CXX targets:
 add_subdirectory(src)  # important
 
@@ -189,64 +188,9 @@ if(BRILLE_BUILD_TESTING)
   catch_discover_tests(${TESTING_TARGET})
 endif()
 
-# OpenMP support:
-find_package(OpenMP REQUIRED) # Change code to support missing OpenMP?
-if(OpenMP_CXX_FOUND)
-  foreach(OMP_TARGET IN LISTS CXX_TARGETS)
-    # message(STATUS "Adding OpenMP library to ${OMP_TARGET}")
-    target_link_libraries(${OMP_TARGET} PUBLIC OpenMP::OpenMP_CXX)
-  endforeach(OMP_TARGET)
-  if (MSVC AND MSVC_VERSION GREATER 1919)
-    add_compile_options(/openmp:experimental) # this doesn't work
-  endif()
-endif()
-
-if(BRILLE_HDF5 AND highfive_FOUND)
-  foreach(HF_TARGET IN LISTS CXX_TARGETS)
-    # message(STATUS "Adding HighFive library to ${HF_TARGET}")
-    target_link_libraries(${HF_TARGET} PUBLIC HighFive)
-  endforeach()
-endif()
-
-
-# if(MSVC)
-# 	if(CMAKE_BUILD_TYPE STREQUAL "Matlab")
-# 		find_package(Matlab)
-# 		target_link_libraries(_brille PUBLIC "${Matlab_ROOT_DIR}/bin/win64/libiomp5md.lib")
-# 		set_property(TARGET _brille APPEND PROPERTY LINK_FLAGS /nodefaultlib:vcomp)
-# 	endif()
-# else()
-# endif()
-
-# first we can indicate the documentation build as an option (default OFF)
-option(BUILD_DOC "Build documentation" OFF)
-option(USE_DOXYGEN "Look for and use Doxygen to build documentation" OFF)
-# check if Doxygen is installed
-if (USE_DOXYGEN)
-find_package(Doxygen QUIET)
-if (DOXYGEN_FOUND)
-  # set input and output files
-  set(DOXYGEN_IN ${PROJECT_SOURCE_DIR}/Doxyfile.in)
-  set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-  # request to configure the file
-  configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-  if(BUILD_DOC)
-    add_custom_target( docs ALL
-    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generating documentation with Doxygen"
-    VERBATIM )
-  else()
-    add_custom_target( docs
-    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generate documentation using target 'docs'"
-    VERBATIM )
-  endif()
-else (DOXYGEN_FOUND)
-  message(STATUS "Install Doxygen to build documentation")
-endif (DOXYGEN_FOUND)
-endif()
+include(brille-openmp)
+include(brille-hdf5)
+include(brille-doxygen)
 
 if (NOT SKBUILD)
 install(

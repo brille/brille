@@ -72,7 +72,7 @@ if(BRILLE_HDF5 AND highfive_FOUND)
 endif()
 
 foreach(CXX_SOURCE IN LISTS CXX_SOURCES)
-    message(STATUS "Setting compile options for ${CXX_SOURCE} to ${SOURCE_FILE_COMPILE_OPTIONS}")
+#    message(STATUS "Setting compile options for ${CXX_SOURCE} to ${SOURCE_FILE_COMPILE_OPTIONS}")
     set_source_files_properties(${CXX_SOURCE} PROPERTIES COMPILE_OPTIONS "${SOURCE_FILE_COMPILE_OPTIONS}")
 endforeach()
 
