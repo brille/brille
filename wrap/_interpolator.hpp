@@ -35,6 +35,16 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, const size_t count){
     case 0: rl = RotatesLike::vector; break;
     default: throw std::runtime_error("Unknown RotatesLike value "+std::to_string(intel[3]));
   }
+  // convert input integer to LengthUnit
+  LengthUnit lu{LengthUnit::none};
+  if (bi.shape[0] > 4) switch(intel[4]){
+    case 4: lu = LengthUnit::reciprocal_lattice; break;
+    case 3: lu = LengthUnit::real_lattice; break;
+    case 2: lu = LengthUnit::inverse_angstrom; break;
+    case 1: lu = LengthUnit::angstrom; break;
+    case 0: lu = LengthUnit::none; break;
+    default: throw std::runtime_error("Unknown LengthUnit value "+std::to_string(intel[4]));
+  }
   // tie everything up
   // return std::make_tuple(data, el, rl);
   return Interpolator(data, el, rl);
@@ -73,10 +83,20 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, py::array_t<double> py
     case 0: rl = RotatesLike::vector; break;
     default: throw std::runtime_error("Unknown RotatesLike value "+std::to_string(intel[3]));
   }
+  // convert input integer to LengthUnit
+  LengthUnit lu{LengthUnit::none};
+  if (bi.shape[0] > 4) switch(intel[4]){
+    case 4: lu = LengthUnit::reciprocal_lattice; break;
+    case 3: lu = LengthUnit::real_lattice; break;
+    case 2: lu = LengthUnit::inverse_angstrom; break;
+    case 1: lu = LengthUnit::angstrom; break;
+    case 0: lu = LengthUnit::none; break;
+    default: throw std::runtime_error("Unknown LengthUnit value "+std::to_string(intel[4]));
+  }
   // get the cost-function type(s)
   int csf{0}, cvf{0};
-  if (bi.shape[0] > 4) csf = intel[4];
-  if (bi.shape[0] > 5) cvf = intel[5];
+  if (bi.shape[0] > 5) csf = intel[5];
+  if (bi.shape[0] > 6) cvf = intel[6];
   // copy-over the weight specification
   std::array<double,3> wght{{1,1,1}};
   bi = pywght.request();

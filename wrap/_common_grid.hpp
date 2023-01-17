@@ -74,6 +74,8 @@ values_elements: integer vector-like
   * an integer :py:class:`RotatesLike` value denoting
     *how* the vector-like and matrix-like parts transform under application
     of a symmetry operation (see note below).
+  * an integer :py:class:`LengthUnit` value denoting what units
+    the vector-like and matrix-like parts are in (see note below).
 
 vectors_data : :py:class:`numpy.ndarray`
   The eigenvector data to be stored in the grid. Same shape restrictions as
@@ -97,6 +99,24 @@ Note
   |   1   |            `pseudovector`          |
   +-------+------------------------------------+
   |   2   |               `Gamma`              |
+  +-------+------------------------------------+
+
+  Integer values outside of the mapped range (or missing) are replaced by 0.
+
+  Mapping of integers to :py:class:`LengthUnit` values:
+
+  +-------+------------------------------------+
+  | value | :py:class:`LengthUnit`             |
+  +=======+====================================+
+  |   0   |               `none`               |
+  +-------+------------------------------------+
+  |   1   |             `angstrom`             |
+  +-------+------------------------------------+
+  |   2   |         `inverse_angstrom`         |
+  +-------+------------------------------------+
+  |   3   |           `real_lattice`           |
+  +-------+------------------------------------+
+  |   4   |        `reciprocal_lattice`        |
   +-------+------------------------------------+
 
   Integer values outside of the mapped range (or missing) are replaced by 0.
@@ -149,6 +169,8 @@ values_elements: integer vector-like
   * an integer :py:class:`RotatesLike` value denoting
     *how* the vector-like and matrix-like parts transform under application
     of a symmetry operation (see note below),
+  * an integer :py:class:`LengthUnit` value denoting what units
+    the vector-like and matrix-like parts are in (see note below)
   * which scalar cost function should be used (see below),
   * which vector cost function should be used (see below).
 
@@ -182,6 +204,24 @@ Note
   +-------+------------------------------------+
   |   2   |               `Gamma`              |
   +-------+------------------------------------+
+
+  Mapping of integers to :py:class:`LengthUnit` values:
+
+  +-------+------------------------------------+
+  | value | :py:class:`LengthUnit`             |
+  +=======+====================================+
+  |   0   |               `none`               |
+  +-------+------------------------------------+
+  |   1   |             `angstrom`             |
+  +-------+------------------------------------+
+  |   2   |         `inverse_angstrom`         |
+  +-------+------------------------------------+
+  |   3   |           `real_lattice`           |
+  +-------+------------------------------------+
+  |   4   |        `reciprocal_lattice`        |
+  +-------+------------------------------------+
+
+  Integer values outside of the mapped range (or missing) are replaced by 0.
 
   Mapping of integers to scalar cost function:
 

@@ -35,7 +35,6 @@ void wrap_interpolator(py::module &m){
   )pbdoc"
 );
   enm.value("vector", RotatesLike::vector, R"pbdoc(Rotates like a vector)pbdoc");
-//  enm.value("Reciprocal", RotatesLike::Reciprocal, R"pbdoc(Rotates like a reciprocal scpace vector or matrix)pbdoc"); // Note to add in reciprocal vector later
   enm.value("pseudovector", RotatesLike::pseudovector, R"pbdoc(Rotates like a pseudovector)pbdoc");
   enm.value("Gamma", RotatesLike::Gamma, R"pbdoc(Rotates like a (real space) phonon eigenvector)pbdoc");
 }
@@ -55,12 +54,22 @@ set_check(
     case 2: rl = RotatesLike::Gamma; break;
     case 1: rl = RotatesLike::pseudovector; break;
     case 0: rl = RotatesLike::vector; break;
-    default: throw std::runtime_error("Unknown RotatesLike value "+std::to_string(intel[3]));
+    default: throw std::runtime_error("Unknown RotatesLike value "+std::to_string(intel[0]));
+  }
+  // convert input integer to LengthUnit
+  LengthUnit lu{LengthUnit::none};
+  if (bi.shape[0] > 1) switch(intel[1]){
+    case 4: lu = LengthUnit::reciprocal_lattice; break;
+    case 3: lu = LengthUnit::real_lattice; break;
+    case 2: lu = LengthUnit::inverse_angstrom; break;
+    case 1: lu = LengthUnit::angstrom; break;
+    case 0: lu = LengthUnit::none; break;
+    default: throw std::runtime_error("Unknown LengthUnit value "+std::to_string(intel[1]));
   }
   // get the cost-function type(s)
   int csf{0}, cvf{0};
-  if (bi.shape[0] > 1) csf = intel[1];
-  if (bi.shape[0] > 2) cvf = intel[2];
+  if (bi.shape[0] > 2) csf = intel[2];
+  if (bi.shape[0] > 3) cvf = intel[3];
   // copy-over the weight specification
   std::array<double,3> wght{{1,1,1}};
   bi = pywght.request();
