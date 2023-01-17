@@ -27,6 +27,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "array_.hpp" // defines bArray
 #include "primitive.hpp"
 #include "array_l_.hpp"
+#include "omp.h"
 namespace brille::lattice {
 
 //! The datatype of the P PrimitiveTransform matrix
@@ -150,6 +151,80 @@ LVec<S> transform_from_primitive(const Lattice<double>& lat, const LVec<T>& a){
   sh.back() = 0;
   for (auto x: a.subItr(sh))
     brille::utils::multiply_matrix_vector(out.ptr(x), transform.data(), a.ptr(x));
+  if (LengthUnit::angstrom == lu){
+    out /= S(6); // since we used 6P instead of P
+  }
+  return out;
+}
+
+template<class T, typename S=typename std::common_type_t<T,int>>
+LVec<S> parallel_transform_to_primitive(const Lattice<double>& lat, const LVec<T>& a, int threads){
+  if (lat.primitive().is_same(a.lattice())) return a;
+  if (!lat.is_same(a.lattice()))
+    throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
+  // different lattices can/should we check if the new lattice is the primitive lattice of the input lattice?
+  PrimitiveTransform PT(lat.bravais());
+  if (PT.does_nothing()) return LVec<S>(a);
+  assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
+  LengthUnit lu = a.type();
+  std::array<int, 9> transform{0,0,0,0,0,0,0,0,0};
+  switch (lu) {
+  case LengthUnit::angstrom: transform = PT.get_invP(); break;
+  case LengthUnit::inverse_angstrom: transform = PT.get_6Pt(); break;
+  default: throw std::runtime_error("Not implemented");
+  }
+  auto sh = a.shape();
+  LVec<S> out(lu, lat.primitive(), sh);
+  auto na = static_cast<int64_t>(a.size(0));
+  auto t_ptr = transform.data();
+  if (threads < 1) threads = omp_get_max_threads();
+  omp_set_num_threads(threads);
+#pragma omp parallel for default(none) shared(out, t_ptr, a, na)
+  for (int64_t si=0; si<na; ++si){
+    auto i = static_cast<ind_t>(si);
+    brille::utils::multiply_matrix_vector(out.ptr(i), t_ptr, a.ptr(i));
+  }
+
+  if (LengthUnit::inverse_angstrom == lu){
+    out /= S(6); // correct for having used 6 * Pt
+  }
+  return out;
+}
+
+/*! \brief transform_from_primitive(Reciprocal, LQVec)
+
+  Takes a Reciprocal lattice, plus a reciprocal lattice
+  vector expressed in the primitive version of the lattice and returns an
+  equivalent Lattice vector expressed in units of the passed lattice.
+*/
+template<class T, typename S=typename std::common_type_t<T,int>>
+LVec<S> parallel_transform_from_primitive(const Lattice<double>& lat, const LVec<T>& a, int threads){
+  if (lat.is_same(a.lattice())) return a;
+  if (!lat.primitive().is_same(a.lattice()))
+    throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
+  // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
+  PrimitiveTransform PT(lat.bravais());
+  if (PT.does_nothing()) return LVec<S>(a);
+  assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
+  LengthUnit lu = a.type();
+  std::array<int, 9> transform{0,0,0,0,0,0,0,0,0};
+  switch (lu) {
+  case LengthUnit::angstrom: transform = PT.get_6P(); break;
+  case LengthUnit::inverse_angstrom: transform = PT.get_invPt(); break;
+  default: throw std::runtime_error("Not implemented");
+  }
+  auto sh = a.shape();
+  LVec<S> out(lu, lat, sh);
+  auto na = static_cast<int64_t>(a.size(0));
+  auto t_ptr = transform.data();
+  if (threads < 1) threads = omp_get_max_threads();
+  omp_set_num_threads(threads);
+#pragma omp parallel for default(none) shared(out, t_ptr, a, na)
+  for (int64_t si=0; si<na; ++si){
+    auto i = static_cast<ind_t>(si);
+    brille::utils::multiply_matrix_vector(out.ptr(i), t_ptr, a.ptr(i));
+  }
+
   if (LengthUnit::angstrom == lu){
     out /= S(6); // since we used 6P instead of P
   }

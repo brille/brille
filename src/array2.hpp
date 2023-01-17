@@ -61,7 +61,7 @@ public:
       // Two arrays are not equal if their *stored values* are unequal.
       // Their raw pointers, total number of elements, shifts, references, mutabilities, and ownerships don't matter
       if (_shape != other._shape) return true;
-      for (auto sub: subItr()) if (this->operator[](sub) != other[sub]) return true;
+      for (const auto & sub: subItr()) if (this->operator[](sub) != other[sub]) return true;
       return false;
   }
   // accessors
@@ -280,7 +280,7 @@ public:
   {
     this->set_stride();
     this->construct();
-    for (auto x: this->subItr()) _data[s2l_d(x)] = static_cast<T>(other[x]);
+    for (const auto & x: this->subItr()) _data[s2l_d(x)] = static_cast<T>(other[x]);
   }
   template<class R>
   Array2<T>& operator=(const Array2<R>& other){
@@ -289,7 +289,7 @@ public:
     _shift = 0;
     this->set_stride();
     this->construct();
-    for (auto x: this->subItr()) _data[s2l_d(x)] = static_cast<T>(other[x]);
+    for (const auto & x: this->subItr()) _data[s2l_d(x)] = static_cast<T>(other[x]);
     return *this;
   }
 
@@ -347,7 +347,7 @@ private:
     if (_num < offset_size) {
       std::string msg = "The shift { " + std::to_string(_shift) + " ";
       msg += "} and size { ";
-      for (auto x: _shape) msg += std::to_string(x) + " ";
+      for (const auto & x: _shape) msg += std::to_string(x) + " ";
       msg += "} of an Array2 must not exceed the allocated pointer size ";
       msg += std::to_string(_num);
       throw std::runtime_error(msg);
@@ -377,7 +377,7 @@ private:
       //subscript conversion necessary due to offset or strided array
       new_st = this->calculate_stride(_shape);
       //                                  vv(no offset)vvv         vvv(offset)vvv
-      for (auto x: this->subItr()) new_data[sub2lin(x,new_st)] = _data[this->s2l_d(x)];
+      for (const auto & x: this->subItr()) new_data[sub2lin(x,new_st)] = _data[this->s2l_d(x)];
     }
     bool new_own = true; // always take ownership of C++ allocated memory
     auto new_ref = std::make_shared<std::atomic<char>>(); // always use the default with C++ created arrays
@@ -548,11 +548,11 @@ public:
       shape_t shape{{static_cast<ind_t>(data_shape[0]),
                      static_cast<ind_t>(data_shape[1])}};
       shape_t stride{{shape[1], 1}};
-      return Array2<T>(data, num, true, shape, stride);
+      return Array2<T>(data, static_cast<ind_t>(num), true, shape, stride);
     }
     if (type == HighFive::ObjectType::Group){
-      ind_t no;
-      shape_t sh;
+      ind_t no{0};
+      shape_t sh{0,0};
       auto datagroup = obj.getGroup(node);
       if (!datagroup.hasAttribute("size")){
         throw std::runtime_error("How and or why is the size attribute missing?");
@@ -581,6 +581,11 @@ public:
   to_hdf(R& obj, const std::string& entry) const;
   bool to_hdf(const std::string& filename, const std::string& datasetname, const unsigned permissions=HighFive::File::OpenOrCreate) const;
 #endif //USE_HIGHFIVE
+
+  friend std::ostream & operator<<(std::ostream & os, const Array2<T>& a){
+    os << a.to_string();
+    return os;
+  }
 };
 
 /*!\brief An iterator for the Array2 class

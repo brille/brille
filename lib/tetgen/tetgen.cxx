@@ -46,7 +46,7 @@
 //============================================================================//
 #include <utility>
 #include "tetgen.h"
-
+/*
 //== io_cxx ==================================================================//
 //                                                                            //
 //                                                                            //
@@ -2891,7 +2891,7 @@ char* tetgenio::findnextfield(char *string)
 //                                                                            //
 //============================================================================//
 
-char* tetgenio::readnumberline(char *string, FILE *infile, char * /*infilename*/)
+char* tetgenio::readnumberline(char *string, FILE *infile, char *)
 {
   char *result;
 
@@ -2950,7 +2950,7 @@ char* tetgenio::findnextnumber(char *string)
 //                                                                            //
 //                                                                            //
 //== io_cxx ==================================================================//
-
+*/
 
 #ifndef TETLIBRARY
 //== behavior_cxx ============================================================//
@@ -23708,6 +23708,7 @@ void tetgenmesh::carveholes()
     } // i
   } // if (in->numberofholes > 0)
 
+  /* Omitted due to removal of I/O
   if (b->hole_mesh && (b->hole_mesh_filename[0] != 0)) {
     // A hole mesh (***.ele) is given.
     //enum tetgenbehavior::objecttype object;
@@ -23799,7 +23800,7 @@ void tetgenmesh::carveholes()
       }
     } // if (hole_mesh_loaded)
   }
-
+  */
   if (b->regionattrib && (in->numberofregions > 0)) { // -A option.
     // Record the tetrahedra that contains the region points for assigning
     //   region attributes after the holes have been carved.

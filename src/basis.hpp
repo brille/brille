@@ -92,7 +92,7 @@ public:
     // is exactly what we don't want. Instead, map numbers near 0 and near 1 to
     // near zero before checking for point equivalency
     auto check = [type,Kappa,e_tol,n_tol](const point& p, const ind_t& t){
-      point d, z{{0,0,0}};
+      point d{{0,0,0}}, z{{0,0,0}};
       if (t != type) return std::make_tuple(false, false, z);
       // find the difference vector % 1, with the discontinuity moved to 0.5
       for (int i=0; i<3; ++i) d[i] = Kappa[i]-p[i]+0.5;
@@ -153,7 +153,7 @@ public:
     auto checker = [type,Kappa,e_tol,n_tol](const point& p, const ind_t& t){
       // if the atom type is different, the positions "can't" be the same
       if (t != type) return false;
-      point d, z{{0,0,0}};
+      point d{{0,0,0}}, z{{0,0,0}};
       // find the difference vector % 1, with the discontinuity moved to 0.5
       for (int i=0; i<3; ++i) d[i] = Kappa[i]-p[i]+0.5;
       for (int i=0; i<3; ++i) d[i] = std::abs(d[i]-std::floor(d[i]))-0.5;
@@ -165,8 +165,8 @@ public:
     // now search for κ'
     for (size_t i=0; i<positions_.size(); ++i)
       if (checker(positions_[i], types_[i]))
-        return std::make_tuple(true, i);
-    return std::make_tuple(false, positions_.size());
+        return std::make_tuple(true, static_cast<ind_t>(i));
+    return std::make_tuple(false, static_cast<ind_t>(positions_.size()));
 //    auto kp_itr = std::find_if(positions_.begin(), positions_.end(), checker);
 //    bool found = kp_itr != positions_.end();
 //    // κ' (or size(positions_) if no equivalent position found)
@@ -243,7 +243,7 @@ public:
   template<class T>
   std::tuple<bool, ind_t> equivalent_after_operation(const size_t k, const std::array<T,9>& op, element_t e_tol = element_t(0), int n_tol = 0){
     if (k>=positions_.size()) throw std::runtime_error("invalid atom positon index");
-    point K_pos;
+    point K_pos{{0,0,0}};
     brille::utils::multiply_matrix_vector(K_pos.data(), op.data(), positions_[k].data());
     return this->equivalent_to(types_[k], K_pos, e_tol, n_tol);
   }
@@ -283,7 +283,7 @@ public:
         auto group = obj.getGroup(entry);
         std::vector<std::array<double,3>> p;
         std::vector<ind_t> t;
-        size_t num;
+        size_t num{0};
         group.getAttribute("size").read(num);
         if (num) {
           auto pos = group.getDataSet("positions");

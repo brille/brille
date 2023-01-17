@@ -186,7 +186,7 @@ public:
 //        info_update("First Brillouin zone\n", _first.python_string(),
 //                    "\nand 'irreducible' Brillouin zone\n",
 //                    _irreducible.python_string());
-        std::string msg = "Failed to find an irreducible Brillouin zone.";
+        std::string msg = "Failed to find an irreducible Brillouin zone.\n";
         msg += "First Brillouin zone\n" + _first.python_string();
         msg += "Last tried candidate\n" + _irreducible.python_string();
         msg += " Consider increasing tolerances from ";
@@ -747,10 +747,10 @@ public:
   [[nodiscard]] int add_time_reversal() const { return time_reversal ? 1 : 0; }
 
 private:
-  void _moveinto_prim(const lattice::LVec<double> &Q, lattice::LVec<double> &q,
-                      lattice::LVec<int> &tau, const lattice::LVec<double> &a,
-                      const lattice::LVec<double> &b,
-                      const lattice::LVec<double> &c) const;
+//  void _moveinto_prim(const lattice::LVec<double> &Q, lattice::LVec<double> &q,
+//                      lattice::LVec<int> &tau, const lattice::LVec<double> &a,
+//                      const lattice::LVec<double> &b,
+//                      const lattice::LVec<double> &c, int threads) const;
   template <class T>
   [[nodiscard]] bool _inside_wedge_outer(const lattice::LVec<T> &p,
                                          const bool pos = false) const {
