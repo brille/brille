@@ -1,5 +1,8 @@
-cmake_minimum_required(VERSION 3.18.2) 
+cmake_minimum_required(VERSION 3.18.2)
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
+cmake_policy(SET CMP0017 NEW) # Prefer cmake's own files for include/find_package before CMAKE_MODULE_PATH
+
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 project(brille)
 set(BRILLE_LIBRARY_TARGET brille)
@@ -28,7 +31,7 @@ set(BRILLE_LOGLEVEL "INFO" CACHE STRING "Emit log messages to standard out (DEBU
 option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
 
 # Define the minimum version of libraries needed
-set(MINIMUM_PYBIND11_VERSION 2.8.1)
+set(MINIMUM_PYBIND11_VERSION 2.10.3)
 set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
 set(MINIMUM_CATCH2_VERSION 2.13.9)
 set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
@@ -86,30 +89,11 @@ if (BRILLE_PROFILING)
   add_definitions(-DPROFILING)
 endif (BRILLE_PROFILING)
 
-
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 # With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
 SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 
-
-# Use Conan to fetch/build HDF5, the manylinux2014 image has HDF5 v1.8 which causes errors in testing
-if (NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/0.18.1/conan.cmake"
-       "${CMAKE_BINARY_DIR}/conan.cmake"
-       EXPECTED_HASH SHA256=5cdb3042632da3efff558924eecefd580a0e786863a857ca097c3d1d43df5dcd
-       TLS_VERIFY ON)
-endif()
-include("${CMAKE_BINARY_DIR}/conan.cmake")
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
-if (DEFINED ENV{CONAN_USER_HOME})
-  message(STATUS "Use $ENV{CONAN_USER_HOME} as CONAN_USER_HOME")
-endif()
-conan_cmake_configure(REQUIRES hdf5/1.12.0 GENERATORS cmake_find_package OPTIONS hdf5:shared=False hdf5:hl=False hdf5:with_zlib=False)
-conan_cmake_autodetect(conan_settings)
-conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_CURRENT_BINARY_DIR} BUILD outdated REMOTE conancenter SETTINGS ${conan_settings})
+include(brille-conan)
 
 if (PYTHON_EXECUTABLE)
   # Ensure the provided Python interpreter is used
@@ -122,7 +106,7 @@ if (NOT DEFINED PYTHON_EXECUTABLE)
   set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
 endif()
 
-include(fetcher.cmake)
+include(fetcher)
 
 # Attempt to find catch2 to handle C++ testing
 if(BRILLE_BUILD_TESTING)
@@ -150,7 +134,7 @@ if (BRILLE_HDF5)
 endif(BRILLE_HDF5)
 
 # Read the version of brille
-include(checkgit.cmake)
+include(checkgit)
 checkGitSetup(BRILLE) # defines/creates version.hpp; and library 'git_version'
 # So that we can print it to the console along with the specified build type
 message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
@@ -189,7 +173,6 @@ list(APPEND CXX_TARGETS ${BRILLE_LIBRARY_TARGET})
 endif()
 
 add_subdirectory(lib)
-
 # add the dependencies and include directories for all CXX targets:
 add_subdirectory(src)  # important
 
@@ -205,64 +188,9 @@ if(BRILLE_BUILD_TESTING)
   catch_discover_tests(${TESTING_TARGET})
 endif()
 
-# OpenMP support:
-find_package(OpenMP REQUIRED) # Change code to support missing OpenMP?
-if(OpenMP_CXX_FOUND)
-  foreach(OMP_TARGET IN LISTS CXX_TARGETS)
-    # message(STATUS "Adding OpenMP library to ${OMP_TARGET}")
-    target_link_libraries(${OMP_TARGET} PUBLIC OpenMP::OpenMP_CXX)
-  endforeach(OMP_TARGET)
-  if (MSVC AND MSVC_VERSION GREATER 1919)
-    add_compile_options(/openmp:experimental) # this doesn't work
-  endif()
-endif()
-
-if(BRILLE_HDF5 AND highfive_FOUND)
-  foreach(HF_TARGET IN LISTS CXX_TARGETS)
-    # message(STATUS "Adding HighFive library to ${HF_TARGET}")
-    target_link_libraries(${HF_TARGET} PUBLIC HighFive)
-  endforeach()
-endif()
-
-
-# if(MSVC)
-# 	if(CMAKE_BUILD_TYPE STREQUAL "Matlab")
-# 		find_package(Matlab)
-# 		target_link_libraries(_brille PUBLIC "${Matlab_ROOT_DIR}/bin/win64/libiomp5md.lib")
-# 		set_property(TARGET _brille APPEND PROPERTY LINK_FLAGS /nodefaultlib:vcomp)
-# 	endif()
-# else()
-# endif()
-
-# first we can indicate the documentation build as an option (default OFF)
-option(BUILD_DOC "Build documentation" OFF)
-option(USE_DOXYGEN "Look for and use Doxygen to build documentation" OFF)
-# check if Doxygen is installed
-if (USE_DOXYGEN)
-find_package(Doxygen QUIET)
-if (DOXYGEN_FOUND)
-  # set input and output files
-  set(DOXYGEN_IN ${PROJECT_SOURCE_DIR}/Doxyfile.in)
-  set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-  # request to configure the file
-  configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-  if(BUILD_DOC)
-    add_custom_target( docs ALL
-    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generating documentation with Doxygen"
-    VERBATIM )
-  else()
-    add_custom_target( docs
-    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generate documentation using target 'docs'"
-    VERBATIM )
-  endif()
-else (DOXYGEN_FOUND)
-  message(STATUS "Install Doxygen to build documentation")
-endif (DOXYGEN_FOUND)
-endif()
+include(brille-openmp)
+include(brille-hdf5)
+include(brille-doxygen)
 
 if (NOT SKBUILD)
 install(

@@ -1,4 +1,4 @@
-name: windows-2019
+name: windows-2022
 channels:
   - conda-forge
 dependencies:

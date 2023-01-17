@@ -3,7 +3,7 @@ set(CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
 find_package(Python3 QUIET COMPONENTS Interpreter)
 
 if (NOT DEFINED pre_configure_dir)
-  set(pre_configure_dir ${CMAKE_CURRENT_LIST_DIR})
+  set(pre_configure_dir ${CMAKE_SOURCE_DIR})
 endif()
 
 if (NOT DEFINED post_configure_dir)
