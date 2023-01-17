@@ -1,0 +1,6 @@
+if(BRILLE_HDF5 AND highfive_FOUND)
+    foreach(HF_TARGET IN LISTS CXX_TARGETS)
+        # message(STATUS "Adding HighFive library to ${HF_TARGET}")
+        target_link_libraries(${HF_TARGET} PUBLIC HighFive)
+    endforeach()
+endif()
