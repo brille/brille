@@ -34,10 +34,10 @@ void wrap_interpolator(py::module &m){
     Enumeration indicating how vector and matrix values transform
   )pbdoc"
 );
-  enm.value("Real", RotatesLike::Real, R"pbdoc(real space vector or matrix)pbdoc");
-  enm.value("Reciprocal", RotatesLike::Reciprocal, R"pbdoc(reciprocal scpace vector or matrix)pbdoc");
-  enm.value("Axial", RotatesLike::Axial, R"pbdoc(real space axial vector)pbdoc");
-  enm.value("Gamma", RotatesLike::Gamma, R"pbdoc((real space) phonon eigenvector)pbdoc");
+  enm.value("vector", RotatesLike::vector, R"pbdoc(Rotates like a vector)pbdoc");
+//  enm.value("Reciprocal", RotatesLike::Reciprocal, R"pbdoc(Rotates like a reciprocal scpace vector or matrix)pbdoc"); // Note to add in reciprocal vector later
+  enm.value("pseudovector", RotatesLike::pseudovector, R"pbdoc(Rotates like a pseudovector)pbdoc");
+  enm.value("Gamma", RotatesLike::Gamma, R"pbdoc(Rotates like a (real space) phonon eigenvector)pbdoc");
 }
 
 std::tuple<br::RotatesLike, int, int, std::array<double,3>>
@@ -50,12 +50,11 @@ set_check(
   if (bi.ndim != 1) throw std::runtime_error("flags must be a 1-D array");
   int *intel = (int*) bi.ptr;
   // convert the input integer to a RotatesLike
-  RotatesLike rl{RotatesLike::Real};
+  RotatesLike rl{RotatesLike::vector};
   if (bi.shape[0] > 0) switch(intel[0]){
-    case 3: rl = RotatesLike::Gamma; break;
-    case 2: rl = RotatesLike::Axial; break;
-    case 1: rl = RotatesLike::Reciprocal; break;
-    case 0: rl = RotatesLike::Real; break;
+    case 2: rl = RotatesLike::Gamma; break;
+    case 1: rl = RotatesLike::pseudovector; break;
+    case 0: rl = RotatesLike::vector; break;
     default: throw std::runtime_error("Unknown RotatesLike value "+std::to_string(intel[3]));
   }
   // get the cost-function type(s)

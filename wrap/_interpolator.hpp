@@ -12,7 +12,6 @@ namespace br = brille;
 
 template<class T>
 br::Interpolator<T>
-// std::tuple< br::Array<T>, std::array<br::ind_t,3>, RotatesLike >
 fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, const size_t count){
   using namespace brille;
   br::Array<T> data = br::py2a(pyarray);
@@ -29,12 +28,11 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, const size_t count){
   for (pybind11::ssize_t i=0; i<bi.shape[0] && i<3; ++i)
     el[i] = static_cast<br::ind_t>(intel[i]);
   // convert the input integer to a RotatesLike
-  RotatesLike rl{RotatesLike::Real};
+  RotatesLike rl{RotatesLike::vector};
   if (bi.shape[0] > 3) switch(intel[3]){
-    case 3: rl = RotatesLike::Gamma; break;
-    case 2: rl = RotatesLike::Axial; break;
-    case 1: rl = RotatesLike::Reciprocal; break;
-    case 0: rl = RotatesLike::Real; break;
+    case 2: rl = RotatesLike::Gamma; break;
+    case 1: rl = RotatesLike::pseudovector; break;
+    case 0: rl = RotatesLike::vector; break;
     default: throw std::runtime_error("Unknown RotatesLike value "+std::to_string(intel[3]));
   }
   // tie everything up
@@ -68,12 +66,11 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, py::array_t<double> py
   for (pybind11::ssize_t i=0; i<bi.shape[0] && i<3; ++i)
     el[i] = static_cast<br::ind_t>(intel[i]);
   // convert the input integer to a RotatesLike
-  RotatesLike rl{RotatesLike::Real};
+  RotatesLike rl{RotatesLike::vector};
   if (bi.shape[0] > 3) switch(intel[3]){
-    case 3: rl = RotatesLike::Gamma; break;
-    case 2: rl = RotatesLike::Axial; break;
-    case 1: rl = RotatesLike::Reciprocal; break;
-    case 0: rl = RotatesLike::Real; break;
+    case 2: rl = RotatesLike::Gamma; break;
+    case 1: rl = RotatesLike::pseudovector; break;
+    case 0: rl = RotatesLike::vector; break;
     default: throw std::runtime_error("Unknown RotatesLike value "+std::to_string(intel[3]));
   }
   // get the cost-function type(s)

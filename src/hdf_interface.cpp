@@ -5,9 +5,8 @@
 namespace HighFive {
 template<> DataType create_datatype<brille::RotatesLike>(){
   return EnumType<brille::RotatesLike>({
-      {"Real", brille::RotatesLike::Real},
-      {"Reciprocal", brille::RotatesLike::Reciprocal},
-      {"Axial", brille::RotatesLike::Axial},
+      {"vector", brille::RotatesLike::vector},
+      {"pseudovector", brille::RotatesLike::pseudovector},
       {"Gamma", brille::RotatesLike::Gamma}
   });
 }

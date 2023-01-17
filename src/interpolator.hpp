@@ -117,7 +117,7 @@ public:
   \see set_cost_info
   */
   explicit Interpolator(int scf_type=0, int vcf_type=0)
-  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::Real}, _costmult({{1,1,1}})
+  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector}, _costmult({{1,1,1}})
   {
     this->set_cost_info(scf_type, vcf_type);
   }
@@ -128,7 +128,7 @@ public:
   \see CostFunction
   */
   Interpolator(costfun_t scf, costfun_t vcf)
-  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::Real},
+  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector},
     _costmult({{1,1,1}}), _scalarfun(scf), _vectorfun(vcf)
   {}
   /*! \brief Partial constructor with default cost functions
@@ -386,9 +386,9 @@ public:
                        const std::vector<size_t>& invr,
                        const int nth=0) const {
     switch (rotlike_){
-      case RotatesLike::Real:       return this->rip_real(x,ps,r,invr,nth);
-      case RotatesLike::Axial:      return this->rip_axial(x,ps,r,invr,nth);
-      case RotatesLike::Reciprocal: return this->rip_recip(x,ps,r,invr,nth);
+      case RotatesLike::vector:       return this->rip_real(x,ps,r,invr,nth);
+      case RotatesLike::pseudovector:      return this->rip_axial(x,ps,r,invr,nth);
+//      case RotatesLike::Reciprocal: return this->rip_recip(x,ps,r,invr,nth);// Note, add back later once LengthUnit implemented
       case RotatesLike::Gamma:      return this->rip_gamma(x,q,rt,ps,r,invr,nth);
       default: throw std::runtime_error("Impossible RotatesLike value!");
     }
@@ -412,7 +412,7 @@ public:
       const bArray<T>& nd,
       const shape_t sh,
       const std::array<I,3>& ne,
-      const RotatesLike rl = RotatesLike::Real)
+      const RotatesLike rl = RotatesLike::vector)
   {
     data_ = nd;
     shape_ = sh;
@@ -439,7 +439,7 @@ public:
   void replace_data(
       const brille::Array<T>& nd,
       const std::array<I,3>& ne,
-      const RotatesLike rl = RotatesLike::Real)
+      const RotatesLike rl = RotatesLike::vector)
   {
     data_ = bArray<T>(nd);
     shape_ = nd.shape();

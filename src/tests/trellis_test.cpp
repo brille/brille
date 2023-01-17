@@ -94,7 +94,8 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   for (auto i: tostore.subItr()) tostore[i] = Qxyz.val(i[0], i[2]);
 
   std::array<unsigned,3> elements{0,3,0};
-  RotatesLike rl = RotatesLike::Reciprocal;
+  //RotatesLike rl = RotatesLike::Reciprocal;
+  RotatesLike rl = RotatesLike::vector;
   // make sure we store an (nQ, 1, 3) array to have one mode per Q
   bzt.replace_value_data(tostore , elements, rl);
 
@@ -163,7 +164,8 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
   for (auto& i: eigenvalues.valItr()) i = distribution(generator);
   for (auto& i: eigenvectors.valItr()) i = std::complex<double>(distribution(generator), distribution(generator));
   std::array<unsigned,3> vals_el{{1,0,0}}, vecs_el{{0,3,0}};
-  RotatesLike vecs_rt{RotatesLike::Reciprocal};
+  //RotatesLike vecs_rt{RotatesLike::Reciprocal};
+  RotatesLike vecs_rt{RotatesLike::vector};
 
   bzt.replace_value_data(eigenvalues, vals_el); // scalars do not rotate, so any RotatesLike value is fine
   bzt.replace_vector_data(eigenvectors, vecs_el, vecs_rt);
@@ -213,7 +215,8 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   for (auto& i: eigenvalues.valItr()) i = distribution(generator);
   for (auto& i: eigenvectors.valItr()) i = std::complex<double>(distribution(generator), distribution(generator));
   std::array<unsigned,3> vals_el{{1,0,0}}, vecs_el{{0,3,0}};
-  RotatesLike vecs_rt{RotatesLike::Reciprocal};
+  //RotatesLike vecs_rt{RotatesLike::Reciprocal};
+  RotatesLike vecs_rt{RotatesLike::vector};
 
   bzt.replace_value_data(eigenvalues, vals_el); // scalars do not rotate, so any RotatesLike value is fine
   bzt.replace_vector_data(eigenvectors, vecs_el, vecs_rt);
@@ -354,7 +357,8 @@ TEST_CASE("PolyNode inclusion rounding error","[trellis][quartz][polynode][61]")
 
   Array<double> zeros(quartz_bzt.get_hkl().size(0), 1u);
   std::array<ind_t,3> elements{{1, 0, 0}};
-  RotatesLike rl{RotatesLike::Reciprocal};
+  //RotatesLike rl{RotatesLike::Reciprocal};
+  RotatesLike rl{RotatesLike::vector};
   Interpolator<double> val(zeros, elements, rl);
   quartz_bzt.replace_data(val, val);
 
@@ -407,7 +411,8 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
 
   Array<double> zeros(bzt.get_hkl().size(0), 1u);
   std::array<ind_t,3> elements{{1, 0, 0}};
-  RotatesLike rl{RotatesLike::Reciprocal};
+  //RotatesLike rl{RotatesLike::Reciprocal};
+  RotatesLike rl{RotatesLike::vector};
   Interpolator<double> val(zeros, elements, rl);
   bzt.replace_data(val, val);
 
@@ -518,7 +523,7 @@ TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
   Array<std::complex<double>> vectors(vec_shape, std::complex<double>(1.0));
 
   std::array<ind_t,3> val_elements{{1, 0, 0}};
-  Interpolator<double> val(values, val_elements, RotatesLike::Real);
+  Interpolator<double> val(values, val_elements, RotatesLike::vector);
   std::array<ind_t,3> vec_elements{{0, n_modes, 0}};
   Interpolator<std::complex<double>> vec(vectors, vec_elements, RotatesLike::Gamma);
   bzt.replace_data(val, vec);
