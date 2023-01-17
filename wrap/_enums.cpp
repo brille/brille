@@ -34,5 +34,7 @@ void wrap_enums(py::module &m){
   )pbdoc")
     .value("none", LengthUnit::none)
     .value("angstrom", LengthUnit::angstrom, R"pbdoc(10⁻¹⁰ meter)pbdoc")
-    .value("inverse_angstrom", LengthUnit::inverse_angstrom, R"pbdoc(1 / angstrom)pbdoc");
+    .value("inverse_angstrom", LengthUnit::inverse_angstrom, R"pbdoc(1 / angstrom)pbdoc")
+    .value("real_lattice", LengthUnit::real_lattice, R"pbdoc(fractional coordinates of real lattice)pbdoc")
+    .value("reciprocal_lattice", LengthUnit::reciprocal_lattice, R"pbdoc(fractional coordinates of reciprocal lattice)pbdoc");
 }
