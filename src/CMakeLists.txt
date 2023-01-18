@@ -67,7 +67,8 @@ list(APPEND CXX_SOURCES
   symmetry.cpp
   vertex_map_set.cpp
 )
-if(BRILLE_HDF5 AND highfive_FOUND)
+
+if(BRILLE_HDF5)
     list(APPEND CXX_SOURCES hdf_interface.cpp)
 endif()
 
