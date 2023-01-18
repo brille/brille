@@ -19,7 +19,7 @@ if (DEFINED ENV{CONAN_USER_HOME})
 endif()
 #conan_cmake_configure(REQUIRES hdf5/1.12.0 ${CONAN_LLVM_OPENMP} GENERATORS cmake_find_package OPTIONS hdf5:shared=False hdf5:hl=False hdf5:with_zlib=False)
 conan_cmake_configure(
-        REQUIRES hdf5/1.14.0
+        REQUIRES hdf5/1.12.0
         ${CONAN_LLVM_OPENMP}
         GENERATORS cmake_find_package
         OPTIONS hdf5:shared=False hdf5:hl=False hdf5:with_zlib=False
