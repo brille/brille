@@ -40,7 +40,7 @@ set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
 option(BRILLE_HDF5 "Add HDF5 file-based IO" ON)
 option(REQUIRE_SYSTEM_HIGHFIVE "Never attempt to fetch HighFive" OFF)
 mark_as_advanced(REQUIRE_SYSTEM_HIGHFIVE)
-set(MINIMUM_HIGHFIVE_VERSION 2.4.1)
+set(MINIMUM_HIGHFIVE_VERSION 2.6.2)
 SET(FETCH_HIGHFIVE_REPO https://github.com/BlueBrain/HighFive)
 
 # find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
