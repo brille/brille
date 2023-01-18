@@ -38,9 +38,11 @@ jobs:
           extra-specs: python=${{ matrix.python-version }}
       - run: echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
       - if: startsWith(matrix.variant.os, 'macos')
-        run: brew install tree; tree /Users/runner/.conan
+        run: brew install tree; tree /Users/runner/.conan || echo "No conan directory"
       - name: configure
         run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.cmake-type }} -D PYTHON3_EXECUTABLE=${{ env.pythonInterpreter }}
+      - if: startsWith(matrix.variant.os, 'macos')
+        run: tree /Users/runner/.conan || echo "No conan directory"
       - name: Get number of CPU cores
         uses: SimenB/github-actions-cpu-cores@v1.1.0
         id: cpu-cores
