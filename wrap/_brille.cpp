@@ -43,6 +43,7 @@ void wrap_version(pybind11::module & m){
   m.attr("__version__") = version_number;
   m.attr("version") = meta_version;
   m.attr("git_revision") = git_revision;
+  m.attr("git_branch") = git_branch;
   m.attr("build_datetime") = build_datetime;
   m.attr("build_hostname") = build_hostname;
 }
