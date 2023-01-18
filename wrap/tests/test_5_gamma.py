@@ -89,9 +89,10 @@ class GammaTest(unittest.TestCase):
 
         # insert the Euphonic-derived eigenvalues and eigenvectors for the grid
         # points, which are used in the interpolation
+        vec_els = np.array([0, 24, 0, 2, 3, 0, 0])
         grid.fill(
             nacl['grid_values'][perm], nacl['grid_values_elements'], nacl['grid_values_weights'],
-            nacl['grid_vectors'][perm], nacl['grid_vectors_elements'], nacl['grid_vectors_weights'],
+            nacl['grid_vectors'][perm], vec_els, nacl['grid_vectors_weights'],
             bool(nacl['grid_sort']))
 
         # the fourth grid point is inside of the irreducible volume, which
