@@ -36,10 +36,6 @@ jobs:
           environment-file: .github/config/${{ matrix.variant.cmake-preset }}.yml
           cache-env: true
           extra-specs: python=${{ matrix.python-version }}
-      - name: CCache
-        uses: hendrikmuhs/ccache-action@v1.2.8
-        with:
-          key: ${{ matrix.variant.os }}
       - run: echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
       - name: configure
         run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.cmake-type }} -D PYTHON3_EXECUTABLE=${{ env.pythonInterpreter }}
