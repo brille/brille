@@ -54,40 +54,37 @@ function(checkGitRead git_hash)
 endfunction()
 
 function(checkGitVersion git_version safe_version)
-
   execute_process(
     COMMAND git rev-parse HEAD
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    WORKING_DIRECTORY ${pre_configure_dir}
     OUTPUT_VARIABLE GIT_HASH
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   execute_process(
     COMMAND git rev-parse --abbrev-ref HEAD
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    WORKING_DIRECTORY ${pre_configure_dir}
     OUTPUT_VARIABLE GIT_BRANCH
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   execute_process(
     COMMAND ${Python3_EXECUTABLE} -c "from datetime import datetime; print(datetime.now().isoformat(timespec='minutes'))"
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     OUTPUT_VARIABLE GIT_CONFIGURE_TIME
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   execute_process(
     COMMAND ${Python3_EXECUTABLE} -c "import setuptools_scm as s; print(s.get_version())"
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    WORKING_DIRECTORY ${pre_configure_dir}
     OUTPUT_VARIABLE GIT_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   execute_process(
     COMMAND ${Python3_EXECUTABLE} -c "import setuptools_scm as s; print('.'.join(s.get_version().split('.')[:3]))"
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    WORKING_DIRECTORY ${pre_configure_dir}
     OUTPUT_VARIABLE GIT_SAFE_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   execute_process(
     COMMAND ${Python3_EXECUTABLE} -c "import platform; print(platform.node())"
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
     OUTPUT_VARIABLE GIT_HOSTNAME
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )

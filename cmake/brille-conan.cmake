@@ -17,6 +17,16 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
 if (DEFINED ENV{CONAN_USER_HOME})
     message(STATUS "Use $ENV{CONAN_USER_HOME} as CONAN_USER_HOME")
 endif()
-conan_cmake_configure(REQUIRES hdf5/1.12.0 ${CONAN_LLVM_OPENMP} GENERATORS cmake_find_package OPTIONS hdf5:shared=False hdf5:hl=False hdf5:with_zlib=False)
+conan_cmake_configure(
+        REQUIRES
+        hdf5/1.12.0
+        ${CONAN_LLVM_OPENMP}
+        GENERATORS
+        cmake_find_package
+        OPTIONS
+        hdf5:shared=False
+        hdf5:hl=False
+        hdf5:with_zlib=False
+)
 conan_cmake_autodetect(conan_settings)
 conan_cmake_install(PATH_OR_REFERENCE ${CMAKE_CURRENT_BINARY_DIR} BUILD outdated REMOTE conancenter SETTINGS ${conan_settings})

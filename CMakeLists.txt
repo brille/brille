@@ -39,8 +39,12 @@ set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
 # Optional support of HDF5-based IO
 option(BRILLE_HDF5 "Add HDF5 file-based IO" ON)
 option(REQUIRE_SYSTEM_HIGHFIVE "Never attempt to fetch HighFive" OFF)
+if (BRILLE_HDF5)
+    # Include the HDF5 IO methods -- safe since configuring will fail if HDF5/HighFive is not available
+    add_definitions(-DUSE_HIGHFIVE)
+endif()
 mark_as_advanced(REQUIRE_SYSTEM_HIGHFIVE)
-set(MINIMUM_HIGHFIVE_VERSION 2.4.1)
+set(MINIMUM_HIGHFIVE_VERSION 2.6.2)
 SET(FETCH_HIGHFIVE_REPO https://github.com/BlueBrain/HighFive)
 
 # find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
@@ -118,20 +122,6 @@ else()
 endif()
 # Attempt to find pybind11 to handle CPython bindings
 git_fetch(pybind11 ${MINIMUM_PYBIND11_VERSION} ${FETCH_PYBIND11_REPO} ${REQUIRE_SYSTEM_PYBIND11})
-
-# HighFive is used to simplify the interface with HDF5:
-# Override some default settings
-if (BRILLE_HDF5)
-  set(HIGHFIVE_USE_BOOST OFF)
-  set(HIGHFIVE_UNIT_TESTS OFF)
-  set(HIGHFIVE_EXAMPLES OFF)
-  set(HIGHFIVE_BUILD_DOCS OFF)
-  git_fetch(highfive ${MINIMUM_HIGHFIVE_VERSION} ${FETCH_HIGHFIVE_REPO} ${REQUIRE_SYSTEM_HIGHFIVE})
-  if (highfive_FOUND)
-    # message(STATUS "Adding HighFive precompiler macro flag")
-    add_definitions(-DUSE_HIGHFIVE)
-  endif()
-endif(BRILLE_HDF5)
 
 # Read the version of brille
 include(checkgit)

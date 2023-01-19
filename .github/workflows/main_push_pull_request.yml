@@ -36,13 +36,13 @@ jobs:
           environment-file: .github/config/${{ matrix.variant.cmake-preset }}.yml
           cache-env: true
           extra-specs: python=${{ matrix.python-version }}
-      - name: CCache
-        uses: hendrikmuhs/ccache-action@v1.2.8
-        with:
-          key: ${{ matrix.variant.os }}
       - run: echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
+      - if: startsWith(matrix.variant.os, 'macos')
+        run: brew install tree; tree /Users/runner/.conan || echo "No conan directory"
       - name: configure
         run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.cmake-type }} -D PYTHON3_EXECUTABLE=${{ env.pythonInterpreter }}
+      - if: startsWith(matrix.variant.os, 'macos')
+        run: tree /Users/runner/.conan || echo "No conan directory"
       - name: Get number of CPU cores
         uses: SimenB/github-actions-cpu-cores@v1.1.0
         id: cpu-cores
