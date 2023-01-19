@@ -194,7 +194,7 @@ public:
   */
   // use the Array2<T>(const Array<T>&) constructor
   Interpolator(brille::Array<T>& d, element_t<ind_t> el, RotatesLike rl, LengthUnit lu, int csf, int cvf, element_t<double> wg)
-  : data_(d), shape_(d.shape()), _elements(el), rotlike_{rl}, _costmult(wg)
+  : data_(d), shape_(d.shape()), _elements(el), rotlike_{rl}, lenunit_{lu}, _costmult(wg)
   {
     this->set_cost_info(csf, cvf);
     this->check_elements();
@@ -464,7 +464,7 @@ public:
       const brille::Array<T>& nd,
       const std::array<I,3>& ne,
       const RotatesLike rl = RotatesLike::vector,
-      const LengthUnit lu = LengthUnit::none)
+      const LengthUnit lu = LengthUnit::real_lattice)
   {
     data_ = bArray<T>(nd);
     shape_ = nd.shape();
