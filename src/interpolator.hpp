@@ -391,12 +391,26 @@ public:
                        const std::vector<size_t>& r,
                        const std::vector<size_t>& invr,
                        const int nth=0) const {
-    switch (rotlike_){
-      case RotatesLike::vector:       return this->rip_real(x,ps,r,invr,nth);
-      case RotatesLike::pseudovector:      return this->rip_axial(x,ps,r,invr,nth);
-//      case RotatesLike::Reciprocal: return this->rip_recip(x,ps,r,invr,nth);// Note, add back later once LengthUnit implemented
-      case RotatesLike::Gamma:      return this->rip_gamma(x,q,rt,ps,r,invr,nth);
-      default: throw std::runtime_error("Impossible RotatesLike value!");
+    switch (lenunit_){
+      case LengthUnit::real_lattice:
+        switch (rotlike_){
+            case RotatesLike::vector:       return this->rip_real(x,ps,r,invr,nth);
+            case RotatesLike::pseudovector: return this->rip_axial(x,ps,r,invr,nth);
+            case RotatesLike::Gamma:        return this->rip_gamma(x,q,rt,ps,r,invr,nth);
+            default: throw std::runtime_error("Impossible RotatesLike value!");
+        }
+      case LengthUnit::reciprocal_lattice:
+        switch (rotlike_){
+            case RotatesLike::vector: return this->rip_recip(x,ps,r,invr,nth);
+            default: throw std::runtime_error("LengthUnit, RotatesLike combination not implemented");
+        }
+      case LengthUnit::angstrom:
+        switch (rotlike_){
+            case RotatesLike::Gamma:
+              return this->rip_gamma(x,q,rt,ps,r,invr,nth);
+            default: throw std::runtime_error("LengthUnit, RotatesLike combination not implemented");
+        }
+      default: throw std::runtime_error("LengthUnit, RotatesLike combination not implemented");
     }
   }
   //! Return the transform type of the stored data under symmetry operation appliation.
