@@ -396,7 +396,7 @@ public:
         switch (rotlike_) {
             case RotatesLike::vector:       return this->rip_real(x,ps,r,invr,nth);
             case RotatesLike::pseudovector: return this->rip_axial(x,ps,r,invr,nth);
-            case RotatesLike::Gamma:        return this->rip_gamma(x,q,rt,ps,r,invr,nth);
+            case RotatesLike::Gamma:        return this->rip_gamma(x,q,rt,ps.getall(),r,invr,nth);
             default: throw std::runtime_error("Impossible RotatesLike value!");
         }
       }
@@ -409,7 +409,16 @@ public:
       case LengthUnit::angstrom: {
         switch (rotlike_) {
             case RotatesLike::Gamma: {
-              return this->rip_gamma(x,q,rt,ps,r,invr,nth);
+              // Convert rotation matrix from fractional to Cartesian
+              std::vector<std::array<double,9>> rot_cart(ps.size());
+              std::array<double,9> tdbl0;
+              for (size_t j=0; j<ps.size(); j++){
+                // tdbl0 = lattice*rot
+                brille::utils::mul_mat_mat(tdbl0.data(), 3u, rt.lattice().to_xyz(LengthUnit::angstrom).data(), ps.data(j));
+                // rot_cart = tdbl0*inv(lattice) = lattice*rot*inv(lattice)
+                brille::utils::mul_mat_mat(rot_cart[j].data(), 3u, tdbl0.data(), rt.lattice().from_xyz(LengthUnit::angstrom).data());
+              }
+              return this->rip_gamma(x,q,rt,rot_cart,r,invr,nth);
             }
             default: throw std::runtime_error("LengthUnit, RotatesLike combination not implemented");
         }
@@ -598,16 +607,16 @@ private:
   bool rip_real(bArray<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   bool rip_recip(bArray<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   bool rip_axial(bArray<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class R>
-  bool rip_gamma_complex(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class R, class S=T>
+  template<class R, class U>
+  bool rip_gamma_complex(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const std::vector<std::array<U,9>>&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class R, class U, class S=T>
   enable_if_t<is_complex<S>::value, bool>
-  rip_gamma(bArray<T>& x, const lattice::LVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
-    return rip_gamma_complex(x, q, gt, ps, r, ir, nth);
+  rip_gamma(bArray<T>& x, const lattice::LVec<R>& q, const GammaTable& gt, const std::vector<std::array<U,9>>& rot, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
+    return rip_gamma_complex(x, q, gt, rot, r, ir, nth);
   }
-  template<class R, class S=T>
+  template<class R, class U, class S=T>
   enable_if_t<!is_complex<S>::value, bool>
-  rip_gamma(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
+  rip_gamma(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const std::vector<std::array<U,9>>&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
     throw std::runtime_error("RotatesLike == Gamma requires complex valued data!");
   }
 

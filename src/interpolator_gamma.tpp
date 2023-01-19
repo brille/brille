@@ -45,10 +45,10 @@ product of q = (h,k,l) and d = (a,b,c) is q⋅d = 2π (h*a + k*b + l*c).
 */
 
 template<class T>
-template<class R>
+template<class R, class U>
 bool Interpolator<T>::rip_gamma_complex(
   bArray<T>& x, const lattice::LVec<R>& q, const GammaTable& pgt,
-  const PointSymmetry& ptsym, const std::vector<size_t>& ridx, const std::vector<size_t>& invRidx,
+  const std::vector<std::array<U,9>>& rot, const std::vector<size_t>& ridx, const std::vector<size_t>& invRidx,
   const int nthreads
 ) const {
   profile_update("Start Interpolator::rip_gamma_complex method");
@@ -74,8 +74,8 @@ bool Interpolator<T>::rip_gamma_complex(
   long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
   std::vector<T> tA;
   T t0[9], t1[9];
-  std::vector<std::array<int,9>> rot;
-  rot = ptsym.getall();
+  //std::vector<std::array<int,9>> rot;
+  //rot = ptsym.getall();
 
 #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
 #pragma omp parallel for default(none) shared(x,q,pgt,rot,ridx,invRidx,e_iqd_gt) private(t0,t1,tA) firstprivate(no,Nmat,xsize) schedule(static)
