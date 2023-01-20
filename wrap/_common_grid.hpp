@@ -119,7 +119,7 @@ Note
   |   4   |        `reciprocal_lattice`        |
   +-------+------------------------------------+
 
-  Integer values outside of the mapped range (or missing) are replaced by 0.
+  Integer values outside of the mapped range (or missing) are replaced by 3.
 
 )pbdoc");
 
@@ -221,7 +221,7 @@ Note
   |   4   |        `reciprocal_lattice`        |
   +-------+------------------------------------+
 
-  Integer values outside of the mapped range (or missing) are replaced by 0.
+  Integer values outside of the mapped range (or missing) are replaced by 3.
 
   Mapping of integers to scalar cost function:
 

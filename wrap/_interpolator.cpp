@@ -57,7 +57,7 @@ set_check(
     default: throw std::runtime_error("Unknown RotatesLike value "+std::to_string(intel[0]));
   }
   // convert input integer to LengthUnit
-  LengthUnit lu{LengthUnit::none};
+  LengthUnit lu{LengthUnit::real_lattice};
   if (bi.shape[0] > 1) switch(intel[1]){
     case 4: lu = LengthUnit::reciprocal_lattice; break;
     case 3: lu = LengthUnit::real_lattice; break;
