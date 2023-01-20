@@ -119,7 +119,7 @@ public:
   \see set_cost_info
   */
   explicit Interpolator(int scf_type=0, int vcf_type=0)
-  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector}, lenunit_{LengthUnit::none}, _costmult({{1,1,1}})
+  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector}, lenunit_{LengthUnit::real_lattice}, _costmult({{1,1,1}})
   {
     this->set_cost_info(scf_type, vcf_type);
   }
@@ -130,7 +130,7 @@ public:
   \see CostFunction
   */
   Interpolator(costfun_t scf, costfun_t vcf)
-  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector}, lenunit_{LengthUnit::none},
+  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector}, lenunit_{LengthUnit::real_lattice},
     _costmult({{1,1,1}}), _scalarfun(scf), _vectorfun(vcf)
   {}
   /*! \brief Partial constructor with default cost functions
@@ -447,7 +447,7 @@ public:
       const shape_t sh,
       const std::array<I,3>& ne,
       const RotatesLike rl = RotatesLike::vector,
-      const LengthUnit lu = LengthUnit::none)
+      const LengthUnit lu = LengthUnit::real_lattice)
   {
     data_ = nd;
     shape_ = sh;

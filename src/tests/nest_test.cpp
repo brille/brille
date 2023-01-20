@@ -54,9 +54,9 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   brille::Array<double> tostore(tostoreshape);
   for (auto i: tostore.subItr()) tostore[i] = Qxyz.val(i[0], i[2]);
   std::array<unsigned,3> elements{0,3,0};
-  //RotatesLike rt = RotatesLike::Reciprocal;
   RotatesLike rt = RotatesLike::vector;
-  bzn.replace_value_data( tostore, elements, rt );
+  LengthUnit lu = LengthUnit::reciprocal_lattice;
+  bzn.replace_value_data( tostore, elements, rt, lu);
 
   // If branches ≠ 1 then the vector is not treated as a vector!
   REQUIRE(bzn.data().branches() == 1u);
@@ -110,9 +110,9 @@ TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest][nb][random]"){
   brille::Array<double> tostore(tostoreshape);
   for (auto i: tostore.subItr()) tostore[i] = Qxyz.val(i[0], i[2]);
   std::array<unsigned,3> elements{0,3,0};
-  //RotatesLike rt = RotatesLike::Reciprocal;
   RotatesLike rt = RotatesLike::vector;
-  bzn.replace_value_data( tostore, elements, rt );
+  LengthUnit lu = LengthUnit::reciprocal_lattice;
+  bzn.replace_value_data( tostore, elements, rt, lu);
 
   // If branches ≠ 1 then the vector is not treated as a vector!
   REQUIRE(bzn.data().branches() == 1u);
@@ -182,9 +182,9 @@ TEST_CASE("BrillouinZoneNest3 interpolation along face","[nest][nb][gb976690]"){
   brille::Array<double> tostore(tostoreshape);
   for (auto i: tostore.subItr()) tostore[i] = Qxyz.val(i[0], i[2]);
   std::array<unsigned,3> elements{0,3,0};
-  //RotatesLike rt = RotatesLike::Reciprocal;
   RotatesLike rt = RotatesLike::vector;
-  bzn.replace_value_data( tostore, elements, rt );
+  LengthUnit lu = LengthUnit::reciprocal_lattice;
+  bzn.replace_value_data( tostore, elements, rt, lu);
 
   // If branches ≠ 1 then the vector is not treated as a vector!
   REQUIRE(bzn.data().branches() == 1u);
