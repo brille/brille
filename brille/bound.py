@@ -2,7 +2,7 @@
 # can be included here. If the module is loaded, however, without being installed first these import statements will
 # raise a ModuleNotFoundError, which prevents automated pre-installation testing from taking place.
 try:
-    from ._brille import __version__, version, AngleUnit, LengthUnit, Bravais, RotatesLike
+    from ._brille import __version__, version, AngleUnit, LengthUnit, Bravais, RotatesLike, NodeType
     from ._brille import real_space_tolerance, reciprocal_space_tolerance, ApproxConfig
     from ._brille import Basis, HallSymbol, Spacegroup, Pointgroup, Symmetry, PointSymmetry, PrimitiveTransform
     from ._brille import BrillouinZone, Polyhedron, LPolyhedron, SortingStatus

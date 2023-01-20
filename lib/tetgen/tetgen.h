@@ -332,7 +332,7 @@ public:
 
   // A callback function.
   TetSizeFunc tetunsuitable;
-
+/*
   // Input & output routines.
   bool load_node_call(FILE* infile, int markers, int uvflag, char*);
   bool load_node(char*);
@@ -365,7 +365,7 @@ public:
   char *findnextfield(char* string);
   char *readnumberline(char* string, FILE* infile, char* infilename);
   char *findnextnumber(char* string);
-
+*/
   static void init(polygon* p) {
     p->vertexlist = (int *) NULL;
     p->numberofvertices = 0;

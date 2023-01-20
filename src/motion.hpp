@@ -29,9 +29,10 @@ operations.
         Vector<T> w;
     public:
         Motion() = default;
+        Motion(Matrix<R> X, Vector<T> x): W(std::move(X)), w(std::move(x)) {}
+        explicit Motion(std::pair<Matrix<R>, Vector<T>> p): W(p.first), w(p.second) {}
         explicit Motion(Matrix<R> X): W(X), w({0,0,0}) {}
         explicit Motion(Vector<T> x): W({1,0,0, 0,1,0, 0,0,1}), w(x) {}
-        Motion(Matrix<R> X, Vector<T> x): W(X), w(x) {}
         explicit Motion(const std::string& x, bool change_of_basis=false) {this->from_ascii(x,change_of_basis);}
         Motion<R,T> operator*(const Motion<R,T>& m) const {
             // {W0, w0} * {W1, w1} == {W0*W1, (W0*w1 + w0)%1}
@@ -42,7 +43,7 @@ operations.
             // ouput translation-part is W0*w1
             brille::utils::multiply_matrix_vector(outw.data(), this->W.data(), m.gett().data());
             // *plus* w0
-            for (int i=0; i<3; ++i) outw[i] += this->w[i];
+            for (size_t i=0; i<3; ++i) outw[i] += this->w[i];
             // we want the output translation elements to be ∈ [0,1)
             for (int i=0; i<3; ++i) outw[i] -= std::floor(outw[i]);
             return Motion(outW, outw);
@@ -174,7 +175,7 @@ operations.
         // ∑ₙiₙαₙ + f where each iₙ is an integer, αₙ∈{x,y,z}
         // and f one of 0, ±1/12, ±1/6, ±1/4, ±1/3, ±1/2
         // but we should support any rational or floating point value for f
-        int n{0};
+        size_t n{0};
         R i{1};
         T f{0}; // always floating point
         char c{' '};

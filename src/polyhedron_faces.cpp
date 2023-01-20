@@ -64,7 +64,7 @@ bool Faces::operator!=(const Faces& that) const {
   for (const auto & face: _faces) for (const auto & v: face) if(known.count(v) == 0) known[v] = n_vert++;
   assert(known.size() == n_vert);
   size_t edge_count = _faces.size() + known.size() - 2u;
-  Array2<ind_t> edges(edge_count, 2u);
+  Array2<ind_t> edges(static_cast<ind_t>(edge_count), 2u);
 //  auto add_to_no = [](const size_t & x, const std::vector<ind_t>& v){return x + v.size();};
 //  auto no = std::accumulate(_faces.begin(), _faces.end(), 0u, add_to_no);
 //  std::vector<bool> unseen(no*no, true);
@@ -91,8 +91,9 @@ bool Faces::operator!=(const Faces& that) const {
 }
 
 [[nodiscard]] Array2<ind_t> Faces::planes() const {
-  Array2<ind_t> planes(_faces.size(), 3u);
-  for (ind_t i=0; i<_faces.size(); ++i){
+  auto fs = static_cast<ind_t>(_faces.size());
+  Array2<ind_t> planes(fs, 3u);
+  for (ind_t i=0; i<fs; ++i){
     for (ind_t j=0; j<3; ++j) {
       planes[{i, j}] = _faces[i][j];
     }

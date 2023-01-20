@@ -298,6 +298,10 @@ namespace brille::polyhedron{
       // and extract the used vertices
       _vertices = _vertices.extract(keep);
     }
+	friend std::ostream& operator<<(std::ostream& os, const Poly<T,A> & p){
+	  os << p.python_string();
+		return os;
+	}
   };
 
   template<class T, template<class> class A>
@@ -323,6 +327,7 @@ namespace brille::polyhedron{
 //    verbose_update("which should match \n", hkl.xyz().to_string());
     return {hkl, faces};
   }
+
 
 }
 #endif
