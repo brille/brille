@@ -33,7 +33,9 @@ template<> DataType create_datatype<brille::LengthUnit>(){
   return EnumType<brille::LengthUnit>({
       {"none", brille::LengthUnit::none},
       {"angstrom", brille::LengthUnit::angstrom},
-      {"inverse_angstrom", brille::LengthUnit::inverse_angstrom}
+      {"inverse_angstrom", brille::LengthUnit::inverse_angstrom},
+      {"real_lattice", brille::LengthUnit::real_lattice},
+      {"reciprocal_lattice", brille::LengthUnit::reciprocal_lattice},
   });
 }
 template<> DataType create_datatype<brille::HF_Matrix<int>>(){
