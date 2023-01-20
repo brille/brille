@@ -74,8 +74,6 @@ bool Interpolator<T>::rip_gamma_complex(
   long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
   std::vector<T> tA;
   T t0[9], t1[9];
-  //std::vector<std::array<int,9>> rot;
-  //rot = ptsym.getall();
 
 #if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
 #pragma omp parallel for default(none) shared(x,q,pgt,rot,ridx,invRidx,e_iqd_gt) private(t0,t1,tA) firstprivate(no,Nmat,xsize) schedule(static)

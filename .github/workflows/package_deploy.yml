@@ -1,7 +1,6 @@
 name: Package and Deploy
 
 on:
-  push:
   pull_request:
   release:
     types: [created, edited, published]
