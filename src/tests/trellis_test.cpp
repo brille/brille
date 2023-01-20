@@ -517,9 +517,9 @@ TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
     Array<std::complex<double>> vectors(vec_shape, std::complex<double>(1.0));
 
     std::array<ind_t,3> val_elements{{1, 0, 0}};
-    Interpolator<double> val(values, val_elements, RotatesLike::Real);
+    Interpolator<double> val(values, val_elements, RotatesLike::vector, LengthUnit::real_lattice);
     std::array<ind_t,3> vec_elements{{0, n_modes, 0}};
-    Interpolator<std::complex<double>> vec(vectors, vec_elements, RotatesLike::Gamma);
+    Interpolator<std::complex<double>> vec(vectors, vec_elements, RotatesLike::Gamma, LengthUnit::real_lattice);
     trellis.replace_data(val, vec);
 
     REQUIRE_NOTHROW(trellis.ir_interpolate_at(qpts, 1));
