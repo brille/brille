@@ -81,7 +81,7 @@ jobs:
     if: github.event_name == 'release'
 
     steps:
-    - uses: actions/download-artifacts@v3
+    - uses: actions/download-artifact@v3
       id: download
       with:
         path: artifacts
@@ -99,7 +99,7 @@ jobs:
         artifacts: "dist/*.whl,dist/*.tar.gz"
     - name: Publish artifacts to PyPI
       if: ${{ github.event.action == 'published' }}
-      uses: pypa/gh-action-pypi-publish@release/v1.5.0
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.PYPI_TOKEN }}
