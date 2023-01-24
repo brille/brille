@@ -34,7 +34,7 @@ enum class AngleUnit { not_provided, radian, degree, pi };
 /*! \brief The units of length quantities supplied to some Lattice methods
 
 */
-enum class LengthUnit { none, angstrom, inverse_angstrom};
+enum class LengthUnit { none, angstrom, inverse_angstrom, real_lattice, reciprocal_lattice };
 
 /*! \brief An enumeration to differentiate betwee Node types
 

@@ -34,13 +34,12 @@ void wrap_interpolator(py::module &m){
     Enumeration indicating how vector and matrix values transform
   )pbdoc"
 );
-  enm.value("Real", RotatesLike::Real, R"pbdoc(real space vector or matrix)pbdoc");
-  enm.value("Reciprocal", RotatesLike::Reciprocal, R"pbdoc(reciprocal scpace vector or matrix)pbdoc");
-  enm.value("Axial", RotatesLike::Axial, R"pbdoc(real space axial vector)pbdoc");
-  enm.value("Gamma", RotatesLike::Gamma, R"pbdoc((real space) phonon eigenvector)pbdoc");
+  enm.value("vector", RotatesLike::vector, R"pbdoc(Rotates like a vector)pbdoc");
+  enm.value("pseudovector", RotatesLike::pseudovector, R"pbdoc(Rotates like a pseudovector)pbdoc");
+  enm.value("Gamma", RotatesLike::Gamma, R"pbdoc(Rotates like a (real space) phonon eigenvector)pbdoc");
 }
 
-std::tuple<br::RotatesLike, int, int, std::array<double,3>>
+std::tuple<br::RotatesLike, br::LengthUnit, int, int, std::array<double,3>>
 set_check(
   py::array_t<int> pyflg, py::array_t<double> pywght
 ){
@@ -50,18 +49,27 @@ set_check(
   if (bi.ndim != 1) throw std::runtime_error("flags must be a 1-D array");
   int *intel = (int*) bi.ptr;
   // convert the input integer to a RotatesLike
-  RotatesLike rl{RotatesLike::Real};
+  RotatesLike rl{RotatesLike::vector};
   if (bi.shape[0] > 0) switch(intel[0]){
-    case 3: rl = RotatesLike::Gamma; break;
-    case 2: rl = RotatesLike::Axial; break;
-    case 1: rl = RotatesLike::Reciprocal; break;
-    case 0: rl = RotatesLike::Real; break;
-    default: throw std::runtime_error("Unknown RotatesLike value "+std::to_string(intel[3]));
+    case 2: rl = RotatesLike::Gamma; break;
+    case 1: rl = RotatesLike::pseudovector; break;
+    case 0: rl = RotatesLike::vector; break;
+    default: throw std::runtime_error("Unknown RotatesLike value "+std::to_string(intel[0]));
+  }
+  // convert input integer to LengthUnit
+  LengthUnit lu{LengthUnit::real_lattice};
+  if (bi.shape[0] > 1) switch(intel[1]){
+    case 4: lu = LengthUnit::reciprocal_lattice; break;
+    case 3: lu = LengthUnit::real_lattice; break;
+    case 2: lu = LengthUnit::inverse_angstrom; break;
+    case 1: lu = LengthUnit::angstrom; break;
+    case 0: lu = LengthUnit::none; break;
+    default: throw std::runtime_error("Unknown LengthUnit value "+std::to_string(intel[1]));
   }
   // get the cost-function type(s)
   int csf{0}, cvf{0};
-  if (bi.shape[0] > 1) csf = intel[1];
-  if (bi.shape[0] > 2) cvf = intel[2];
+  if (bi.shape[0] > 2) csf = intel[2];
+  if (bi.shape[0] > 3) cvf = intel[3];
   // copy-over the weight specification
   std::array<double,3> wght{{1,1,1}};
   bi = pywght.request();
@@ -69,5 +77,5 @@ set_check(
   auto *dblwght = (double*) bi.ptr;
   for (pybind11::ssize_t i=0; i<bi.shape[0] && i<3; ++i) wght[i] = dblwght[i];
   // tie everything up
-  return std::make_tuple(rl, csf, cvf, wght);
+  return std::make_tuple(rl, lu, csf, cvf, wght);
 }

@@ -94,9 +94,10 @@ TEST_CASE("Simple BrillouinZoneTrellis3 interpolation","[trellis][debugging]"){
   for (auto i: tostore.subItr()) tostore[i] = Qxyz.val(i[0], i[2]);
 
   std::array<unsigned,3> elements{0,3,0};
-  RotatesLike rl = RotatesLike::Reciprocal;
+  RotatesLike rl = RotatesLike::vector;
+  LengthUnit lu = LengthUnit::reciprocal_lattice;
   // make sure we store an (nQ, 1, 3) array to have one mode per Q
-  bzt.replace_value_data(tostore , elements, rl);
+  bzt.replace_value_data(tostore, elements, rl, lu);
 
   REQUIRE(bzt.data().branches() == 1u);
 
@@ -163,10 +164,11 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
   for (auto& i: eigenvalues.valItr()) i = distribution(generator);
   for (auto& i: eigenvectors.valItr()) i = std::complex<double>(distribution(generator), distribution(generator));
   std::array<unsigned,3> vals_el{{1,0,0}}, vecs_el{{0,3,0}};
-  RotatesLike vecs_rt{RotatesLike::Reciprocal};
+  RotatesLike vecs_rt{RotatesLike::vector};
+  LengthUnit vecs_lu{LengthUnit::reciprocal_lattice};
 
   bzt.replace_value_data(eigenvalues, vals_el); // scalars do not rotate, so any RotatesLike value is fine
-  bzt.replace_vector_data(eigenvectors, vecs_el, vecs_rt);
+  bzt.replace_vector_data(eigenvectors, vecs_el, vecs_rt, vecs_lu);
 
   REQUIRE(bzt.data().branches() == n_modes);
 
@@ -214,10 +216,11 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   for (auto& i: eigenvalues.valItr()) i = distribution(generator);
   for (auto& i: eigenvectors.valItr()) i = std::complex<double>(distribution(generator), distribution(generator));
   std::array<unsigned,3> vals_el{{1,0,0}}, vecs_el{{0,3,0}};
-  RotatesLike vecs_rt{RotatesLike::Reciprocal};
+  RotatesLike vecs_rt{RotatesLike::vector};
+  LengthUnit vecs_lu{LengthUnit::reciprocal_lattice};
 
   bzt.replace_value_data(eigenvalues, vals_el); // scalars do not rotate, so any RotatesLike value is fine
-  bzt.replace_vector_data(eigenvectors, vecs_el, vecs_rt);
+  bzt.replace_vector_data(eigenvectors, vecs_el, vecs_rt, vecs_lu);
 
   REQUIRE(bzt.data().branches() == n_modes);
 
@@ -357,8 +360,9 @@ TEST_CASE("PolyNode inclusion rounding error","[trellis][quartz][polynode][61]")
 
   Array<double> zeros(quartz_bzt.get_hkl().size(0), 1u);
   std::array<ind_t,3> elements{{1, 0, 0}};
-  RotatesLike rl{RotatesLike::Reciprocal};
-  Interpolator<double> val(zeros, elements, rl);
+  RotatesLike rl{RotatesLike::vector};
+  LengthUnit lu{LengthUnit::reciprocal_lattice};
+  Interpolator<double> val(zeros, elements, rl, lu);
   quartz_bzt.replace_data(val, val);
 
   // error identified for delta=1e-9
@@ -410,8 +414,10 @@ TEST_CASE("BrillouinZoneTrellis3 inclusion data race error","[trellis][la2zr2o7]
 
   Array<double> zeros(bzt.get_hkl().size(0), 1u);
   std::array<ind_t,3> elements{{1, 0, 0}};
-  RotatesLike rl{RotatesLike::Reciprocal};
-  Interpolator<double> val(zeros, elements, rl);
+  RotatesLike rl{RotatesLike::vector};
+  LengthUnit lu{LengthUnit::reciprocal_lattice};
+
+  Interpolator<double> val(zeros, elements, rl, lu);
   bzt.replace_data(val, val);
 
   int n{5000};
@@ -511,9 +517,9 @@ TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
     Array<std::complex<double>> vectors(vec_shape, std::complex<double>(1.0));
 
     std::array<ind_t,3> val_elements{{1, 0, 0}};
-    Interpolator<double> val(values, val_elements, RotatesLike::Real);
+    Interpolator<double> val(values, val_elements, RotatesLike::vector, LengthUnit::real_lattice);
     std::array<ind_t,3> vec_elements{{0, n_modes, 0}};
-    Interpolator<std::complex<double>> vec(vectors, vec_elements, RotatesLike::Gamma);
+    Interpolator<std::complex<double>> vec(vectors, vec_elements, RotatesLike::Gamma, LengthUnit::real_lattice);
     trellis.replace_data(val, vec);
 
     REQUIRE_NOTHROW(trellis.ir_interpolate_at(qpts, 1));
