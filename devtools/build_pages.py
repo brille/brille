@@ -90,7 +90,7 @@ def main(build_wheel, wheelhouse, output):
     # Use the built wheel to build the documentation
     if len(wheel) != 1:
         raise RuntimeError(f"Failed to find single musllinux wheel; found {wheel} instead")
-    image = get_image(client, 'docker.io/brille/docact:v5.0.0')
+    image = get_image(client, 'docker.io/brille/docact:v5.1.0')
     volumes = get_volumes(client, {'wheelhouse': folder, 'build': get_folder(output), 'conan': None})
     write_entrypoint(PAGES_ENTRYPOINT, folder, sub={'wheel': wheel[0]})
     try:

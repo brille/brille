@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('.'))
 # -- Project information -----------------------------------------------------
 
 project = 'brille'
-copyright = '2020, Gregory Tucker'
+copyright = '2020-2023, Gregory Tucker'
 author = 'Gregory Tucker'
 import brille._brille as brille_module
 version = brille_module.__version__ # just the 'short' version
