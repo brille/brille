@@ -1,10 +1,10 @@
-name: macos-11
+name: macos-12
 channels:
   - conda-forge
 dependencies:
   - cmake=3.23.2
   - numpy
   - llvm-openmp==11.1.0
-  - conan
+  - conan==1.57.0
 #  - hdf5
 

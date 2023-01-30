@@ -27,8 +27,11 @@ void define_polyhedron_lvec(py::class_<A> & cls){
   using namespace brille;
   using namespace brille::polyhedron;
   using namespace pybind11::literals;
-  cls.def("rotate", [](const A &p, const PointSymmetry &s, const size_t i) {
+  cls.def("rotate", [](const A &p, const PointSymmetry &s, const ind_t i) {
     return p.apply(s, i);
+  });
+  cls.def("to_Cartesian", [](const A & p){
+    return Poly<T,bArray>(p.vertices().xyz(), p.faces());
   });
 }
 

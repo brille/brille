@@ -1,8 +1,8 @@
-name: windows-2019
+name: windows-2022
 channels:
   - conda-forge
 dependencies:
   - cmake=3.23.2
   - numpy
-  - conan
+  - conan==1.57.0
     #  - hdf5

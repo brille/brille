@@ -644,6 +644,6 @@ public:
 #endif // USE_HIGHFIVE
 };
 
-#include "trellis_poly.tpp"
+#include "trellis_poly_l.tpp"
 } // end namespace brille
 #endif

@@ -69,6 +69,34 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
   def_grid_ir_interpolate(cls);
   def_grid_sort(cls);
 
+  cls.def("node_at", [](const Class& cobj, const std::array<ind_t, 3>& sub){
+    return cobj.subscripted_node_poly(sub);
+  }, "subscript"_a);
+
+  cls.def("node_containing", [](const Class & c, py::array_t<double> pyX){
+    using namespace brille;
+    using namespace brille::lattice;
+    brille::Array2<double> bX = brille::py2a2(pyX);
+    auto qv = LQVec<double>(c.get_brillouinzone().get_lattice(), bX);
+    return c.point_in_node_poly(qv);
+  }, "Q"_a);
+
+  cls.def("node_at_type", [](const Class & c, const std::array<ind_t, 3>& s){
+    return c.node_at_type(s);
+  }, "subscript"_a);
+
+  cls.def("node_containing_type", [](const Class & c, py::array_t<double> pyX){
+    using namespace brille;
+    using namespace brille::lattice;
+    brille::Array2<double> bX = brille::py2a2(pyX);
+    auto qv = LQVec<double>(c.get_brillouinzone().get_lattice(), bX);
+    return c.point_in_node_type(qv);
+  }, "Q"_a);
+
+  cls.def("all_node_types", [](const Class & c){
+    return c.all_node_types();
+  });
+
 #ifdef USE_HIGHFIVE
   def_grid_hdf_interface(cls, pyclass_name);
 #endif

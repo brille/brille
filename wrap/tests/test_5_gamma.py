@@ -64,7 +64,11 @@ def getLoad(loader, file, **kwds):
 
 
 class GammaTest(unittest.TestCase):
-    def test_nacl(self):
+
+    @classmethod
+    def setUpClass(cls):
+        # Set up nacl test data, lattice and grid
+
         from brille import Basis, Symmetry, Lattice, BrillouinZone, BZTrellisQdc
         # load numpy arrays from the compressed binary pack
         nacl = getLoad(np.load, 'test_5_gamma.npz')
@@ -81,6 +85,16 @@ class GammaTest(unittest.TestCase):
         always_triangulate = bool(nacl['grid_always_triangulate'])
         grid = BZTrellisQdc(bz, max_volume, always_triangulate)
 
+        cls.nacl = nacl
+        cls.lat = lat
+        cls.grid = grid
+
+    def test_nacl(self):
+        # Verify interpolation with defined test data/lattice/grid
+        nacl = self.nacl
+        lat = self.lat
+        grid = self.grid
+
         # verify the stored grid points to ensure we have the same irreducible
         # wedge and grid
         # Though the points could be permuted:
@@ -89,9 +103,15 @@ class GammaTest(unittest.TestCase):
 
         # insert the Euphonic-derived eigenvalues and eigenvectors for the grid
         # points, which are used in the interpolation
+        # Original vectors elements enumeration was [0, 24 0, 3, 0, 0] where
+        # RotatesLike::Gamma = 3. New interface includes extra enumeration
+        # LengthUnit::real_lattice = 3, and the RotatesLike enumeration has
+        # changed, so RotatesLike::Gamma = 2 now. Replace here rather than
+        # regenerate file.
+        vec_els = np.array([0, 24, 0, 2, 3, 0, 0])
         grid.fill(
             nacl['grid_values'][perm], nacl['grid_values_elements'], nacl['grid_values_weights'],
-            nacl['grid_vectors'][perm], nacl['grid_vectors_elements'], nacl['grid_vectors_weights'],
+            nacl['grid_vectors'][perm], vec_els, nacl['grid_vectors_weights'],
             bool(nacl['grid_sort']))
 
         # the fourth grid point is inside of the irreducible volume, which
@@ -121,7 +141,7 @@ class GammaTest(unittest.TestCase):
         # plus that the interpolated eigenvalues match the store Euphonic eigenvalues
         self.assertTrue(np.allclose(br_val, nacl['euphonic_values']))
 
-        # convert the eigenvalues into the same cartesian coordinate system
+        # convert the eigenvectors into the same cartesian coordinate system
         # used by Euphonic
         br_vec = np.einsum('ba,ijkb->ijka', nacl['basis_vectors'], br_vec)
         # load the Euphonic calculated eigenvectors
@@ -136,6 +156,55 @@ class GammaTest(unittest.TestCase):
 
         # as an extra check we *could* verfiy that the output of brille is
         # unchanged, but we don't care about changes in overall phase factor
+
+    def test_cartesian_eigenvector_interpolation(self):
+        # Verify interpolation with Cartesian eigenvectors
+        nacl = self.nacl
+        grid = self.grid
+
+        # Permuted grid points:
+        perm = np.hstack([
+            np.argwhere(np.all(np.isclose(nacl['grid_rlu'], x), axis=1))
+                for x in grid.rlu]
+            ).flatten()
+
+        # Convert input grid vectors from basis to Cartesian
+        grid_vecs_cart =  np.einsum(
+            'ba,ijkb->ijka', nacl['basis_vectors'], nacl['grid_vectors'])
+        # Use RotatesLike::Gamma = 2 and LengthUnit::angstrom = 1
+        vec_els = np.array([0, 24, 0, 2, 1, 0, 0])
+        grid.fill(
+            nacl['grid_values'][perm], nacl['grid_values_elements'],
+            nacl['grid_values_weights'], grid_vecs_cart[perm],
+            vec_els, nacl['grid_vectors_weights'])
+
+        # Use the grid to interpolate at each q_nu:
+        br_val, br_vec = grid.ir_interpolate_at(nacl['q_nu'])
+
+        # load the Euphonic calculated eigenvectors
+        eu_vec = nacl['euphonic_vectors']
+        # The 'interpolated' eigenvectors and the Euphonic eigenvectors should
+        # only be equivalent up to an overall phase factor, so find it:
+        antiphase = np.exp(-1J * np.angle(
+            np.einsum('qmij,qmij->qm', np.conj(eu_vec), br_vec)))
+        # and remove the phase from the interpolated eigenvectors
+        br_vec = np.einsum('ab,abij->abij', antiphase, br_vec)
+        # now all eigenvectors must match
+        self.assertTrue(np.allclose(br_vec, eu_vec))
+
+    def test_unsupported_rotateslike_lengthunit_combinations_error(self):
+        nacl = self.nacl
+        grid = self.grid
+        # RotatesLike, Lengthunit
+        combos = [(0, 1), (1, 0), (2, 2), (2, 4)]
+
+        for combo in combos:
+            vec_els = np.array([0, 24, 0, *combo, 0, 0])
+            grid.fill(nacl['grid_values'], nacl['grid_values_elements'],
+            nacl['grid_values_weights'], nacl['grid_vectors'],
+            vec_els, nacl['grid_vectors_weights'])
+            with self.assertRaises(RuntimeError):
+                grid.ir_interpolate_at(nacl['q_nu'])
 
 
 if __name__ == '__main__':

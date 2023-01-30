@@ -34,5 +34,16 @@ void wrap_enums(py::module &m){
   )pbdoc")
     .value("none", LengthUnit::none)
     .value("angstrom", LengthUnit::angstrom, R"pbdoc(10⁻¹⁰ meter)pbdoc")
-    .value("inverse_angstrom", LengthUnit::inverse_angstrom, R"pbdoc(1 / angstrom)pbdoc");
+    .value("inverse_angstrom", LengthUnit::inverse_angstrom, R"pbdoc(1 / angstrom)pbdoc")
+    .value("real_lattice", LengthUnit::real_lattice, R"pbdoc(fractional coordinates of real lattice)pbdoc")
+    .value("reciprocal_lattice", LengthUnit::reciprocal_lattice, R"pbdoc(fractional coordinates of reciprocal lattice)pbdoc");
+
+  py::enum_<NodeType>(m, "NodeType", R"pbdoc(
+  The units of a number representing a length
+  )pbdoc")
+      .value("assumed_null", NodeType::assumed_null, R"pbdoc(Indicates a node which should be null but no explicit check was performed)pbdoc")
+      .value("found_null", NodeType::found_null, R"pbdoc(A node which an explicit check found to be null)pbdoc")
+      .value("null", NodeType::null, R"pbdoc(A null node)pbdoc")
+      .value("cube", NodeType::cube, R"pbdoc(A cube shaped node)pbdoc")
+      .value("polygon", NodeType::poly, R"pbdoc(A convex polygon shaped node)pbdoc");
 }

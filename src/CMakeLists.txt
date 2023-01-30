@@ -30,13 +30,17 @@ if (BRILLE_PROFILING)
 endif (BRILLE_PROFILING)
 
 # Directory specific compilation flags
+# Setting directory-level flags here does nothing since the *target* is defined in the parent folder.
+# Instead we can specify flags *per source file*
 if (MSVC)
     # warning level 4 -- add /WX for all warnings as errors
     # /Zc__cplusplus ensures the preprocessor macro __cplusplus is set
     add_compile_options(/W4 /Zc__cplusplus)
+    set(SOURCE_FILE_COMPILE_OPTIONS "")
 else()
     # lots of warnings -- add -Werror for  all warnings as errors
-    add_compile_options(-Wall -Wextra -pedantic -Wmissing-braces)
+    add_compile_options(-Wall -Wextra -Wmissing-braces -Wconversion -Wsign-conversion -pedantic-errors -Werror)
+    set(SOURCE_FILE_COMPILE_OPTIONS "-Wall;-Wextra;-Wmissing-braces;-Wconversion;-Wsign-conversion;-pedantic-errors;-Werrors")
 endif()
 
 # if(CMAKE_CXX_CPPCHECK)
@@ -61,10 +65,17 @@ list(APPEND CXX_SOURCES
   process_id.cpp
   spg_database.cpp
   symmetry.cpp
+  vertex_map_set.cpp
 )
-if(BRILLE_HDF5 AND highfive_FOUND)
+
+if(BRILLE_HDF5)
     list(APPEND CXX_SOURCES hdf_interface.cpp)
 endif()
+
+foreach(CXX_SOURCE IN LISTS CXX_SOURCES)
+#    message(STATUS "Setting compile options for ${CXX_SOURCE} to ${SOURCE_FILE_COMPILE_OPTIONS}")
+    set_source_files_properties(${CXX_SOURCE} PROPERTIES COMPILE_OPTIONS "${SOURCE_FILE_COMPILE_OPTIONS}")
+endforeach()
 
 foreach(CXX_TARGET IN LISTS CXX_TARGETS)
   target_sources(${CXX_TARGET} PRIVATE ${CXX_SOURCES})

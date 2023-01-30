@@ -95,6 +95,7 @@ protected:
   shape_t shape_;       //!< The shape of the input Array (or Array2)
   element_t<ind_t> _elements; //!< The number of each element type per point and per mode
   RotatesLike rotlike_;   //!< How the elements of `data_` rotate
+  LengthUnit lenunit_;   //!< The units of `data_`
   element_t<double> _costmult; //!< The relative (multiplicative) cost for differences in each element type
   element_t<ind_t> _funtype;
   costfun_t _scalarfun; //!< A function to calculate differences between the scalars at two stored points
@@ -106,6 +107,7 @@ public:
     if (shape_ != other.shape_) return true;
     if (_elements != other._elements) return true;
     if (rotlike_ != other.rotlike_) return true;
+    if (lenunit_ != other.lenunit_) return true;
     if (_costmult != other._costmult) return true;
     if (_funtype != other._funtype) return true;
     return false;
@@ -117,7 +119,7 @@ public:
   \see set_cost_info
   */
   explicit Interpolator(int scf_type=0, int vcf_type=0)
-  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::Real}, _costmult({{1,1,1}})
+  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector}, lenunit_{LengthUnit::real_lattice}, _costmult({{1,1,1}})
   {
     this->set_cost_info(scf_type, vcf_type);
   }
@@ -128,7 +130,7 @@ public:
   \see CostFunction
   */
   Interpolator(costfun_t scf, costfun_t vcf)
-  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::Real},
+  : data_(0,0), _elements({{0,0,0}}), rotlike_{RotatesLike::vector}, lenunit_{LengthUnit::real_lattice},
     _costmult({{1,1,1}}), _scalarfun(scf), _vectorfun(vcf)
   {}
   /*! \brief Partial constructor with default cost functions
@@ -137,10 +139,11 @@ public:
   \param sh The \f$N\f$-dimensional shape of the data array
   \param el The sub-array character specifier
   \param rl How any vectors or tensors transform under application of a symmetry operation
-  \see RotatesLike
+  \param lu Units of vectors/tensors
+  \see RotatesLike, LengthUnit
   */
-  Interpolator(bArray<T>& d, shape_t sh, element_t<ind_t> el, RotatesLike rl)
-  : data_(d), shape_(sh), _elements(el), rotlike_{rl}, _costmult({{1,1,1}})
+  Interpolator(bArray<T>& d, shape_t sh, element_t<ind_t> el, RotatesLike rl, LengthUnit lu)
+  : data_(d), shape_(sh), _elements(el), rotlike_{rl}, lenunit_{lu}, _costmult({{1,1,1}})
   {
     this->set_cost_info(0,0);
     this->check_elements();
@@ -151,13 +154,14 @@ public:
   \param sh The \f$N\f$-dimensional shape of the data array
   \param el The sub-array character specifier
   \param rl How any vectors or tensors transform under application of a symmetry operation
+  \param lu Units of vectors/tensors
   \param csf The scalar cost function type
   \param cvf The vector cost function type
   \param wg The relative scalar, vector, and matrix cost scaling values
-  \see RotatesLike, set_cost_info
+  \see RotatesLike, LengthUnit, set_cost_info
   */
-  Interpolator(bArray<T>& d, shape_t sh, element_t<ind_t> el, RotatesLike rl, int csf, int cvf, element_t<double> wg)
-  : data_(d), shape_(sh), _elements(el), rotlike_{rl}, _costmult(wg)
+  Interpolator(bArray<T>& d, shape_t sh, element_t<ind_t> el, RotatesLike rl, LengthUnit lu, int csf, int cvf, element_t<double> wg)
+  : data_(d), shape_(sh), _elements(el), rotlike_{rl}, lenunit_{lu}, _costmult(wg)
   {
     this->set_cost_info(csf, cvf);
     this->check_elements();
@@ -167,11 +171,12 @@ public:
   \param d The \f$N\f$-dimensional data to be interpolated, will be flattend to 2-D
   \param el The sub-array character specifier
   \param rl How any vectors or tensors transform under application of a symmetry operation
-  \see RotatesLike
+  \param lu Units of vectors/tensors
+  \see RotatesLike, LengthUnit
   */
   // use the Array2<T>(const Array<T>&) constructor
-  Interpolator(brille::Array<T>& d, element_t<ind_t> el, RotatesLike rl)
-  : data_(d), shape_(d.shape()), _elements(el), rotlike_{rl}, _costmult({{1,1,1}})
+  Interpolator(brille::Array<T>& d, element_t<ind_t> el, RotatesLike rl, LengthUnit lu)
+  : data_(d), shape_(d.shape()), _elements(el), rotlike_{rl}, lenunit_{lu}, _costmult({{1,1,1}})
   {
     this->set_cost_info(0,0);
     this->check_elements();
@@ -181,14 +186,15 @@ public:
   \param d The \f$N\f$-dimensional data to be interpolated, will be flattend to 2-D
   \param el The sub-array character specifier
   \param rl How any vectors or tensors transform under application of a symmetry operation
+  \param lu Units of vectors/tensors
   \param csf The scalar cost function type
   \param cvf The vector cost function type
   \param wg The relative scalar, vector, and matrix cost scaling values
-  \see RotatesLike, set_cost_info
+  \see RotatesLike, LengthUnit, set_cost_info
   */
   // use the Array2<T>(const Array<T>&) constructor
-  Interpolator(brille::Array<T>& d, element_t<ind_t> el, RotatesLike rl, int csf, int cvf, element_t<double> wg)
-  : data_(d), shape_(d.shape()), _elements(el), rotlike_{rl}, _costmult(wg)
+  Interpolator(brille::Array<T>& d, element_t<ind_t> el, RotatesLike rl, LengthUnit lu, int csf, int cvf, element_t<double> wg)
+  : data_(d), shape_(d.shape()), _elements(el), rotlike_{rl}, lenunit_{lu}, _costmult(wg)
   {
     this->set_cost_info(csf, cvf);
     this->check_elements();
@@ -385,12 +391,39 @@ public:
                        const std::vector<size_t>& r,
                        const std::vector<size_t>& invr,
                        const int nth=0) const {
-    switch (rotlike_){
-      case RotatesLike::Real:       return this->rip_real(x,ps,r,invr,nth);
-      case RotatesLike::Axial:      return this->rip_axial(x,ps,r,invr,nth);
-      case RotatesLike::Reciprocal: return this->rip_recip(x,ps,r,invr,nth);
-      case RotatesLike::Gamma:      return this->rip_gamma(x,q,rt,ps,r,invr,nth);
-      default: throw std::runtime_error("Impossible RotatesLike value!");
+    switch (lenunit_) {
+      case LengthUnit::real_lattice: {
+        switch (rotlike_) {
+            case RotatesLike::vector:       return this->rip_real(x,ps,r,invr,nth);
+            case RotatesLike::pseudovector: return this->rip_axial(x,ps,r,invr,nth);
+            case RotatesLike::Gamma:        return this->rip_gamma(x,q,rt,ps.getall(),r,invr,nth);
+            default: throw std::runtime_error("Impossible RotatesLike value!");
+        }
+      }
+      case LengthUnit::reciprocal_lattice: {
+        switch (rotlike_) {
+            case RotatesLike::vector: return this->rip_recip(x,ps,r,invr,nth);
+            default: throw std::runtime_error("LengthUnit, RotatesLike combination not implemented");
+        }
+      }
+      case LengthUnit::angstrom: {
+        switch (rotlike_) {
+            case RotatesLike::Gamma: {
+              // Convert rotation matrix from fractional to Cartesian
+              std::vector<std::array<double,9>> rot_cart(ps.size());
+              std::array<double,9> tdbl0;
+              for (size_t j=0; j<ps.size(); j++){
+                // tdbl0 = lattice*rot
+                brille::utils::mul_mat_mat(tdbl0.data(), 3u, rt.lattice().to_xyz(LengthUnit::angstrom).data(), ps.data(j));
+                // rot_cart = tdbl0*inv(lattice) = lattice*rot*inv(lattice)
+                brille::utils::mul_mat_mat(rot_cart[j].data(), 3u, tdbl0.data(), rt.lattice().from_xyz(LengthUnit::angstrom).data());
+              }
+              return this->rip_gamma(x,q,rt,rot_cart,r,invr,nth);
+            }
+            default: throw std::runtime_error("LengthUnit, RotatesLike combination not implemented");
+        }
+      }
+      default: throw std::runtime_error("LengthUnit, RotatesLike combination not implemented");
     }
   }
   //! Return the transform type of the stored data under symmetry operation appliation.
@@ -406,17 +439,20 @@ public:
   \param sh The \f$N\f$-dimensional shape of the data to be interpolated
   \param ne The new sub-array character specification
   \param rl How the new data transforms under application of a symmetry operation
+  \param lu Units of new data
   */
   template<class I>
   void replace_data(
       const bArray<T>& nd,
       const shape_t sh,
       const std::array<I,3>& ne,
-      const RotatesLike rl = RotatesLike::Real)
+      const RotatesLike rl = RotatesLike::vector,
+      const LengthUnit lu = LengthUnit::real_lattice)
   {
     data_ = nd;
     shape_ = sh;
     rotlike_ = rl;
+    lenunit_ = lu;
     // convert the elements datatype as necessary
     if (ne[1]%3)
       throw std::logic_error("Vectors must have 3N elements per branch");
@@ -430,6 +466,7 @@ public:
   \param nd The new \f$N\f$-dimensional data to be interpolated
   \param ne The new sub-array character specification
   \param rl How the new data transforms under application of a symmetry operation
+  \param lu Units of new data
 
   \note The provided data will only be used in-place if it is a contiguous
         row-ordered array. In all other cases a copy will be made before
@@ -439,11 +476,13 @@ public:
   void replace_data(
       const brille::Array<T>& nd,
       const std::array<I,3>& ne,
-      const RotatesLike rl = RotatesLike::Real)
+      const RotatesLike rl = RotatesLike::vector,
+      const LengthUnit lu = LengthUnit::real_lattice)
   {
     data_ = bArray<T>(nd);
     shape_ = nd.shape();
     rotlike_ = rl;
+    lenunit_ = lu;
     // convert the elements datatype as necessary
     if (ne[1]%3)
       throw std::logic_error("Vectors must have 3N elements per branch");
@@ -568,16 +607,16 @@ private:
   bool rip_real(bArray<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   bool rip_recip(bArray<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
   bool rip_axial(bArray<T>&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class R>
-  bool rip_gamma_complex(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
-  template<class R, class S=T>
+  template<class R, class U>
+  bool rip_gamma_complex(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const std::vector<std::array<U,9>>&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const;
+  template<class R, class U, class S=T>
   enable_if_t<is_complex<S>::value, bool>
-  rip_gamma(bArray<T>& x, const lattice::LVec<R>& q, const GammaTable& gt, const PointSymmetry& ps, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
-    return rip_gamma_complex(x, q, gt, ps, r, ir, nth);
+  rip_gamma(bArray<T>& x, const lattice::LVec<R>& q, const GammaTable& gt, const std::vector<std::array<U,9>>& rot, const std::vector<size_t>& r, const std::vector<size_t>& ir, const int nth) const{
+    return rip_gamma_complex(x, q, gt, rot, r, ir, nth);
   }
-  template<class R, class S=T>
+  template<class R, class U, class S=T>
   enable_if_t<!is_complex<S>::value, bool>
-  rip_gamma(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const PointSymmetry&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
+  rip_gamma(bArray<T>&, const lattice::LVec<R>&, const GammaTable&, const std::vector<std::array<U,9>>&, const std::vector<size_t>&, const std::vector<size_t>&, const int) const{
     throw std::runtime_error("RotatesLike == Gamma requires complex valued data!");
   }
 
@@ -595,6 +634,7 @@ private:
     group.createDataSet("shape", shape_);
     group.createDataSet("elements", _elements);
     group.createDataSet("rotlike", rotlike_);
+    group.createDataSet("lenunit", lenunit_);
     group.createDataSet("costmult", _costmult);
     group.createDataSet("funtype", _funtype);
     return ok;
@@ -611,15 +651,17 @@ private:
     shape_t s;
     element_t<ind_t> e, f;
     RotatesLike r;
+    LengthUnit l;
     element_t<double> c;
     //
     group.getDataSet("shape").read(s);
     group.getDataSet("elements").read(e);
     group.getDataSet("rotlike").read(r);
+    group.getDataSet("lenunit").read(l);
     group.getDataSet("costmult").read(c);
     group.getDataSet("funtype").read(f);
     //
-    return {d, s, e, r, static_cast<int>(f[0]), static_cast<int>(f[1]), c};
+    return {d, s, e, r, l, static_cast<int>(f[0]), static_cast<int>(f[1]), c};
   }
   static Interpolator<T> from_hdf(const std::string& filename, const std::string& dataset){
     HighFive::File file(filename, HighFive::File::ReadOnly);

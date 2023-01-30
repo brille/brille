@@ -38,7 +38,7 @@ namespace brille::math{
 
 template<class T>
 static T degree_to_radian(T degree){
-  return (degree / T(180)) * pi;
+  return static_cast<T>((degree / T(180)) * pi);
 }
 
 template<class T>

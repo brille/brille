@@ -127,10 +127,10 @@ namespace brille {
       std::vector<T> out;
       out.reserve(broadcaster.size());
       for (auto [outerSub, aSub, dSub]: broadcaster){
-        const auto ar{a.view(aSub[0])};
-        const auto br{b.view(aSub[0])};
-        const auto cr{c.view(aSub[0])};
-        const auto dr{d.view(dSub[0])};
+        const auto & ar{a.view(aSub[0])};
+        const auto & br{b.view(aSub[0])};
+        const auto & cr{c.view(aSub[0])};
+        const auto & dr{d.view(dSub[0])};
         auto tp = dot(ar-dr, cross(br-dr, cr-dr)).sum();
         out.push_back(tp);
       }
@@ -340,7 +340,7 @@ namespace brille {
   face_has_area(const A<T> &points, const bool strict = false) {
     // first verify that all points are coplanar
     // pick the first three points to define a plane, then ensure all points are in it
-    if (points.size(0) < 3) return -2; // can't be a face
+    if (points.size(0) < 3) return false; // can't be a face
     // move to the 2-D face coordinate system so that we can use orient2d
     auto centre = points.sum(0) / static_cast<T>(points.size(0));
     auto facet = points - centre;
@@ -775,7 +775,7 @@ namespace brille {
     angles[0] = (std::numeric_limits<T>::max)();
     for (ind_t i=1; i < pruned.size(); ++i){
       auto itr = std::min_element(angles.begin(), angles.end());
-      perm[i] = std::distance(angles.begin(), itr);
+      perm[i] = static_cast<ind_t>(std::distance(angles.begin(), itr));
       *itr = angles[0];
     }
 
@@ -817,9 +817,9 @@ namespace brille {
 
     // finally, go through sorted to ensure there are no extraneous points hanging about
     for (ind_t i=0, j; sorted.size() > 3 && i < sorted.size();){
-      j = (sorted.size() + i - 1) % sorted.size(); // why not just (i-1) % sorted.size()?
+      j = static_cast<ind_t>((sorted.size() + i - 1) % sorted.size()); // why not just (i-1) % sorted.size()?
       auto prev = points.view(sorted[i]) - points.view(sorted[j]);
-      j = (sorted.size() + i + 1) % sorted.size();
+      j = static_cast<ind_t>((sorted.size() + i + 1) % sorted.size());
       auto next = points.view(sorted[j]) - points.view(sorted[i]);
       if (dot(normal, cross(prev, next)).all(cmp::gt, 0.)){ // FIXME add tolerance?
         // left turn; we keep this point
@@ -892,7 +892,7 @@ namespace brille {
         break;
       }
     }
-    auto total = std::count(keep.begin(), keep.end(), true);
+    auto total = static_cast<ind_t>(std::count(keep.begin(), keep.end(), true));
     if (total < points.size(0)){
       ind_t count{0};
       std::vector<ind_t> nim;
@@ -946,17 +946,20 @@ namespace brille {
 
   template<class T, template<class> class A>
   std::enable_if_t<isArray<T,A>, std::vector<ind_t>>
-  remove_middle_colinear_points_from_one_face(const A<T>& points, const std::vector<ind_t>& face, const T Ttol, const int tol){
-    std::vector<ind_t> updated;
-    updated.reserve(face.size());
-    updated.push_back(face[0]);
+  remove_middle_colinear_points_from_one_face(const A<T>& points, const std::vector<ind_t>& face, const T t_tol, const int i_tol){
     const auto s{face.size()};
-    for (ind_t i=1; i < s; ++i){
-      auto a = points.view(face[(i-1) % s]);
-      auto b = points.view(face[i]);
-      auto c = points.view(face[(i+1) % s]);
-      // switched from !cross(,).all(cmp::eq, 0.) to take advantage of short-cutting in any/all
-      if (cross(b-a, c-b).any(cmp::neq, 0., Ttol, tol)) updated.push_back(face[i]);
+    std::vector<ind_t> updated;
+    updated.reserve(s);
+    if (s > 2) {
+      updated.push_back(face[0]);
+      auto e0 = points.view(face[1]) - points.view(face[0]);
+      e0 /= norm(e0);
+      for (ind_t i = 1; i < s; ++i) {
+        auto e1 = points.view(face[(i + 1) % s]) - points.view(face[i]);
+        e1 /= norm(e1);
+        if (dot(e0, e1).any(cmp::lt, 1., t_tol, i_tol)) updated.push_back(face[i]);
+        std::swap(e0, e1);
+      }
     }
     return updated;
   }

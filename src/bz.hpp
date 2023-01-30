@@ -186,7 +186,7 @@ public:
 //        info_update("First Brillouin zone\n", _first.python_string(),
 //                    "\nand 'irreducible' Brillouin zone\n",
 //                    _irreducible.python_string());
-        std::string msg = "Failed to find an irreducible Brillouin zone.";
+        std::string msg = "Failed to find an irreducible Brillouin zone.\n";
         msg += "First Brillouin zone\n" + _first.python_string();
         msg += "Last tried candidate\n" + _irreducible.python_string();
         msg += " Consider increasing tolerances from ";
@@ -747,10 +747,10 @@ public:
   [[nodiscard]] int add_time_reversal() const { return time_reversal ? 1 : 0; }
 
 private:
-  void _moveinto_prim(const lattice::LVec<double> &Q, lattice::LVec<double> &q,
-                      lattice::LVec<int> &tau, const lattice::LVec<double> &a,
-                      const lattice::LVec<double> &b,
-                      const lattice::LVec<double> &c) const;
+//  void _moveinto_prim(const lattice::LVec<double> &Q, lattice::LVec<double> &q,
+//                      lattice::LVec<int> &tau, const lattice::LVec<double> &a,
+//                      const lattice::LVec<double> &b,
+//                      const lattice::LVec<double> &c, int threads) const;
   template <class T>
   [[nodiscard]] bool _inside_wedge_outer(const lattice::LVec<T> &p,
                                          const bool pos = false) const {
@@ -792,10 +792,10 @@ public:
     ok &= _first.to_hdf(group, "first");
     ok &= _irreducible.to_hdf(group, "irreducible");
     ok &= ir_wedge_normals.to_hdf(group, "ir_wedge_normals");
-    group.createAttribute("time_reversal", time_reversal);
-    group.createAttribute("has_inversion", has_inversion);
-    group.createAttribute("is_primitive", is_primitive);
-    group.createAttribute("no_ir_mirroring", no_ir_mirroring);
+    group.createAttribute("time_reversal", time_reversal ? 1 : 0);
+    group.createAttribute("has_inversion", has_inversion ? 1 : 0);
+    group.createAttribute("is_primitive", is_primitive ? 1 : 0);
+    group.createAttribute("no_ir_mirroring", no_ir_mirroring ? 1 : 0);
     group.createAttribute("approx_tolerance", approx_tolerance);
     group.createAttribute("float_tolerance", float_tolerance);
     return ok;
@@ -811,8 +811,7 @@ public:
     auto poly = BrillouinZone::poly_t::from_hdf(group, "first");
     auto ir_p = BrillouinZone::poly_t::from_hdf(group, "irreducible");
     auto ir_w = bArray<double>::from_hdf(group, "ir_wedge_normals");
-    bool tr, hi, ip, nim;
-    int tol;
+    int tr, hi, ip, nim, tol;
     double f_tol;
     group.getAttribute("time_reversal").read(tr);
     group.getAttribute("has_inversion").read(hi);
@@ -820,7 +819,7 @@ public:
     group.getAttribute("no_ir_mirroring").read(nim);
     group.getAttribute("approx_tolerance").read(tol);
     group.getAttribute("float_tolerance").read(f_tol);
-    return {lat, olat, poly, ir_p, ir_w, tr, hi, ip, nim, tol, f_tol};
+    return {lat, olat, poly, ir_p, ir_w, tr > 0, hi > 0, ip > 0, nim > 0, tol, f_tol};
   }
   [[nodiscard]] bool
   to_hdf(const std::string &filename, const std::string &entry,

@@ -81,7 +81,7 @@ bool BrillouinZone::check_ir_polyhedron(){
   }
   ps = ps.higher(1);
   for (size_t i=0; i < ps.size(); ++i) {
-    auto rotated = _irreducible.apply(ps, i);
+    auto rotated = _irreducible.apply(ps, static_cast<ind_t>(i));
     if (_irreducible.intersects(rotated, float_tolerance, approx_tolerance)){
       debug_update("_irreducible\n", _irreducible.python_string(),"\nintersects\n",rotated.python_string());
       debug_update("The trial irreducible polyhedron intersects itself.");

@@ -22,19 +22,23 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief A class holding a hybrid grid of cuboid and triangulated tetrahedral
            cells and data for interpolation
 */
-#include <queue>
-#include <condition_variable>
-#include <atomic>
-#include <functional>
-#include <utility>
-#include <filesystem>
-#include "interpolatordual.hpp"
-#include "hdf_interface.hpp"
-#include "trellis_node.hpp"
-#include "polyhedron_flex.hpp"
-#include "triangulation_poly.hpp"
-#include "approx_float.hpp"
 #include "approx_config.hpp"
+#include "approx_float.hpp"
+#include "hdf_interface.hpp"
+#include "interpolatordual.hpp"
+#include "polyhedron_flex.hpp"
+#include "trellis_node.hpp"
+#include "triangulation_poly.hpp"
+#include "vertex_map_set.h"
+#include "vertex_index_map.h"
+#include "vertex_map_knit.h"
+#include <atomic>
+#include <condition_variable>
+#include <filesystem>
+#include <functional>
+#include <queue>
+#include <utility>
+#include "thread_exception.h"
 
 namespace brille::polytrellis {
 
@@ -168,13 +172,23 @@ public:
                  bool always_triangulate,
                  approx_t cfg);
 private:
-  std::tuple<std::map<size_t, poly_t>, std::vector<std::vector<ind_t>>, std::vector<ind_t>, VertexType<VertexComponents>, ind_t>
+//  std::tuple<std::map<size_t, poly_t>, std::vector<std::vector<ind_t>>, std::vector<ind_t>, VertexType<VertexComponents>, ind_t>
+//  part_one(const poly_t&, const VertexType<VertexComponents>&,
+//           std::vector<NodeType>&, bool, VertexComponents, int);
+//  std::tuple<std::map<size_t, poly_t>, std::vector<std::vector<ind_t>>>
+//  part_one(const poly_t&, VertexMapSet<VertexComponents, VertexType>&,
+//           std::vector<NodeType>&, bool, VertexComponents, int);
+  std::tuple<
+      std::map<size_t, poly_t>,
+      VertexMapSet<VertexComponents, VertexType>,
+      VertexIndexMap
+      >
   part_one(const poly_t&, const VertexType<VertexComponents>&,
            std::vector<NodeType>&, bool, VertexComponents, int);
+
   void
-  part_two(const std::map<size_t, poly_t>&, const std::vector<NodeType>& ,
-           const std::vector<std::vector<ind_t>>&, ind_t, ind_t,
-           VertexComponents, int);
+  part_two(const std::map<size_t, poly_t>&, const std::vector<NodeType>&,
+           ind_t, const VertexIndexMap&, VertexComponents, int);
 public:
   //! Explicit empty constructor
   explicit PolyTrellis(): vertices_(0,3) {}
@@ -296,6 +310,7 @@ public:
   interpolate_at(const vert_t& x, const int threads) const {
     this->check_before_interpolating(x);
     omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
+//    info_update("Interpolate at ", x.to_string());
     profile_update("Parallel interpolation at ",x.size(0)," points with ",threads," threads");
     auto valsh = data_.values().shape();
     auto vecsh = data_.vectors().shape();
@@ -310,19 +325,27 @@ public:
     typename data_t::vector_in_t vecs2(vecs_out);
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
     auto xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
-    size_t n_unfound{0};
-  #pragma omp parallel for default(none) shared(x,vals2,vecs2,xsize) reduction(+:n_unfound) schedule(dynamic)
+    size_t missing{0};
+    ThreadException thread_ex;
+  #pragma omp parallel for default(none) shared(x,vals2,vecs2,xsize,thread_ex) reduction(+:missing) schedule(dynamic)
     for (long long si=0; si<xsize; ++si){
-      auto i = brille::utils::s2u<ind_t, long long>(si);
-      auto indwghts = this->indices_weights(x.view(i));
-      if (indwghts.size()>0) {
-        data_.interpolate_at(indwghts, vals2, vecs2, i);
-      } else {
-        ++n_unfound;
-      }
+      thread_ex.run(
+      [&]{
+            auto i = brille::utils::s2u<ind_t, long long>(si);
+            auto i_w = indices_weights(x.view(i)); // this might throw an error!
+            if (i_w.size()>0) {
+              data_.interpolate_at(i_w, vals2, vecs2, i);
+            } else {
+              ++missing;
+            }
+          }
+      );
     }
-    if (n_unfound){
-      throw std::runtime_error("interpolate at failed to find "+std::to_string(n_unfound)+" point"+(n_unfound>1?"s.":"."));
+    thread_ex.rethrow(); // only throws if error(s) were caught
+    if (missing){
+      std::ostringstream oss;
+      oss << "interpolate_at failed to find" << missing << "point" << (missing > 1 ? "s." : ".");
+      throw std::runtime_error(oss.str());
     }
     return std::make_tuple(vals_out, vecs_out);
   }
@@ -400,15 +423,52 @@ public:
         bad = !subscript_ok_and_not_null(newsub);
       }
       if (!bad) sub = newsub;
-      else
-      info_update("The node subscript ",sub,
-                  " for the point (hkl) ", p.to_string(0u), "(xyz) ", pos,
-                  " is either invalid or points to a null node!");
+      else {
+        auto node_type = nodes_.node_type_string(sub2idx(sub));
+        info_update("The node subscript ", sub, " for the point\n\t(hkl) ",
+                    p.to_string(0u), "\n\t(xyz) [[", pos, "]]\n",
+                    " is either invalid or a ", node_type, " node");
+      }
     }
     return sub;
   }
   //! Find the trellis node linear index for an arbitrary point
   template <class S> ind_t node_index(const S& p) const { return this->sub2idx(this->node_subscript(p)); }
+  //! Return the (Cube) polyhedron representing an indexed node
+  poly_t subscripted_node_poly(const std::array<ind_t, 3>& ijk) const {
+    auto i0 = knots_[0][ijk[0]];
+    auto i1 = knots_[0][ijk[0]+1];
+    auto j0 = knots_[1][ijk[1]];
+    auto j1 = knots_[1][ijk[1]+1];
+    auto k0 = knots_[2][ijk[2]];
+    auto k1 = knots_[2][ijk[2]+1];
+    std::vector<std::array<VertexComponents,3>> v{
+        {i0, j0, k0}, // 000 0
+        {i0, j1, k0}, // 010 1
+        {i0, j1, k1}, // 011 2
+        {i0, j0, k1}, // 001 3
+        {i1, j0, k0}, // 100 4
+        {i1, j1, k0}, // 110 5
+        {i1, j1, k1}, // 111 6
+        {i1, j0, k1}, // 101 7
+    };
+    auto faces = typename poly_t::faces_t({{3,0,4,7},{3,2,1,0},{0,1,5,4},{3,7,6,2},{7,4,5,6},{2,6,5,1}});
+    auto hkl = from_xyz_like(vertices_, bArray<VertexComponents>::from_std(v));
+    return poly_t(hkl, faces);
+  }
+  //! Return the (Cube) polyhedron representing the node containing a point
+  template <class S> poly_t point_in_node_poly(const S& p) const {
+    return subscripted_node_poly(node_subscript(p));
+  }
+  [[nodiscard]] NodeType node_at_type(const std::array<ind_t, 3>& ijk) const {
+    return nodes_.node_type(sub2idx(ijk));
+  }
+  template <class S>
+  NodeType point_in_node_type(const S & p) const {
+    return node_at_type(node_subscript(p));
+  }
+
+  [[nodiscard]] std::vector<NodeType> all_node_types() const { return nodes_.all_node_types(); }
 
   // return a list of non-null neighbouring nodes
   /*! \brief Return a list of all non-null nodes neighbouring a trellis node
@@ -633,7 +693,7 @@ public:
     auto cfg = approx_t::from_hdf(group, "approx");
     return PolyTrellis(p, d, v, n, b, cfg);
   }
-  bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
+  [[nodiscard]] bool to_hdf(const std::string& filename, const std::string& entry, const unsigned perm=HighFive::File::OpenOrCreate) const {
     HighFive::File file(filename, perm);
     return this->to_hdf(file, entry);
   }
@@ -644,6 +704,6 @@ public:
 #endif // USE_HIGHFIVE
 };
 
-#include "trellis_poly.tpp"
+#include "trellis_poly_parallel.tpp"
 } // end namespace brille
 #endif

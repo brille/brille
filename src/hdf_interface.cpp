@@ -5,9 +5,8 @@
 namespace HighFive {
 template<> DataType create_datatype<brille::RotatesLike>(){
   return EnumType<brille::RotatesLike>({
-      {"Real", brille::RotatesLike::Real},
-      {"Reciprocal", brille::RotatesLike::Reciprocal},
-      {"Axial", brille::RotatesLike::Axial},
+      {"vector", brille::RotatesLike::vector},
+      {"pseudovector", brille::RotatesLike::pseudovector},
       {"Gamma", brille::RotatesLike::Gamma}
   });
 }
@@ -34,7 +33,9 @@ template<> DataType create_datatype<brille::LengthUnit>(){
   return EnumType<brille::LengthUnit>({
       {"none", brille::LengthUnit::none},
       {"angstrom", brille::LengthUnit::angstrom},
-      {"inverse_angstrom", brille::LengthUnit::inverse_angstrom}
+      {"inverse_angstrom", brille::LengthUnit::inverse_angstrom},
+      {"real_lattice", brille::LengthUnit::real_lattice},
+      {"reciprocal_lattice", brille::LengthUnit::reciprocal_lattice},
   });
 }
 template<> DataType create_datatype<brille::HF_Matrix<int>>(){
