@@ -17,6 +17,14 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
 if (DEFINED ENV{CONAN_USER_HOME})
     message(STATUS "Use $ENV{CONAN_USER_HOME} as CONAN_USER_HOME")
 endif()
+
+# Force re-discovery of the Conan executable for every run
+# When using pip to build the python module, it installs the binary into a temporary directory
+# which has a new name on each re-run. 
+unset(CONAN_CMD CACHE)
+unset(CONAN_CMD)
+#conan_check(REQUIRED)
+
 conan_cmake_configure(
         REQUIRES
         hdf5/1.12.0
