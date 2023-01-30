@@ -9,11 +9,11 @@ from typing import List
 
 @dataclass
 class VisPolyhedron:
-    """Wrapper to contain visualisation options for a brille.Polyhedron or brille.LPolyhedron
+    """A wrapper class to contain visualisation options for a :py:class:`brille.Polyhedron` or :py:class:`brille.LPolyhedron`
 
     Attributes
     ----------
-    polyhedron : Union[Polyhedron, LPolyhedron]
+    polyhedron : Union[:py:class:`~brille.Polyhedron`, :py:class:`~brille.LPolyhedron`]
         The polyhedron to be visualised. A LPolyhedron will be converted automatically to its Cartesian equivalent.
     face_color : Union[str, vispy.color.Color]
         The face color of the visualised polyhedron, default 'black'
@@ -51,23 +51,26 @@ class VisPolyhedron:
 
 
 def vis_polyhedron(polyhedron: VisPolyhedron, **kwargs):
-    """Visualise a single wrapped polyhedron
+    """Visualise a single :py:class:`~brille.vis.VisPolyhedron` wrapped polyhedron
 
     Parameters
     ----------
-    polyhedron : Union[VisPolyhedron, brille.Polyhedron, brille.LPolyhedron]
+    polyhedron : Union[:py:class:`~brille.vis.VisPolyhedron`, :py:class:`~brille.Polyhedron`, :py:class:`~brille.LPolyhedron`]
         The polyhedron to be visualised. Any object with similar `vertices` and `faces` properties may work as well.
-    kwargs
+    **kwargs
         Optional keyword arguments for the VisPolyhedron constructor. Only used if a Polyhedron or LPolyhedron
-        is provided as input.
-        face_color : Union[str, vispy.color.Color]
-            The face color used for Polyhedron or LPolyhedron object input.
-        edge_color : Union[str, vispy.color.Color]
-            The edge color used for Polyhedron or LPolyhedron object input.
-        fill : bool
-            Control drawing the faces of the Polyhedron or LPolyhedron object.
-        outline : bool
-            Control drawing the edges of the Polyhedron or LPolyhedron object.
+        is provided as input. See other parameters below for expected keyword arguments.
+
+    Other Parameters
+    ----------------
+    face_color : Union[str, vispy.color.Color]
+        The face color used for Polyhedron or LPolyhedron object input.
+    edge_color : Union[str, vispy.color.Color]
+        The edge color used for Polyhedron or LPolyhedron object input.
+    fill : bool
+        Control drawing the faces of the Polyhedron or LPolyhedron object.
+    outline : bool
+        Control drawing the edges of the Polyhedron or LPolyhedron object.
     """
     if not isinstance(polyhedron, VisPolyhedron):
         polyhedron = VisPolyhedron(polyhedron, **kwargs)
@@ -79,26 +82,29 @@ def vis_polyhedra(polyhedra: List[VisPolyhedron], **kwargs):
 
     Parameters
     ----------
-    polyhedra : List[Union[VisPolyhedron, brille.Polyhedron, brille.LPolyhedron]]
+    polyhedra : List[Union[:py:class:`~brille.vis.VisPolyhedron`, :py:class:`~brille.Polyhedron`, :py:class:`~brille.LPolyhedron`]]
         The polyhedron to be visualised. Any object with similar `vertices` and `faces` properties may work as well.
-    kwargs
+    **kwargs
         Optional keyword arguments for the VisPolyhedron constructor. Only used if a Polyhedron or LPolyhedron
         is provided in the polyhedron list.
-        face_color : Union[List[Union[str, vispy.color.Color]],Union[str, vispy.color.Color]]
-            A single face color used for all Polyhedron and LPolyhedron objects or a list of colors which will be tiled
-            to the size of the full polyhedra list.
-        edge_color : Union[List[Union[str, vispy.color.Color]],Union[str, vispy.color.Color]]
-            A single edge color used for all Polyhedron and LPolyhedron objects or a list of colors which will be tiled
-            to the size of the full polyhedra list.
-        fill : Union[List[bool], bool]
-            A single value to control drawing the faces of all Polyhedron and LPolyhedron objects or a list of boolean
-            values which will be tiled to the size of the full polyhedra list.
-        outline : Union[List[bool], bool]
-            A single value to control drawing the edges of all Polyhedron and LPolyhedron objects or a list of boolean
-            values which will be tiled to the size of the full polyhedra list.
-        opacity : Union[List[float], float]
-            A single value to control face opacity of all Polyhedron and LPolyhedron objects or a list of floating point
-            values which will be tiled to the size of the full polyhedra list.
+
+    Other Parameters
+    ----------------
+    face_color : Union[List[Union[str, vispy.color.Color]],Union[str, vispy.color.Color]]
+        A single face color used for all Polyhedron and LPolyhedron objects or a list of colors which will be tiled
+        to the size of the full polyhedra list.
+    edge_color : Union[List[Union[str, vispy.color.Color]],Union[str, vispy.color.Color]]
+        A single edge color used for all Polyhedron and LPolyhedron objects or a list of colors which will be tiled
+        to the size of the full polyhedra list.
+    fill : Union[List[bool], bool]
+        A single value to control drawing the faces of all Polyhedron and LPolyhedron objects or a list of boolean
+        values which will be tiled to the size of the full polyhedra list.
+    outline : Union[List[bool], bool]
+        A single value to control drawing the edges of all Polyhedron and LPolyhedron objects or a list of boolean
+        values which will be tiled to the size of the full polyhedra list.
+    opacity : Union[List[float], float]
+        A single value to control face opacity of all Polyhedron and LPolyhedron objects or a list of floating point
+        values which will be tiled to the size of the full polyhedra list.
     """
     if any([not isinstance(x, VisPolyhedron) for x in polyhedra]):
         n_poly = len(polyhedra)

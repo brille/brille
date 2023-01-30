@@ -56,6 +56,8 @@ intersphinx_mapping = {
   'euphonic': ('https://euphonic.readthedocs.io/en/stable/', None),
   'brilleu': ('https://brille.github.io/brilleu/latest/', None),
   'numpy': ('https://numpy.org/doc/stable/', None),
+  'vispy': ('https://vispy.org', None),
+  'matplotlib': ('https://matplotlib.org/stable/', None),
 }
 
 # Some :math:`[LaTeX]` directives insert '\r' into the string passed to katex?
@@ -181,3 +183,6 @@ def generate_doxygen_xml(app):
 def setup(app):
     """Add hook for building Doxygen xml when needed"""
     app.connect("builder-inited", generate_doxygen_xml)
+
+
+autodoc_mock_imports = ['vispy']

@@ -33,12 +33,30 @@ Note:
   please install the latest x64 Visual C++ redistributable package from
   `Microsoft <https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads>`_.
 
+submodules
+----------
+
+As installed above, :py:mod:`brille` contains two submodules which may be missing dependencies required to function properly.
+The submodules :py:mod:`brille.plotting` and :py:mod:`brille.vis` contain useful visualisation routines based on
+:py:mod:`matplotlib` and :py:mod:`vispy`, respectively.
+
+The necessary dependencies can be automatically installed by ``pip`` by specifying the submodule name(s) as `extra` installations
+
+.. code-block:: bash
+
+  # install only the VisPy dependencies
+  pip install brille[vis]
+  # install only the Matplotlib dependencies
+  pip install brille[plotting]
+  # install both
+  pip install brille[plotting,vis]
+
 
 
 source
 ======
 If your development environment has `git <https://git-scm.com/>`_, Python ≥ 3.6,
-a C++17 compliant compiler, and `CMake <https://cmake.org/>`_ ≥ 3.13,
+a C++17 compliant compiler, and `CMake <https://cmake.org/>`_ ≥ 3.18.2,
 then you can build the latest version of brille from source via
 
 .. code-block:: bash
@@ -74,13 +92,16 @@ development
 -----------
 If you plan to modify the pure Python submodules, e.g.,
 :py:mod:`brille.plotting`, you may benefit from
-constructing from source using the ``develop`` option.
+constructing from source using the ``develop`` option,
+or using an 'editable' pip install
 
 .. code-block:: bash
 
     git clone https://github.com/brille/brille
     cd brille
     python setup.py develop
+    # or
+    python -m pip install -e .
 
 This allows any modifications to the Python source files to be immediately
 available to the Python interpreter; where otherwise the ``install`` command

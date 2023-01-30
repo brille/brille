@@ -2,6 +2,20 @@
 Introduction
 ============
 
+The main goal of :py:mod:`brille` is to support *you* in leveraging the 
+the symmetry of your crystal system to speed-up simulation and analysis of large,
+partly redundant, reciprocal space datasets.
+The first step to achieve this goal is finding the volume of reciprocal space 
+which contains all possible information for your system from the lattice basis
+vectors and symmetry operations of you provide.
+With the minimum volume identified, a space-filling grid is then constructed 
+following the parameters you specify. If you then provide calculated values for
+the vertices of the grid, the 'filled' grid can be used to interpolate your
+calculations to all points within the volume.
+Importantly, if your calculated values are modified by the application of a
+pointgroup symmetry operation, the interpolation routine can automatically correct
+the interpolated results for this effect is some cases.
+
 Background
 ##########
 
@@ -200,13 +214,20 @@ a reduced momentum transfer :math:`\mathbf{q} = \mathbf{Q}-\mathbf{G}`
 Irreducible first Brillouin zone
 --------------------------------
 
-The first Brillouin zone may contain redundant information depending on
-the Point group symmetry of the Space group.
+The first Brillouin zone as described above ignores the possibility of rotational symmetries.
+Such a definition of the Brillouin zone contains redundant information in the case of a system
+posessing a non-trivial Point group, and a smaller cell is the true Brillouin zone.
+To distinguish the translation-only *first* Brillouin zone from the true Brillouin zone,
+we introduce the term *irreducible*.
+Note that in the case of a trivial Point group symmetry the *first* and *irreducible* Brillouin
+zones are identical.
+
+
 If the two-dimensional hexagonal lattice above possesses a six-fold rotation
 axis perpendicular to the plane, so that the information within each first
 Brillouin zone is repeated six times, then the zone can be *reduced*.
-The definition of an irreducible zone is not unique, but one choice for
-this Reciprocal lattice is shown below
+Like the translation-only first Brillouin  zone, the definition of an irreducible zone
+is not unique, but one choice for this reciprocal lattice is shown below
 
 .. tikz::
     :libs: calc
