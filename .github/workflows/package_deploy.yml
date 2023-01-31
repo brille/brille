@@ -131,7 +131,7 @@ jobs:
       working-directory: wheelhouse
     - run: echo "${{ steps.wheel.outputs.wheel }}"
     - name: Sphinx Docker build
-      uses: g5t/sphinxer@v2.3.0
+      uses: g5t/sphinxer@v2.3.1
       with:
         source_dir: repository
         pages_dir: io
