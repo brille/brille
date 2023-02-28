@@ -133,6 +133,7 @@ setup(
     long_description_content_type="text/markdown",
     ext_modules=[CMakeExtension('brille._brille')],
     packages=find_packages(str(PACKAGE_ROOT)),
+    install_requires=['numpy'],
     extras_require={'plotting': ['matplotlib>=2.2.0', ], 'vis': ['pyglet>=1.5.27', 'vispy>=0.12.1', ]},
     cmdclass=dict(build_ext=CMakeBuild),
     url="https://github.com/brille/brille",
