@@ -17,7 +17,7 @@
 
 """
 Matplotlib utilities for ``brille``
----------------------------------
+-----------------------------------
 
 .. currentmodule:: brille.plotting
 

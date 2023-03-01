@@ -18,11 +18,12 @@ True
 
 
 With a CIF xyz encoded string from, e.g., a CIF file, one can directly create a :py:class:`~brille._brille.Direct` lattice object
-with the appropriate symmetry operations without also specifying, e.g., the spacegroup::
+with the appropriate symmetry operations without also specifying, e.g., the spacegroup:
 
-  basis_lengths, basis_angles, xyz_string = hypothetical_CIF_parser('some_system.cif')
-  lattice = brille._brille.Direct(basis_lengths, basis_angles)
-  lattice.spacegroup = brille._brille.Symmetry(xyz_string)
+>>> from brille import Lattice, Symmetry
+>>> basis_lengths, basis_angles, xyz_string = hypothetical_CIF_parser('some.cif')
+>>> lattice = Lattice(basis_lengths, basis_angles)
+>>> lattice.spacegroup = Symmetry(xyz_string)
 
 in setting the lattice spacegroup, the :py:meth:`~brille._brille.Symmetry.generate()` method is called,
 so the provided CIF xyz operators need only be the generators of the spacegroup.
@@ -40,11 +41,12 @@ which has the advantage of representing all unique crystallographic lattices as 
 .. _symbol: http://cci.lbl.gov/sginfo/hall_symbols.html
 
 Within :py:mod:`brille`, :py:class:`~brille._brille.HallSymbol` can be used to decode an arbitrary Hall symbol.
-And then its generators can be extracted to create the spacegroup for lattice::
+And then its generators can be extracted to create the spacegroup for lattice:
 
-  basis_lengths, basis_angles, hall_symbol = hypothetical_CIF_parser('some_system.cif')
-  lattice = brille._brille.Direct(basis_lengths, basis_angles)
-  lattice.spacegroup = brille._brille.HallSymbol(hall_symbol).generators
+>>> from brille import Lattice, HallSymbol
+>>> basis_lengths, basis_angles, hall_symbol = hypothetical_CIF_parser('some.cif')
+>>> lattice = Lattice(basis_lengths, basis_angles)
+>>> lattice.spacegroup = HallSymbol(hall_symbol).generators
 
 
 .. autoclass:: brille._brille.HallSymbol
@@ -55,4 +57,12 @@ Other classes
 =============
 
 .. autoclass:: brille._brille.PointSymmetry
+  :members:
+
+
+.. autoclass:: brille._brille.Pointgroup
+  :members:
+
+
+.. autoclass:: brille._brille.Spacegroup
   :members:

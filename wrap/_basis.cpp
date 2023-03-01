@@ -18,16 +18,22 @@ void wrap_basis(py::module & m){
   using namespace brille;
 
 
-  py::class_<Basis> cls(m, "Basis");
+  py::class_<Basis> cls(m, "Basis",
+  R"pbdoc(An atom basis in a unit cell
+
+  The positions and types of all symmetry-distinct atoms in a lattice define the atom basis.
+  Two equivalent-type atoms may exchange position within the unit cell under application of
+  a symmetry of the spacegroup.
+)pbdoc");
 
   cls.def(py::init([](const py::array_t<double>& positions){
     auto pos = np2sva<double,3>(positions);
     return Basis(pos);
-  }));
+  }), "positions"_a, R"pbdoc(Given only atom positions, assume all are unique types)pbdoc");
   cls.def(py::init([](const py::array_t<double>& positions, const std::vector<ind_t>& types){
     auto pos = np2sva<double,3>(positions);
     return Basis(pos, types);
-  }));
+  }), "positions"_a, "types"_a);
 
   cls.def_property_readonly("size", &Basis::size);
   cls.def_property_readonly("positions", [](const Basis& b){

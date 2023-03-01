@@ -61,11 +61,11 @@ PYBIND11_MODULE(_brille, m){
 
     .. code-block:: python
 
-      from brille._brille import Direct, BrillouinZone
+      from brille._brille import Lattice, BrillouinZone
       from brille.plotting import plot as bplot
 
-      direct_lattice = Direct((3.95, 3.95, 3.95, 12.9), (90, 90, 90), 'I4/mmm')
-      brillouin_zone = BrillouinZone(direct_lattice.star)
+      lattice = Lattice((3.95, 3.95, 3.95, 12.9), (90, 90, 90), 'I4/mmm')
+      brillouin_zone = BrillouinZone(lattice)
 
       bplot(brillouin_zone)
 
