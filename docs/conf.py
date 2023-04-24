@@ -19,11 +19,20 @@ sys.path.insert(0, os.path.abspath('.'))
 # -- Project information -----------------------------------------------------
 
 project = 'brille'
-copyright = '2020, Gregory Tucker'
+copyright = '2020-2023, Gregory Tucker'
 author = 'Gregory Tucker'
 import brille._brille as brille_module
 version = brille_module.__version__ # just the 'short' version
 release = brille_module.version # the 'full' version information
+
+# Add links to different release versions
+from version import VersionInfo
+version_info = VersionInfo(repo=project)
+import sphinx_book_theme
+from buttons import make_add_launch_buttons
+sphinx_book_theme.add_launch_buttons = make_add_launch_buttons(version, version_info)
+
+fontawesome_included=True
 
 
 # -- General configuration ---------------------------------------------------
@@ -47,6 +56,8 @@ intersphinx_mapping = {
   'euphonic': ('https://euphonic.readthedocs.io/en/stable/', None),
   'brilleu': ('https://brille.github.io/brilleu/latest/', None),
   'numpy': ('https://numpy.org/doc/stable/', None),
+  'vispy': ('https://vispy.org', None),
+  'matplotlib': ('https://matplotlib.org/stable/', None),
 }
 
 # Some :math:`[LaTeX]` directives insert '\r' into the string passed to katex?
@@ -102,6 +113,9 @@ master_doc = 'index'
 #exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 exclude_patterns = ['Thumbs.db', '.DS_Store']
 
+pygments_style = 'friendly'
+#pygments_style = 'fruity'
+
 
 # -- Options for HTML output -------------------------------------------------
 # # following github.com/pybind/pybind11/blob/stable/docs/conf.py:
@@ -122,10 +136,30 @@ exclude_patterns = ['Thumbs.db', '.DS_Store']
 html_theme = 'sphinx_rtd_theme'
 html_logo = '../brille.svg'
 
+html_theme = 'sphinx_book_theme'
+html_theme_options = dict(
+        logo_only=True,
+        repository_url=f"https://github.com/brille/{project}",
+        repository_branch="master",
+        path_to_docs="docs",
+        use_repository_button=True,
+        use_issues_button=True,
+        use_edit_page_button=True,
+        show_toc_level=2,
+)
+
+if not version_info.is_latest(version):
+    html_theme_options["announcement"] = (
+        f"⚠️  You are viewing the documentation for an old version of {project}. "
+        "Switch to <a href='https://brille.github.io' "
+        "style='color:white;text-decoration:underline;'"
+        ">latest</a> version. ⚠️")
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_css_files = ['custom.css']
 
 def call_and_check(command, **kwds):
     from subprocess import call, CalledProcessError
@@ -149,3 +183,6 @@ def generate_doxygen_xml(app):
 def setup(app):
     """Add hook for building Doxygen xml when needed"""
     app.connect("builder-inited", generate_doxygen_xml)
+
+
+autodoc_mock_imports = ['vispy']

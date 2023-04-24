@@ -2,26 +2,26 @@
 
 See `VisPy <https://vispy.org>`_ for installation and configuration directions
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from brille import Polyhedron
 from vispy.color import Color
 from typing import List
 
 @dataclass
 class VisPolyhedron:
-    """Wrapper to contain visualisation options for a brille.Polyhedron or brille.LPolyhedron
+    """A wrapper class to contain visualisation options for a :py:class:`brille.Polyhedron` or :py:class:`brille.LPolyhedron`
 
     Attributes
     ----------
-    polyhedron : Union[Polyhedron, LPolyhedron]
+    polyhedron : Union[:py:class:`~brille.Polyhedron`, :py:class:`~brille.LPolyhedron`]
         The polyhedron to be visualised. A LPolyhedron will be converted automatically to its Cartesian equivalent.
-    face_color : Union[str, vispy.color.Color]
+    face_color : Union[``str``, :py:class:`vispy.color.Color`]
         The face color of the visualised polyhedron, default 'black'
-    edge_color : Union[str, vispy.color.Color]
+    edge_color : Union[``str``, :py:class:`vispy.color.Color`]
         The edge color of the visualised polyhedron, default 'black'
-    fill : bool
+    fill : ``bool``
         Control drawing of the faces, default True
-    outline : bool
+    outline : ``bool``
         Control drawing of the edges, default True
 
     Note
@@ -30,8 +30,8 @@ class VisPolyhedron:
     basis vectors will be used to convert the vertices into an orthonormal frame during object initialisation.
     """
     polyhedron: Polyhedron
-    face_color: Color = Color('black')
-    edge_color: Color = Color('black')
+    face_color: Color = field(default_factory=lambda: Color('black'))
+    edge_color: Color = field(default_factory=lambda: Color('black'))
     fill: bool = True
     outline: bool = True
     opacity: float = 0.2
@@ -51,23 +51,26 @@ class VisPolyhedron:
 
 
 def vis_polyhedron(polyhedron: VisPolyhedron, **kwargs):
-    """Visualise a single wrapped polyhedron
+    """Visualise a single :py:class:`~brille.vis.VisPolyhedron` wrapped polyhedron
 
     Parameters
     ----------
-    polyhedron : Union[VisPolyhedron, brille.Polyhedron, brille.LPolyhedron]
+    polyhedron : Union[:py:class:`~brille.vis.VisPolyhedron`, :py:class:`~brille.Polyhedron`, :py:class:`~brille.LPolyhedron`]
         The polyhedron to be visualised. Any object with similar `vertices` and `faces` properties may work as well.
-    kwargs
+    **kwargs
         Optional keyword arguments for the VisPolyhedron constructor. Only used if a Polyhedron or LPolyhedron
-        is provided as input.
-        face_color : Union[str, vispy.color.Color]
-            The face color used for Polyhedron or LPolyhedron object input.
-        edge_color : Union[str, vispy.color.Color]
-            The edge color used for Polyhedron or LPolyhedron object input.
-        fill : bool
-            Control drawing the faces of the Polyhedron or LPolyhedron object.
-        outline : bool
-            Control drawing the edges of the Polyhedron or LPolyhedron object.
+        is provided as input. See other parameters below for expected keyword arguments.
+
+    Other Parameters
+    ----------------
+    face_color : Union[``str``, :py:class:`vispy.color.Color`]
+        The face color used for Polyhedron or LPolyhedron object input.
+    edge_color : Union[``str``, :py:class:`vispy.color.Color`]
+        The edge color used for Polyhedron or LPolyhedron object input.
+    fill : ``bool``
+        Control drawing the faces of the Polyhedron or LPolyhedron object.
+    outline : ``bool``
+        Control drawing the edges of the Polyhedron or LPolyhedron object.
     """
     if not isinstance(polyhedron, VisPolyhedron):
         polyhedron = VisPolyhedron(polyhedron, **kwargs)
@@ -77,29 +80,56 @@ def vis_polyhedron(polyhedron: VisPolyhedron, **kwargs):
 def vis_polyhedra(polyhedra: List[VisPolyhedron], **kwargs):
     """Visualise multiple polyhedra
 
+    This function can be used to visualise the polyhedra that make up a space-filling mesh, but doing so will likely be slow.
+    Pre-filtering out all polyhedra which can not be seen (those fully surrounded by other polyhedra) may improve the visualisation speed.
+
+
+    The visualisation includes interactive elements:
+        - The view can be changed via the mouse
+        - The shading-style can be cycled by pressing 's' between (`None`, `'smooth'`, and `'flat'`)
+        - The shading `shininess` can be increased by pressing '+' or decreased by pressing '-'
+        - The polygon facet fill and wire display can be cycled by pressing 'f'
+        - The wireframe display can be toggled by pressing 'w'
+
+
     Parameters
     ----------
-    polyhedra : List[Union[VisPolyhedron, brille.Polyhedron, brille.LPolyhedron]]
+    polyhedra : List[Union[:py:class:`~brille.vis.VisPolyhedron`, :py:class:`~brille._brille.Polyhedron`, :py:class:`~brille._brille.LPolyhedron`]]
         The polyhedron to be visualised. Any object with similar `vertices` and `faces` properties may work as well.
-    kwargs
+    **kwargs
         Optional keyword arguments for the VisPolyhedron constructor. Only used if a Polyhedron or LPolyhedron
         is provided in the polyhedron list.
-        face_color : Union[List[Union[str, vispy.color.Color]],Union[str, vispy.color.Color]]
-            A single face color used for all Polyhedron and LPolyhedron objects or a list of colors which will be tiled
-            to the size of the full polyhedra list.
-        edge_color : Union[List[Union[str, vispy.color.Color]],Union[str, vispy.color.Color]]
-            A single edge color used for all Polyhedron and LPolyhedron objects or a list of colors which will be tiled
-            to the size of the full polyhedra list.
-        fill : Union[List[bool], bool]
-            A single value to control drawing the faces of all Polyhedron and LPolyhedron objects or a list of boolean
-            values which will be tiled to the size of the full polyhedra list.
-        outline : Union[List[bool], bool]
-            A single value to control drawing the edges of all Polyhedron and LPolyhedron objects or a list of boolean
-            values which will be tiled to the size of the full polyhedra list.
-        opacity : Union[List[float], float]
-            A single value to control face opacity of all Polyhedron and LPolyhedron objects or a list of floating point
-            values which will be tiled to the size of the full polyhedra list.
+
+    Other Parameters
+    ----------------
+    face_color : Union[List[Union[``str``, :py:class:`vispy.color.Color`]],Union[``str``, :py:class:`vispy.color.Color`]]
+        A single face color used for all Polyhedron and LPolyhedron objects or a list of colors which will be tiled
+        to the size of the full polyhedra list.
+    edge_color : Union[List[Union[``str``, :py:class:`vispy.color.Color`]],Union[``str``, :py:class:`vispy.color.Color`]]
+        A single edge color used for all Polyhedron and LPolyhedron objects or a list of colors which will be tiled
+        to the size of the full polyhedra list.
+    fill : Union[List[``bool``], ``bool``]
+        A single value to control drawing the faces of all Polyhedron and LPolyhedron objects or a list of boolean
+        values which will be tiled to the size of the full polyhedra list.
+    outline : Union[List[``bool``], ``bool``]
+        A single value to control drawing the edges of all Polyhedron and LPolyhedron objects or a list of boolean
+        values which will be tiled to the size of the full polyhedra list.
+    opacity : Union[List[``float``], ``float``]
+        A single value to control face opacity of all Polyhedron and LPolyhedron objects or a list of floating point
+        values which will be tiled to the size of the full polyhedra list.
+    elevation: number
+        A single value to control the view 'elevation', the angle in degrees above the (x, y) plane of the view
+    azimuth: number
+        A single value to control the view 'azimuth', the angle in degrees (from -1 * \hat(y)?) of the view
+    wireframe_color: Union[``str``, :py:class:`vispy.color.Color`]
+        A single color used to draw the wireframe of *every* polyhedron.
+    axis: ``bool``
+        Control whether a set of axes are displayed along x, y, and z
     """
+    if is_interactive():
+        print("Visualisation via VisPy may not work properly in an interactive Python shell.")
+        print("If no window appears, try embedding your work in a Python script and execute it non-interactively.")
+
     if any([not isinstance(x, VisPolyhedron) for x in polyhedra]):
         n_poly = len(polyhedra)
         face_colors = make_colours(n_poly, color=kwargs.get('face_color', None))
@@ -114,13 +144,23 @@ def vis_polyhedra(polyhedra: List[VisPolyhedron], **kwargs):
     bg = Color('white')
     canvas = scene.SceneCanvas(keys='interactive', bgcolor=bg, size=(800, 600))
     view = canvas.central_widget.add_view()
-    view.camera = 'arcball'
 
+    cam = scene.TurntableCamera(elevation=kwargs.get('elevation', 15), azimuth=kwargs.get('azimuth', 150)) 
+    view.camera = cam
+
+    if kwargs.get('axis', False):
+        axis = scene.visuals.XYZAxis(parent=view.scene)
+
+    wireframe_filter, shading_filter, attach_headlight = make_filters(0, 1, kwargs.get('wireframe_color', 'black'))
     for p in polyhedra:
         if p.fill:
-            view.add(vis_polyhedron_to_mesh(p.polyhedron, color=p.face_color, opacity=p.opacity))
+            mesh = vis_polyhedron_to_mesh(p.polyhedron, color=p.face_color, opacity=p.opacity, shading=shading_filter, wireframe=wireframe_filter)
+            view.add(mesh)
+            add_shading_wireframe_interface(canvas, mesh, shading_filter, wireframe_filter)
         if p.outline:
             [view.add(line) for line in vis_polyhedron_boundary(p.polyhedron, color=p.edge_color)]
+    
+    attach_headlight(view)
 
     # set the camera range based on properties of the polyhedra...
     from numpy import vstack
@@ -134,7 +174,7 @@ def vis_polyhedra(polyhedra: List[VisPolyhedron], **kwargs):
     app.run()
 
 
-def vis_polyhedron_to_mesh(polyhedron: Polyhedron, color=None, opacity=1.0):
+def vis_polyhedron_to_mesh(polyhedron: Polyhedron, color=None, opacity=1.0, shading=None, wireframe=None):
     """Construct as VisPy mesh from a Polyhedron object"""
     from vispy.scene.visuals import Mesh
     from numpy import array
@@ -144,8 +184,12 @@ def vis_polyhedron_to_mesh(polyhedron: Polyhedron, color=None, opacity=1.0):
     faces = polyhedron.faces
     # ensure the faces are all triangulated:
     faces = [[face[0], face[i], face[(i + 1) % len(face)]] for face in faces for i in range(1, len(face) - 1)]
-    mesh = Mesh(v, array(faces, dtype='uint32'), shading='flat', color=color)
+    mesh = Mesh(v, array(faces, dtype='uint32'), color=color)
     mesh.opacity = opacity
+    if wireframe is not None:
+        mesh.attach(wireframe)
+    if shading is not None:
+        mesh.attach(shading)
     return mesh
 
 
@@ -166,12 +210,12 @@ def make_colours(n, color=None):
     ----------
     n : int
         The number of colors required
-    color : Union[List[Union[str, vispy.color.Color]], Union[str, vispy.color.Color]]
+    color : Union[List[Union[``str``, :py:class:`vispy.color.Color`]], Union[``str``, :py:class:`vispy.color.Color`]]
         If color is not provided, the list of all colors known to VisPy will be used
 
     Returns
     -------
-    List[vispy.color.Color]
+    List[:py:class:`vispy.color.Color`]
         A length-n list of colors. If the starting value of `color` is less than length-n, it will be tiled to length-n.
 
     Examples
@@ -237,3 +281,78 @@ def make_list(n, val):
     if val.size < n:
         val = tile(val, 1 + n//val.size)
     return val[:n]
+
+
+def make_filters(shininess, width, wireframe_color):
+    from vispy.visuals.filters import ShadingFilter, WireframeFilter
+    shading_filter = ShadingFilter()
+    shading_filter.shading=None
+    wireframe_filter = WireframeFilter(width=width, color=wireframe_color)
+
+    def attach_headlight(view):
+        light_dir = (0, 1, 0, 0)
+        shading_filter.light_dir = light_dir[:3]
+        initial_light_dir = view.camera.transform.imap(light_dir)
+
+        @view.scene.transform.changed.connect
+        def on_transform_change(event):
+            transform = view.camera.transform
+            shading_filter.light_dir = transform.map(initial_light_dir)[:3]
+
+    return wireframe_filter, shading_filter, attach_headlight
+
+
+def make_states():
+    shading = {'shading':None}, {'shading':'flat'}, {'shading':'smooth'}
+    w, f = 'wireframe_only', 'faces_only'
+    wireframe = {w:False, f:False}, {w:True, f:False}, {w:False, f:True}
+    return shading, wireframe
+
+
+def cycle_state(states, index):
+    nindex = (index + 1) % len(states)
+    return states[nindex], nindex
+
+
+def add_shading_wireframe_interface(canvas, mesh, shading, wireframe):
+    shading_states, wireframe_states = make_states()
+
+    global shading_index
+    global wireframe_index
+    shading_index = shading_states.index({'shading':shading.shading})
+    wireframe_index = wireframe_states.index({'wireframe_only':wireframe.wireframe_only, 'faces_only':wireframe.faces_only})
+
+    @canvas.events.key_press.connect
+    def on_key_press(event):
+        global shading_index
+        global wireframe_index
+        if event.key == 's':
+            state, shading_index = cycle_state(shading_states, shading_index)
+            for attr, value in state.items():
+                setattr(shading, attr, value)
+            mesh.update()
+        elif event.key == 'w':
+            wireframe.enabled = not wireframe.enabled
+            mesh.update()
+        elif event.key == 'f':
+            state, wireframe_index = cycle_state(wireframe_states, wireframe_index)
+            for attr, value in state.items():
+                setattr(wireframe, attr, value)
+            mesh.update()
+        elif event.key == '+' or event.key == '=':
+            shading.shininess = min(100, shading.shininess + 10)
+            mesh.update()
+        elif event.key == '-':
+            shading.shininess = max(0, shading.shininess - 10)
+            mesh.update()
+
+
+def is_interactive():
+    """Identify if the current running Python is executing a script or running interactively
+
+    Running a command from the command prompt, e.g., `python -c 'import brille.vis as bv; bv.something()`
+    will be identified as an interactive session via this method.
+    """
+    import __main__ as main
+    return not hasattr(main, '__file__')
+

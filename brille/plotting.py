@@ -16,8 +16,8 @@
 # along with brille. If not, see <https://www.gnu.org/licenses/>.
 
 """
-Plotting utilities for ``brille``
----------------------------------
+Matplotlib utilities for ``brille``
+-----------------------------------
 
 .. currentmodule:: brille.plotting
 
