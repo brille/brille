@@ -17,7 +17,7 @@ True
 .. _`CIF xyz`: https://www.iucr.org/__data/iucr/cifdic_html/1/cif_core.dic/Ispace_group_symop_operation_xyz.html
 
 
-With a CIF xyz encoded string from, e.g., a CIF file, one can directly create a :py:class:`~brille._brille.Direct` lattice object
+With a CIF xyz encoded string from, e.g., a CIF file, one can directly create a :py:class:`~brille._brille.Lattice` object
 with the appropriate symmetry operations without also specifying, e.g., the spacegroup:
 
 >>> from brille import Lattice, Symmetry

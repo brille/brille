@@ -15,13 +15,13 @@ class VisPolyhedron:
     ----------
     polyhedron : Union[:py:class:`~brille.Polyhedron`, :py:class:`~brille.LPolyhedron`]
         The polyhedron to be visualised. A LPolyhedron will be converted automatically to its Cartesian equivalent.
-    face_color : Union[str, vispy.color.Color]
+    face_color : Union[``str``, :py:class:`vispy.color.Color`]
         The face color of the visualised polyhedron, default 'black'
-    edge_color : Union[str, vispy.color.Color]
+    edge_color : Union[``str``, :py:class:`vispy.color.Color`]
         The edge color of the visualised polyhedron, default 'black'
-    fill : bool
+    fill : ``bool``
         Control drawing of the faces, default True
-    outline : bool
+    outline : ``bool``
         Control drawing of the edges, default True
 
     Note
@@ -63,13 +63,13 @@ def vis_polyhedron(polyhedron: VisPolyhedron, **kwargs):
 
     Other Parameters
     ----------------
-    face_color : Union[str, vispy.color.Color]
+    face_color : Union[``str``, :py:class:`vispy.color.Color`]
         The face color used for Polyhedron or LPolyhedron object input.
-    edge_color : Union[str, vispy.color.Color]
+    edge_color : Union[``str``, :py:class:`vispy.color.Color`]
         The edge color used for Polyhedron or LPolyhedron object input.
-    fill : bool
+    fill : ``bool``
         Control drawing the faces of the Polyhedron or LPolyhedron object.
-    outline : bool
+    outline : ``bool``
         Control drawing the edges of the Polyhedron or LPolyhedron object.
     """
     if not isinstance(polyhedron, VisPolyhedron):
@@ -86,7 +86,7 @@ def vis_polyhedra(polyhedra: List[VisPolyhedron], **kwargs):
 
     The visualisation includes interactive elements:
         - The view can be changed via the mouse
-        - The shading-style can be cycled by pressing 's' between (`None`, `'smooth'`, and `'flat')
+        - The shading-style can be cycled by pressing 's' between (`None`, `'smooth'`, and `'flat'`)
         - The shading `shininess` can be increased by pressing '+' or decreased by pressing '-'
         - The polygon facet fill and wire display can be cycled by pressing 'f'
         - The wireframe display can be toggled by pressing 'w'
@@ -94,7 +94,7 @@ def vis_polyhedra(polyhedra: List[VisPolyhedron], **kwargs):
 
     Parameters
     ----------
-    polyhedra : List[Union[:py:class:`~brille.vis.VisPolyhedron`, :py:class:`~brille.Polyhedron`, :py:class:`~brille.LPolyhedron`]]
+    polyhedra : List[Union[:py:class:`~brille.vis.VisPolyhedron`, :py:class:`~brille._brille.Polyhedron`, :py:class:`~brille._brille.LPolyhedron`]]
         The polyhedron to be visualised. Any object with similar `vertices` and `faces` properties may work as well.
     **kwargs
         Optional keyword arguments for the VisPolyhedron constructor. Only used if a Polyhedron or LPolyhedron
@@ -102,28 +102,28 @@ def vis_polyhedra(polyhedra: List[VisPolyhedron], **kwargs):
 
     Other Parameters
     ----------------
-    face_color : Union[List[Union[str, vispy.color.Color]],Union[str, vispy.color.Color]]
+    face_color : Union[List[Union[``str``, :py:class:`vispy.color.Color`]],Union[``str``, :py:class:`vispy.color.Color`]]
         A single face color used for all Polyhedron and LPolyhedron objects or a list of colors which will be tiled
         to the size of the full polyhedra list.
-    edge_color : Union[List[Union[str, vispy.color.Color]],Union[str, vispy.color.Color]]
+    edge_color : Union[List[Union[``str``, :py:class:`vispy.color.Color`]],Union[``str``, :py:class:`vispy.color.Color`]]
         A single edge color used for all Polyhedron and LPolyhedron objects or a list of colors which will be tiled
         to the size of the full polyhedra list.
-    fill : Union[List[bool], bool]
+    fill : Union[List[``bool``], ``bool``]
         A single value to control drawing the faces of all Polyhedron and LPolyhedron objects or a list of boolean
         values which will be tiled to the size of the full polyhedra list.
-    outline : Union[List[bool], bool]
+    outline : Union[List[``bool``], ``bool``]
         A single value to control drawing the edges of all Polyhedron and LPolyhedron objects or a list of boolean
         values which will be tiled to the size of the full polyhedra list.
-    opacity : Union[List[float], float]
+    opacity : Union[List[``float``], ``float``]
         A single value to control face opacity of all Polyhedron and LPolyhedron objects or a list of floating point
         values which will be tiled to the size of the full polyhedra list.
     elevation: number
         A single value to control the view 'elevation', the angle in degrees above the (x, y) plane of the view
     azimuth: number
         A single value to control the view 'azimuth', the angle in degrees (from -1 * \hat(y)?) of the view
-    wireframe_color: Union[str, vispy.color.Color]
+    wireframe_color: Union[``str``, :py:class:`vispy.color.Color`]
         A single color used to draw the wireframe of *every* polyhedron.
-    axis: bool
+    axis: ``bool``
         Control whether a set of axes are displayed along x, y, and z
     """
     if is_interactive():
@@ -210,12 +210,12 @@ def make_colours(n, color=None):
     ----------
     n : int
         The number of colors required
-    color : Union[List[Union[str, vispy.color.Color]], Union[str, vispy.color.Color]]
+    color : Union[List[Union[``str``, :py:class:`vispy.color.Color`]], Union[``str``, :py:class:`vispy.color.Color`]]
         If color is not provided, the list of all colors known to VisPy will be used
 
     Returns
     -------
-    List[vispy.color.Color]
+    List[:py:class:`vispy.color.Color`]
         A length-n list of colors. If the starting value of `color` is less than length-n, it will be tiled to length-n.
 
     Examples

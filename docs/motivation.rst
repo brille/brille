@@ -7,7 +7,7 @@ the symmetry of your crystal system to speed-up simulation and analysis of large
 partly redundant, reciprocal space datasets.
 The first step to achieve this goal is finding the volume of reciprocal space 
 which contains all possible information for your system from the lattice basis
-vectors and symmetry operations of you provide.
+vectors and symmetry operations which you provide.
 With the minimum volume identified, a space-filling grid is then constructed 
 following the parameters you specify. If you then provide calculated values for
 the vertices of the grid, the 'filled' grid can be used to interpolate your

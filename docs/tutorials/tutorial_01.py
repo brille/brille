@@ -226,7 +226,7 @@ bv = lambda t: np.array([[np.cos(t), 0, np.sin(t)],[0, 1, 0], [-np.sin(t), 0, np
 lat_basis_hall_symbol = brille.Lattice(bv(np.random.rand()*np.pi), '-F 4 3 2')
 
 if lat_basis_hall_symbol != lat_parameters_hall_symbol:
-    print('Something has gone wrong creating the Direct lattices')
+    print('Something has gone wrong creating the lattices')
 
 p1_cube = brille.Latice((1, 1, 1), (90, 90, 90))
 # another potential pitfall, lattice equivalency does not consider spacegroups
