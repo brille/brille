@@ -10,6 +10,7 @@
 #include <vector>
 #include <mutex>
 #include <map>
+#include <algorithm>
 
 namespace brille {
 
@@ -197,9 +198,11 @@ public:
 
   [[nodiscard]] bool is_consolidated() const {
     if (appended_.size(0) > 0) return false;
-//    for (ind_t i=0; i<preserved_.size(); ++i) if (preserved_[i] != i) return false;
-    for (const auto & pr: preserve_) if (pr.first != pr.second) return false;
-    return true;
+// //    for (ind_t i=0; i<preserved_.size(); ++i) if (preserved_[i] != i) return false;
+//    for (const auto & pr: preserve_) if (pr.first != pr.second) return false;
+//    return true;
+    return std::all_of(preserve_.begin(), preserve_.end(),
+                       [](const auto & pr){return pr.first == pr.second;});
   }
 
   friend std::ostream & operator<<(std::ostream & os, const VertexMapSet<T,A>& v){
@@ -234,7 +237,7 @@ private:
 
   [[nodiscard]] std::vector<std::pair<ind_t, ind_t>> key_sorted_preserve() const {
     std::vector<std::pair<ind_t, ind_t>> ksp;
-    for (auto & pair: preserve_) ksp.push_back(pair);
+    for (auto & pair: preserve_) ksp.emplace_back(pair);
     std::sort(ksp.begin(), ksp.end(), [](auto & a, auto & b){return a.second < b.second;});
     return ksp;
   }
