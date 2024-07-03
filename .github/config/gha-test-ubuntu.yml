@@ -2,9 +2,8 @@ name: ubuntu-22.04
 channels:
   - conda-forge
 dependencies:
-  - cmake=3.23.2
+  - cmake=3.30.0
   - gcc
   - gxx
   - numpy
-  - conan==1.57.0
-#  - hdf5 # use hdf5-1.12 via conan
+  - conan==2.4.1

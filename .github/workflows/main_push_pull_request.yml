@@ -5,12 +5,12 @@ on:
   pull_request:
 
 concurrency :
-  group: ${{ github.workflow }}-${{ github.ref == 'refs/head/main' && github.run_number || github.ref }}
+  group: "${{ github.workflow }}-${{ github.ref == 'refs/head/main' && github.run_number || github.ref }}"
   cancel-in-progress: true
 
 jobs:
   cmake_and_ctest:
-    name: CMake & CTest, ${{ matrix.variant.os }}, py${{ matrix.python-version }}
+    name: "CMake & CTest, ${{ matrix.variant.os }}, py${{ matrix.python-version }}"
     runs-on: ${{ matrix.variant.os }}
     defaults:
       run:
@@ -26,28 +26,21 @@ jobs:
         cmake-type: ['Release']
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup micromamba environment
-        uses: mamba-org/provision-with-micromamba@main
+        uses: mamba-org/setup-micromamba@v1
         with:
-          micromamba-version: "1.1.0"
           environment-file: .github/config/${{ matrix.variant.cmake-preset }}.yml
-          cache-env: true
-          extra-specs: python=${{ matrix.python-version }}
+          create-args: >-
+            python=${{ matrix.python-version }}
+          cache-environment: true
       - run: echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
-      - if: startsWith(matrix.variant.os, 'macos')
-        run: brew install tree; tree /Users/runner/.conan || echo "No conan directory"
       - name: configure
         run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.cmake-type }} -D PYTHON3_EXECUTABLE=${{ env.pythonInterpreter }}
-      - if: startsWith(matrix.variant.os, 'macos')
-        run: tree /Users/runner/.conan || echo "No conan directory"
-      - name: Get number of CPU cores
-        uses: SimenB/github-actions-cpu-cores@v1.1.0
-        id: cpu-cores
       - name: build
-        run: cmake --build build --config ${{ matrix.cmake-type }} --parallel ${{ steps.cpu-cores.outputs.count }}
+        run: cmake --build build --config ${{ matrix.cmake-type }} -j
       - name: test
         working-directory: build
-        run: ctest -C ${{ matrix.cmake-type }} --output-on-failure --parallel ${{ steps.cpu-cores.outputs.count }}
+        run: ctest -C ${{ matrix.cmake-type }} --output-on-failure -j

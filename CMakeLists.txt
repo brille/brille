@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.18.2)
+cmake_minimum_required(VERSION 3.24)
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 cmake_policy(SET CMP0017 NEW) # Prefer cmake's own files for include/find_package before CMAKE_MODULE_PATH
 
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake")
-
+set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES "${CMAKE_CURRENT_LIST_DIR}/cmake/conan_provider.cmake")
 project(brille)
 set(BRILLE_LIBRARY_TARGET brille)
 set(BRILLE_PYTHON_MODULE _brille)
@@ -15,7 +15,6 @@ SET(BRILLE_INCLUDE_DESTINATION include)
 set(TESTING_TARGET tester)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS ON)
 
 # Make the availability of testing optional
 option(BRILLE_BUILD_TESTING "Build tests for brille" ON)
@@ -96,8 +95,6 @@ endif (BRILLE_PROFILING)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
 SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
-
-include(brille-conan)
 
 if (PYTHON_EXECUTABLE)
   # Ensure the provided Python interpreter is used

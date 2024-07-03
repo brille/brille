@@ -15,7 +15,7 @@ jobs:
     name: Build Source distribution
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - run: pipx run build --sdist
@@ -26,7 +26,7 @@ jobs:
         path: dist/*.tar.gz
 
   cibuildwheel:
-    name: ${{ matrix.python-tag }} ${{ matrix.variant.platform }} on ${{ matrix.variant.os }}
+    name: "${{ matrix.python-tag }} ${{ matrix.variant.platform }} on ${{ matrix.variant.os }}"
     runs-on: ${{ matrix.variant.os }}
     strategy:
       fail-fast: false
@@ -35,38 +35,38 @@ jobs:
           - {os: ubuntu-22.04, platform: 'manylinux'}
           - {os: ubuntu-22.04, platform: 'musllinux'}
           - {os: macos-12, platform: 'macosx'}
-        python-tag: ['cp37', 'cp38', 'cp39', 'cp310', 'cp311']
+        python-tag: ['cp38', 'cp39', 'cp310', 'cp311', 'cp312']
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    - uses: pypa/cibuildwheel@v2.11.4
+    - uses: pypa/cibuildwheel@v2.19.2
       env:
-        CIBW_BUILD: ${{ matrix.python-tag }}-${{ matrix.variant.platform }}*
+        CIBW_BUILD: "${{ matrix.python-tag }}-${{ matrix.variant.platform }}*"
         MACOSX_DEPLOYMENT_TARGET: "10.15"
 
     - name: Verify clean directory
       run: git diff --exit-code
       shell: bash
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: "${{ matrix.python-tag }}-${{ matrix.variant.platform }}"
         path: wheelhouse/*.whl
 
   buildwheel:
-    name: ${{ matrix.python-version }} ${{ matrix.variant.name }} on ${{ matrix.variant.os }}
+    name: "${{ matrix.python-version }} ${{ matrix.variant.name }} on ${{ matrix.variant.os }}"
     runs-on: ${{ matrix.variant.os }}
     strategy:
       fail-fast: false
       matrix:
         variant:
           - {os: windows-2022, name: "windows", config: "gha-test-windows"}
-        python-version: [ '3.7', '3.8', '3.9', '3.10', '3.11' ]
+        python-version: [ '3.8', '3.9', '3.10', '3.11', '3.12' ]
     steps:
-      - uses: brille/python-hdf5-buildwheel-action@v2.2
+      - uses: brille/python-hdf5-buildwheel-action@v2.3
         with:
           os: ${{ matrix.variant.os }}
           python-version: ${{ matrix.python-version }}
@@ -81,7 +81,7 @@ jobs:
     if: github.event_name == 'release'
 
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       id: download
       with:
         path: artifacts
@@ -109,18 +109,18 @@ jobs:
     needs: [cibuildwheel]
     steps:
     - name: Checkout brille repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: repository
     - name: Checkout brille.github.io repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
         repository: brille/brille.github.io
         token: ${{ secrets.BRILLE_GITHUB_IO_TOKEN }}
         path: io
     - name: Download musl libc musllinux wheel
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       id: path
       with:
         name: cp39-musllinux

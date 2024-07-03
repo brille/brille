@@ -1,6 +1,6 @@
 # Build and test the python module using CIBuildWheel
 
-ENTRYPOINT="""#!/bin/bash
+ENTRYPOINT = r"""#!/bin/bash
 set -eu
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # ! This file is auto-generated and will be overwritten !
@@ -8,9 +8,9 @@ set -eu
 
 function echo_run {{
     echo "-------------------------------------------------"
-	echo "$" "$@"
+    echo "$" "$@"
     echo "-------------------------------------------------"
-	"$@"
+    "$@"
 }}
 
 export PATH={path}:$PATH
@@ -24,7 +24,7 @@ echo_run find /build -type f -iname "*-linux*.whl" -exec sh -c "auditwheel repai
 """
 
 
-def main():
+def main(variant=None):
     from config import get_client, get_image, get_volumes, get_folder, write_entrypoint
     from python_on_whales import exceptions
 
@@ -32,8 +32,8 @@ def main():
     image = get_image(client)
     folder = get_folder('wheelhouse')
     volumes = get_volumes(client, {'build': folder, 'conan': None})
-    
-    write_entrypoint(ENTRYPOINT, folder)
+
+    write_entrypoint(ENTRYPOINT, folder, variant=variant)
     try:
         result = client.run(image, ['sh', '/build/entrypoint.sh'], volumes=volumes, tty=True)
         print(result)
@@ -42,5 +42,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-
+    from argparse import ArgumentParser
+    parser = ArgumentParser()
+    parser.add_argument('-p', '--python', type=str, default='cp312-cp312')
+    args = parser.parse_args()
+    main(variant=args.python)

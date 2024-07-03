@@ -1,11 +1,11 @@
 [build-system]
 # Minimum requirements for the build system to execute.
 requires =[
-  "setuptools>='45'",
-  "setuptools_scm[toml]>='6.2'",
+  "setuptools>=45",
+  "setuptools_scm[toml]>=6.2",
   "wheel",
-  "cmake>=3.18.2",
-  "conan==1.57.0",
+  "cmake>=3.24",
+  "conan==2.4.1",
 ]
 
 [tool.setuptools_scm]
