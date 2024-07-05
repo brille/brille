@@ -121,6 +121,7 @@ namespace brille {
       - outside of the volume no inidices or weights are set and the returned bool
         is false.
     */
+    using NullNode::indices_weights; // otherwise gcc complains that we're hiding NullNode::indices_weights
     template<class T, class I, template<class> class A>
     std::enable_if_t<isArray<T,A>, bool>
     indices_weights(const A<T>& vertices, const A<T>& x, std::vector<std::pair<I,T>>& iw, const bool should_contain) const {
@@ -235,6 +236,8 @@ namespace brille {
     }
     //! Return the vertex indices for each triangulated tetrahedra
     [[nodiscard]] std::vector<std::array<ind_t,4>> vertices_per_tetrahedron() const override {return vi_t;}
+
+    using NullNode::indices_weights;
     /*!\brief Return the indices required and their weights for linear
               interpolation at a point
 
@@ -439,7 +442,7 @@ namespace brille {
     explicit NodeContainer() = default;
     NodeContainer(nodes_t&& n, cubes_t&& c, polys_t&& p)
         : nodes_(std::move(n)), cube_nodes_(std::move(c)), poly_nodes_(std::move(p)) {}
-    NodeContainer(const std::vector<NodeType>& types) {
+    explicit NodeContainer(const std::vector<NodeType>& types) {
       nodes_.reserve(types.size());
       ind_t n_cube{0}, n_poly{0}, null_idx{(std::numeric_limits<ind_t>::max)()};
       for (const auto & x: types){
@@ -458,7 +461,7 @@ namespace brille {
       if (poly_nodes_ != other.poly_nodes_) return true;
       return false;
     }
-    std::vector<NodeType> all_node_types() const {
+    [[nodiscard]] std::vector<NodeType> all_node_types() const {
       std::vector<NodeType> types;
       types.reserve(nodes_.size());
       for (const auto & n: nodes_) types.push_back(n.first);
@@ -507,7 +510,7 @@ namespace brille {
       assert(nodes_[i].second < poly_nodes_.size());
       poly_nodes_[nodes_[i].second] = std::move(n);
     }
-    void set(const ind_t, NullNode){
+    void set(const ind_t, const NullNode&){
     }
     //! Return the NodeType of the indexed node
     [[nodiscard]] NodeType type(const ind_t i) const {
