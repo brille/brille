@@ -18,12 +18,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Make the availability of testing optional
 option(BRILLE_BUILD_TESTING "Build tests for brille" ON)
-# Allow system pybind11 to be required
-option(REQUIRE_SYSTEM_PYBIND11 "Never attempt to fetch pybind11" OFF)
-mark_as_advanced(REQUIRE_SYSTEM_PYBIND11)
-# Allow system catch2 to be required
-option(REQUIRE_SYSTEM_CATCH2 "Never attempt to fetch catch2" OFF)
-mark_as_advanced(REQUIRE_SYSTEM_CATCH2)
 # Allow the log level to be set by cmake
 set(BRILLE_LOGLEVEL "INFO" CACHE STRING "Emit log messages to standard out (DEBUG|VERBOSE)")
 # Special option for profiling runs
@@ -37,12 +31,10 @@ set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
 
 # Optional support of HDF5-based IO
 option(BRILLE_HDF5 "Add HDF5 file-based IO" ON)
-option(REQUIRE_SYSTEM_HIGHFIVE "Never attempt to fetch HighFive" OFF)
 if (BRILLE_HDF5)
     # Include the HDF5 IO methods -- safe since configuring will fail if HDF5/HighFive is not available
     add_definitions(-DUSE_HIGHFIVE)
 endif()
-mark_as_advanced(REQUIRE_SYSTEM_HIGHFIVE)
 set(MINIMUM_HIGHFIVE_VERSION 2.6.2)
 SET(FETCH_HIGHFIVE_REPO https://github.com/BlueBrain/HighFive)
 
@@ -111,14 +103,14 @@ include(fetcher)
 
 # Attempt to find catch2 to handle C++ testing
 if(BRILLE_BUILD_TESTING)
-  git_fetch(catch2 ${MINIMUM_CATCH2_VERSION} ${FETCH_CATCH2_REPO} ${REQUIRE_SYSTEM_CATCH2})
+  git_fetch(catch2 ${MINIMUM_CATCH2_VERSION} ${FETCH_CATCH2_REPO})
   list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
 else()
   # Since no testing is to be built, fake that we've found Catch2.
   set(Catch2_FOUND ON)
 endif()
 # Attempt to find pybind11 to handle CPython bindings
-git_fetch(pybind11 ${MINIMUM_PYBIND11_VERSION} ${FETCH_PYBIND11_REPO} ${REQUIRE_SYSTEM_PYBIND11})
+git_fetch(pybind11 ${MINIMUM_PYBIND11_VERSION} ${FETCH_PYBIND11_REPO})
 
 # Read the version of brille
 include(checkgit)

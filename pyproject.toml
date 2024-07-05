@@ -15,8 +15,9 @@ archs = ["auto64"]
 test-command = "python -m unittest discover -s {package}/wrap/tests"
 before-test = "pip install numpy"
 build-verbosity = 1
+skip = ["cp36-*", "cp37-*", "pp*"]  # all skipped for speed, except on Windows where PyPy builds don't work(?)
 
-[tools.cibuildwheel.windows]
+[tool.cibuildwheel.windows]
 before-build = "pip install delvewheel"
 repair-wheel-command = "delvewheel repair -w {dest_dir} -v {wheel}"
 

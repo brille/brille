@@ -6,6 +6,10 @@ on:
     types: [created, edited, published]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event.action == 'published' }}
+
 defaults:
   run:
     shell: bash -l {0}
@@ -20,65 +24,57 @@ jobs:
         fetch-depth: 0
     - run: pipx run build --sdist
     - run: pipx run twine check dist/*
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: dist
         path: dist/*.tar.gz
 
   cibuildwheel:
-    name: "${{ matrix.python-tag }} ${{ matrix.variant.platform }} on ${{ matrix.variant.os }}"
+    name: "Build wheels for ${{ matrix.variant.platform }} on ${{ matrix.variant.os }}"
     runs-on: ${{ matrix.variant.os }}
     strategy:
       fail-fast: false
       matrix:
         variant:
-          - {os: ubuntu-22.04, platform: 'manylinux'}
-          - {os: ubuntu-22.04, platform: 'musllinux'}
-          - {os: macos-12, platform: 'macosx'}
-        python-tag: ['cp38', 'cp39', 'cp310', 'cp311', 'cp312']
+          - { os: ubuntu-22.04, platform: 'manylinux' }
+          - { os: ubuntu-22.04, platform: 'musllinux' }
+          - { os: macos-13, platform: 'macosx' }  # Intel support
+          - { os: macos-14, platform: 'macosx' }  # Apple silicon support
+          - { os: windows-2022, platform: "win" }
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - uses: pypa/cibuildwheel@v2.19.2
-      env:
-        CIBW_BUILD: "${{ matrix.python-tag }}-${{ matrix.variant.platform }}*"
-        MACOSX_DEPLOYMENT_TARGET: "10.15"
-
-    - name: Verify clean directory
-      run: git diff --exit-code
-      shell: bash
-
-    - uses: actions/upload-artifact@v4
-      with:
-        name: "${{ matrix.python-tag }}-${{ matrix.variant.platform }}"
-        path: wheelhouse/*.whl
-
-  buildwheel:
-    name: "${{ matrix.python-version }} ${{ matrix.variant.name }} on ${{ matrix.variant.os }}"
-    runs-on: ${{ matrix.variant.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        variant:
-          - {os: windows-2022, name: "windows", config: "gha-test-windows"}
-        python-version: [ '3.8', '3.9', '3.10', '3.11', '3.12' ]
-    steps:
-      - uses: brille/python-hdf5-buildwheel-action@v2.3
+      - uses: actions/checkout@v4
         with:
-          os: ${{ matrix.variant.os }}
-          python-version: ${{ matrix.python-version }}
-          arch: auto64
-          environment-file: .github/config/${{ matrix.variant.config }}.yml
-          environment-name: ${{ matrix.variant.name }}
+          fetch-depth: 0
+
+      # https://cibuildwheel.pypa.io/en/stable/faq/#macos-building-cpython-38-wheels-on-arm64
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.8
+        if: runner.os == 'macOS' && runner.arch == 'ARM64'
+
+      - uses: pypa/cibuildwheel@v2.19.2
+        env:
+          CIBW_BUILD: "*-${{ matrix.variant.platform }}*"
+
+      - name: Verify clean directory
+        run: git diff --exit-code
+        shell: bash
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: "cibw-wheels-${{ matrix.variant.platform }}-${{ matrix.variant.os }}"
+          path: wheelhouse/*.whl
 
   draft:
     name: Deploy packages
-    needs: [source, cibuildwheel, buildwheel]
+    needs: [source, cibuildwheel]
     runs-on: ubuntu-22.04
     if: github.event_name == 'release'
+    permissions:
+      id-token: write
+      contents: write
+    environment: release
 
     steps:
     - uses: actions/download-artifact@v4
@@ -94,15 +90,10 @@ jobs:
       with:
         allowUpdates: true
         draft: ${{ github.event.action != 'published' }}
-        prerelease: true
-        token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: "dist/*.whl,dist/*.tar.gz"
     - name: Publish artifacts to PyPI
       if: ${{ github.event.action == 'published' }}
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_TOKEN }}
 
   sphinx:
     runs-on: ubuntu-latest
@@ -123,7 +114,7 @@ jobs:
       uses: actions/download-artifact@v4
       id: path
       with:
-        name: cp39-musllinux
+        name: cibw-wheels-musllinux-ubuntu-22.04
         path: wheelhouse
     - name: Get downloaded wheel name
       id: wheel
