@@ -30,21 +30,13 @@ namespace brille {
     //! Deconstruction of a NullNode
     virtual ~NullNode() = default;
     //! Return the type of this Node
-    [[nodiscard]] virtual NodeType type() const {return NodeType::null;}
+    [[nodiscard]] static NodeType type() {return NodeType::null;}
     //! Return the number of vertices this Node indexes
-    [[nodiscard]] virtual ind_t vertex_count() const {return 0u;}
+    [[nodiscard]] static ind_t vertex_count() {return 0u;}
     //! Return the vertex indices of this Node
-    [[nodiscard]] virtual std::vector<ind_t> vertices() const {return {};}
-    //! Return the triangulated tetrahedra indices of this Node
-    [[nodiscard]] virtual std::vector<std::array<ind_t,4>> vertices_per_tetrahedron() const {return {};}
-    virtual //! Return the indices required and their weights for linear interpolation at a point
-    bool indices_weights(const bArray<double>&,
-                         const bArray<double>&,
-                         std::vector<std::pair<ind_t,double>>&,
-                         const bool
-                        ) const {return false;}
+    [[nodiscard]] static std::vector<ind_t> vertices() {return {};}
     //! Return the volume of this Node
-    [[nodiscard]] virtual double volume(const bArray<double>&) const {return 0.;}
+    [[nodiscard]] static double volume(const bArray<double>&) {return 0.;}
 #ifdef USE_HIGHFIVE
     //! Write to an HDF file
     template<class R>
@@ -58,6 +50,20 @@ namespace brille {
     from_hdf(R&, const std::string&) {return NullNode();}
     bool operator!=(const NullNode&) const { return true; }
 #endif
+  private:
+    /*
+     * These methods are present in CubeNode and PolyNode which inherit from NullNode.
+     * They should never be used, however, since a Null node can not be used for interpolation.
+     * Marking the methods private allows for compilation without warnings.
+     */
+    //! Return the triangulated tetrahedra indices of this Node
+    [[nodiscard]] static std::vector<std::array<ind_t,4>> vertices_per_tetrahedron() {return {};}
+    //! Return the indices required and their weights for linear interpolation at a point
+    static bool indices_weights(const bArray<double>&,
+                         const bArray<double>&,
+                         std::vector<std::pair<ind_t,double>>&,
+                         const bool
+                        ) {return false;}
   };
   /*! \brief A Node fully within the domain of the PolyhedronTrellis
 
@@ -89,9 +95,9 @@ namespace brille {
       for (ind_t i=0; i<8u; ++i) vertex_indices[i] = vi[i];
     }
     //! Return the number of vertices this Node indexes
-    [[nodiscard]] ind_t vertex_count() const override { return 8u;}
+    [[nodiscard]] static ind_t vertex_count() { return 8u;}
     //! Return the vertex indices of this Node
-    [[nodiscard]] std::vector<ind_t> vertices() const override {
+    [[nodiscard]] std::vector<ind_t> vertices() const {
       std::vector<ind_t> out;
       for (auto v: vertex_indices) out.push_back(v);
       return out;
@@ -121,7 +127,6 @@ namespace brille {
       - outside of the volume no inidices or weights are set and the returned bool
         is false.
     */
-    using NullNode::indices_weights; // otherwise gcc complains that we're hiding NullNode::indices_weights
     template<class T, class I, template<class> class A>
     std::enable_if_t<isArray<T,A>, bool>
     indices_weights(const A<T>& vertices, const A<T>& x, std::vector<std::pair<I,T>>& iw, const bool should_contain) const {
@@ -226,25 +231,24 @@ namespace brille {
     //! Return the number of triangulated tetrahedra in the PolyNode
     [[nodiscard]] ind_t tetrahedra_count() const {return static_cast<ind_t>(vi_t.size());}
     //! Return the number of unique vertex indices in the triangulated tetrahedra
-    [[nodiscard]] ind_t vertex_count() const override { return static_cast<ind_t>(this->vertices().size());}
+    [[nodiscard]] ind_t vertex_count() const { return static_cast<ind_t>(this->vertices().size());}
     //! Return the unique vertex indices from all triangulated tetrahedra
-    [[nodiscard]] std::vector<ind_t> vertices() const override {
+    [[nodiscard]] std::vector<ind_t> vertices() const {
       std::vector<ind_t> out;
       for (auto tet: vi_t) for (auto idx: tet)
       if (std::find(out.begin(), out.end(), idx)==out.end()) out.push_back(idx);
       return out;
     }
     //! Return the vertex indices for each triangulated tetrahedra
-    [[nodiscard]] std::vector<std::array<ind_t,4>> vertices_per_tetrahedron() const override {return vi_t;}
+    [[nodiscard]] std::vector<std::array<ind_t,4>> vertices_per_tetrahedron() const {return vi_t;}
 
-    using NullNode::indices_weights;
     /*!\brief Return the indices required and their weights for linear
               interpolation at a point
 
     \param vertices all vertex positions of the PolyhedronTrellis
     \param        x the point at which linear interpolation is required
     \param[out]  iw the minimal number of vertex indices and their interpolation
-                    weights required for linear interpoaltion within the Node
+                    weights required for linear interpolation within the Node
     \returns whether a triangulated tetrahedra contains `x` and `iw` has been set
 
     If one of the triangulated tetrahedra contains the interpolation point and it
@@ -263,7 +267,7 @@ namespace brille {
         `iw` along with weights proportional to the volume of the tetrahedron
         formed by the point and the other three Node corners.
 
-    If the point is not inside any of the triangulated tetrahedra no inidices
+    If the point is not inside any of the triangulated tetrahedra no indices
     or weights are set and the returned bool is false.
     */
     template<class T, class I, template<class> class A>
@@ -291,7 +295,7 @@ namespace brille {
       if (should_contain){
         auto i = std::distance(most_neg.begin(), std::max_element(most_neg.begin(), most_neg.end()));
         verbose_update("PolyNode does not contain ",x.to_string(0)," but should\n\tUsing tetrahedron with ",most_neg[i]," weight for one vertex");
-        bool allow_shortcut{false}; // just incase we chose a really bad tetrahedron
+        bool allow_shortcut{false}; // just in case we chose an unfortunate tetrahedron
         auto val = tetrahedra_contains(static_cast<ind_t>(i), vertices, x, w, allow_shortcut);
         if (val > 0.){
           throw std::runtime_error("This shouldn't be possible");
@@ -474,11 +478,11 @@ namespace brille {
     [[nodiscard]] size_t cube_count() const {
       return std::count_if(nodes_.begin(),nodes_.end(),[](std::pair<NodeType,ind_t> n){return NodeType::cube == n.first;});
     }
-    //! Return the nuber of indexed PolyNode objects
+    //! Return the number of indexed PolyNode objects
     [[nodiscard]] size_t poly_count() const {
       return std::count_if(nodes_.begin(),nodes_.end(),[](std::pair<NodeType,ind_t> n){return NodeType::poly == n.first;});
     }
-    //! Return the nubmer of indexed NullNode objects
+    //! Return the number of indexed NullNode objects
     [[nodiscard]] size_t null_count() const {
       return std::count_if(nodes_.begin(),nodes_.end(),[](std::pair<NodeType,ind_t> n){return NodeType::null == n.first;});
     }
@@ -609,19 +613,19 @@ namespace brille {
         return false;
       }
     }
-    /*! Find the total interpolable volume of the node at index i
+    /*! Find the total accessible interpolation volume of the node at index i
 
-    \param verts all vertex positions of the PolyhedronTrellis
-    \param i     the indexed node to interogate
+    \param vertices all vertex positions of the PolyhedronTrellis
+    \param i        the indexed node to interrogate
     */
     template<class T, template<class> class A>
     [[nodiscard]] std::enable_if_t<isArray<T,A>, T>
-    volume(const A<T>& verts, const ind_t i) const {
+    volume(const A<T>& vertices, const ind_t i) const {
       switch (nodes_[i].first){
         case NodeType::cube:
-        return cube_nodes_[nodes_[i].second].volume(verts);
+        return cube_nodes_[nodes_[i].second].volume(vertices);
         case NodeType::poly:
-        return poly_nodes_[nodes_[i].second].volume(verts);
+        return poly_nodes_[nodes_[i].second].volume(vertices);
         default:
         return 0.;
       }

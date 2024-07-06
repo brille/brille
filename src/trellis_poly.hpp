@@ -344,7 +344,7 @@ public:
     thread_ex.rethrow(); // only throws if error(s) were caught
     if (missing){
       std::ostringstream oss;
-      oss << "interpolate_at failed to find" << missing << "point" << (missing > 1 ? "s." : ".");
+      oss << "interpolate_at failed to find " << missing << " point" << (missing > 1 ? "s." : ".");
       throw std::runtime_error(oss.str());
     }
     return std::make_tuple(vals_out, vecs_out);
