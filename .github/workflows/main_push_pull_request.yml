@@ -42,4 +42,4 @@ jobs:
         run: cmake --build build --config ${{ matrix.cmake-type }} -j
       - name: test
         working-directory: build
-        run: ctest -C ${{ matrix.cmake-type }} --output-on-failure -j
+        run: ctest -C ${{ matrix.cmake-type }} --verbose # --output-on-failure -j
