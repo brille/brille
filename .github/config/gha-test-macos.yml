@@ -1,9 +1,0 @@
-name: macos-12
-channels:
-  - conda-forge
-dependencies:
-  - cmake=3.30.0
-  - numpy
-  - llvm-openmp==11.1.0
-  - conan==2.4.1
-

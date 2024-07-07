@@ -1,9 +1,0 @@
-name: ubuntu-22.04
-channels:
-  - conda-forge
-dependencies:
-  - cmake=3.30.0
-  - gcc
-  - gxx
-  - numpy
-  - conan==2.4.1
