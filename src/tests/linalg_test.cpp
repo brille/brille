@@ -1,4 +1,6 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+
 #include "utilities.hpp"
 #include "approx_float.hpp"
 
@@ -115,7 +117,7 @@ TEST_CASE("specialized (rounding for double->int) casting","[linalg]"){
 TEST_CASE("determinant and inverse of matrices","[linalg]"){
   double M[9] = {1,0,1, 0,1,0, 0,1,1};
   double invM[9], expected_invM[9] = {1,1,-1, 0,1,0, 0,-1,1};
-  REQUIRE( matrix_determinant<double>(M) == Approx(1) );
+  REQUIRE_THAT( matrix_determinant<double>(M), Catch::Matchers::WithinRel(1.0, 1e-10) ); // new style
   REQUIRE( matrix_inverse<double>(invM, M) ); // require that the inverse exists
   REQUIRE( matrix<double,double,3>(invM, expected_invM) ); // and that the result is correct
 }
@@ -164,7 +166,7 @@ TEST_CASE("matrix metric","[linalg]"){
 }
 TEST_CASE("vector norm squared","[linalg]"){
   double v[3] = {1,-2,3};
-  REQUIRE( vector_norm_squared<double,3>(v) == Approx(14.0) );
+  REQUIRE_THAT( (vector_norm_squared<double, 3>(v)), Catch::Matchers::WithinRel(14.0, 1e-10));
 }
 TEST_CASE("vector cross products","[linalg]"){
   double v1[3] = {1,0,0}, v2[3] = {0,1,0}, v3[3] = {0,0,1};
@@ -185,7 +187,13 @@ TEST_CASE("vector cross products","[linalg]"){
 TEST_CASE("vector dot products","[linalg]"){
   double v1[3] = {1,1,0}, v2[3] = {0,1,1}, v3[3] = {1,0,1};
   // double dot[3];
-  SECTION("(110)⋅(011)"){ REQUIRE( vector_dot<double,3>(v1,v2) == Approx(1.0) );}
-  SECTION("(011)⋅(101)"){ REQUIRE( vector_dot<double,3>(v2,v3) == Approx(1.0) );}
-  SECTION("(101)⋅(110)"){ REQUIRE( vector_dot<double,3>(v3,v1) == Approx(1.0) );}
+  SECTION("(110)⋅(011)"){
+    REQUIRE_THAT( (vector_dot<double, 3>(v1 ,v2)), Catch::Matchers::WithinRel(1.0, 1e-10));
+  }
+  SECTION("(011)⋅(101)"){
+    REQUIRE_THAT( (vector_dot<double, 3>(v2 ,v3)), Catch::Matchers::WithinRel(1.0, 1e-10));
+  }
+  SECTION("(101)⋅(110)"){
+    REQUIRE_THAT( (vector_dot<double, 3>(v3 ,v1)), Catch::Matchers::WithinRel(1.0, 1e-10));
+  }
 }

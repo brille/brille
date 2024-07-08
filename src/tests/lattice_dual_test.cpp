@@ -1,4 +1,5 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #include "lattice_dual.hpp"
 
@@ -39,6 +40,8 @@ TEST_CASE("LatticeDual with Seitz symbol","[latticedual]"){
 
 
 TEST_CASE("Verify Lattice property correctness","[latticedual][macos-arm]"){
+  using Catch::Matchers::WithinRel;
+  using Catch::Matchers::WithinAbs;
   auto perform_checks = [] (Lattice<double>& lat, bool B_is_triangular){
     //we have constructed A and B *both* as column vector matrices,
     // so they are related by B = 2π (A⁻¹)ᵀ   !!Note the transpose!!
@@ -49,7 +52,11 @@ TEST_CASE("Verify Lattice property correctness","[latticedual][macos-arm]"){
     std::cout << "AB: [ ";
     for (auto & x: AB) std::cout << x << " ";
     std::cout << "]" << std::endl;
-    for (size_t i=0; i < I.size(); ++i) REQUIRE(I[i]*two_pi == Approx(AB[i]));
+    for (size_t i=0; i < I.size(); ++i) {
+      // The direct and reciprocal lattice basis vectors should be related by B = 2π (A⁻¹)ᵀ
+      // If the element of AB == 0, we care about absolute error, otherwise relative error
+      REQUIRE_THAT((I[i] * two_pi), WithinRel(AB[i], 1e-10) || WithinAbs(AB[i], 1e-11));
+    }
 
     if (B_is_triangular){
 //      info_update("A and B should be triangular!");
@@ -77,7 +84,9 @@ TEST_CASE("Verify Lattice property correctness","[latticedual][macos-arm]"){
       auto t = lat.to_xyz(lu);
       auto f = lat.from_xyz(lu);
       auto tf = mul_mat_mat(t, f);
-      for (size_t i=0; i<I.size(); ++i) REQUIRE(I[i] == Approx(tf[i]));
+      for (size_t i=0; i<I.size(); ++i) {
+        REQUIRE_THAT(I[i], Catch::Matchers::WithinRel(tf[i], 1e-12));
+      }
     };
     to_from_check(LengthUnit::angstrom);
     to_from_check(LengthUnit::inverse_angstrom);

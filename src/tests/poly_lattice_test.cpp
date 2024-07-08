@@ -1,4 +1,6 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+
 #include <filesystem>
 
 #include "array_.hpp" // defines bArray<T> as Array2<T> or Array<T>
@@ -20,6 +22,6 @@ TEST_CASE("Lattice Polyhedron","[polyhedron][lattice]") {
 
   debug_update(fbz.python_string());
 
-  REQUIRE(fbz_xyz.volume() == Approx(volume));
-  REQUIRE(fbz.volume() == Approx(volume));
+  REQUIRE_THAT(fbz_xyz.volume(), Catch::Matchers::WithinRel(volume, 1e-12));
+  REQUIRE_THAT(fbz.volume(), Catch::Matchers::WithinRel(volume, 1e-12));
 }

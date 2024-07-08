@@ -14,6 +14,7 @@ class BrilleRecipe(ConanFile):
 
     def requirements(self):
         self.requires("hdf5/1.12.0")
+        self.requires("catch2/3.6.0")
         if self.settings.os == "Macos":
             self.requires("llvm-openmp/11.1.0")
 

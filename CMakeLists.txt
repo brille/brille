@@ -26,8 +26,6 @@ option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
 # Define the minimum version of libraries needed
 set(MINIMUM_PYBIND11_VERSION 2.10.3)
 set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
-set(MINIMUM_CATCH2_VERSION 2.13.9)
-set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
 
 # Optional support of HDF5-based IO
 option(BRILLE_HDF5 "Add HDF5 file-based IO" ON)
@@ -103,8 +101,7 @@ include(fetcher)
 
 # Attempt to find catch2 to handle C++ testing
 if(BRILLE_BUILD_TESTING)
-  git_fetch(catch2 ${MINIMUM_CATCH2_VERSION} ${FETCH_CATCH2_REPO})
-  list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
+  find_package(Catch2 REQUIRED)
 else()
   # Since no testing is to be built, fake that we've found Catch2.
   set(Catch2_FOUND ON)
@@ -161,7 +158,7 @@ endforeach()
 
 if(BRILLE_BUILD_TESTING)
   message(STATUS "Build testing target '${TESTING_TARGET}' and configure CTest")
-  target_link_libraries(${TESTING_TARGET} PUBLIC Catch2::Catch2)
+  target_link_libraries(${TESTING_TARGET} PUBLIC Catch2::Catch2WithMain)
   include(CTest)
   include(Catch)
   catch_discover_tests(${TESTING_TARGET})

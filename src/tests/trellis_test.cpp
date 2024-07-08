@@ -1,4 +1,6 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+
 #include <tuple>
 #include <omp.h>
 #include <complex>
@@ -341,7 +343,7 @@ TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trell
   // The PolyhedronTrellis constructor would happily construct a trellis with
   // imporant (overlapping) nodes inserted as NullNode objects instead of
   // PolyNode objects like they should be.
-  REQUIRE(bzt.total_node_volume() == Approx(bz.get_ir_polyhedron().volume()));
+  REQUIRE_THAT(bzt.total_node_volume(), Catch::Matchers::WithinRel(bz.get_ir_polyhedron().volume(), 1e-10));
 }
 
 

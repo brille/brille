@@ -1,4 +1,5 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #include "lattice_dual.hpp"
 #include "array_l_.hpp"
@@ -13,8 +14,9 @@ TEST_CASE("Lattice Vector tests","[latvec]"){
   auto q = LQVec<double>(lattice, bArray<double>::from_std(values));
 
   SECTION("length via .norm(integer)"){
-    for(int i=0; i<3; i++)
-    REQUIRE( q.norm(i) == Approx(brille::math::two_pi) );
+    for(int i=0; i<3; i++) {
+      REQUIRE_THAT((q.norm(i)), Catch::Matchers::WithinRel(brille::math::two_pi, 1e-6));
+    }
   }
   SECTION("length via norm()"){
     auto normq = norm(q);
