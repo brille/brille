@@ -184,13 +184,10 @@ TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2
   auto wrong_mat = wrong_lat.to_xyz(rlu);
   auto right_mat = right_lat.to_xyz(rlu);
 
-  std::cout << "     latmat     " << "   wrong_mat    " << "   right_mat    " << std::endl;
-  std::cout << " -------------- " << " -------------- " << " -------------- " << std::endl;
+  std::cout << "   wrong_mat    " << "   right_mat    " << std::endl;
+  std::cout << " -------------- " << " -------------- " << std::endl;
   for (size_t i=0; i<3u; ++i) {
     std::cout << " ";
-    for (size_t j = 0; j < 3u; ++j) {
-      std::cout  << std::fixed << std::setprecision(2) << latmat[i*3+j] << " ";
-    }
     for (size_t j = 0; j < 3u; ++j) {
       std::cout << std::fixed << std::setprecision(2) << wrong_mat[i*3+j] << " ";
     }
@@ -202,7 +199,7 @@ TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2
 
   for (size_t i=0; i<9u; ++i){
     // snapping to symmetry should preserve the basis vector orientation
-		REQUIRE(std::abs(wrong_mat[i] - right_mat[i]) < 1e-12);
+    REQUIRE_THAT(right_mat[i], Catch::Matchers::WithinAbs(wrong_mat[i], 1e-10));
   }
 }
 
@@ -257,8 +254,16 @@ TEST_CASE("snap_to_symmetry works for row or column basis vectors", "[lattice][s
   auto row_lat = Direct<double>(row_basis, MatrixVectors::row, "P 6_3/m m c");
   auto col_lat = Direct<double>(col_basis, MatrixVectors::column, "P 6_3/m m c");
 
-  std::cout << row_lat.to_string(brille::LengthUnit::angstrom) << std::endl;
-  std::cout << col_lat.to_string(brille::LengthUnit::angstrom) << std::endl;
-
   REQUIRE(row_lat == col_lat);
+
+  // Correcting the inputs should not (unnecessarily) modify the provided basis
+  // but its internal representation _is_ column ordered vectors independent of input
+  auto value = row_lat.real_basis_vectors();
+  for (size_t i=0; i<9u; ++i){
+    REQUIRE_THAT(col_basis[i], Catch::Matchers::WithinAbs(value[i], 1e-10));
+  }
+  value = col_lat.real_basis_vectors();
+  for (size_t i=0; i<9u; ++i){
+    REQUIRE_THAT(col_basis[i], Catch::Matchers::WithinAbs(value[i], 1e-10));
+  }
 }

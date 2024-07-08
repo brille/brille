@@ -321,8 +321,11 @@ operations.
     }
 #endif
 
-
-
+template<class T, class R>
+std::ostream & operator<<(std::ostream & os, brille::Motion<T,R> const & motion){
+  os << motion.to_ascii();
+  return os;
+}
 
 }
 #endif

@@ -1,7 +1,9 @@
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators_range.hpp>
 
 #include "hall_symbol.hpp"
 #include "spg_database.hpp"
+#include "symmetry.hpp"
 
 using namespace brille;
 
@@ -7934,28 +7936,29 @@ static const int SPACEGROUP_SYMMETRY_OPERATIONS_INDEX[][2] = {
 };
 
 // renamed from spgdb_get_operation
-int get_numbered_operation(std::array<int,9>& rot, std::array<double,3>& trans, const int idx)
+int get_numbered_operation(std::array<int,9> & rot, std::array<double,3> & trans, const int idx)
 {
   /* A space group operation is compressed using ternary numerical system for */
   /* rotation and duodecimal system for translation. This is achieved because */
   /* each element of rotation matrix can have only one of {-1,0,1}, and */
   /* the translation can have one of {0,2,3,4,6,8,9,10} divided by */
-  /* 12. Therefore 3^9 * 12^3 = 34012224 different values can map space */
+  /* 12. Therefore, 3^9 * 12^3 = 34012224 different values can map space */
   /* group operations. In principle, octal numerical system can be used */
   /* for translation, but duodecimal system is more convenient. */
 
   // powers of 3: 3⁹, 3⁸, 3⁷, 3⁶, 3⁵, 3⁴, 3³, 3², 3¹, 3⁰
   int p3[10]{19683, 6561, 2187, 729, 243, 81, 27, 9, 3, 1};
   int r = ALL_SPACEGROUP_SYMMETRY_OPERATIONS[idx] % p3[0]; // % 3⁹
-  for (int i=0; i<9; ++i)
-    rot[i] = (r%p3[i])/p3[i+1] - 1;
-
+  for (int i=0; i<9; ++i) {
+    rot[i] = (r % p3[i]) / p3[i + 1] - 1;
+  }
   // powers of 12: 12³, 12², 12¹, 12⁰
   int p12[4]{1728, 144, 12, 1};
   int t = ALL_SPACEGROUP_SYMMETRY_OPERATIONS[idx] / p3[0];
-  for (int i=0; i<3; ++i)
-    trans[i] = static_cast<double>((t%p12[i])/p12[i+1])/12.0;
-
+  for (int i=0; i<3; ++i) {
+    int partial = (t % p12[i]) / p12[i + 1];
+    trans[i] = static_cast<double>(partial) / 12.0;
+  }
   return 1;
 }
 
@@ -7966,8 +7969,8 @@ Symmetry make_spacegroup_symmetry_object(const int hall_number)
   const int count{SPACEGROUP_SYMMETRY_OPERATIONS_INDEX[hall_number][0]};
   const int first{SPACEGROUP_SYMMETRY_OPERATIONS_INDEX[hall_number][1]};
   Symmetry symmetry;
-  std::array<double,3> t;
-  std::array<int,9> r;
+  std::array<double, 3> t{};
+  std::array<int, 9> r{};
   for (int i =0; i < count; i++){
     get_numbered_operation(r, t, first+i);
     symmetry.add(r, t);
@@ -7975,20 +7978,31 @@ Symmetry make_spacegroup_symmetry_object(const int hall_number)
   return symmetry;
 }
 
+namespace Catch {
+  template<>
+  struct StringMaker<brille::Symmetry> {
+    static std::string convert( brille::Symmetry const& value ) {
+      return value.to_string();
+    }
+  };
+}
+
 TEST_CASE("Check for consistency between Spglib sourced and HallSymbol decoded Symmetry objects","[spglib]"){
   // check every defined Hall group in the Spglib database
-  for (int hall_no=1; hall_no<531; ++hall_no){
-    // construct a Spacegroup object to have access to the Hall symbol associated with this number`
-    Spacegroup spg(hall_no);
-    // construct a HallSymbol object from the Spacegroup's Hall symbol
-    HallSymbol hallsymbol(spg.get_hall_symbol());
-    // convert the HallSymbol to a set of generators
-    Symmetry hallsymbol_generators = hallsymbol.get_generators();
-    // and use these to build a full spacegroup Symmetry
-    Symmetry hallsymbol_sym = hallsymbol_generators.generate();
-    // pull the spacegroup symmetries from the database
-    Symmetry spglib_sym = make_spacegroup_symmetry_object(hall_no);
-    // Now we can compare the Spglib sourced and decoded Symmetry objects
-    REQUIRE(hallsymbol_sym == spglib_sym); // does not check Motion order
+  auto hall_no = GENERATE(Catch::Generators::range(1, 530));
+  // construct a Spacegroup object to have access to the Hall symbol associated with this number`
+  Spacegroup spg(hall_no);
+  // construct a HallSymbol object from the Spacegroup's Hall symbol
+  HallSymbol hall_symbol(spg.get_hall_symbol());
+  // convert the HallSymbol to a set of generators
+  Symmetry hall_symbol_generators = hall_symbol.get_generators();
+  // and use these to build a full spacegroup Symmetry
+  Symmetry hall_symbol_sym = hall_symbol_generators.generate();
+  // pull the spacegroup symmetries from the database
+  Symmetry spglib_sym = make_spacegroup_symmetry_object(hall_no);
+  // Now we can compare the Spglib sourced and decoded Symmetry objects
+  if (hall_symbol_sym != spglib_sym){
+    std::cout << "Failure for " << hall_no << ": " << spg.get_hall_symbol() << "\n";
   }
+  REQUIRE(hall_symbol_sym == spglib_sym); // does not check Motion order
 }

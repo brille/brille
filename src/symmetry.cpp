@@ -213,3 +213,15 @@ Bravais Symmetry::getcentring() const {
   // With none of the pure translations it *must* be primitive (or have a problem)
   return Bravais::P;
 }
+
+std::string brille::Symmetry::to_string() const {
+  std::stringstream s;
+  s << "Symmetry with " << size() << " Motions\n";
+  for (const auto & m: M) s << "  " << m << "\n";
+  return s.str();
+}
+
+std::ostream & operator<<(std::ostream & os, brille::Symmetry const & sym) {
+  os << sym.to_string();
+  return os;
+}

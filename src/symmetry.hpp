@@ -24,6 +24,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Classes for a lattice spacegroup Symmetry operations
 */
 #include <utility>
+#include <iostream>
 
 #include "symmetry_common.hpp"
 #include "motion.hpp"
@@ -200,7 +201,13 @@ public:
     return Symmetry(m);
   }
 #endif
+
+  [[nodiscard]] std::string to_string() const;
 };
 
 } // end namespace brille
+
+std::ostream & operator<<(std::ostream & os, brille::Symmetry const & sym);
+
 #endif
+
