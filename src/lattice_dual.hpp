@@ -271,7 +271,7 @@ public:
     set_space_symmetry(s, c);
     _bravais = _space.getcentring();
     set_point_symmetry();
-    set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
+    set_vectors(MatrixVectors::column == mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
     set_metrics();
     snap_basis_to_symmetry(snap_to_symmetry);
   }
@@ -290,7 +290,10 @@ public:
     set_space_symmetry(s);
     _bravais = _space.getcentring();
     set_point_symmetry();
-    set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
+    std::cout << "Impl given " << (MatrixVectors::column == mv ? "column" : "row") << " vectors [ ";
+    for (const auto & v: vectors) std::cout << v << " ";
+    std::cout << "] " << s << "\n";
+    set_vectors(MatrixVectors::column == mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
     set_metrics();
     snap_basis_to_symmetry(snap_to_symmetry);
   }
@@ -407,18 +410,38 @@ private:
 		auto lu = use_real ? LengthUnit::angstrom : LengthUnit::inverse_angstrom;
     auto v = lengths(lu);
     auto [c, s] = inter_facial_angles_to_cosines_sines(angles(lu), AngleUnit::radian);
+    std::cout << "lengths [" << v[0] << ", " << v[1] << ", " << v[2] << "] ";
+    std::cout << "cosines [" << c[0] << ", " << c[1] << ", " << c[2] << "] ";
+    std::cout << " sines [" << s[0] << ", " << s[1] << ", " << s[2] << "] \n";
+    std::cout << "reciprocal vectors [";
+    for (const auto & r: _reciprocal_vectors) std::cout << " " << r;
+    std::cout << " ]\n";
     if (snap_to_symmetry(use_real, v, c, s)) {
+      std::cout << "lengths [" << v[0] << ", " << v[1] << ", " << v[2] << "] ";
+      std::cout << "cosines [" << c[0] << ", " << c[1] << ", " << c[2] << "] ";
+      std::cout << " sines [" << s[0] << ", " << s[1] << ", " << s[2] << "] \n";
       // determine the re-orientation matrix necessary to align the real basis
       // vectors with the 'standard' orientation of a || x, b⋅z == 0, b⋅y > 0
       auto R = standard_orientation_matrix(use_real ? _real_vectors : _reciprocal_vectors);
+      std::cout << "standard orientation matrix [";
+      for (const auto & r: R) std::cout << " " << r;
+      std::cout << " ]\n";
       // build the upper-triangular basis vector column-vector matrix
       matrix_t ut {{
           v[0],  v[1] * c[2], v[2] * c[1],
           T(0) , v[1] * s[2], v[2] * (c[0] - c[2]*c[1])/s[2],
           T(0) , T(0)       , v[2] * unit_parallelpiped_volume(c) / s[2]
       }};
+      std::cout << "upper triangular matrix [";
+      for (const auto & u: ut) std::cout << " " << u;
+      std::cout << " ]\n";
+
       // rotate the matrix back from the standard orientation to the user orientation
 			auto invR_ut = linear_algebra::mul_mat_mat(transpose(R), ut);
+      std::cout << "inverse standard orientation matrix * upper triangular matrix [";
+      for (const auto & i: invR_ut) std::cout << " " << i;
+      std::cout << " ]\n";
+
 			// provide a message to the user if the basis vectors have changed outside of approximate tolerance
 			if (!approx_float::matrix(3u, use_real ? _real_vectors.data() : _reciprocal_vectors.data(), invR_ut.data())){
 				std::ostringstream msg;
@@ -553,9 +576,17 @@ private:
     auto BorA_transposed = linear_algebra::mat_inverse(AorB);
     for (auto & x: BorA_transposed) x *= math::two_pi;
     if (LengthUnit::angstrom == lu){
+      std::cout << "Setting vectors from real input basis\n";
+      std::cout << "A [";
+      for (const auto & a: AorB) std::cout << " " << a;
+      std::cout << " ]\n";
+      std::cout << "B^T [";
+      for (const auto & b: BorA_transposed) std::cout << " " << b;
+      std::cout << " ]\n";
       _real_vectors = AorB;
       _reciprocal_vectors = transpose(BorA_transposed);
     } else if (LengthUnit::inverse_angstrom == lu) {
+      std::cout << "Setting vectors from reciprocal input basis\n";
       _real_vectors = transpose(BorA_transposed);
       _reciprocal_vectors = AorB;
     }

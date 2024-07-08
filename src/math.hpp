@@ -2,6 +2,7 @@
 #define BRILLE_MATH_HPP
 
 #include <cmath>
+#include <tuple>
 
 namespace brille::math{
 //const double             pi = 3.14159265358979323846;

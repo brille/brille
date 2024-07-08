@@ -28,22 +28,43 @@ jobs:
         cmake-type: ['Release']
 
     steps:
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python-based dependencies
+        run: |
+          python -m pip install setuptools_scm conan numpy
+          echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
+
+      - name: Cache conan setup
+        id: conan-cache-key
+        run: |
+          echo "key=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_OUTPUT
+          echo "path=$(conan config home)" >> $GITHUB_OUTPUT
+
+      - name: Cache conan
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.conan-cache-key.outputs.path }}
+          key: conan-${{ matrix.variant.os }}-${{ steps.conan-cache-key.outputs.key }}
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - run: python -m pip install setuptools_scm conan numpy
-      - run: echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
+
       - name: configure
         run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.cmake-type }} -D Python3_EXECUTABLE=${{ env.pythonInterpreter }}
+
       - name: build
         run: cmake --build build --config ${{ matrix.cmake-type }} -j
+
       - name: special MacOs on Arm64 tests
         if: matrix.variant.os != 'windows-2022'
         working-directory: build
-        run: ./tester "[macos-arm]" -s
+        run: ./tester "[macos-arm]"
+
       - name: test
         working-directory: build
         run: ctest -C ${{ matrix.cmake-type }} --verbose # --output-on-failure -j

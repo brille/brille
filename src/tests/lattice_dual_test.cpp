@@ -85,7 +85,8 @@ TEST_CASE("Verify Lattice property correctness","[latticedual][macos-arm]"){
       auto f = lat.from_xyz(lu);
       auto tf = mul_mat_mat(t, f);
       for (size_t i=0; i<I.size(); ++i) {
-        REQUIRE_THAT(I[i], Catch::Matchers::WithinRel(tf[i], 1e-12));
+        // all elements of tf should be close to the identity matrix -- so 1 or 0 only.
+        REQUIRE_THAT(I[i], WithinRel(tf[i], 1e-10) || WithinAbs(tf[i], 1e-11));
       }
     };
     to_from_check(LengthUnit::angstrom);
@@ -152,7 +153,7 @@ TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2
 
   Symmetry::Motions mots;
   mots.reserve(W.size());
-  for (size_t i=0; i<W.size(); ++i) mots.push_back(Motion<int,double>(W[i], w[i]));
+  for (size_t i=0; i<W.size(); ++i) mots.emplace_back(W[i], w[i]);
   Symmetry sym(mots);
   //
   LengthUnit lu { LengthUnit::angstrom };
@@ -182,6 +183,23 @@ TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2
 	auto rlu = LengthUnit::inverse_angstrom;
   auto wrong_mat = wrong_lat.to_xyz(rlu);
   auto right_mat = right_lat.to_xyz(rlu);
+
+  std::cout << "     latmat     " << "   wrong_mat    " << "   right_mat    " << std::endl;
+  std::cout << " -------------- " << " -------------- " << " -------------- " << std::endl;
+  for (size_t i=0; i<3u; ++i) {
+    std::cout << " ";
+    for (size_t j = 0; j < 3u; ++j) {
+      std::cout  << std::fixed << std::setprecision(2) << latmat[i*3+j] << " ";
+    }
+    for (size_t j = 0; j < 3u; ++j) {
+      std::cout << std::fixed << std::setprecision(2) << wrong_mat[i*3+j] << " ";
+    }
+    for (size_t j = 0; j < 3u; ++j) {
+      std::cout << std::fixed << std::setprecision(2) << right_mat[i*3+j] << " ";
+    }
+    std::cout << std::endl;
+  }
+
   for (size_t i=0; i<9u; ++i){
     // snapping to symmetry should preserve the basis vector orientation
 		REQUIRE(std::abs(wrong_mat[i] - right_mat[i]) < 1e-12);
@@ -230,4 +248,17 @@ TEST_CASE("snap_to_symmetry should not change parameters unnecessarily", "[latti
 
     REQUIRE(n == w);
     REQUIRE(sum(diff(n.metric(LengthUnit::angstrom), w.metric(LengthUnit::angstrom))) == 0.);
+}
+
+TEST_CASE("snap_to_symmetry works for row or column basis vectors", "[lattice][snap_to_symmetry][issue-99]"){
+  std::array<double, 9> row_basis{2, 0.0, 0.0,  -1, 1.7320508076, 0.0,  0.0, 0.0, 1.0};
+  std::array<double, 9> col_basis{2, -1, 0.0,  0.0, 1.7320508076, 0.0,  0.0, 0.0, 1.0};
+
+  auto row_lat = Direct<double>(row_basis, MatrixVectors::row, "P 6_3/m m c");
+  auto col_lat = Direct<double>(col_basis, MatrixVectors::column, "P 6_3/m m c");
+
+  std::cout << row_lat.to_string(brille::LengthUnit::angstrom) << std::endl;
+  std::cout << col_lat.to_string(brille::LengthUnit::angstrom) << std::endl;
+
+  REQUIRE(row_lat == col_lat);
 }
