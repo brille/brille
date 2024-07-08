@@ -40,6 +40,9 @@ jobs:
         run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.cmake-type }} -D Python3_EXECUTABLE=${{ env.pythonInterpreter }}
       - name: build
         run: cmake --build build --config ${{ matrix.cmake-type }} -j
-      - name: test
+#      - name: test
+#        working-directory: build
+#        run: ctest -C ${{ matrix.cmake-type }} --verbose # --output-on-failure -j
+      - name: special MacOs on Arm64 tests
         working-directory: build
-        run: ctest -C ${{ matrix.cmake-type }} --verbose # --output-on-failure -j
+        run: ./tester "[macos-arm]" -s

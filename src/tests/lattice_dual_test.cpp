@@ -38,7 +38,7 @@ TEST_CASE("LatticeDual with Seitz symbol","[latticedual]"){
 }
 
 
-TEST_CASE("Verify Lattice property correctness","[latticedual]"){
+TEST_CASE("Verify Lattice property correctness","[latticedual][macos-arm]"){
   auto perform_checks = [] (Lattice<double>& lat, bool B_is_triangular){
     //we have constructed A and B *both* as column vector matrices,
     // so they are related by B = 2π (A⁻¹)ᵀ   !!Note the transpose!!
@@ -46,6 +46,9 @@ TEST_CASE("Verify Lattice property correctness","[latticedual]"){
     auto B = lat.reciprocal_basis_vectors();
     Lattice<double>::matrix_t I{1,0,0, 0,1,0, 0,0,1};
     auto AB = mul_mat_mat(A,transpose(B));
+    std::cout << "AB: [ ";
+    for (auto & x: AB) std::cout << x << " ";
+    std::cout << "]" << std::endl;
     for (size_t i=0; i < I.size(); ++i) REQUIRE(I[i]*two_pi == Approx(AB[i]));
 
     if (B_is_triangular){
@@ -104,7 +107,7 @@ TEST_CASE("Verify Lattice property correctness","[latticedual]"){
 
 
 
-TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2zr2o7][64]"){
+TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2zr2o7][64][macos-arm]"){
   // Basis vectors from https://github.com/pace-neutrons/Euphonic/blob/aa3cc28786797bb3052f898dd63d4928d6f27ee2/tests_and_analysis/test/data/force_constants/LZO_force_constants.json#L186
   std::array<double,9> latmat {7.583912824349999, 1.8412792137035698e-32, 0.,
                                3.791956412170034, 3.791956412170034, 5.362636186024768,

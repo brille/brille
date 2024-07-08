@@ -39,7 +39,7 @@ TEST_CASE("BrillouinZoneNest3 vertex accessors","[nest]"){
  * errors can easily disrupt; otherwise a non-identity rotation matrix due to non-zero lattice translation will cause
  * mixing of the components of the interpolated vector which will not work.
  * */
-TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
+TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest][macos-arm]"){
   std::array<double,3> len{3.2598, 3.2598, 3.2598}, ang{half_pi, half_pi, half_pi};
   auto lat = Direct(len, ang, "-I 4 2 3"); // was 529
   BrillouinZone bz(lat);
