@@ -3,6 +3,13 @@ name: Main
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
 
 concurrency :
   group: "${{ github.workflow }}-${{ github.ref == 'refs/head/main' && github.run_number || github.ref }}"
@@ -64,6 +71,10 @@ jobs:
         if: matrix.variant.os != 'windows-2022'
         working-directory: build
         run: ./tester "[macos-arm]"
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure() }}
 
       - name: test
         working-directory: build
