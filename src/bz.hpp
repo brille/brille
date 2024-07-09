@@ -489,6 +489,8 @@ public:
   //! Returns the vertex indices for each facet of the irreducible first
   //! Brillouin zone polyhedron
   [[nodiscard]] poly_t::faces_t::faces_t get_ir_vertices_per_face() const;
+  //! Return a string representation of the Brillouin zone object
+  [[nodiscard]] std::string to_string() const;
   //! Print a representation of the object to std::cout
   void print() const;
   //  /*! \brief Attempt to find an irreducible section of reciprocal space
@@ -860,6 +862,10 @@ public:
   }
   bool operator==(const BrillouinZone &other) const {
     return !this->operator!=(other);
+  }
+  friend std::ostream& operator<<(std::ostream& os, const BrillouinZone & p){
+    os << p.to_string();
+    return os;
   }
 };
 

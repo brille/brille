@@ -49,9 +49,6 @@ TEST_CASE("Verify Lattice property correctness","[latticedual][macos-arm]"){
     auto B = lat.reciprocal_basis_vectors();
     Lattice<double>::matrix_t I{1,0,0, 0,1,0, 0,0,1};
     auto AB = mul_mat_mat(A,transpose(B));
-    std::cout << "AB: [ ";
-    for (auto & x: AB) std::cout << x << " ";
-    std::cout << "]" << std::endl;
     for (size_t i=0; i < I.size(); ++i) {
       // The direct and reciprocal lattice basis vectors should be related by B = 2π (A⁻¹)ᵀ
       // If the element of AB == 0, we care about absolute error, otherwise relative error
@@ -184,18 +181,18 @@ TEST_CASE("La2Zr2O7 construction off-symmetry basis vector input","[lattice][la2
   auto wrong_mat = wrong_lat.to_xyz(rlu);
   auto right_mat = right_lat.to_xyz(rlu);
 
-  std::cout << "   wrong_mat    " << "   right_mat    " << std::endl;
-  std::cout << " -------------- " << " -------------- " << std::endl;
-  for (size_t i=0; i<3u; ++i) {
-    std::cout << " ";
-    for (size_t j = 0; j < 3u; ++j) {
-      std::cout << std::fixed << std::setprecision(2) << wrong_mat[i*3+j] << " ";
-    }
-    for (size_t j = 0; j < 3u; ++j) {
-      std::cout << std::fixed << std::setprecision(2) << right_mat[i*3+j] << " ";
-    }
-    std::cout << std::endl;
-  }
+//  std::cout << "   wrong_mat    " << "   right_mat    " << std::endl;
+//  std::cout << " -------------- " << " -------------- " << std::endl;
+//  for (size_t i=0; i<3u; ++i) {
+//    std::cout << " ";
+//    for (size_t j = 0; j < 3u; ++j) {
+//      std::cout << std::fixed << std::setprecision(2) << wrong_mat[i*3+j] << " ";
+//    }
+//    for (size_t j = 0; j < 3u; ++j) {
+//      std::cout << std::fixed << std::setprecision(2) << right_mat[i*3+j] << " ";
+//    }
+//    std::cout << std::endl;
+//  }
 
   for (size_t i=0; i<9u; ++i){
     // snapping to symmetry should preserve the basis vector orientation

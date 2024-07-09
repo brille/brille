@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <tuple>
+#include <catch2/matchers/catch_matchers_quantifiers.hpp>
 #include "bz_nest.hpp"
 
 using namespace brille;
@@ -65,6 +66,7 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest][macos-arm]"){
   std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> distribution(0.,1.);
 
+  // construct random Q points that are linear combinations of the mapped nest Q points
   brille::ind_t nQmap = Qmap.size(0), nQ = 10;//10000;
   auto Q = LQVec<double>(lat,nQ);
   double rli;
@@ -72,6 +74,13 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest][macos-arm]"){
     rli = distribution(generator);
     Q.set(i, rli*Qmap.view(i%nQmap) + (1-rli)*Qmap.view((i+1)%nQmap) );
   }
+
+  std::cout << bz << "\n";
+
+  // verify that those points are all inside of the Brillouin zone
+  REQUIRE_THAT(bz.isinside(Q), Catch::Matchers::AllTrue());
+  // and in the irreducible wedge
+  REQUIRE_THAT(bz.isinside_wedge(Q), Catch::Matchers::AllTrue());
 
   auto [intres, dummy] =  bzn.ir_interpolate_at(Q, 1);
   auto QinvA = Q.xyz();
