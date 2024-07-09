@@ -29,19 +29,15 @@ bool Interpolator<T>::rip_recip(
   std::array<int,9> ident = {1,0,0, 0,1,0, 0,0,1};
   // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
   long long xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
-//#if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
-//// otherwise gcc complains that const b_ is *already* shared
-//#pragma omp parallel for default(none) shared(x,ptsym,r,invR) private(tmp_v,tmp_m) firstprivate(ident,no,xsize) schedule(static)
-//#else
-//#pragma omp parallel for default(none) shared(b_,s_,x,ptsym,r,invR) private(tmp_v,tmp_m) firstprivate(ident,no,xsize) schedule(static)
-//#endif
+#if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
+// otherwise gcc complains that const b_ is *already* shared
+#pragma omp parallel for default(none) shared(x,ptsym,r,invR) private(tmp_v,tmp_m) firstprivate(ident,no,xsize) schedule(static)
+#else
+#pragma omp parallel for default(none) shared(b_,s_,x,ptsym,r,invR) private(tmp_v,tmp_m) firstprivate(ident,no,xsize) schedule(static)
+#endif
   for (long long si=0; si<xsize; ++si){
     ind_t i = brille::utils::s2u<ind_t, long long>(si);
     T * xi = x.ptr(i);
-    auto ptsym_r = ptsym.get(r[i]);
-    std::cout << x.to_string(i) << " x [";
-    for (const auto pr: ptsym_r) std::cout << pr << ", ";
-    std::cout << "]\n";
     if (!brille::approx_float::matrix(3, ident.data(), ptsym.get(r[i]).data())){
       for (ind_t b=0; b<b_; ++b){
         // scalar elements do not need to be rotated, so skip them

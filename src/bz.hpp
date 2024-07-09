@@ -782,6 +782,17 @@ private:
   [[nodiscard]] lattice::LVec<double> get_ir_polyhedron_wedge_normals() const;
 
 public:
+
+  //! Accessor for otherwise private _inside_wedge_outer method needed for testing
+  template <class T>
+  [[nodiscard]] std::vector<bool> isinside_wedge_outer(const lattice::LVec<T> & p, const bool pos=false) const {
+    std::vector<bool> out;
+    out.reserve(p.size(0));
+    for (long long i = 0; i < p.size(0); ++i)
+      out.push_back(_inside_wedge_outer(p.view(i), pos));
+    return out;
+  }
+
 #ifdef USE_HIGHFIVE
   // FIXME Update these to reflect class contents
   template <class HF>
