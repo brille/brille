@@ -72,10 +72,10 @@ jobs:
         working-directory: build
         run: ./tester "[macos-arm]"
 
-      - name: Setup tmate session on failure
-        uses: mxschmitt/action-tmate@v3
-        # if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure() }}
-        if: ${{ failure() }}
+#      - name: Setup tmate session on failure
+#        uses: mxschmitt/action-tmate@v3
+#        # if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure() }}
+#        if: ${{ failure() }}
 
       - name: test
         working-directory: build

@@ -172,6 +172,12 @@ public:
     profile_update("Apply rotations/permutations to interpolated results");
     // we always need the pointgroup operations to 'rotate'
     PointSymmetry psym = bz_.get_pointgroup_symmetry();
+    if constexpr (NO_MOVE) {
+      // set rot and invrot to the identity symmetry operation (which is not necessarily the 0th one)
+      auto identity = psym.find_identity_index();
+      std::fill(rot.begin(), rot.end(), identity);
+      std::fill(invrot.begin(), invrot.end(), identity);
+    }
     // and might need the Phonon Gamma table
     auto cfg = this->approx_config();
     auto s_tol = cfg.template direct<double>();

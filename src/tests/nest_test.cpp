@@ -82,7 +82,16 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest][macos-arm]"){
   // and in the irreducible wedge
   REQUIRE_THAT(bz.isinside_wedge(Q), Catch::Matchers::AllTrue());
 
-  auto [intres, dummy] =  bzn.ir_interpolate_at(Q, 1);
+  Array<double> intres;
+  SECTION("Explicitly turn-off ir_moveinto since all points are inside wedge and inside")
+  {
+    auto [tmp_intres, dummy] =  bzn.ir_interpolate_at<true>(Q, 1); // true == don't move
+    intres = tmp_intres;
+  }
+  SECTION("Allow ir_moveinto, but it should _not_ move any points if the previous testing worked"){
+    auto [tmp_intres, dummy] =  bzn.ir_interpolate_at(Q, 1);
+    intres = tmp_intres;
+  }
   auto QinvA = Q.xyz();
   // QinvA is (at present) a brille::Array2<double> and so can not be reshaped
   // to 3D (maybe introducing conversion routines is a good idea?)
@@ -92,7 +101,6 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest][macos-arm]"){
   for (auto i: antres.subItr()) antres[i] = QinvA.val(i[0],i[2]);
 
   auto diff = intres - antres;
-
   if (!(diff.round().all(brille::cmp::eq, 0))) for (ind_t i = 0; i < nQ; ++i) {
       info_update_if(!(diff.view(i).round().all(0,0)),
         "The interpolation point Q = ", Q.to_string(i), "\n",
