@@ -202,7 +202,6 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     std::vector<std::vector<int>> vpf{{0,1,3},{0,2,1},{0,3,2},{1,2,3}};
     auto poly = Poly(verts, Faces(vpf));
 
-#ifdef USE_HIGHFIVE
     // write the Polyhedron to the file:
     namespace fs=std::filesystem;
     auto tdir = fs::temp_directory_path();
@@ -243,7 +242,6 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     REQUIRE(poly.to_hdf(filename, dataset));
 
     fs::remove(filepath);
-#endif //USE_HIGHFIVE
 }
 
 TEST_CASE("Plane convention conversion","[plane]"){

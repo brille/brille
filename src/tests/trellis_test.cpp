@@ -14,7 +14,6 @@ using namespace brille;
 using namespace brille::lattice;
 using namespace brille::math;
 
-#ifdef USE_HIGHFIVE
 template<class T, class R, class S>
 bool write_read_test(const BrillouinZoneTrellis3<T,R,S>& source, const std::string& name){
   namespace fs = std::filesystem;
@@ -32,12 +31,6 @@ bool write_read_test(const BrillouinZoneTrellis3<T,R,S>& source, const std::stri
   fs::remove(filepath);
   return (source == sink);
 }
-#else
-template<class T, class R, class S>
-bool write_read_test(const BrillouinZoneTrellis3<T,R,S>&, const std::string&){
-  return true;
-}
-#endif
 
 TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis][simple]"){
   // The conventional cell for Nb

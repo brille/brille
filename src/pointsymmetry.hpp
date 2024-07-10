@@ -91,7 +91,7 @@ public:
   [[nodiscard]] bool vec_mat_links(const std::array<int, 3>&, const std::array<int, 3>&) const;
   [[nodiscard]] std::vector<Matrix<int>> mat_vec_linking_operations(const std::array<int, 3>&, const std::array<int, 3>&) const;
   [[nodiscard]] std::vector<Matrix<int>> vec_mat_linking_operations(const std::array<int, 3>&, const std::array<int, 3>&) const;
-#ifdef USE_HIGHFIVE
+
     // Output to HDF5 file/object
     template<class HF>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -111,7 +111,7 @@ public:
         for (const auto& x: hfm) m.push_back(x.array());
         return PointSymmetry(m);
     }
-#endif
+
 };
 
 } // namespace brille

@@ -27,14 +27,12 @@ option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
 set(MINIMUM_PYBIND11_VERSION 2.10.3)
 set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
 
-# Optional support of HDF5-based IO
-option(BRILLE_HDF5 "Add HDF5 file-based IO" ON)
-if (BRILLE_HDF5)
-    # Include the HDF5 IO methods -- safe since configuring will fail if HDF5/HighFive is not available
-    add_definitions(-DUSE_HIGHFIVE)
-endif()
-set(MINIMUM_HIGHFIVE_VERSION 2.6.2)
-SET(FETCH_HIGHFIVE_REPO https://github.com/BlueBrain/HighFive)
+# Require support of HDF5-based IO
+#option(BRILLE_HDF5 "Add HDF5 file-based IO" ON)
+#if (BRILLE_HDF5)
+#    # Include the HDF5 IO methods -- safe since configuring will fail if HDF5/HighFive is not available
+#    add_definitions(-DUSE_HIGHFIVE)
+#endif()
 
 # find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
 # if (CMAKE_CXX_CPPCHECK)

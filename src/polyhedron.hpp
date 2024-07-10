@@ -814,7 +814,7 @@ public:
     }
     return p;
   }
-#ifdef USE_HIGHFIVE
+
 public:
   template<class HF> std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
   to_hdf(HF& obj, const std::string& entry) const {
@@ -839,7 +839,7 @@ public:
     HighFive::File file(filename, HighFive::File::ReadOnly);
     return Polyhedron::from_hdf(file, dataset);
   }
-#endif //USE_HIGHFIVE
+
 };
 
 //! Construct a Polyhedron box from its minimal and maximal vertices

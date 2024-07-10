@@ -5,7 +5,6 @@
 #ifndef BRILLE_HDF_INTERFACE_HPP
 #define BRILLE_HDF_INTERFACE_HPP
 #include "enums.hpp"
-#ifdef USE_HIGHFIVE
 
 #include <map>
 #include <vector>
@@ -13,8 +12,6 @@
 #include <highfive/H5File.hpp>
 #include <highfive/H5DataSet.hpp>
 #include <highfive/H5DataSpace.hpp>
-
-
 
 const std::string LENGTH_ATTR_NAME("length");
 
@@ -196,5 +193,5 @@ HighFive::CompoundType create_compound_Matrix(){
       {"zz", ::HighFive::AtomicType<T>{}},
   };
 }
-#endif //USE_HIGHFIVE
+
 #endif //BRILLE_HDF_INTERFACE_HPP

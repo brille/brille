@@ -116,7 +116,6 @@ operations.
         size_t from_ascii(const std::string& s, bool cob=false);
         [[nodiscard]] std::string to_ascii() const;
 
-#ifdef USE_HIGHFIVE
         // Output to HDF5 file/object
         template<class HF>
         std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -133,7 +132,7 @@ operations.
             auto [W, w] = m.tuple();
             return {W, w};
         }
-#endif //USE_HIGHFIVE
+
     };
 
 

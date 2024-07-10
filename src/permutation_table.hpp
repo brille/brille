@@ -233,7 +233,6 @@ private:
 		ijmap[0u] = 0u + offset;// offset first valid value
 	}
 
-#ifdef USE_HIGHFIVE
       public:
         template<class R>
         std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
@@ -264,7 +263,6 @@ private:
           HighFive::File file(filename, HighFive::File::ReadOnly);
           return PermutationTable::from_hdf(file, dataset);
         }
-#endif
 };
 
 /*! \brief Build a list of all possible keys from an iterable container

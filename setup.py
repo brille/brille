@@ -30,11 +30,6 @@ def get_cmake():
     return CMAKE_BIN
 
 
-# We want users to be able to specify to *not* use HDF5 for object IO.
-# Disable HDF5 IO by passing `--no-hdf` when calling python setup.py.
-USE_HDF5 = True
-
-
 def is_vsc():
     platform = get_platform()
     return platform.startswith("win")
@@ -96,9 +91,6 @@ class CMakeBuild(build_ext):
         cmake_args += ["-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE"]
         cmake_args += ["-DCMAKE_INSTALL_RPATH={}".format("$ORIGIN")]
 
-        if not USE_HDF5:
-            cmake_args += ["-DBRILLE_HDF5=FALSE"]
-
         if is_vsc():
             cmake_lib_out_dir = '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'
             cmake_args += [cmake_lib_out_dir.format(cfg.upper(), extdir)]
@@ -117,12 +109,6 @@ class CMakeBuild(build_ext):
 with open(PACKAGE_ROOT.joinpath('README.md'), 'r') as fh:
     LONG_DESCRIPTION = fh.read()
 
-if "--use-hdf5" in sys.argv:
-    USE_HDF5 = True
-    sys.argv.remove("--use-hdf5")
-if "--no-hdf5" in sys.argv:
-    USE_HDF5 = False
-    sys.argv.remove("--no-hdf5")
 
 setup(
     name='brille',

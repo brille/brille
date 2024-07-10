@@ -662,7 +662,6 @@ private:
     return boundary_t(faces);
   }
 
-#ifdef USE_HIGHFIVE
 public:
   template<class HFObject>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, HFObject>, bool>
@@ -701,7 +700,7 @@ public:
     HighFive::File file(filename, HighFive::File::ReadOnly);
     return class_t::from_hdf(file, entry);
   }
-#endif // USE_HIGHFIVE
+
 };
 
 #include "trellis_poly_parallel.tpp"

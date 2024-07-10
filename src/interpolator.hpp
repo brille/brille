@@ -624,7 +624,6 @@ private:
   void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, bArray<T>&, const ind_t, const bool) const;
   void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, bArray<T>&, const ind_t, const bool) const;
 
-#ifdef USE_HIGHFIVE
   public:
   template<class HF> std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
   to_hdf(HF& object, const std::string& entry) const {
@@ -667,7 +666,7 @@ private:
     HighFive::File file(filename, HighFive::File::ReadOnly);
     return Interpolator<T>::from_hdf(file, dataset);
   }
-#endif // USE_HIGHFIVE
+
 };
 
 #include "interpolator_at.tpp"

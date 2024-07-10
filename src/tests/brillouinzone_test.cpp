@@ -11,7 +11,6 @@
 using namespace brille;
 using namespace brille::lattice;
 
-#ifdef USE_HIGHFIVE
 bool write_read_test(const BrillouinZone& source, const std::string& name){
     namespace fs = std::filesystem;
     auto temp_dir = fs::temp_directory_path();
@@ -28,11 +27,6 @@ bool write_read_test(const BrillouinZone& source, const std::string& name){
     fs::remove(filepath);
     return (source == sink);
 }
-#else
-bool write_read_test(const BrillouinZone&, const std::string&){
-	return true;
-}
-#endif
 
 TEST_CASE("Primitive Cubic BrillouinZone instantiation","[bz_]"){
   auto lat = Direct<double>(

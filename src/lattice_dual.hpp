@@ -700,7 +700,6 @@ public:
     return transpose(mat);
   }
 
-#ifdef USE_HIGHFIVE
   template<class H>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool>
   to_hdf(H& obj, const std::string& entry) const {
@@ -732,7 +731,6 @@ public:
     auto bas = Basis::from_hdf(group, "basis");
     return {real, reciprocal, real_metric, reciprocal_metric, L, spg, ptg, bas};
   }
-#endif
 
   Impl<T> primitive() const {
     PrimitiveTransform P(_bravais);
@@ -848,13 +846,12 @@ public:
   LATTICE_FORWARD_METHOD(bool, is_triclinic)
   LATTICE_FORWARD_METHOD(matrix_t, to_xyz)
   LATTICE_FORWARD_METHOD(matrix_t, from_xyz)
-#ifdef USE_HIGHFIVE
   LATTICE_FORWARD_METHOD(bool, to_hdf)
   template<class... A> static Lattice<T> from_hdf(A... a){
     auto li = Impl<T>::from_hdf(a...);
     return Lattice<T>(std::make_shared<Impl<T>>(li));
   }
-#endif
+
   Lattice<T> primitive() const {
     if (PrimitiveTransform(ptr->bravais()).does_anything()) {
       return Lattice<T>(std::make_shared<Impl<T>>(ptr->primitive()));

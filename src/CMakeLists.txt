@@ -58,6 +58,7 @@ list(APPEND CXX_SOURCES
   comparisons.cpp
   debug.cpp
   hall_symbol.cpp
+  hdf_interface.cpp
   neighbours.cpp
   polyhedron_faces.cpp
   pointgroup.cpp
@@ -67,10 +68,6 @@ list(APPEND CXX_SOURCES
   symmetry.cpp
   vertex_map_set.cpp
 )
-
-if(BRILLE_HDF5)
-    list(APPEND CXX_SOURCES hdf_interface.cpp)
-endif()
 
 foreach(CXX_SOURCE IN LISTS CXX_SOURCES)
 #    message(STATUS "Setting compile options for ${CXX_SOURCE} to ${SOURCE_FILE_COMPILE_OPTIONS}")

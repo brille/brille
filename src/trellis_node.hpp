@@ -37,7 +37,7 @@ namespace brille {
     [[nodiscard]] static std::vector<ind_t> vertices() {return {};}
     //! Return the volume of this Node
     [[nodiscard]] static double volume(const bArray<double>&) {return 0.;}
-#ifdef USE_HIGHFIVE
+
     //! Write to an HDF file
     template<class R>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
@@ -49,7 +49,7 @@ namespace brille {
     static std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, NullNode>
     from_hdf(R&, const std::string&) {return NullNode();}
     bool operator!=(const NullNode&) const { return true; }
-#endif
+
   private:
     /*
      * These methods are present in CubeNode and PolyNode which inherit from NullNode.
@@ -171,7 +171,7 @@ namespace brille {
       auto d = vertices.view(vertex_indices[5]);
       return pseudo_orient3d(a, b, c, d)[0];
     }
-#ifdef USE_HIGHFIVE
+
     //! Write to an HDF file
     template<class R>
     std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
@@ -190,7 +190,7 @@ namespace brille {
       obj.getGroup(name).getDataSet("vertex_indices").read(vi);
       return CubeNode(vi);
     }
-#endif
+
   };
   /*! \brief A Node at least partly within the domain of the PolyhedronTrellis
 
@@ -368,7 +368,6 @@ namespace brille {
       return this->tetrahedra_might_contain(t, x.xyz());
     }
 
-#ifdef USE_HIGHFIVE
   public:
     //! Write to an HDF file
     template<class R>
@@ -420,7 +419,7 @@ namespace brille {
 
       return {vi, ci, vol};
     }
-#endif //USE_HIGHFIVE
+
   };
 
   /*! \brief A utility class to hold and index both CubeNode and PolyNode objects
@@ -643,7 +642,7 @@ namespace brille {
       }
       return "unknown node type";
     }
-#ifdef USE_HIGHFIVE
+
   public:
     //! Write to an HDF file
     template<class R>
@@ -700,7 +699,7 @@ namespace brille {
       for (size_t i=0; i<np; ++i) polys[i] = PolyNode::from_hdf(pg, std::to_string(i));
       return {std::move(n), std::move(cubes), std::move(polys)};
     }
-#endif // USE_HIGHFIVE
+
   };
 
 }

@@ -64,9 +64,7 @@ void declare_bznestq(py::module &m, const std::string &typestr){
   def_grid_sort(cls);
 //  def_grid_debye_waller(cls);
 
-#ifdef USE_HIGHFIVE
   def_grid_hdf_interface(cls, pyclass_name);
-#endif
 }
 
 #endif

@@ -793,7 +793,6 @@ public:
     return out;
   }
 
-#ifdef USE_HIGHFIVE
   // FIXME Update these to reflect class contents
   template <class HF>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -845,7 +844,7 @@ public:
     HighFive::File file(filename, HighFive::File::ReadOnly);
     return BrillouinZone::from_hdf(file, entry);
   }
-#endif // USE_HIGHFIVE
+
   bool operator!=(const BrillouinZone &other) const {
     if (time_reversal != other.time_reversal)
       return true;
