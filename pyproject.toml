@@ -7,6 +7,49 @@ requires =[
   "cmake>=3.24",
   "conan==2.4.1",
 ]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = 'brille'
+dynamic = ["version"]
+authors = [
+  {name = "Gregory Tucker"},
+  {name = "Duc Le"},
+  {name = "Rebecca Fair"}
+]
+maintainers = [
+  {name = "Gregory Tucker", email = "gregory.tucker@ess.eu"},
+]
+description='Irreducible Brillouin zone symmetry and interpolation.'
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers=[
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+  "Operating System :: Microsoft :: Windows :: Windows 10",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: C++",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+  'numpy',
+]
+
+[project.optional-dependencies]
+plotting = ['matplotlib>=2.2.0', ]
+vis = ['pyglet>=1.5.27', 'vispy>=0.12.1', ]
+
+[project.urls]
+Homepage = "https://github.com/brille"
+Documentation = "https://brille.github.io"
+Respository = "https://github.com/brille/brille.git"
+Issues = "https://github.com/brille/brille/issues"
+
+[tool.setuptools.packages.find]
+include = ["brille*"]
+namespaces = false
 
 [tool.setuptools_scm]
 

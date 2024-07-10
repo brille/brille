@@ -1,137 +1,146 @@
 import os
 import re
+import subprocess
 import sys
 import pkgutil
-from sysconfig import get_platform
-from subprocess import check_output, check_call
 from pathlib import Path
 
-from setuptools import setup, Extension, find_packages
+from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
-
-if pkgutil.find_loader('packaging') is None:
-    from distutils.version import LooseVersion as Version
-else:
-    from packaging.version import Version
-
-# We can use cmake provided from pip which (normally) gets installed at /bin
-# Except that in the manylinux builds it's placed at /opt/python/[version]/bin/
-# (as a symlink at least) which is *not* on the path.
-# If cmake is a known module, import it and use it to tell us its binary directory
-if pkgutil.find_loader('cmake') is not None:
-    import cmake
-
-    CMAKE_BIN = cmake.CMAKE_BIN_DIR + os.path.sep + 'cmake'
-else:
-    CMAKE_BIN = 'cmake'
 
 
 def get_cmake():
-    return CMAKE_BIN
+    # We can use cmake provided from pip which (normally) gets installed at /bin
+    # Except that in the manylinux builds it's placed at /opt/python/[version]/bin/
+    # (as a symlink at least) which is *not* on the path.
+    # If cmake is a known module, import it and use it to tell us its binary directory
+
+    if pkgutil.find_loader('cmake') is not None:
+        import cmake
+        return str(Path(cmake.CMAKE_BIN_DIR) / 'cmake')
+
+    return 'cmake'
 
 
-def is_vsc():
-    platform = get_platform()
-    return platform.startswith("win")
+# Convert distutils Windows platform specifiers to CMake -A arguments
+PLAT_TO_CMAKE = {
+    "win32": "Win32",
+    "win-amd64": "x64",
+    "win-arm32": "ARM",
+    "win-arm64": "ARM64",
+}
 
 
-def is_mingw():
-    platform = get_platform()
-    return platform.startswith("mingw")
-
-
+# A CMakeExtension needs a sourcedir instead of a file list.
+# The name must be the _single_ output extension from the CMake build.
+# If you need multiple extensions, see scikit-build.
 class CMakeExtension(Extension):
-    def __init__(self, name, sourcedir=''):
-        Extension.__init__(self, name, sources=[])
-        self.sourcedir = os.path.abspath(sourcedir)
+    def __init__(self, name: str, sourcedir: str = "") -> None:
+        super().__init__(name, sources=[])
+        self.sourcedir = os.fspath(Path(sourcedir).resolve())
 
-PACKAGE_ROOT = Path(__file__).absolute().parent
-
-if PACKAGE_ROOT != Path(os.getcwd()):
-    raise RuntimeError(f"{PACKAGE_ROOT} != {os.getcwd()}")
 
 class CMakeBuild(build_ext):
-    def run(self):
-        try:
-            out = check_output([get_cmake(), '--version'])
-        except OSError:
-            raise RuntimeError("CMake must be installed to build" +
-                               " the following extensions: " +
-                               ", ".join(e.name for e in self.extensions))
+    def build_extension(self, ext: CMakeExtension) -> None:
+        # Must be in this form due to bug in .resolve() only fixed in Python 3.10+
+        ext_fullpath = Path.cwd() / self.get_ext_fullpath(ext.name)
+        extdir = ext_fullpath.parent.resolve()
 
-        rex = r'version\s*([\d.]+)'
-        cmake_version = Version(re.search(rex, out.decode()).group(1))
-        if cmake_version < Version('3.18.2'):
-            raise RuntimeError("CMake >= 3.18.2 is required")
+        # Using this requires trailing slash for auto-detection & inclusion of
+        # auxiliary "native" libs
 
-        for ext in self.extensions:
-            self.build_extension(ext)
+        debug = int(os.environ.get("DEBUG", 0)) if self.debug is None else self.debug
+        cfg = "Debug" if debug else "Release"
 
-    def build_extension(self, ext):
-        extdir = os.path.dirname(self.get_ext_fullpath(ext.name))
-        extdir = os.path.abspath(extdir)
-        cmake_args = []
-        if is_vsc():
-            if sys.maxsize > 2 ** 32:
-                cmake_args += ['-A', 'x64']
-            else:
-                cmake_args += ['-A', 'Win32']
+        # CMake lets you override the generator - we need to check this.
+        # Can be set with Conda-Build, for example.
+        cmake_generator = os.environ.get("CMAKE_GENERATOR", "")
 
-        if is_mingw():
-            cmake_args += ['-G', 'Unix Makefiles']  # Must be two entries to work
+        # Set Python_EXECUTABLE instead if you use PYBIND11_FINDPYTHON
+        # EXAMPLE_VERSION_INFO shows you how to pass a value into the C++ code
+        # from Python.
+        cmake_args = [
+            f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
+            f"-DPython_EXECUTABLE={sys.executable}",
+            f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
+        ]
+        build_args = []
+        # Adding CMake arguments set as environment variable
+        # (needed e.g. to build for ARM OSx on conda-forge)
+        if "CMAKE_ARGS" in os.environ:
+            cmake_args += [item for item in os.environ["CMAKE_ARGS"].split(" ") if item]
 
-        cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
-                       '-DPYTHON_EXECUTABLE=' + sys.executable]
+        ## In this example, we pass in the version to C++. You might not need to.
+        # cmake_args += [f"-DEXAMPLE_VERSION_INFO={self.distribution.get_version()}"]
 
-        cfg = 'Debug' if self.debug else 'Release'
-        # cfg = 'Debug' if self.debug else 'RelWithDebInfo'
-        build_args = ['--config', cfg, '--target', '_brille']
+        if self.compiler.compiler_type != "msvc":
+            # Using Ninja-build since it a) is available as a wheel and b)
+            # multithreads automatically. MSVC would require all variables be
+            # exported for Ninja to pick it up, which is a little tricky to do.
+            # Users can override the generator with CMAKE_GENERATOR in CMake
+            # 3.15+.
+            if not cmake_generator or cmake_generator == "Ninja":
+                if pkgutil.find_loader('ninja') is not None:
+                    import ninja
 
-        # make sure all library files end up in one place
-        cmake_args += ["-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE"]
-        cmake_args += ["-DCMAKE_INSTALL_RPATH={}".format("$ORIGIN")]
+                    ninja_executable_path = Path(ninja.BIN_DIR) / "ninja"
+                    cmake_args += [
+                        "-GNinja",
+                        f"-DCMAKE_MAKE_PROGRAM:FILEPATH={ninja_executable_path}",
+                    ]
 
-        if is_vsc():
-            cmake_lib_out_dir = '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'
-            cmake_args += [cmake_lib_out_dir.format(cfg.upper(), extdir)]
-            cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
-            build_args += ['--', '/m:4']
         else:
-            cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
-            build_args += ['--', '-j']
+            # Single config generators are handled "normally"
+            single_config = any(x in cmake_generator for x in {"NMake", "Ninja"})
 
-        if not os.path.exists(self.build_temp):
-            os.makedirs(self.build_temp)
-        check_call([get_cmake(), str(PACKAGE_ROOT)] + cmake_args, cwd=self.build_temp)
-        check_call([get_cmake(), '--build', '.', '--target', "_brille"] + build_args, cwd=self.build_temp)
+            # CMake allows an arch-in-generator style for backward compatibility
+            contains_arch = any(x in cmake_generator for x in {"ARM", "Win64"})
 
+            # Specify the arch if using MSVC generator, but only if it doesn't
+            # contain a backward-compatibility arch spec already in the
+            # generator name.
+            if not single_config and not contains_arch:
+                cmake_args += ["-A", PLAT_TO_CMAKE[self.plat_name]]
 
-with open(PACKAGE_ROOT.joinpath('README.md'), 'r') as fh:
-    LONG_DESCRIPTION = fh.read()
+            # Multi-config generators have a different way to specify configs
+            if not single_config:
+                cmake_args += [
+                    f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{cfg.upper()}={extdir}"
+                ]
+                build_args += ["--config", cfg]
+
+        if sys.platform.startswith("darwin"):
+            # Cross-compile support for macOS - respect ARCHFLAGS if set
+            archs = re.findall(r"-arch (\S+)", os.environ.get("ARCHFLAGS", ""))
+            if archs:
+                cmake_args += ["-DCMAKE_OSX_ARCHITECTURES={}".format(";".join(archs))]
+
+        # Set CMAKE_BUILD_PARALLEL_LEVEL to control the parallel build level
+        # across all generators.
+        if "CMAKE_BUILD_PARALLEL_LEVEL" not in os.environ:
+            # self.parallel is a Python 3 only way to set parallel jobs by hand
+            # using -j in the build_ext call, not supported by pip or PyPA-build.
+            if hasattr(self, "parallel") and self.parallel:
+                # CMake 3.12+ only.
+                build_args += [f"-j{self.parallel}"]
+
+        build_temp = Path(self.build_temp) / ext.name
+        if not build_temp.exists():
+            build_temp.mkdir(parents=True)
+
+        # skip building the testing target and single-header target, etc.
+        build_args += ['--target', '_brille']
+
+        cmake = get_cmake()
+        subprocess.run(
+            [cmake, ext.sourcedir, *cmake_args], cwd=build_temp, check=True
+        )
+        subprocess.run(
+            [cmake, "--build", ".", *build_args], cwd=build_temp, check=True
+        )
 
 
 setup(
-    name='brille',
-    author='Greg Tucker',
-    author_email='gregory.tucker@ess.eu',
-    description='Irreducible Brillouin zone symmetry and interpolation.',
-    long_description=LONG_DESCRIPTION,
-    long_description_content_type="text/markdown",
     ext_modules=[CMakeExtension('brille._brille')],
-    packages=find_packages(str(PACKAGE_ROOT)),
-    install_requires=['numpy'],
-    extras_require={'plotting': ['matplotlib>=2.2.0', ], 'vis': ['pyglet>=1.5.27', 'vispy>=0.12.1', ]},
     cmdclass=dict(build_ext=CMakeBuild),
-    url="https://github.com/brille/brille",
-    zip_safe=False,
-    classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
-        "Intended Audience :: Science/Research",
-        "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
-        "Operating System :: Microsoft :: Windows :: Windows 10",
-        "Operating System :: POSIX :: Linux",
-        "Programming Language :: C++",
-        "Programming Language :: Python :: 3",
-        "Topic :: Scientific/Engineering :: Physics",
-    ]
 )
