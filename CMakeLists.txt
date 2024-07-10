@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 cmake_policy(SET CMP0017 NEW) # Prefer cmake's own files for include/find_package before CMAKE_MODULE_PATH
+cmake_policy(SET CMP0148 NEW) # Conform to no FindPythonInterp and FindPythonLibs (needed for Pybind11)
 
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake")
 set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES "${CMAKE_CURRENT_LIST_DIR}/cmake/conan_provider.cmake")
@@ -22,17 +23,6 @@ option(BRILLE_BUILD_TESTING "Build tests for brille" ON)
 set(BRILLE_LOGLEVEL "INFO" CACHE STRING "Emit log messages to standard out (DEBUG|VERBOSE)")
 # Special option for profiling runs
 option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
-
-# Define the minimum version of libraries needed
-set(MINIMUM_PYBIND11_VERSION 2.10.3)
-set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
-
-# Require support of HDF5-based IO
-#option(BRILLE_HDF5 "Add HDF5 file-based IO" ON)
-#if (BRILLE_HDF5)
-#    # Include the HDF5 IO methods -- safe since configuring will fail if HDF5/HighFive is not available
-#    add_definitions(-DUSE_HIGHFIVE)
-#endif()
 
 # find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
 # if (CMAKE_CXX_CPPCHECK)
@@ -84,18 +74,16 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
 SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 
+# Force pybind11 to use FindPython:
+set(PYBIND11_FINDPYTHON ON)
+# Ensure we can find/user the user-provided Python executable
 if (PYTHON_EXECUTABLE)
-  # Ensure the provided Python interpreter is used
   set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
 endif()
-# With modern CMake, this find_package forces pybind11 to use FindPython instead of its custom tools
 find_package(Python3 COMPONENTS Interpreter Development)
-
 if (NOT DEFINED PYTHON_EXECUTABLE)
   set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
 endif()
-
-include(fetcher)
 
 # Attempt to find catch2 to handle C++ testing
 if(BRILLE_BUILD_TESTING)
@@ -104,8 +92,8 @@ else()
   # Since no testing is to be built, fake that we've found Catch2.
   set(Catch2_FOUND ON)
 endif()
-# Attempt to find pybind11 to handle CPython bindings
-git_fetch(pybind11 ${MINIMUM_PYBIND11_VERSION} ${FETCH_PYBIND11_REPO})
+
+find_package(pybind11 REQUIRED)
 
 # Read the version of brille
 include(checkgit)
