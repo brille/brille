@@ -56,6 +56,7 @@ jobs:
       - uses: pypa/cibuildwheel@v2.19.2
         env:
           CIBW_BUILD: "*-${{ matrix.variant.platform }}*"
+          MACOSX_DEPLOYMENT_TARGET: "10.15"  # must be 10.14 for 'full' C++17 support, CIBW uses 10.9 if not set!
 
       - name: Verify clean directory
         run: git diff --exit-code
