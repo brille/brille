@@ -49,15 +49,14 @@ intersphinx_mapping = {
   'numpy': ('https://numpy.org/doc/stable/', None),
 }
 
-# Some :math:`[LaTeX]` directives insert '\r' into the string passed to katex?
-# This raises an error with the version specified in the Docker image's
-# sphinxcontrib.katex, 0.11.1, switching to v0.15.0 turns the error into
-# a warning about 'LaTeX-incompatible input' 
-# Updating the Docker image might be possible, but the exhale/breathe/sphinx
-# problem encountered outside of the Docker build would need to be avoided.
-katex_css_path = 'https://cdn.jsdelivr.net/npm/katex@0.15.0/dist/katex.min.css'
-katex_js_path = 'https://cdn.jsdelivr.net/npm/katex@0.15.0/dist/katex.min.js'
-katex_autorender_path = 'https://cdn.jsdelivr.net/npm/katex@0.15.0/dist/contrib/auto-render.min.js'
+# The image now has sphinxcontrib-katex v0.9.10, which uses katex 0.16.10
+# # Some :math:`[LaTeX]` directives insert '\r' into the string passed to katex?
+# # This raises an error with the version specified in the Docker image's
+# # sphinxcontrib.katex, 0.11.1, switching to v0.15.0 turns the error into
+# # a warning about 'LaTeX-incompatible input'
+# # Updating the Docker image might be possible, but the exhale/breathe/sphinx
+# # problem encountered outside of the Docker build would need to be avoided.
+# katex_css_path = 'https://cdn.jsdelivr.net/npm/katex@0.15.0/dist/katex.min.css'
 
 napoleon_use_ivar = True
 napoleon_use_param = False
@@ -65,9 +64,11 @@ napoleon_use_admonition_for_notes = True
 
 tikz_proc_suite = 'pdf2svg'  # We are building exclusively in our own container, no ReadTheDocs ghostscript restriction
 
-breathe_projects = {'brille' : '_build/doxygenxml/'}
+breathe_projects = {'brille': '_build/doxygenxml/'}
 breathe_default_project = 'brille'
-breathe_domain_by_extension = {'h': 'cpp', 'h': 'hpp', 'h': 'tpp'}
+# The naming of this breath directive seems backwards, but for it to make any sense
+# the keys must be the extensions and their values the associated domain(s)
+breathe_domain_by_extension = {'h': 'cpp', 'hpp': 'cpp', 'tpp': 'cpp'}
 
 # # setup the exhale extension
 # exhale_args = {
@@ -96,10 +97,11 @@ templates_path = ['_templates']
 source_suffice = '.rst'
 master_doc = 'index'
 
+
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-#exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+# exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 exclude_patterns = ['Thumbs.db', '.DS_Store']
 
 
@@ -127,6 +129,7 @@ html_logo = '../brille.svg'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+
 def call_and_check(command, **kwds):
     from subprocess import call, CalledProcessError
     try:
@@ -136,6 +139,7 @@ def call_and_check(command, **kwds):
     except (CalledProcessError, OSError) as e:
         sys.stderr.write('{} execution failed: {}\n'.format(call, e))
 
+
 # again, following from github.com/pybind/pybind11/blob/stable/docs/conf.py:
 def generate_doxygen_xml(app):
     build_dir = os.path.join(app.confdir, '_build')
@@ -143,8 +147,10 @@ def generate_doxygen_xml(app):
         os.mkdir(build_dir)
 
     call_and_check('doxygen', cwd=app.confdir)
-    call_and_check(['breathe-apidoc','--output-dir=_build/breathe','-f',
-                    '-g','class,namespace','_build/doxygenxml/'], cwd=app.confdir)
+    call_and_check([
+        'breathe-apidoc', '--output-dir=_build/breathe', '-f', '-g', 'class,namespace', '_build/doxygenxml/'
+    ], cwd=app.confdir)
+
 
 def setup(app):
     """Add hook for building Doxygen xml when needed"""
