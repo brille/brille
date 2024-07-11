@@ -27,9 +27,8 @@ jobs:
       matrix:
         variant:
           - { os: ubuntu-22.04} # current Ubuntu latest
-          - { os: macos-12}
-          - { os: macos-13}
-          - { os: macos-14}
+          - { os: macos-13}     # last Intel macOS
+          - { os: macos-14}     # current macOS latest, arm64
           - { os: windows-2022} # current Windows latest
         python-version: ["3.10"]
         cmake-type: ['Release']
@@ -67,11 +66,6 @@ jobs:
       - name: build
         run: cmake --build build --config ${{ matrix.cmake-type }} -j
 
-      - name: special MacOs on Arm64 tests
-        if: matrix.variant.os != 'windows-2022'
-        working-directory: build
-        run: ./tester "[macos-arm]"
-
 #      - name: Setup tmate session on failure
 #        uses: mxschmitt/action-tmate@v3
 #        # if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure() }}
@@ -79,4 +73,4 @@ jobs:
 
       - name: test
         working-directory: build
-        run: ctest -C ${{ matrix.cmake-type }} --verbose # --output-on-failure -j
+        run: ctest -C ${{ matrix.cmake-type }} --verbose -j
