@@ -60,9 +60,16 @@ test-command = "pytest {package}/wrap/tests"
 build-verbosity = 1
 skip = ["cp36-*", "cp37-*", "pp*"]  # all skipped for speed, except on Windows where PyPy builds don't work(?)
 
-[tool.cibuildwheel.windows]
-before-build = "pip install delvewheel"
-repair-wheel-command = "delvewheel repair -w {dest_dir} -v {wheel}"
+# GitHub Actions + cibuildwheel + delvewheel leads to memory access errors that are not present
+# for cibuildwheel with or without delvewheel (but without GitHub Actions).
+# TODO Investigate the possibility of specifying 'good' sources of vcomp140.dll and msvcp140.dll
+# On a virtual machine these were located at
+# c:\windows\system32\vcomp140.dll and
+# c:\program files\microsoft visual studio\2022\community\vc\tools\msvc\14.40.38807\bin\hostx64\64\msvcp140.dll
+#
+# [tool.cibuildwheel.windows]
+# before-build = "pip install delvewheel"
+# repair-wheel-command = "delvewheel repair -w {dest_dir} -v {wheel}"
 
 [[tool.cibuildwheel.overrides]]
 select = "*-musllinux*"
