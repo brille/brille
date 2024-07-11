@@ -2,7 +2,6 @@ import os
 import re
 import subprocess
 import sys
-import pkgutil
 from pathlib import Path
 
 from setuptools import Extension, setup
@@ -14,12 +13,26 @@ def get_cmake():
     # Except that in the manylinux builds it's placed at /opt/python/[version]/bin/
     # (as a symlink at least) which is *not* on the path.
     # If cmake is a known module, import it and use it to tell us its binary directory
+    from importlib.util import find_spec
 
-    if pkgutil.find_loader('cmake') is not None:
+    if find_spec('cmake') is not None:
         import cmake
         return str(Path(cmake.CMAKE_BIN_DIR) / 'cmake')
 
     return 'cmake'
+
+
+def get_ninja_cmake_args():
+    from importlib.util import find_spec
+    if find_spec('ninja') is not None:
+        import ninja
+
+        ninja_executable_path = Path(ninja.BIN_DIR) / "ninja"
+        return [
+            "-GNinja",
+            f"-DCMAKE_MAKE_PROGRAM:FILEPATH={ninja_executable_path}",
+        ]
+    return []
 
 
 # Convert distutils Windows platform specifiers to CMake -A arguments
@@ -70,24 +83,16 @@ class CMakeBuild(build_ext):
         if "CMAKE_ARGS" in os.environ:
             cmake_args += [item for item in os.environ["CMAKE_ARGS"].split(" ") if item]
 
-        ## In this example, we pass in the version to C++. You might not need to.
+        # # In this example, we pass in the version to C++. You might not need to.
         # cmake_args += [f"-DEXAMPLE_VERSION_INFO={self.distribution.get_version()}"]
 
         if self.compiler.compiler_type != "msvc":
-            # Using Ninja-build since it a) is available as a wheel and b)
-            # multithreads automatically. MSVC would require all variables be
-            # exported for Ninja to pick it up, which is a little tricky to do.
-            # Users can override the generator with CMAKE_GENERATOR in CMake
-            # 3.15+.
+            # Using Ninja-build since it is available as a wheel and multithreads
+            # automatically. MSVC would require all variables be exported for Ninja
+            # to pick it up, which is a little tricky to do.
+            # Users can override the generator with CMAKE_GENERATOR in CMake 3.15+.
             if not cmake_generator or cmake_generator == "Ninja":
-                if pkgutil.find_loader('ninja') is not None:
-                    import ninja
-
-                    ninja_executable_path = Path(ninja.BIN_DIR) / "ninja"
-                    cmake_args += [
-                        "-GNinja",
-                        f"-DCMAKE_MAKE_PROGRAM:FILEPATH={ninja_executable_path}",
-                    ]
+                cmake_args += get_ninja_cmake_args()
 
         else:
             # Single config generators are handled "normally"
