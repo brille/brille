@@ -55,8 +55,8 @@ namespaces = false
 
 [tool.cibuildwheel]
 archs = ["auto64"]
-test-command = "python -m unittest discover -s {package}/wrap/tests"
-before-test = "pip install numpy"
+test-requires = ["numpy", "pytest"]
+test-command = "pytest {package}/wrap/tests"
 build-verbosity = 1
 skip = ["cp36-*", "cp37-*", "pp*"]  # all skipped for speed, except on Windows where PyPy builds don't work(?)
 
