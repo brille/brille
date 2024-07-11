@@ -97,9 +97,7 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
     return c.all_node_types();
   });
 
-#ifdef USE_HIGHFIVE
   def_grid_hdf_interface(cls, pyclass_name);
-#endif
 }
 
 #endif

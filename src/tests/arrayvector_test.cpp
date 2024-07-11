@@ -2,7 +2,10 @@
 #include <chrono>
 #include <filesystem>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_template_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+
 // for now we want to be able to switch between Array and Array2
 // array_.hpp defines a bArray<T> as one or the other:
 #include "array_.hpp"
@@ -196,8 +199,9 @@ TEST_CASE("Append Array(s)","[array]"){
   REQUIRE(z.ndim() == 2);
   REQUIRE(z.size(0) == expected[0]);
   REQUIRE(z.size(1) == expected[1]);
-  for (ind_t i=0; i<12; ++i)
-    REQUIRE(z[i] == Approx(static_cast<double>(i)));
+  for (ind_t i=0; i<12; ++i) {
+    REQUIRE_THAT(z[i], Catch::Matchers::WithinRel(static_cast<double>(i), 1e-12));
+  }
 }
 
 TEMPLATE_TEST_CASE("Array IO","[array][io]",double,float){
@@ -209,7 +213,6 @@ TEMPLATE_TEST_CASE("Array IO","[array][io]",double,float){
     // fill array with random values
     for (auto& v: rand_array.valItr()) v = distribution(generator);
 
-#ifdef USE_HIGHFIVE
     // write the array to disk:
     namespace fs=std::filesystem;
     auto tdir = fs::temp_directory_path();
@@ -229,5 +232,5 @@ TEMPLATE_TEST_CASE("Array IO","[array][io]",double,float){
         REQUIRE(read_array[sub] == rand_array[sub]);
 
     fs::remove(filepath);
-#endif
+
 }

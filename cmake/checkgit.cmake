@@ -1,7 +1,5 @@
 set(CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR})
 
-find_package(Python3 QUIET COMPONENTS Interpreter)
-
 if (NOT DEFINED pre_configure_dir)
   set(pre_configure_dir ${CMAKE_SOURCE_DIR})
 endif()
@@ -105,6 +103,7 @@ endfunction()
 
 function(checkGitSetup name)
   add_custom_target(AlwaysCheckGit COMMAND ${CMAKE_COMMAND}
+    -DPython3_EXECUTABLE=${Python3_EXECUTABLE}  # Ensure the top-level used Python is always used
     -DRUN_CHECK_GIT_VERSION=1
     -Dpre_configure_dir=${pre_configure_dir}
     -Dpost_configure_dir=${post_configure_dir}

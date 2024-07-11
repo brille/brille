@@ -3,14 +3,21 @@ name: Main
 on:
   push:
   pull_request:
+#  workflow_dispatch:
+#    inputs:
+#      debug_enabled:
+#        type: boolean
+#        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+#        required: false
+#        default: false
 
 concurrency :
-  group: ${{ github.workflow }}-${{ github.ref == 'refs/head/main' && github.run_number || github.ref }}
+  group: "${{ github.workflow }}-${{ github.ref == 'refs/head/main' && github.run_number || github.ref }}"
   cancel-in-progress: true
 
 jobs:
   cmake_and_ctest:
-    name: CMake & CTest, ${{ matrix.variant.os }}, py${{ matrix.python-version }}
+    name: "CMake & CTest, ${{ matrix.variant.os }}, py${{ matrix.python-version }}"
     runs-on: ${{ matrix.variant.os }}
     defaults:
       run:
@@ -19,35 +26,51 @@ jobs:
       fail-fast: false
       matrix:
         variant:
-          - {os: ubuntu-22.04, cmake-preset: gha-test-ubuntu }
-          - {os: macos-12, cmake-preset: gha-test-macos }
-          - {os: windows-2022, cmake-preset: gha-test-windows }
+          - { os: ubuntu-22.04} # current Ubuntu latest
+          - { os: macos-13}     # last Intel macOS
+          - { os: macos-14}     # current macOS latest, arm64
+          - { os: windows-2022} # current Windows latest
         python-version: ["3.10"]
         cmake-type: ['Release']
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python-based dependencies
+        run: |
+          python -m pip install setuptools_scm conan numpy
+          echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
+
+      - name: Cache conan setup
+        id: conan-cache-key
+        run: |
+          echo "key=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_OUTPUT
+          echo "path=$(conan config home)" >> $GITHUB_OUTPUT
+
+      - name: Cache conan
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.conan-cache-key.outputs.path }}
+          key: conan-${{ matrix.variant.os }}-${{ steps.conan-cache-key.outputs.key }}
+
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup micromamba environment
-        uses: mamba-org/provision-with-micromamba@main
-        with:
-          micromamba-version: "1.1.0"
-          environment-file: .github/config/${{ matrix.variant.cmake-preset }}.yml
-          cache-env: true
-          extra-specs: python=${{ matrix.python-version }}
-      - run: echo "pythonInterpreter=`which python`" >> $GITHUB_ENV
-      - if: startsWith(matrix.variant.os, 'macos')
-        run: brew install tree; tree /Users/runner/.conan || echo "No conan directory"
+
       - name: configure
-        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.cmake-type }} -D PYTHON3_EXECUTABLE=${{ env.pythonInterpreter }}
-      - if: startsWith(matrix.variant.os, 'macos')
-        run: tree /Users/runner/.conan || echo "No conan directory"
-      - name: Get number of CPU cores
-        uses: SimenB/github-actions-cpu-cores@v1.1.0
-        id: cpu-cores
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.cmake-type }} -D Python3_EXECUTABLE=${{ env.pythonInterpreter }}
+
       - name: build
-        run: cmake --build build --config ${{ matrix.cmake-type }} --parallel ${{ steps.cpu-cores.outputs.count }}
+        run: cmake --build build --config ${{ matrix.cmake-type }} -j
+
+#      - name: Setup tmate session on failure
+#        uses: mxschmitt/action-tmate@v3
+#        # if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure() }}
+#        if: ${{ failure() }}
+
       - name: test
         working-directory: build
-        run: ctest -C ${{ matrix.cmake-type }} --output-on-failure --parallel ${{ steps.cpu-cores.outputs.count }}
+        run: ctest -C ${{ matrix.cmake-type }} --verbose -j

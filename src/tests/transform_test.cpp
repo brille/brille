@@ -1,6 +1,9 @@
 #include <random>
 #include <chrono>
-#include <catch2/catch.hpp>
+
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+
 #include <array>
 
 #include "spg_database.hpp"
@@ -49,18 +52,25 @@ TEST_CASE("primitive vector transforms","[transform]"){
     auto V = LVec<double>(lu, lat, bArray<double>::from_std(rawQ));
     auto Vp = transform_to_primitive(lat, V);
     // Test 1: make sure that |Vᵢ|==|Vpᵢ|
-    for (int i=0; i<nQ; ++i)
-      REQUIRE( Vp.norm(i) == Approx(V.norm(i)) );
+    for (int i=0; i<nQ; ++i) {
+      REQUIRE_THAT(Vp.norm(i), Catch::Matchers::WithinRel(V.norm(i), 1e-6));
+    }
     // Test 2: Check components, expressed in absolute LengthUnit units
     auto Vxyz = V.xyz();
     auto Vpxyz = Vp.xyz();
-    for (int i=0; i<nQ; ++i) REQUIRE( Vxyz.norm(i) == Approx(Vpxyz.norm(i)) );
+    for (int i=0; i<nQ; ++i) {
+      REQUIRE_THAT(Vxyz.norm(i), Catch::Matchers::WithinRel(Vpxyz.norm(i), 1e-6));
+    }
     // Test 2a: Verify that the individual components are the same in the cartesian coordinate system
-    for (auto i: V.subItr()) REQUIRE(Vpxyz[i] == Approx(Vxyz[i]));
+    for (auto i: V.subItr()) {
+      REQUIRE_THAT(Vpxyz[i], Catch::Matchers::WithinRel(Vxyz[i], 1e-6));
+    }
 
     // Test 3: check transfrom_from_primitive(transform_to_primitive(X)) == X
     auto pVp = transform_from_primitive(lat,Vp);
-    for (auto i: V.subItr()) REQUIRE(pVp[i] == Approx(V[i]));
+    for (auto i: V.subItr()) {
+      REQUIRE_THAT(pVp[i], Catch::Matchers::WithinRel(V[i], 1e-6));
+    }
   };
   SECTION("Primitive, direct"){    run_tests("P 1", LengthUnit::angstrom);   }
   SECTION("Body-centred, direct"){ run_tests("Im-3m", LengthUnit::angstrom); }

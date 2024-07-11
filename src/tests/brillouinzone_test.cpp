@@ -1,6 +1,9 @@
 #include <random>
 #include <chrono>
-#include <catch2/catch.hpp>
+
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+
 #include "bz.hpp"
 #include <filesystem>
 #include "process_id.hpp"
@@ -8,7 +11,6 @@
 using namespace brille;
 using namespace brille::lattice;
 
-#ifdef USE_HIGHFIVE
 bool write_read_test(const BrillouinZone& source, const std::string& name){
     namespace fs = std::filesystem;
     auto temp_dir = fs::temp_directory_path();
@@ -25,11 +27,6 @@ bool write_read_test(const BrillouinZone& source, const std::string& name){
     fs::remove(filepath);
     return (source == sink);
 }
-#else
-bool write_read_test(const BrillouinZone&, const std::string&){
-	return true;
-}
-#endif
 
 TEST_CASE("Primitive Cubic BrillouinZone instantiation","[bz_]"){
   auto lat = Direct<double>(
@@ -68,7 +65,7 @@ TEST_CASE("Rhombohedral Brillouin zone","[bz_]"){
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.volume() == Approx(fbz.volume()/6));
+  REQUIRE_THAT(irp.volume(), Catch::Matchers::WithinRel(fbz.volume()/6, 1e-12));
   REQUIRE(write_read_test(bz, "mp-147"));
   debug_update("First Brillouin zone\n", fbz.python_string());
   debug_update("Irreducible Brillouin zone\n", irp.python_string());
@@ -106,7 +103,7 @@ TEST_CASE("Rhombohedral Brillouin zone","[bz_]"){
 //  LQVec<double> Qmq = Q-q;
 //  LQVec<double> Qmqmtau = Q-(q+tau);
 //  for (auto i: Q.subItr()){
-//    REQUIRE(Q[i] == Approx(q[i] + tau[i]));
+//    REQUIRE_THAT(Q[i], Catch::Matchers::WithinRel(q[i] + tau[i], 1e-12));
 //    REQUIRE(brille::approx_float::scalar(Qmq[i], static_cast<double>(tau[i])));
 //    REQUIRE(brille::approx_float::scalar(std::abs(Qmqmtau[i]), 0.));
 //  }
@@ -136,7 +133,7 @@ TEST_CASE("BrillouinZone moveinto","[bz_]"){
     auto Qmq = Q-q;
     auto Qmqmtau = Q-(q+tau);
     for (auto i: Q.subItr()){
-      REQUIRE(Q[i] == Approx(q[i] + tau[i]));
+      REQUIRE_THAT(Q[i], Catch::Matchers::WithinRel(q[i] + tau[i], 1e-12));
       REQUIRE(brille::approx_float::scalar(Qmq[i], static_cast<double>(tau[i])));
       REQUIRE(brille::approx_float::scalar(std::abs(Qmqmtau[i]), 0.));
     }
@@ -229,7 +226,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147 alt","[bz_][materialsproject]")
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.volume() == Approx(fbz.volume()/6));
+  REQUIRE_THAT(irp.volume(), Catch::Matchers::WithinRel(fbz.volume()/6, 1e-12));
   REQUIRE(write_read_test(bz, "mp-147"));
   debug_update("First Brillouin zone\n", fbz.python_string());
   debug_update("Irreducible Brillouin zone\n", irp.python_string());
@@ -240,7 +237,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-147","[bz_][materialsproject][mp-14
     REQUIRE(bz.check_ir_polyhedron());
     auto fbz = bz.get_polyhedron();
     auto irp = bz.get_ir_polyhedron();
-    REQUIRE(irp.volume() == Approx(fbz.volume()/6));
+    REQUIRE_THAT(irp.volume(), Catch::Matchers::WithinRel(fbz.volume()/6, 1e-12));
     return bz;
   };
   // The spacegroup for elemental Se, from https://www.materialsproject.org/materials/mp-147/
@@ -279,7 +276,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-306","[bz_][materialsproject]"){
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.volume() == Approx(fbz.volume()/6));
+  REQUIRE_THAT(irp.volume(), Catch::Matchers::WithinRel(fbz.volume()/6, 1e-9));
   REQUIRE(write_read_test(bz, "mp-306"));
 }
 
@@ -299,7 +296,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-661","[bz_][materialsproject]"){
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.volume() == Approx(fbz.volume()/12));
+  REQUIRE_THAT(irp.volume(), Catch::Matchers::WithinRel(fbz.volume()/12, 1e-9));
   REQUIRE(write_read_test(bz, "mp-661"));
 }
 
@@ -320,7 +317,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-7041","[bz_][materialsproject]"){
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.volume() == Approx(fbz.volume()/12));
+  REQUIRE_THAT(irp.volume(), Catch::Matchers::WithinRel(fbz.volume()/12, 1e-12));
   REQUIRE(write_read_test(bz, "mp-7041"));
 }
 
@@ -337,7 +334,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-917 atl","[bz_][materialsproject]")
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.volume() == Approx(fbz.volume()/4));
+  REQUIRE_THAT(irp.volume(), Catch::Matchers::WithinRel(fbz.volume()/4, 1e-12));
   REQUIRE(write_read_test(bz, "mp-917"));
   debug_update("First Brillouin zone\n", fbz.python_string());
   debug_update("Irreducible Brillouin zone\n", irp.python_string());
@@ -359,7 +356,7 @@ TEST_CASE("Irreducible Brillouin zone for mp-917","[bz_][materialsproject]"){
   REQUIRE(bz.check_ir_polyhedron());
   auto fbz = bz.get_polyhedron();
   auto irp = bz.get_ir_polyhedron();
-  REQUIRE(irp.volume() == Approx(fbz.volume()/4));
+  REQUIRE_THAT(irp.volume(), Catch::Matchers::WithinRel(fbz.volume()/4, 1e-12));
   REQUIRE(write_read_test(bz, "mp-917"));
 }
 
@@ -379,7 +376,7 @@ TEST_CASE("Nb irreducible Brillouin Zone", "[bz_]"){
   auto fbz = bz.get_polyhedron();
   auto irbz = bz.get_ir_polyhedron();
   auto mult = bz.get_pointgroup_symmetry().size();
-  REQUIRE(irbz.volume() == Approx(fbz.volume() / mult));
+  REQUIRE_THAT(irbz.volume(), Catch::Matchers::WithinRel(fbz.volume() / mult, 1e-12));
 }
 
 
@@ -390,7 +387,7 @@ TEST_CASE("From python tests of all Hall symbols","[bz_]"){
     auto fbz = bz.get_polyhedron();
     auto irbz = bz.get_ir_polyhedron();
     auto mult = bz.get_pointgroup_symmetry().size();
-    REQUIRE(irbz.volume() == Approx(fbz.volume() / mult));
+    REQUIRE_THAT(irbz.volume(), Catch::Matchers::WithinRel(fbz.volume() / mult, 1e-12));
   };
   // too-precise tolerances cause Convex Hull errors when the IR wedge is doubled
   // due to two sets of three on-face points giving normals (x, y, +ε) and (x, y, -ε)
@@ -410,7 +407,7 @@ TEST_CASE("Primitive trigonal from python test of all Hall symbols", "[bz_]"){
     auto fbz = bz.get_polyhedron();
     auto irbz = bz.get_ir_polyhedron();
     auto mult = bz.get_pointgroup_symmetry().size();
-    REQUIRE(irbz.volume() == Approx(fbz.volume() / mult));
+    REQUIRE_THAT(irbz.volume(), Catch::Matchers::WithinRel(fbz.volume() / mult, 1e-12));
   };
   // Failed previously due to attempting to use to points co-linear with the stationary axis to define
   // the wedge planes, which should have given 0/0 errors but did not due to rounding errors.
@@ -430,7 +427,7 @@ TEST_CASE("Monoclinic from python test of all Hall symbols", "[bz_]"){
     auto fbz = bz.get_polyhedron();
     auto irbz = bz.get_ir_polyhedron();
     auto mult = bz.get_pointgroup_symmetry().size();
-    REQUIRE(irbz.volume() == Approx(fbz.volume() / mult));
+    REQUIRE_THAT(irbz.volume(), Catch::Matchers::WithinRel(fbz.volume() / mult, 1e-12));
   };
   SECTION("Hall -C 2yc"){run_test("-C 2yc");}
 
@@ -444,7 +441,7 @@ TEST_CASE("Rhombohedral from python test of all Hall symbols", "[bz_]"){
     auto fbz = bz.get_polyhedron();
     auto irbz = bz.get_ir_polyhedron();
     auto mult = bz.get_pointgroup_symmetry().size();
-    REQUIRE(irbz.volume() == Approx(fbz.volume() / mult));
+    REQUIRE_THAT(irbz.volume(), Catch::Matchers::WithinRel(fbz.volume() / mult, 1e-12));
   };
   SECTION("Hall -R 3"){run_test("-R 3");}
 }
@@ -464,7 +461,7 @@ TEST_CASE("Aflow lattices from python test", "[bz_][aflow]"){
 //    info_update(fbz.python_string());
     auto irb = bz.get_ir_polyhedron();
     auto mlt = bz.get_pointgroup_symmetry().size();
-    REQUIRE(irb.volume() == Approx(fbz.volume() / mlt));
+    REQUIRE_THAT(irb.volume(), Catch::Matchers::WithinRel(fbz.volume() / mlt, 1e-12));
   };
   // 579 of 582 passed the python tests, these three did not
   /* This R 3 (rhombohedrally-centred hexagonal) lattice has a primitive cell which is very nearly cubic

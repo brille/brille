@@ -246,7 +246,6 @@ namespace brille::polyhedron{
       return {v, f};
     }
 
-#ifdef USE_HIGHFIVE
     template<class H> std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool> to_hdf(H& obj, const std::string& entry) const {
       auto group = overwrite_group(obj, entry);
       bool ok{true};
@@ -268,7 +267,7 @@ namespace brille::polyhedron{
       HighFive::File file(filename, HighFive::File::ReadOnly);
       return Poly<T,A>::from_hdf(file, dataset);
     }
-#endif
+
     [[nodiscard]] std::string python_string() const {
       return "np.array("+get_xyz(_vertices).to_string()+"),"+_faces.python_string();
     }

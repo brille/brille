@@ -1,8 +1,0 @@
-name: windows-2022
-channels:
-  - conda-forge
-dependencies:
-  - cmake=3.23.2
-  - numpy
-  - conan==1.57.0
-    #  - hdf5

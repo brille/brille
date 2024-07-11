@@ -111,7 +111,6 @@ namespace brille{
     template<class R> LQPolyhedron<T> one_cut(const lattice::LVec<R>&, const lattice::LVec<R>&, const lattice::LVec<R>&) const;
     template<class R> LQPolyhedron<T> cut(const lattice::LVec<R>&, const lattice::LVec<R>&, const lattice::LVec<R>&) const;
 
-#ifdef USE_HIGHFIVE
     template<class H> std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool> to_hdf(H& obj, const std::string& entry) const {
       auto group = overwrite_group(obj, entry);
       bool ok{true};
@@ -133,7 +132,7 @@ namespace brille{
       HighFive::File file(filename, HighFive::File::ReadOnly);
       return LQPolyhedron<T>::from_hdf(file, dataset);
     }
-#endif
+
   };
 #include "polyhedron_lattice.tpp"
 

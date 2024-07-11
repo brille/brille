@@ -194,7 +194,6 @@ LVec<T> operator ^ (const T& val) {
     return LVec<T>(_type, _lattice, this->bArray<T>::decouple());
   }
 
-#ifdef USE_HIGHFIVE
 template<class H>
 std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool>
  to_hdf(H& obj, const std::string& entry) const {
@@ -223,7 +222,6 @@ static LVec<T> from_hdf(const std::string& filename, const std::string& dataset)
   HighFive::File file(filename, HighFive::File::ReadOnly);
   return LVec<T>::from_hdf(file, dataset);
 }
-#endif
 
 protected:
   void check_array();

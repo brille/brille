@@ -1,4 +1,6 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+
 #include <tuple>
 #include <omp.h>
 #include <complex>
@@ -12,7 +14,6 @@ using namespace brille;
 using namespace brille::lattice;
 using namespace brille::math;
 
-#ifdef USE_HIGHFIVE
 template<class T, class R, class S>
 bool write_read_test(const BrillouinZoneTrellis3<T,R,S>& source, const std::string& name){
   namespace fs = std::filesystem;
@@ -30,12 +31,6 @@ bool write_read_test(const BrillouinZoneTrellis3<T,R,S>& source, const std::stri
   fs::remove(filepath);
   return (source == sink);
 }
-#else
-template<class T, class R, class S>
-bool write_read_test(const BrillouinZoneTrellis3<T,R,S>&, const std::string&){
-  return true;
-}
-#endif
 
 TEST_CASE("BrillouinZoneTrellis3 instantiation","[trellis][simple]"){
   // The conventional cell for Nb
@@ -341,7 +336,7 @@ TEST_CASE("PolyhedronTrellis construction with 'sharp' polyhedron input","[trell
   // The PolyhedronTrellis constructor would happily construct a trellis with
   // imporant (overlapping) nodes inserted as NullNode objects instead of
   // PolyNode objects like they should be.
-  REQUIRE(bzt.total_node_volume() == Approx(bz.get_ir_polyhedron().volume()));
+  REQUIRE_THAT(bzt.total_node_volume(), Catch::Matchers::WithinRel(bz.get_ir_polyhedron().volume(), 1e-10));
 }
 
 

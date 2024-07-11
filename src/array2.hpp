@@ -530,7 +530,7 @@ public:
   template<class R> bool is_permutation(const Array2<R>& other, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
   template<class R> std::vector<ind_t> permutation_vector(const Array2<R>& other, T Ttol=T(0), R Rtol=R(0), int tol=1) const;
   //
-#if USE_HIGHFIVE
+
   // Read in from a file
   template<class R>
   static std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, Array2<T>>
@@ -580,7 +580,7 @@ public:
   std::enable_if_t<std::is_base_of_v<HighFive::Object, R>, bool>
   to_hdf(R& obj, const std::string& entry) const;
   bool to_hdf(const std::string& filename, const std::string& datasetname, const unsigned permissions=HighFive::File::OpenOrCreate) const;
-#endif //USE_HIGHFIVE
+
 
   friend std::ostream & operator<<(std::ostream & os, const Array2<T>& a){
     os << a.to_string();

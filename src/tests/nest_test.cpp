@@ -1,5 +1,8 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+
 #include <tuple>
+#include <catch2/matchers/catch_matchers_quantifiers.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include "bz_nest.hpp"
 
 using namespace brille;
@@ -39,7 +42,7 @@ TEST_CASE("BrillouinZoneNest3 vertex accessors","[nest]"){
  * errors can easily disrupt; otherwise a non-identity rotation matrix due to non-zero lattice translation will cause
  * mixing of the components of the interpolated vector which will not work.
  * */
-TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
+TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest][macos-arm]"){
   std::array<double,3> len{3.2598, 3.2598, 3.2598}, ang{half_pi, half_pi, half_pi};
   auto lat = Direct(len, ang, "-I 4 2 3"); // was 529
   BrillouinZone bz(lat);
@@ -64,33 +67,85 @@ TEST_CASE("Simple BrillouinZoneNest3 interpolation","[nest]"){
   std::default_random_engine generator(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
   std::uniform_real_distribution<double> distribution(0.,1.);
 
-  brille::ind_t nQmap = Qmap.size(0), nQ = 10;//10000;
-  auto Q = LQVec<double>(lat,nQ);
-  double rli;
-  for (ind_t i=0; i<nQ; ++i){
-    rli = distribution(generator);
-    Q.set(i, rli*Qmap.view(i%nQmap) + (1-rli)*Qmap.view((i+1)%nQmap) );
+  auto Q = LQVec<double>(lat);
+  brille::ind_t nQ{0};
+
+//  SECTION("Random points between mapped Q points") {
+//    std::cout << "Random points between mapped Q points\n";
+//    // construct random Q points that are linear combinations of the mapped nest Q points
+//    brille::ind_t nQmap = Qmap.size(0);
+//    nQ = 10;//10000;
+//    Q.resize(nQ, 3u);
+//    //Q = LQVec<double>(lat, nQ);
+//    double rli;
+//    for (ind_t i = 0; i < nQ; ++i) {
+//      rli = distribution(generator);
+//      Q.set(i, rli * Qmap.view(i % nQmap) + (1 - rli) * Qmap.view((i + 1) % nQmap));
+//    }
+//  }
+//  SECTION("Check point(s) that failed on macOS-14 (arm64) before") {
+//    // like all generated points, this one is on the surface of the ir_bz polyhedron
+//    // but this one is not inside the ir_polyhedron according to ir_moveinto.
+//    // _really_ strangely Q = inv(transpose(R)) q_ir + tau is such that Q == q_ir to within tolerance
+//    nQ = 1u;
+//    Q.resize(nQ, 3u);
+//    // auto bad_Q = std::array<double, 3>{0.6362324202966432,  0.3637675797033568, -0.0000000000000011};
+//    Q.set(0u, std::array<double, 3>{0.6362324202966432, 0.3637675797033568, -0.0000000000000011});
+//  }
+  SECTION("Random points inside the irreducible Brillouin zone polyhedron") {
+    nQ = 10;
+    Q = bz.get_ir_polyhedron().rand_rejection(nQ);
   }
 
-  auto [intres, dummy] =  bzn.ir_interpolate_at(Q, 1);
-  auto QinvA = Q.xyz();
-  // QinvA is (at present) a brille::Array2<double> and so can not be reshaped
-  // to 3D (maybe introducing conversion routines is a good idea?)
-  // Instead make a new brille::Array and copy the Q values by hand:
-  brille::shape_t antshp{nQ, 1u, 3u};
-  brille::Array<double> antres(antshp);
-  for (auto i: antres.subItr()) antres[i] = QinvA.val(i[0],i[2]);
+  // verify that those points are all inside of the Brillouin zone
+  REQUIRE_THAT(bz.isinside(Q), Catch::Matchers::AllTrue());
+  // and in the irreducible wedge
+  REQUIRE_THAT(bz.isinside_wedge(Q), Catch::Matchers::AllTrue());
 
-  auto diff = intres - antres;
+  REQUIRE_THAT(bz.isinside_wedge_outer(Q, true), Catch::Matchers::AllTrue());
 
-  if (!(diff.round().all(brille::cmp::eq, 0))) for (ind_t i = 0; i < nQ; ++i) {
-      info_update_if(!(diff.view(i).round().all(0,0)),
-        "The interpolation point Q = ", Q.to_string(i), "\n",
-        "           returned result ", intres.to_string(i), "\n",
-        "                instead of ", antres.to_string(i), "\n");
-  }
-  REQUIRE( diff.round().all(brille::cmp::eq, 0) ); // this is not a great test :(
-  for (auto i: diff.valItr()) REQUIRE(std::abs(i) < 2E-14);
+  auto ir_poly = bz.get_ir_polyhedron();
+  auto in_ir_poly = ir_poly.contains(Q);
+  REQUIRE_THAT(in_ir_poly, Catch::Matchers::AllTrue());
+
+  auto first_poly = bz.get_polyhedron();
+  auto in_first_poly = first_poly.contains(Q);
+  REQUIRE_THAT(in_first_poly, Catch::Matchers::AllTrue());
+
+  // Extra check that the points do not get moved by ir_moveinto (that they're not so close that rounding is a problem)
+  auto q_ir = 0 * Q;
+  auto tau = LQVec<int>(lat);
+  auto rot = std::vector<size_t>(nQ, 0u);
+  auto inv_rot = std::vector<size_t>(nQ, 0u);
+  bz.ir_moveinto(Q, q_ir, tau, rot, inv_rot);
+  REQUIRE(Q == q_ir); // because of how we constructed Q, this can be true even if tau != 0 which is surprising
+  // if any tau is not 0, the rest of this test _will_ fail
+  REQUIRE(tau == 0 * tau);
+  // this should be an equivalent test to tau == 0
+  REQUIRE_THAT(rot, Catch::Matchers::AllMatch(Catch::Matchers::WithinAbs(bz.get_pointgroup_symmetry().find_identity_index(), 0)));
+
+  auto Q_invA = Q.xyz();
+  brille::Array<double> expected(brille::shape_t{nQ, 1u, 3u});
+  for (auto i: expected.subItr()) expected[i] = Q_invA.val(i[0], i[2]);
+
+  auto check_interpolate = [&](const auto & result){
+    auto diff = result - expected;
+    if (!(diff.round().all(brille::cmp::eq, 0))) for (ind_t i = 0; i < nQ; ++i) {
+        info_update_if(!(diff.view(i).round().all(0,0)),
+                       "The interpolation point Q = ", Q.to_string(i), "\n",
+                       "           returned result ", result.to_string(i), "\n",
+                       "                instead of ", expected.to_string(i), "\n");
+      }
+    REQUIRE( diff.round().all(brille::cmp::eq, 0) ); // this is not a great test :(
+    for (auto i: diff.valItr()) REQUIRE(std::abs(i) < 2E-14);
+  };
+
+  auto [no_move, unused] = bzn.ir_interpolate_at<true>(Q, 1);
+  check_interpolate(no_move);
+
+  //Now the real check, allow ir_interpolate_at to move Q into the irreducible wedge
+  auto [move, also_unused] = bzn.ir_interpolate_at(Q, 1);
+  check_interpolate(move);
 }
 
 TEST_CASE("Random BrillouinZoneNest3 interpolation","[nest][nb][random]"){

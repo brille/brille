@@ -548,7 +548,6 @@ void wrap_brillouinzone(py::module & m){
       :math:`\mathbf{Q}_\text{ir} = R \mathbf{Q}`.
   )pbdoc");
 
-#ifdef USE_HIGHFIVE
   const std::string default_entry("BrillouinZone");
   const std::string default_flags("ac");
   cls.def("to_file",[](CLS& cobj, const std::string& filename, const std::string& entry, const std::string& flags){
@@ -622,5 +621,5 @@ void wrap_brillouinzone(py::module & m){
   clsObj
 
   )pbdoc");
-#endif //USE_HIGHFIVE
+
 }

@@ -517,7 +517,7 @@ namespace brille::polyhedron{
       return std::make_tuple(ov, of);
     }
 
-#ifdef USE_HIGHFIVE
+
     template<class H> std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool> to_hdf(H& obj, const std::string& entry) const {
       bool ok{true};
       ok &= lists_to_hdf(_faces, obj, entry);
@@ -535,7 +535,7 @@ namespace brille::polyhedron{
       HighFive::File file(filename, HighFive::File::ReadOnly);
       return Faces::from_hdf(file, dataset);
     }
-#endif
+
     [[nodiscard]] Faces combine(const Faces& that, ind_t offset) const;
 
     [[nodiscard]] std::string python_string() const {

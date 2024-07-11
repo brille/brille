@@ -56,3 +56,6 @@ Pipfile.lock
 # devtools generated directories
 devtools/conan
 devtools/wheelhouse
+
+# Python virtual environment
+venv/

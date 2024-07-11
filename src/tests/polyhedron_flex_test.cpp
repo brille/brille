@@ -1,4 +1,6 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+
 #include <filesystem>
 
 #include "array_.hpp" // defines bArray<T> as Array2<T> or Array<T>
@@ -44,7 +46,7 @@ TEST_CASE("Polyhedron instantiation","[polyhedron]"){
     // verify that the vertices are the same
     auto pv = p.vertices();
     for (const auto & i: verts.subItr()){
-      REQUIRE(verts[i] == Approx(pv[i]));
+      REQUIRE_THAT(verts[i], Catch::Matchers::WithinRel(pv[i], 1e-12));
     }
     // verify that the anticipated faces were found:
     size_t num_faces_matching{0};
@@ -60,7 +62,7 @@ TEST_CASE("Polyhedron instantiation","[polyhedron]"){
       }
     }
     REQUIRE( num_faces_matching == vpf.size() );
-    REQUIRE( p.volume() == Approx(2./6.)); // [(200)×(110)]⋅(111)/6
+    REQUIRE_THAT(p.volume(), Catch::Matchers::WithinRel(2./6., 1e-12));
   };
   SECTION("Convex Hull creation"){
     auto poly = Poly<double,bArray>(verts);
@@ -78,15 +80,18 @@ TEST_CASE("Polyhedron intersection","[polyhedron]"){
   double a = 0.96373785;
   std::vector<std::array<double,3>> verts{{a,a,0},{2*a,0,0},{a,a,a},{0,0,0}};
   auto poly = Poly(bArray<double>::from_std(verts));
-  REQUIRE(poly.volume() == Approx(2.*a*a*a/6.));
+
+  REQUIRE_THAT(poly.volume(), Catch::Matchers::WithinRel(2.*a*a*a/6., 1e-12));
   double x = 0.143963;
   std::vector<std::array<double,3>> body_diagonal{{2*x, 0, 0}, {3*x, x, x}};
   auto box = bounding_box(bArray<double>::from_std(body_diagonal));
-  REQUIRE(box.volume() == Approx(x*x*x));
+
+  REQUIRE_THAT(box.volume(), Catch::Matchers::WithinRel(x*x*x, 1e-12));
   auto poly_box = poly.intersection(box);
   auto box_poly = box.intersection(poly);
-  REQUIRE(poly_box.volume() == Approx(box.volume()/2));
-  REQUIRE(box_poly.volume() == Approx(box.volume()/2));
+
+  REQUIRE_THAT(poly_box.volume(), Catch::Matchers::WithinRel(box.volume()/2, 1e-12));
+  REQUIRE_THAT(box_poly.volume(), Catch::Matchers::WithinRel(box.volume()/2, 1e-12));
 }
 
 TEST_CASE("Polyhedron bisect","[polyhedron]"){
@@ -110,7 +115,8 @@ TEST_CASE("Polyhedron bisect","[polyhedron]"){
     pc.val(0, 2) = 1;
   }
   auto cut = doubled_poly.cut(pa, pb, pc);
-  REQUIRE(cut.volume() == Approx(poly.volume()));
+
+  REQUIRE_THAT(cut.volume(), Catch::Matchers::WithinRel(poly.volume(), 1e-12));
   REQUIRE(cut.vertices().size(0) == 6u);
 }
 
@@ -160,7 +166,8 @@ TEST_CASE("Polyhedron intersection La2Zr2O7","[polyhedron][intersection]"){
   auto cube = bounding_box(bArray<double>::from_std(body));
   // Must have an intersection no larger in volume than the cube
   auto cbp = cube.intersection(poly);
-  REQUIRE(cbp.volume() == Approx(0.000366739));
+
+  REQUIRE_THAT(cbp.volume(), Catch::Matchers::WithinRel(0.000366739, 1e-6));
   REQUIRE(cbp.volume() <= cube.volume());
   REQUIRE(cbp.vertices().size(0) == 10u);
 }
@@ -185,7 +192,8 @@ TEST_CASE("Small face polyhedron convex hull","[polyhedron][convexhull]"){
   auto fct_poly = Poly(verts, Faces(vpf));
 
   //REQUIRE(cv_poly.get_vertices_per_face().size() == fct_poly.get_vertices_per_face().size());
-  REQUIRE(cv_poly.volume() == Approx(fct_poly.volume()));
+
+  REQUIRE_THAT(cv_poly.volume(), Catch::Matchers::WithinRel(fct_poly.volume(), 1e-12));
 }
 
 TEST_CASE("Polyhedron IO","[polyhedron][io]"){
@@ -194,7 +202,6 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     std::vector<std::vector<int>> vpf{{0,1,3},{0,2,1},{0,3,2},{1,2,3}};
     auto poly = Poly(verts, Faces(vpf));
 
-#ifdef USE_HIGHFIVE
     // write the Polyhedron to the file:
     namespace fs=std::filesystem;
     auto tdir = fs::temp_directory_path();
@@ -235,7 +242,6 @@ TEST_CASE("Polyhedron IO","[polyhedron][io]"){
     REQUIRE(poly.to_hdf(filename, dataset));
 
     fs::remove(filepath);
-#endif //USE_HIGHFIVE
 }
 
 TEST_CASE("Plane convention conversion","[plane]"){
@@ -246,7 +252,7 @@ TEST_CASE("Plane convention conversion","[plane]"){
   auto [a, b, c] = plane_points_from_normal(v, v);
   auto n = three_point_normal(a, b, c);
   for (ind_t i=0; i < v.size(0); ++i){
-    REQUIRE( dot(v.view(i), n.view(i)).sum() == Approx((norm(v.view(i)) * norm(n.view(i))).sum()));
+    REQUIRE_THAT(dot(v.view(i), n.view(i)).sum(), Catch::Matchers::WithinRel((norm(v.view(i)) * norm(n.view(i))).sum(), 1e-12));
   }
 }
 

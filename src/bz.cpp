@@ -176,6 +176,16 @@ LVec<double> BrillouinZone::get_primitive_ir_wedge_normals() const {
   return {LengthUnit::inverse_angstrom, _outer, 0u};
 }
 
+std::string BrillouinZone::to_string() const {
+  std::stringstream s;
+  s << "BrillouinZone with " << this->vertices_count() << " vertices and ";
+  s << this->faces_count() << " faces\n";
+  s << "  first Brillouin zone:\n";
+  s << get_polyhedron() << "\n";
+  s << "  irreducible first Brillouin zone:\n";
+  s << get_ir_polyhedron() << "\n";
+  return s.str();
+}
 
 void BrillouinZone::print() const {
   std::string msg = "BrillouinZone with ";

@@ -40,7 +40,7 @@ operations.
             Vector<T> outw;
             // output rotation-part is W0*W1
             brille::utils::multiply_matrix_matrix(outW.data(), this->W.data(), m.getr().data());
-            // ouput translation-part is W0*w1
+            // output translation-part is W0*w1
             brille::utils::multiply_matrix_vector(outw.data(), this->W.data(), m.gett().data());
             // *plus* w0
             for (size_t i=0; i<3; ++i) outw[i] += this->w[i];
@@ -49,8 +49,8 @@ operations.
             return Motion(outW, outw);
         }
         Motion<R,T> inverse() const {
-            Matrix<R> outW;
-            Vector<T> outw;
+            Matrix<R> outW{}; // initialize to appease gcc's -Wmaybe-uninitialized (which was wrong)
+            Vector<T> outw{};
             // output rotation part is W⁻¹
             brille::utils::matrix_inverse(outW.data(), this->W.data());
             // output translation part is -W⁻¹*w
@@ -116,7 +116,6 @@ operations.
         size_t from_ascii(const std::string& s, bool cob=false);
         [[nodiscard]] std::string to_ascii() const;
 
-#ifdef USE_HIGHFIVE
         // Output to HDF5 file/object
         template<class HF>
         std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -133,7 +132,7 @@ operations.
             auto [W, w] = m.tuple();
             return {W, w};
         }
-#endif //USE_HIGHFIVE
+
     };
 
 
@@ -178,7 +177,7 @@ operations.
         size_t n{0};
         R i{1};
         T f{0}; // always floating point
-        char c{' '};
+        char c;
         size_t ret{0}; // number of characters read
         std::stringstream stream(s);
         std::string nosearch = special ? "-+ " : ";,xyz-+";
@@ -321,8 +320,11 @@ operations.
     }
 #endif
 
-
-
+template<class T, class R>
+std::ostream & operator<<(std::ostream & os, brille::Motion<T,R> const & motion){
+  os << motion.to_ascii();
+  return os;
+}
 
 }
 #endif

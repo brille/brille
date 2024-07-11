@@ -308,7 +308,7 @@ protected:
         circum_centres.ptr(i), circum_radii.data()+i);
     }
   }
-#ifdef USE_HIGHFIVE
+
 public:
   template<class HF>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -342,7 +342,7 @@ public:
     group.getDataSet("circumsphere_radii").read(cr);
     return {nV, nT, vp, vt, tv, nt, cc, cr};
   }
-#endif // USE_HIGHFIVE
+
 };
 
 // If we ever get around to making the tetrahedra mesh refinable, then we will
@@ -492,7 +492,7 @@ private:
     // higher tetrahedron or share some part of its volume.
     return map;
   }
-#ifdef USE_HIGHFIVE
+
 public:
   template<class HF>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -534,7 +534,7 @@ public:
     }
     return {layers, connections};
   }
-#endif // USE_HIGHFIVE
+
 };
 
 //! Triangulate a single layer of the TetTri hierarchy

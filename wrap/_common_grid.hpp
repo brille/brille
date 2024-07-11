@@ -625,7 +625,7 @@ void def_grid_sort(py::class_<Grid<T,R,S>>& cls){
 //  )pbdoc");
 //}
 
-#ifdef USE_HIGHFIVE
+
 template<template<class, class, class> class Grid, class T, class R, class S>
 void def_grid_hdf_interface(py::class_<Grid<T,R,S>>& cls, const std::string& default_entry){
   using namespace pybind11::literals;
@@ -705,6 +705,5 @@ void def_grid_hdf_interface(py::class_<Grid<T,R,S>>& cls, const std::string& def
 
   )pbdoc");
 }
-#endif // USE_HIGHFIVE
 
 #endif

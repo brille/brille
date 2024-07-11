@@ -489,6 +489,8 @@ public:
   //! Returns the vertex indices for each facet of the irreducible first
   //! Brillouin zone polyhedron
   [[nodiscard]] poly_t::faces_t::faces_t get_ir_vertices_per_face() const;
+  //! Return a string representation of the Brillouin zone object
+  [[nodiscard]] std::string to_string() const;
   //! Print a representation of the object to std::cout
   void print() const;
   //  /*! \brief Attempt to find an irreducible section of reciprocal space
@@ -780,7 +782,17 @@ private:
   [[nodiscard]] lattice::LVec<double> get_ir_polyhedron_wedge_normals() const;
 
 public:
-#ifdef USE_HIGHFIVE
+
+  //! Accessor for otherwise private _inside_wedge_outer method needed for testing
+  template <class T>
+  [[nodiscard]] std::vector<bool> isinside_wedge_outer(const lattice::LVec<T> & p, const bool pos=false) const {
+    std::vector<bool> out;
+    out.reserve(p.size(0));
+    for (long long i = 0; i < p.size(0); ++i)
+      out.push_back(_inside_wedge_outer(p.view(i), pos));
+    return out;
+  }
+
   // FIXME Update these to reflect class contents
   template <class HF>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -832,7 +844,7 @@ public:
     HighFive::File file(filename, HighFive::File::ReadOnly);
     return BrillouinZone::from_hdf(file, entry);
   }
-#endif // USE_HIGHFIVE
+
   bool operator!=(const BrillouinZone &other) const {
     if (time_reversal != other.time_reversal)
       return true;
@@ -860,6 +872,10 @@ public:
   }
   bool operator==(const BrillouinZone &other) const {
     return !this->operator!=(other);
+  }
+  friend std::ostream& operator<<(std::ostream& os, const BrillouinZone & p){
+    os << p.to_string();
+    return os;
   }
 };
 

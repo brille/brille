@@ -38,8 +38,6 @@ public:
     return *this;
   }
 
-
-#ifdef USE_HIGHFIVE
   template<class H> std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool>
   to_hdf(H& obj, const std::string & entry) const {
     auto group = overwrite_group(obj, entry);
@@ -58,7 +56,7 @@ public:
     group.getAttribute("reciprocal").read(rec);
     return {d, dir, rec};
   }
-#endif // USE_HIGHFIVE
+
 };
 //
 //class ConfigHolder {

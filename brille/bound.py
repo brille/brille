@@ -18,3 +18,11 @@ try:
     )
 except ModuleNotFoundError:
     pass
+except ImportError as imp_error:
+    import platform
+    if platform.system == 'Windows' and 'DLL' in imp_error.msg:
+        msg = 'You may be missing the latest Visual C++ redistributable package'
+        msg += ' install it from Microsoft @ https://support.microsoft.com/en-us/help/2977003'
+        msg += ' before trying to import brille again'
+        print(msg)
+    raise imp_error

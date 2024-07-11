@@ -271,7 +271,7 @@ public:
     set_space_symmetry(s, c);
     _bravais = _space.getcentring();
     set_point_symmetry();
-    set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
+    set_vectors(MatrixVectors::column == mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
     set_metrics();
     snap_basis_to_symmetry(snap_to_symmetry);
   }
@@ -290,7 +290,7 @@ public:
     set_space_symmetry(s);
     _bravais = _space.getcentring();
     set_point_symmetry();
-    set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
+    set_vectors(MatrixVectors::column == mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
     set_metrics();
     snap_basis_to_symmetry(snap_to_symmetry);
   }
@@ -401,122 +401,57 @@ private:
     }
     return false;
   }
-  void snap_basis_vectors_to_symmetry(){
+  void snap_basis_vectors_to_symmetry(bool use_real=false){
     // calculate lattice parameters from already-set _reciprocal_vectors
-		bool use_real{false};
 		auto lu = use_real ? LengthUnit::angstrom : LengthUnit::inverse_angstrom;
     auto v = lengths(lu);
     auto [c, s] = inter_facial_angles_to_cosines_sines(angles(lu), AngleUnit::radian);
+
     if (snap_to_symmetry(use_real, v, c, s)) {
       // determine the re-orientation matrix necessary to align the real basis
       // vectors with the 'standard' orientation of a || x, b⋅z == 0, b⋅y > 0
       auto R = standard_orientation_matrix(use_real ? _real_vectors : _reciprocal_vectors);
+
       // build the upper-triangular basis vector column-vector matrix
       matrix_t ut {{
           v[0],  v[1] * c[2], v[2] * c[1],
           T(0) , v[1] * s[2], v[2] * (c[0] - c[2]*c[1])/s[2],
           T(0) , T(0)       , v[2] * unit_parallelpiped_volume(c) / s[2]
       }};
+
       // rotate the matrix back from the standard orientation to the user orientation
 			auto invR_ut = linear_algebra::mul_mat_mat(transpose(R), ut);
-			// provide a message to the user if the basis vectors have changed outside of approximate tolerance
-			if (!approx_float::matrix(3u, use_real ? _real_vectors.data() : _reciprocal_vectors.data(), invR_ut.data())){
-				std::ostringstream msg;
-				msg << "Basis vectors changed by [";
-				for (size_t i=0; i<3u; ++i){
-					msg << "(";
-					for (size_t j=0; j<3u; ++j) msg << " " << invR_ut[i + j*3u] -  _reciprocal_vectors[i + j*3u];
-					msg << " ), ";
-				}
-				msg << "] " << (use_real ? u8"Å" : u8"Å⁻¹");
-				info_update(msg.str());
-			}
-			// And actually update the stored parameters to the new reciprocal and real vectors
-			_reciprocal_vectors = invR_ut;
-			_real_vectors = transpose(linear_algebra::mat_inverse(_reciprocal_vectors));
-      for (auto & x: _real_vectors) x *= math::two_pi;
+
+			// provide a message to the user if the basis vectors have changed beyond the approximate tolerance
+      auto check_and_warn = [&](const auto & which, const auto & vectors, const auto & unit){
+        if (!approx_float::matrix(3u, vectors.data(), invR_ut.data())){
+          std::ostringstream msg;
+          msg << which << " basis vectors changed by [";
+          for (size_t i=0; i<3u; ++i){
+            msg << "(";
+            for (size_t j=0; j<3u; ++j) msg << " " << invR_ut[i + j*3u] -  vectors[i + j*3u];
+            msg << " ), ";
+          }
+          msg << "] " << unit;
+          info_update(msg.str());
+        }
+      };
+      if (use_real){
+        check_and_warn("Real", _real_vectors, u8"Å");
+        // And actually update the stored parameters to the new reciprocal and real vectors
+        _real_vectors = invR_ut;
+        _reciprocal_vectors = transpose(linear_algebra::mat_inverse(_real_vectors));
+        for (auto & x: _reciprocal_vectors) x *= math::two_pi;
+      } else {
+        check_and_warn("Reciprocal", _reciprocal_vectors, u8"Å⁻¹");
+        // And actually update the stored parameters to the new reciprocal and real vectors
+        _reciprocal_vectors = invR_ut;
+        _real_vectors = transpose(linear_algebra::mat_inverse(_reciprocal_vectors));
+        for (auto & x: _real_vectors) x *= math::two_pi;
+      }
     }
   }
-//  void snap_basis_vectors_to_symmetry(){
-//    using approx_float::scalar;
-//    using linear_algebra::dot;
-//    using linear_algebra::norm, linear_algebra::mul_mat_mat, linear_algebra::mul_mat_vec;
-//    matrix_t vectors{{0,0,0, 0,0,0, 0,0,0}}, deviations{{0,0,0, 0,0,0, 0,0,0}};
-//    size_t counts[3]{0,0,0};
-//
-//    matrix_t _bv{_real_vectors}, _inv_bv{linear_algebra::mat_inverse(_real_vectors)};
-//
-//    std::vector<std::array<int,3>> e_i_list {{1, 0, 0}, {0, 1, 0}, {0, 0, 1},
-//                                             {-1, 0, 0}, {0, -1, 0}, {0, 0, -1},
-//                                             {1, 1, 0}, {1, 0, 1}, {0, 1, 1},
-//                                             {-1, 1, 0}, {-1, 0, 1}, {0, -1, 1},
-//                                             {1, -1, 0}, {1, 0, -1}, {0, 1, -1},
-//                                             {-1, -1, 0}, {-1, 0, -1}, {0, -1, -1},
-//                                             {1, 1, 1}, {-1, 1, 1}, {1, -1, 1},
-//                                             {1, 1, -1}, {-1, -1, 1}, {-1, 1, -1},
-//                                             {1, -1, -1}, {-1, -1, -1}};
-//    auto vectors_match = [](const auto & a, const auto & b){
-//      if (a[0] * b[0] + a[1] * b[1] + a[2] * b[2]) return true;
-//      return false;
-//    };
-//    std::vector<vector_t> vs;
-//    for (size_t i=0; i<3u; ++i) vs.push_back(vector(LengthUnit::angstrom, i));
-//
-//    std::array<std::vector<vector_t>, 3> all_e_j;
-//
-//    for (const auto & e_i_lu: e_i_list){
-//      vector_t e_i_c{0,0,0};
-//      for (size_t i=0; i<3u; ++i) if (e_i_lu[i]) {
-//        for (size_t j=0; j<3u; ++j) e_i_c[j] += e_i_lu[i] * vs[i][j];
-//      }
-//      // loop over all output real space basis vectors
-//      for (size_t e_j =0; e_j <3u; ++e_j){
-//        std::array<int,3> e_j_lu{{0,0,0}}; e_j_lu[e_j] = 1;
-//        if (!vectors_match(e_i_lu, e_j_lu)) {
-//          info_update("Operations which map ", e_i_lu," to ", e_j_lu);
-//          // and for all point group operations that link e_i to e_j
-//          for (const auto &r : _point.mat_vec_linking_operations(e_i_lu, e_j_lu)) {
-//            // The rotation matrix in cartesian coordinates
-//            auto r_c = mul_mat_mat(_bv, mul_mat_mat(r, _inv_bv));
-//            // now rotate the cartesian basis vector to point along e_j
-//            auto e_j_c = mul_mat_vec(r_c, e_i_c);
-//            //          info_update(e_j_c);
-//            // add the result to the output basis vector at 'e_j'
-//            for (size_t i = 0; i < 3u; ++i) vectors[e_j + 3u * i] += e_j_c[i];
-//            // add the difference to the output deviations at 'e_j'
-//            for (size_t i = 0; i < 3u; ++i) {
-//              auto x = e_j_c[i] - _bv[e_j + 3u * i];
-//              deviations[e_j + 3u * i] += x * x;
-//            }
-//            ++counts[e_j];
-//            all_e_j[e_j].push_back(e_j_c);
-//          }
-//        }
-//      }
-//    }
-//    // Show all found 'matching' basis vectors:
-//    for (size_t i=0; i<3; ++i){
-//      std::cout << i << ". basis vectors" << std::endl;
-//      for (const auto & x: all_e_j[i]){
-//        for (const auto & z: x) std::cout << std::fixed << std::setprecision(16) << std::setw(20) << z << " ";
-//        std::cout << std::endl;
-//      }
-//      std::cout << std::endl;
-//    }
-//
-//    // complete finding the average output basis vectors
-//    for (size_t z=0; z<9u; ++z) vectors[z] /= static_cast<T>(counts[z % 3u]);
-//    for (size_t z=0; z<9u; ++z) deviations[z] /= static_cast<T>(counts[z % 3u]);
-//    auto greatest_deviation = std::sqrt(*std::max_element(deviations.begin(), deviations.end()));
-//    for (size_t z=0; z<9u; ++z) deviations[z] = std::abs(vectors[z] - _real_vectors[z]);
-//    auto greatest_change = *std::max_element(deviations.begin(), deviations.end());
-//    info_update("Deviations ", greatest_deviation, " changes ", greatest_change);
-//
-//    // TODO actually check if the basis vectors changed?
-//    _real_vectors = vectors;
-//    _reciprocal_vectors = transpose(linear_algebra::mat_inverse(_real_vectors));
-//    for (auto & x: _reciprocal_vectors) x *= math::two_pi;
-//  }
+
   void set_vectors(const vector_t& v, const vector_t& a, LengthUnit lu, AngleUnit angle_unit, bool snap_to_symmetry=false){
     auto [cos, sin] = inter_facial_angles_to_cosines_sines(a, angle_unit);
     // arrays are small; so copying shouldn't hurt
@@ -558,9 +493,11 @@ private:
     } else if (LengthUnit::inverse_angstrom == lu) {
       _real_vectors = transpose(BorA_transposed);
       _reciprocal_vectors = AorB;
+    } else {
+      throw std::runtime_error("LengthUnit should be angstrom or inverse angstrom");
     }
     if (snap_to_symmetry){
-      snap_basis_vectors_to_symmetry();
+      snap_basis_vectors_to_symmetry(LengthUnit::angstrom == lu);
     }
   }
   void set_metrics() {
@@ -763,7 +700,6 @@ public:
     return transpose(mat);
   }
 
-#ifdef USE_HIGHFIVE
   template<class H>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, H>, bool>
   to_hdf(H& obj, const std::string& entry) const {
@@ -795,7 +731,6 @@ public:
     auto bas = Basis::from_hdf(group, "basis");
     return {real, reciprocal, real_metric, reciprocal_metric, L, spg, ptg, bas};
   }
-#endif
 
   Impl<T> primitive() const {
     PrimitiveTransform P(_bravais);
@@ -911,13 +846,12 @@ public:
   LATTICE_FORWARD_METHOD(bool, is_triclinic)
   LATTICE_FORWARD_METHOD(matrix_t, to_xyz)
   LATTICE_FORWARD_METHOD(matrix_t, from_xyz)
-#ifdef USE_HIGHFIVE
   LATTICE_FORWARD_METHOD(bool, to_hdf)
   template<class... A> static Lattice<T> from_hdf(A... a){
     auto li = Impl<T>::from_hdf(a...);
     return Lattice<T>(std::make_shared<Impl<T>>(li));
   }
-#endif
+
   Lattice<T> primitive() const {
     if (PrimitiveTransform(ptr->bravais()).does_anything()) {
       return Lattice<T>(std::make_shared<Impl<T>>(ptr->primitive()));

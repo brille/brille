@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 3.18.2)
+cmake_minimum_required(VERSION 3.24)
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 cmake_policy(SET CMP0017 NEW) # Prefer cmake's own files for include/find_package before CMAKE_MODULE_PATH
+cmake_policy(SET CMP0148 NEW) # Conform to no FindPythonInterp and FindPythonLibs (needed for Pybind11)
 
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake")
-
+set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES "${CMAKE_CURRENT_LIST_DIR}/cmake/conan_provider.cmake")
 project(brille)
 set(BRILLE_LIBRARY_TARGET brille)
 set(BRILLE_PYTHON_MODULE _brille)
@@ -15,37 +16,13 @@ SET(BRILLE_INCLUDE_DESTINATION include)
 set(TESTING_TARGET tester)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS ON)
 
 # Make the availability of testing optional
 option(BRILLE_BUILD_TESTING "Build tests for brille" ON)
-# Allow system pybind11 to be required
-option(REQUIRE_SYSTEM_PYBIND11 "Never attempt to fetch pybind11" OFF)
-mark_as_advanced(REQUIRE_SYSTEM_PYBIND11)
-# Allow system catch2 to be required
-option(REQUIRE_SYSTEM_CATCH2 "Never attempt to fetch catch2" OFF)
-mark_as_advanced(REQUIRE_SYSTEM_CATCH2)
 # Allow the log level to be set by cmake
 set(BRILLE_LOGLEVEL "INFO" CACHE STRING "Emit log messages to standard out (DEBUG|VERBOSE)")
 # Special option for profiling runs
 option(BRILLE_PROFILING "Emit profiling output to standard out" OFF)
-
-# Define the minimum version of libraries needed
-set(MINIMUM_PYBIND11_VERSION 2.10.3)
-set(FETCH_PYBIND11_REPO https://github.com/pybind/pybind11)
-set(MINIMUM_CATCH2_VERSION 2.13.9)
-set(FETCH_CATCH2_REPO https://github.com/catchorg/Catch2)
-
-# Optional support of HDF5-based IO
-option(BRILLE_HDF5 "Add HDF5 file-based IO" ON)
-option(REQUIRE_SYSTEM_HIGHFIVE "Never attempt to fetch HighFive" OFF)
-if (BRILLE_HDF5)
-    # Include the HDF5 IO methods -- safe since configuring will fail if HDF5/HighFive is not available
-    add_definitions(-DUSE_HIGHFIVE)
-endif()
-mark_as_advanced(REQUIRE_SYSTEM_HIGHFIVE)
-set(MINIMUM_HIGHFIVE_VERSION 2.6.2)
-SET(FETCH_HIGHFIVE_REPO https://github.com/BlueBrain/HighFive)
 
 # find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
 # if (CMAKE_CXX_CPPCHECK)
@@ -97,31 +74,26 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # With GCC 10+ the interproceedural optmization only adds to compilation time without improving performance
 SET(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 
-include(brille-conan)
-
+# Force pybind11 to use FindPython:
+set(PYBIND11_FINDPYTHON ON)
+# Ensure we can find/user the user-provided Python executable
 if (PYTHON_EXECUTABLE)
-  # Ensure the provided Python interpreter is used
   set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
 endif()
-# With modern CMake, this find_package forces pybind11 to use FindPython instead of its custom tools
 find_package(Python3 COMPONENTS Interpreter Development)
-
 if (NOT DEFINED PYTHON_EXECUTABLE)
   set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
 endif()
 
-include(fetcher)
-
 # Attempt to find catch2 to handle C++ testing
 if(BRILLE_BUILD_TESTING)
-  git_fetch(catch2 ${MINIMUM_CATCH2_VERSION} ${FETCH_CATCH2_REPO} ${REQUIRE_SYSTEM_CATCH2})
-  list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
+  find_package(Catch2 REQUIRED)
 else()
   # Since no testing is to be built, fake that we've found Catch2.
   set(Catch2_FOUND ON)
 endif()
-# Attempt to find pybind11 to handle CPython bindings
-git_fetch(pybind11 ${MINIMUM_PYBIND11_VERSION} ${FETCH_PYBIND11_REPO} ${REQUIRE_SYSTEM_PYBIND11})
+
+find_package(pybind11 REQUIRED)
 
 # Read the version of brille
 include(checkgit)
@@ -172,7 +144,7 @@ endforeach()
 
 if(BRILLE_BUILD_TESTING)
   message(STATUS "Build testing target '${TESTING_TARGET}' and configure CTest")
-  target_link_libraries(${TESTING_TARGET} PUBLIC Catch2::Catch2)
+  target_link_libraries(${TESTING_TARGET} PUBLIC Catch2::Catch2WithMain)
   include(CTest)
   include(Catch)
   catch_discover_tests(${TESTING_TARGET})

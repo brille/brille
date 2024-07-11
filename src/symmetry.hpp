@@ -24,6 +24,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Classes for a lattice spacegroup Symmetry operations
 */
 #include <utility>
+#include <iostream>
 
 #include "symmetry_common.hpp"
 #include "motion.hpp"
@@ -175,7 +176,6 @@ public:
   */
   [[nodiscard]] size_t  find_matrix_index(const Matrix<int>&) const;
 
-#ifdef USE_HIGHFIVE
   // Output to HDF5 file/object
   template<class HF>
   std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -199,8 +199,13 @@ public:
     }
     return Symmetry(m);
   }
-#endif
+
+  [[nodiscard]] std::string to_string() const;
 };
 
 } // end namespace brille
+
+std::ostream & operator<<(std::ostream & os, brille::Symmetry const & sym);
+
 #endif
+
