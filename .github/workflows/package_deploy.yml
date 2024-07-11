@@ -119,7 +119,7 @@ jobs:
         path: wheelhouse
 
     - name: Sphinx Docker build
-      uses: g5t/sphinxer@v3.0.0
+      uses: g5t/sphinxer@v3.0.1
       with:
         source_dir: repository
         pages_dir: io
