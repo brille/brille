@@ -111,23 +111,20 @@ jobs:
         repository: brille/brille.github.io
         token: ${{ secrets.BRILLE_GITHUB_IO_TOKEN }}
         path: io
-    - name: Download musl libc musllinux wheel
+    - name: Download musl libc musllinux wheels
       uses: actions/download-artifact@v4
       id: path
       with:
         name: cibw-wheels-musllinux-ubuntu-22.04
         path: wheelhouse
-    - name: Get downloaded wheel name
-      id: wheel
-      run: echo "wheel=wheelhouse/$(ls *cp39*)" >> $GITHUB_OUTPUT
-      working-directory: wheelhouse
-    - run: echo "${{ steps.wheel.outputs.wheel }}"
+
     - name: Sphinx Docker build
-      uses: g5t/sphinxer@v2.3.0
+      uses: g5t/sphinxer@v3.0.0
       with:
         source_dir: repository
         pages_dir: io
         is_release: ${{ contains(github.event_name, 'release') }}
         create_readme: true
-        wheel: "${{ steps.wheel.outputs.wheel }}"
+        wheelhouse: wheelhouse
+        package: brille
         html_dir: ${{ github.head_ref }}
