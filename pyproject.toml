@@ -63,7 +63,6 @@ skip = ["cp36-*", "cp37-*", "pp*"]  # all skipped for speed, except on Windows w
 [tool.cibuildwheel.windows]
 before-build = "pip install delvewheel"
 repair-wheel-command = "delvewheel repair -w {dest_dir} -v {wheel}"
-test-command = ""  # elide testing to get-out wheels for manual tests
 
 [[tool.cibuildwheel.overrides]]
 select = "*-musllinux*"
