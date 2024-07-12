@@ -2,13 +2,12 @@
 """Run tests of Brillouin zone creation."""
 import unittest
 
+
 def get_local_JSON(filename):
-    import os
-    import pathlib
+    from pathlib import Path
     import json
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    with open(str(pathlib.Path(current_dir, filename)), 'r') as f:
-        data = json.load(f)
+    with open(Path(__file__).parent / filename) as file:
+        data = json.load(file)
     return data
 
 

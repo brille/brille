@@ -36,7 +36,7 @@ tutorial.
 .. _NaCl: https://github.com/brille/brilleu/raw/master/brilleu/NaCl.castep_bin
 
 .. literalinclude:: tutorial_00.py
-    :lines: 28
+    :lines: 34
 
 Constructing the :py:class:`~brilleu.BrillEu` object creates a hybrid grid
 in the irreducible Brillouin zone and then uses the
@@ -69,14 +69,14 @@ We can construct points along the path and find :math:`\omega_i(\mathbf{Q})`
 using
 
 .. literalinclude:: tutorial_00.py
-    :lines: 31,32,34
+    :lines: 37,38,40
 
 Since this path passes through four first Brillouin zones, an equivalent path
 must pass through the irreducible Brillouin zone multiple times. We can find
 the irreducible path using
 
 .. literalinclude:: tutorial_00.py
-    :lines: 50
+    :lines: 56
 
 .. figure:: images/nacl_123_disp.png
     :align: center
@@ -132,7 +132,7 @@ Here we will avoid these complications by calculating :math:`S(\mathbf{Q},E)`
 for all points in a :math:`(\mathbf{Q},E)` grid.
 
 .. literalinclude:: tutorial_00.py
-    :lines: 66-71
+    :lines: 72-77
 
 .. figure:: images/nacl_123_sqw.png
     :align: center

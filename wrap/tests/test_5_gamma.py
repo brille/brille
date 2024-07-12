@@ -26,7 +26,7 @@ def fetchLoad(loader, fetchfile, **kwds):
     with tempfile.TemporaryDirectory() as tmp_dir:
         r = requests.get(base_url + "/" + fetchfile)
         if not r.ok:
-            raise Exception("Fetching {} failed with reason '{}'".format(fetchfile, r.reason))
+            raise Exception(f"Fetching {fetchfile} failed with reason '{r.reason}'")
         out_path = str(pathlib.Path(tmp_dir, fetchfile))
         open(out_path, 'wb').write(r.content)
         return loader(out_path, **kwds)
@@ -59,7 +59,7 @@ def getLoad(loader, file, **kwds):
     try:
         return loader(str(pathlib.Path(docs_dir, file)), **kwds)
     except FileNotFoundError:
-        print('{} not found in {}. Fetching remote content.'.format(file, docs_dir))
+        print(f'{file} not found in {docs_dir}. Fetching remote content.')
         return fetchLoad(loader, file, **kwds)
 
 

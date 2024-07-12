@@ -22,7 +22,7 @@ to decode the generators. Those decoded generators can then be used to generate
 the full spacegroup:
 
 .. literalinclude:: tutorial_01.py
-  :lines: 201-203
+  :lines: 202-204
 
 
 This spacegroup is comprised of :math:`192` motions,
@@ -33,7 +33,7 @@ This spacegroup is comprised of :math:`192` motions,
    <summary><a>(show the 192 lines of motions)</a></summary>
 
 .. literalinclude:: tutorial_01.py
-  :lines: 4-195
+  :lines: 5-196
 
 .. raw:: html
 
@@ -47,7 +47,7 @@ They can be separated and used to define a :py:class:`~brille._brille.Symmetry`
 object plus a set of generators for the group:
 
 .. literalinclude:: tutorial_01.py
-  :lines: 196-199
+  :lines: 197-200
 
 The symmetry information for NaCl is available in :download:`a script <tutorial_01.py>`
 which also contains different methods of constructing a real space lattice

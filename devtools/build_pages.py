@@ -1,6 +1,6 @@
 # Build the documentation pages in a reproducible environment
 
-ENTRYPOINT="""#!/bin/sh
+ENTRYPOINT = r"""#!/bin/sh
 set -eu
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # ! This file is auto-generated and will be overwritten !
@@ -8,9 +8,9 @@ set -eu
 
 function echo_run {{
     echo "-------------------------------------------------"
-	echo "$" "$@"
+    echo "$" "$@"
     echo "-------------------------------------------------"
-	"$@"
+    "$@"
 }}
 
 export PATH={path}:$PATH
@@ -25,7 +25,7 @@ echo_run find /build -type f -iname "*-linux*.whl" -exec sh -c "auditwheel repai
 
 """
 
-PAGES_ENTRYPOINT="""#!/bin/sh
+PAGES_ENTRYPOINT = """#!/bin/sh
 set -eu
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # ! This file is auto-generated and will be overwritten !
@@ -33,9 +33,9 @@ set -eu
 
 function echo_run {{
     echo "-------------------------------------------------"
-	echo "$" "$@"
+    echo "$" "$@"
     echo "-------------------------------------------------"
-	"$@"
+    "$@"
 }}
 
 sphinx_doctree=/conan/.doctree
@@ -57,6 +57,7 @@ echo_run mkdir -p /build/pages
 echo_run rsync -a --delete "${{html_dir}}/" /build/pages
 
 """
+
 
 def find_wheel(p):
     return [x.name for x in p.iterdir() if x.is_file() and 'cp39-musllinux' in str(x)]
@@ -84,7 +85,7 @@ def main(build_wheel, wheelhouse, output):
             result = client.run(image, ['sh', '/build/entrypoint.sh'], volumes=volumes, tty=True)
             print(result)
         except exceptions.DockerException as ex:
-            raise RuntimeError()
+            raise RuntimeError(ex)
         wheel = find_wheel(folder)
 
     # Use the built wheel to build the documentation

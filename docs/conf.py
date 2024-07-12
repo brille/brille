@@ -12,18 +12,17 @@
 #
 import os
 import sys
-import shlex
-import subprocess
 sys.path.insert(0, os.path.abspath('.'))
+import brille._brille as brille_module
 
 # -- Project information -----------------------------------------------------
 
 project = 'brille'
 copyright = '2020, Gregory Tucker'
 author = 'Gregory Tucker'
-import brille._brille as brille_module
-version = brille_module.__version__ # just the 'short' version
-release = brille_module.version # the 'full' version information
+
+version = brille_module.__version__  # just the 'short' version
+release = brille_module.version  # the 'full' version information
 
 
 # -- General configuration ---------------------------------------------------
@@ -135,9 +134,9 @@ def call_and_check(command, **kwds):
     try:
         retcode = call(command, **kwds)
         if retcode < 0:
-            sys.stderr.write('{} error code: {}\n'.format(call, -retcode))
+            sys.stderr.write(f'{call} error code: {-retcode}\n')
     except (CalledProcessError, OSError) as e:
-        sys.stderr.write('{} execution failed: {}\n'.format(call, e))
+        sys.stderr.write(f'{call} execution failed: {e}\n')
 
 
 # again, following from github.com/pybind/pybind11/blob/stable/docs/conf.py:

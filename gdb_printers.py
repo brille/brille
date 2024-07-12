@@ -5,7 +5,7 @@ class BrillePrinter:
     def method(self, named, *args):
         arg_string = ",".join(f"{arg}" for arg in args) if len(args) else ""
         eval_string = f"(*({self.val.type}*)({self.val.address})).{named}({arg_string})"
-        return gdb.parse_and_eval(eval_string)
+        return gdb.parse_and_eval(eval_string)  # noqa: F821
 
     def wrap_to_string(self, string):
         return str(string)
@@ -32,17 +32,23 @@ class BrilleLatVecPrinter(BrillePrinter):
     def _to_string(self):
         array = BrilleArrayPrinter(self.val)
         lattice = BrilleLatticePrinter(self.val['lattice'])
-        return f"\n{lattice._to_string()}\n{array._to_string()}"
+        return f"\n{lattice.to_string()}\n{array.to_string()}"
 
 
 def array_printer(val):
-    if "Array" in str(val.type): return BrilleArrayPrinter(val)
+    if "Array" in str(val.type):
+        return BrilleArrayPrinter(val)
+
 
 def lattice_printer(val):
-    if "Lattice" in  str(val.type): return BrilleLatticePrinter(val)
+    if "Lattice" in str(val.type):
+        return BrilleLatticePrinter(val)
+
 
 def latvec_printer(val):
-    if "LatVeC" in str(val.type): return BrilleLatVecPrinter(val)
+    if "LatVeC" in str(val.type):
+        return BrilleLatVecPrinter(val)
+
 
 # gdb.pretty_printers.append(lattice_printer)
 # gdb.pretty_printers.append(array_printer)

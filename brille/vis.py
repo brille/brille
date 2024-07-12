@@ -106,7 +106,7 @@ def vis_polyhedra(polyhedra: List[VisPolyhedron], **kwargs):
         edge_colors = make_colours(n_poly, color=kwargs.get('edge_color', None))
         fill = make_list(n_poly, kwargs.get('fill', True))
         outline = make_list(n_poly, kwargs.get('outline', True))
-        opacity = make_list(n_poly, kwargs.get('opacity', 0.2))
+        # opacity = make_list(n_poly, kwargs.get('opacity', 0.2))
         polyhedra = [p if isinstance(p, VisPolyhedron) else
                      VisPolyhedron(p, face_color=fc, edge_color=ec, fill=f, outline=o)
                      for p, fc, ec, f, o in zip(polyhedra, face_colors, edge_colors, fill, outline)]

@@ -38,7 +38,7 @@ def main(variant=None):
         result = client.run(image, ['sh', '/build/entrypoint.sh'], volumes=volumes, tty=True)
         print(result)
     except exceptions.DockerException as ex:
-        raise RuntimeError()
+        raise RuntimeError(ex)
 
 
 if __name__ == '__main__':

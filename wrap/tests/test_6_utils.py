@@ -8,6 +8,7 @@ from brille import _brille as br_mod
 if br_mod != br_py:
     print(f"Loaded binary module {br_mod.__file__} and python module {br_py.__file__} differ")
 
+
 def get_latvec(lens, angs):
     # Calculates the lattice vectors after the convention of self.spglib
     xhat = np.array([1, 0, 0])
@@ -73,12 +74,12 @@ class UtilsTestBZ (unittest.TestCase):
     def test_invalid_input_negative_squared_vol(self):
         # Tests for physically impossible lattice
         with self.assertRaises(ValueError):
-            bz = br_py.utils.create_bz([4, 5, 6], [30, 30, 90], 'P 6')
+            br_py.utils.create_bz([4, 5, 6], [30, 30, 90], 'P 6')
 
     def test_no_spacegroup(self):
         # Tests if no spacegroup is given
         with self.assertRaises(ValueError):
-            bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90])
+            br_py.utils.create_bz([4, 5, 6], [90, 90, 90])
 
     # 'Hall number' specification removed in v0.6.0
     # def test_spacegroup_number(self):
@@ -90,10 +91,10 @@ class UtilsTestBZ (unittest.TestCase):
         # Tests for invalid spacegroups given
         with self.assertRaises(ValueError):
             # Must be a string
-            bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], [])
+            br_py.utils.create_bz([4, 5, 6], [90, 90, 90], [])
         with self.assertRaises(ValueError):
             # Must be a string
-            bz = br_py.utils.create_bz([4, 5, 6], [90, 90, 90], -1)
+            br_py.utils.create_bz([4, 5, 6], [90, 90, 90], -1)
 
     def test_using_reciprocal(self):
         # Test with reciprocal lattice

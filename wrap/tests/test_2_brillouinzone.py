@@ -241,7 +241,9 @@ class BrillouinZone(unittest.TestCase):
                     print("Monoclinic without 'a', 'b', or 'c' choice?? ", spacegroup.choice)
                     continue
             elif 'tric' in pointgroup.holohedry:
-                ang = lambda: np.pi / 3 * (1 + np.random.rand())
+                def ang():
+                    return np.pi / 3 * (1 + np.random.rand())
+
                 a, b, c, al, be, ga = 5, 10, 15, ang(), ang(), ang()
 
             lat = br_py.Lattice(([a, b, c], [al, be, ga]), spacegroup=spacegroup.hall_symbol)
