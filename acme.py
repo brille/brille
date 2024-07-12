@@ -42,7 +42,7 @@ import os
 import logging
 import subprocess
 
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 alone_in_parentheses_rx = re.compile(r'\((?P<inside>0|1|!?defined\((?P<name>[^)]+)\))\)')
 zero_and_something_rx = re.compile(r'0 && (0|1|!?defined\([^)]+\)|!?\()')
@@ -51,13 +51,15 @@ one_or_something_rx = re.compile(r'1 \|\| (0|1|!?defined\([^)]+\)|!?\()')
 something_or_one_rx = re.compile(r'(0|1|!?defined\([^)]+\)|\)) \|\| 1')
 alone_defined_rx = re.compile(r'^(?P<not>!)?defined\((?P<name>[^)]+)\)$')
 
+
 def normalize_expression(expression) -> Tuple[str, str]:
     match = alone_defined_rx.match(expression)
     if match:
         return 'ifndef' if match.group('not') else 'ifdef', match.group('name')
     return 'if', expression
 
-def simplify_expression(what, expression, forced_defines = {}):
+
+def simplify_expression(what, expression, forced_defines={}):
     assert what in ['if', 'ifdef', 'ifndef', 'elif']
 
     # Denormalize the shorthand expression
@@ -68,14 +70,13 @@ def simplify_expression(what, expression, forced_defines = {}):
 
     # Go through all forced defines and replace them with their values
     for name, enabled in forced_defines.items():
-        if name not in expression: continue
-
-        expression = expression.replace('defined({})'.format(name), '1' if enabled else '0')
+        if name in expression:
+            expression = expression.replace('defined({})'.format(name), '1' if enabled else '0')
 
     # Now comes the ugly part, simplify as long as there's something
     modified = True
     while modified:
-        modified = False # Nothing done in this round yet
+        modified = False  # Nothing done in this round yet
 
         # Basic replacements
         for find, replace in [('!0', '1'),
@@ -99,7 +100,8 @@ def simplify_expression(what, expression, forced_defines = {}):
         # If the above replacements modified something, restart to avoid e.g.
         # `!0 && (something)` getting reduced by the "zero and something" rule
         # below
-        if modified: continue
+        if modified:
+            continue
 
         # 0 && something or something && 0, replace with just 0
         # 1 || something or something || 1, replace with just 1
@@ -113,7 +115,8 @@ def simplify_expression(what, expression, forced_defines = {}):
                     level = 1
                     for i in range(match.end(), len(expression)):
                         c = expression[i]
-                        if c == '(': level = level + 1
+                        if c == '(':
+                            level = level + 1
                         elif c == ')':
                             level = level - 1
                             assert level >= 0
@@ -127,7 +130,8 @@ def simplify_expression(what, expression, forced_defines = {}):
                     level = 1
                     for i in range(match.start(), 0, -1):
                         c = expression[i - 1]
-                        if c == ')': level = level + 1
+                        if c == ')':
+                            level = level + 1
                         elif c == '(':
                             level = level - 1
                             assert level >= 0
@@ -149,23 +153,30 @@ def simplify_expression(what, expression, forced_defines = {}):
     elif expression == '1':
         result = True
     else:
-        result = None # keep it
+        result = None  # keep it
 
     # Renormalize back to ifdef if the expression is simple enough
-    if what == 'if': what, expression = normalize_expression(expression)
+    if what == 'if':
+        what, expression = normalize_expression(expression)
 
     return result, what, expression
+
 
 def sort_includes(includes: List[str]) -> List[str]:
     system, local = [], []
     for i in sorted(includes):
-        if i.startswith('#include <'): system += [i]
-        elif i.startswith('#include "'): local += [i]
-        else: assert False # pragma: no cover
+        if i.startswith('#include <'):
+            system += [i]
+        elif i.startswith('#include "'):
+            local += [i]
+        else:
+            assert False  # pragma: no cover
     return (system + ["\n"] + local) if local and system else (system + local)
+
 
 copyright_email_rx = re.compile(r'<[^@]+@[^>]+>')
 copyright_year_rx = re.compile(r'\d\d\d\d')
+
 
 def sort_copyrights(copyrights: List[str]) -> List[str]:
     email_dict = {}
@@ -188,7 +199,8 @@ def sort_copyrights(copyrights: List[str]) -> List[str]:
         # as well
         else:
             # If all years are there, nothing left to do
-            if years <= email_dict[email][0]: continue
+            if years <= email_dict[email][0]:
+                continue
 
             # If we have a superset of the years, use this copyright line
             # instead
@@ -198,19 +210,23 @@ def sort_copyrights(copyrights: List[str]) -> List[str]:
                 continue
 
             # Otherwise complain
-            raise ValueError("First copyright found for {} is missing years {}, supply an explicit combined copyright instead".format(email, repr(years - email_dict[email][0])))
+            raise ValueError("First copyright found for {} is missing years {}, supply an explicit combined copyright "
+                             "instead".format(email, repr(years - email_dict[email][0])))
 
     return output
 
+
 include_rx = re.compile(r'^(?P<include>#include (?P<quote>["<])(?P<file>[^">]+)[">]).*?$')
-preprocessor_rx = re.compile(r'^(?P<indent>\s*)#(?P<what>ifdef|ifndef|if|else|elif|endif)\s*(?P<value>[^\n]*?[^\s]?)(?P<comment>\s*/[/*].*)?$')
+preprocessor_rx = re.compile(
+    r'^(?P<indent>\s*)#(?P<what>ifdef|ifndef|if|else|elif|endif)\s*(?P<value>[^\n]*?[^\s]?)(?P<comment>\s*/[/*].*)?$')
 define_rx = re.compile(r'\s*#(?P<what>define|undef) (?P<name>[^\s]+)\s*$')
 linecomment_rx = re.compile(r'^\s*(/\*.*\*/|//.*)?\s*$')
 copyright_rc = re.compile(r'^\s*Copyright © \d{4}.+$')
 blockcomment_start_rx = re.compile(r'^\s*/\*.*\s*$')
 blockcomment_end_rx = re.compile(r'^\s*.*\*/\s*$')
 acme_pragma_rx = re.compile(r'^#pragma\s+ACME\s+(?P<what>[^\s]+)\s*(?P<value>[^\s]?.*)\s*$')
-tpp_filename = re.compile("""\.tpp$""")
+tpp_filename = re.compile(r"""\.tpp$""")
+
 
 def acme(toplevel_file, output) -> List[str]:
     base_directory = os.path.dirname(toplevel_file)
@@ -226,10 +242,11 @@ def acme(toplevel_file, output) -> List[str]:
     forced_defines = {}
     revision_commands = {}
     stats_commands = {}
+
     def parse(file, level):
         nonlocal write_comments, paths, local_include_prefixes, all_includes, new_includes, copyrights, parsed_files, forced_defines, revision_commands, stats_commands
 
-        logging.info("%sParsing file %s...", ' '*level, file)
+        logging.info("%sParsing file %s...", ' ' * level, file)
 
         # Mark the file as parsed. Doing it at the beginning so accidental
         # circular includes are caught.
@@ -241,7 +258,7 @@ def acme(toplevel_file, output) -> List[str]:
         out = []
         in_comment = False
         comment_buffer = []
-        multiline_copyright: str = None
+        multiline_copyright: Optional[str] = None
         # Preprocessor branch stack. First element of each item is True if
         # this is a real node, False if this is a dummy for an #elif. The leaf
         # node is never False, all False nodes get popped at an #endif. Second
@@ -293,16 +310,19 @@ def acme(toplevel_file, output) -> List[str]:
                             comment_buffer = []
 
                             # Add a complete copyright line to the global list
-                            if line.rstrip().endswith('>'): copyrights.add(line)
+                            if line.rstrip().endswith('>'):
+                                copyrights.add(line)
 
                             # If a multi-line copyright (ending either with a
                             # `,` or a year), wait for next time
-                            else: multiline_copyright = line
+                            else:
+                                multiline_copyright = line
 
                         # Otherwise add to the buffer. The buffer is always at least
                         # one line (added when comment start matches), if not then it
                         # means we don't want it (license block, for example)
-                        elif comment_buffer: comment_buffer += [line]
+                        elif comment_buffer:
+                            comment_buffer += [line]
 
                     continue
 
@@ -318,7 +338,9 @@ def acme(toplevel_file, output) -> List[str]:
                     # branch and it's either a non-empty line (and comments are
                     # not disabled) or an empty line that's not first in the
                     # file and there's not more than one following each other
-                    if branch_stack[-1][1] is not False and ((line.strip() and write_comments) or line.strip() == '// {{includes}}' or (not line.strip() and out and out[-1].strip())):
+                    if branch_stack[-1][1] is not False and (
+                            (line.strip() and write_comments) or line.strip() == '// {{includes}}' or (
+                            not line.strip() and out and out[-1].strip())):
                         out += [line]
                     continue
 
@@ -346,11 +368,12 @@ def acme(toplevel_file, output) -> List[str]:
                     what = match.group('what')
                     value = match.group('value').strip()
                     comment = match.group('comment') or ''
-                    if comment and not comment[0].isspace(): comment = ' ' + comment
+                    if comment and not comment[0].isspace():
+                        comment = ' ' + comment
 
                     # Leaf node should always be a real node
                     assert len(branch_stack) >= 1
-                    assert branch_stack[-1][0] == True
+                    assert branch_stack[-1][0]
 
                     if what in ['if', 'ifdef', 'ifndef', 'elif']:
                         push_value, what, value = simplify_expression(what, value, forced_defines)
@@ -358,7 +381,8 @@ def acme(toplevel_file, output) -> List[str]:
                     if what in ['if', 'ifdef', 'ifndef']:
                         # If the parent node disabled visibility, this should
                         # not enable it back
-                        if branch_stack[-1][1] is False: push_value = False
+                        if branch_stack[-1][1] is False:
+                            push_value = False
                         # Push a new node on the stack
                         branch_stack += [[True, push_value, len(out)]]
                         # If the new node doesn't affect visibility, print it
@@ -374,14 +398,15 @@ def acme(toplevel_file, output) -> List[str]:
                             branch_stack[-1][1] = not branch_stack[-1][1]
                         # If the parent node disabled visibility, this should
                         # not enable it back
-                        if branch_stack[-1][1] is False: push_value = False
+                        if branch_stack[-1][1] is False:
+                            push_value = False
 
                         # If the outer branch didn't affect visibility and this
                         # one isn't either, put the processed elif to output.
                         # The outer branch then doesn't need to have its #endif
                         # written, so setting it to True.
                         if branch_stack[-1][1] is None and push_value is None:
-                            branch_stack[-1][1] = True # TODO: false? does it matter?
+                            branch_stack[-1][1] = True  # TODO: false? does it matter?
                             out += ['{}#elif {}{}\n'.format(indent, value, comment)]
                         # If the outer branch didn't affect visibility and this
                         # does, put just else to output. That also means we
@@ -458,14 +483,14 @@ def acme(toplevel_file, output) -> List[str]:
                 # Include
                 match = include_rx.match(line)
                 if match:
-                    include:str = match.group('file')
+                    include: str = match.group('file')
                     is_local = match.group('quote') == '"'
                     # Local includes or includes from dependent projects, recurse
-                    if (is_local or include.partition('/')[0] in local_include_prefixes) and not include in local_includes_noexpand:
+                    if (is_local or include.partition('/')[0] in local_include_prefixes) and include not in local_includes_noexpand:
                         # A header corresponding to an implementation file
                         if is_local and '/' not in include:
                             absolute_include = os.path.join(os.path.dirname(file), include)
-                            if not os.path.exists(absolute_include): # pragma: no cover
+                            if not os.path.exists(absolute_include):  # pragma: no cover
                                 for path in paths:
                                     relative_include = os.path.join(path, include)
                                     if os.path.exists(relative_include):
@@ -480,7 +505,7 @@ def acme(toplevel_file, output) -> List[str]:
                                 absolute_include = os.path.join(path, include)
                                 if os.path.exists(absolute_include):
                                     break
-                            else: # pragma: no cover
+                            else:  # pragma: no cover
                                 logging.fatal("Can't find %s in any of %s", include, paths)
                                 assert False
 
@@ -501,7 +526,8 @@ def acme(toplevel_file, output) -> List[str]:
                         includeline = match.group('include') + '\n'
 
                         # Already spotted, don't do anything
-                        if includeline in all_includes: continue
+                        if includeline in all_includes:
+                            continue
 
                         # If the include is wrapped in a preprocessor branch
                         # other than the include guard (i.e., it starts at a
@@ -516,7 +542,9 @@ def acme(toplevel_file, output) -> List[str]:
                         # {{includes}} placeholder.
                         else:
                             if not new_includes:
-                                logging.warning("Includes found before an {{includes}} placeholder, the resulting file will have them on the top")
+                                logging.warning(
+                                    "Includes found before an {{includes}} placeholder, the resulting file will have "
+                                    "them on the top")
                                 new_includes += [set()]
                             new_includes[-1].add(includeline)
 
@@ -573,7 +601,8 @@ def acme(toplevel_file, output) -> List[str]:
         assert len(branch_stack) == 1
 
         # Drop empty liness off the end
-        while out and not out[-1].strip(): out.pop()
+        while out and not out[-1].strip():
+            out.pop()
 
         # Return parsed lines, stuff from includes in front
         return includes_out + out
@@ -589,7 +618,8 @@ def acme(toplevel_file, output) -> List[str]:
                 sorted_includes = sort_includes(new_includes[0])
                 lines = lines[:i] + sorted_includes + lines[i + 1:]
                 new_includes.pop(0)
-                if not new_includes: break
+                if not new_includes:
+                    break
                 i = i + len(sorted_includes)
             else:
                 i = i + 1
@@ -614,17 +644,19 @@ def acme(toplevel_file, output) -> List[str]:
         placeholder = '{{{{revision{}}}}}'.format('' if path == '*' else ':' + path)
         revision = None
         for i, line in enumerate(lines):
-            if not placeholder in line: continue
+            if placeholder not in line:
+                continue
             if not revision:
                 # Find the file where the revision should be fetched
-                if path == '*': cwd = os.path.dirname(os.path.realpath(toplevel_file))
+                if path == '*':
+                    cwd = os.path.dirname(os.path.realpath(toplevel_file))
                 else:
                     for file in parsed_files:
                         realfile = os.path.realpath(file)
                         if path in realfile:
                             cwd = os.path.dirname(realfile)
                             break
-                    else: # pragma: no cover
+                    else:  # pragma: no cover
                         logging.fatal("No matching file found for expanding %s", placeholder)
                         assert False
 
@@ -633,7 +665,8 @@ def acme(toplevel_file, output) -> List[str]:
 
     # Create the output directory
     output_dir = os.path.dirname(output)
-    if not os.path.exists(output_dir): os.makedirs(output_dir)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
     # Perform some stats on file contents, passing them to stdin, running in
     # the (freshly created) output directory
@@ -641,9 +674,11 @@ def acme(toplevel_file, output) -> List[str]:
         placeholder = '{{{{stats:{}}}}}'.format(id)
         stats = None
         for i, line in enumerate(lines):
-            if not placeholder in line: continue
+            if placeholder not in line:
+                continue
             if not stats:
-                stats = subprocess.check_output(command, cwd=output_dir, input=''.join(lines).encode('utf-8'), shell=True).decode('utf-8').strip()
+                stats = subprocess.check_output(command, cwd=output_dir, input=''.join(lines).encode('utf-8'),
+                                                shell=True).decode('utf-8').strip()
             lines[i] = line.replace(placeholder, stats)
 
     logging.info('Writing %i lines to %s', len(lines), output)
@@ -651,7 +686,8 @@ def acme(toplevel_file, output) -> List[str]:
         for line in lines:
             of.write(line.encode('utf-8'))
 
-if __name__ == '__main__': # pragma: no cover
+
+if __name__ == '__main__':  # pragma: no cover
     parser = argparse.ArgumentParser(
         description=r"""Creates single-header libraries from given top-level input file.""",
         epilog="""If output exists and is a directory, the file is saved inside with the same name as the input.""")
@@ -673,6 +709,7 @@ if __name__ == '__main__': # pragma: no cover
 
     # Otherwise assume it's a filename, create all directories above it if they
     # don't exist
-    else: os.makedirs(os.path.dirname(output), exist_ok=True)
+    else:
+        os.makedirs(os.path.dirname(output), exist_ok=True)
 
     acme(args.file, output)
