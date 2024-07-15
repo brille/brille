@@ -15,7 +15,8 @@ def get_cmake():
     # If cmake is a known module, import it and use it to tell us its binary directory
     from importlib.util import find_spec
 
-    if find_spec("cmake").loader is not None:
+    cmake_spec = find_spec("cmake")
+    if cmake_spec is not None and cmake_spec.loader is not None:
         import cmake
 
         return str(Path(cmake.CMAKE_BIN_DIR) / "cmake")
@@ -26,7 +27,8 @@ def get_cmake():
 def get_ninja_cmake_args():
     from importlib.util import find_spec
 
-    if find_spec("ninja").loader is not None:
+    ninja_spec = find_spec("ninja")
+    if ninja_spec is not None and ninja_spec.loader is not None:
         import ninja
 
         ninja_executable_path = Path(ninja.BIN_DIR) / "ninja"
