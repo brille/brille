@@ -8,7 +8,7 @@ def _make(to_type, args):
 
 # def Lattice(values, /, *, spacegroup=None, symmetry=None, basis=None, **kwargs):
 def Lattice(values, spacegroup=None, symmetry=None, basis=None, **kwargs):
-    """  Construct a space-spanning lattice in three dimensions
+    """Construct a space-spanning lattice in three dimensions
 
     A space-spanning lattice in :math:`N` dimensions has :math:`N` basis vectors
     which can be described fully by their :math:`N` lengths and the
@@ -63,7 +63,7 @@ def Lattice(values, spacegroup=None, symmetry=None, basis=None, **kwargs):
         * a letter and digit, denoting unique-axis and origin choice
         * a permutation of 'abc' with possible '-' before one of the letters, denoting axis permutation
         * or 'R' or 'H' for trigonal systems with Rhombohedral or Hexagonal lattice settings, respectively.
-        
+
         Acceptable values are contained in the C++ source code in the seventh column of
         `this table <https://github.com/brille/brille/blob/eecb4cb28227665908793abc47e88c69518c09fc/src/spg_database.cpp#L63-L610>`_
         with each line representing one spacegroup with values, in order, defined by the
@@ -87,14 +87,19 @@ def Lattice(values, spacegroup=None, symmetry=None, basis=None, **kwargs):
     from ._brille import Lattice as _Lattice, Symmetry as _Symmetry, Basis as _Basis
 
     if isinstance(spacegroup, str):
-        spacegroup = spacegroup,
+        spacegroup = (spacegroup,)
     if spacegroup is None:
         spacegroup = tuple()
     if len(spacegroup) and not all([isinstance(x, str) for x in spacegroup]):
-        raise ValueError("Keyword argument spacegroup should be one of: str, (str,), or (str, str)")
+        raise ValueError(
+            "Keyword argument spacegroup should be one of: str, (str,), or (str, str)"
+        )
 
     if basis is not None and symmetry is None and len(spacegroup) == 0:
-        raise ValueError("Providing basis without symmetry or spacegroup is not allowed")
+        raise ValueError(
+            "Providing basis without symmetry or spacegroup is not allowed"
+        )
+
     if symmetry is not None and len(spacegroup):
         raise ValueError("Providing both spacegroup and symmetry is not allowed")
 
@@ -106,7 +111,7 @@ def Lattice(values, spacegroup=None, symmetry=None, basis=None, **kwargs):
     #
     # If the user provided a 2-tuple then it must be (lengths, angles), otherwise it must be vectors
     # We use less-than to allow a user to provide (vectors,) as the first input
-    args = values if len(values) < 3 else (values, )
+    args = values if len(values) < 3 else (values,)
 
     if symmetry is None and basis is None:
         return _Lattice(*args, *spacegroup, **kwargs)
@@ -116,4 +121,6 @@ def Lattice(values, spacegroup=None, symmetry=None, basis=None, **kwargs):
     if basis is None:
         return _Lattice(*args, _make(_Symmetry, symmetry), **kwargs)
     else:
-        return _Lattice(*args, _make(_Symmetry, symmetry), _make(_Basis, basis), **kwargs)
+        return _Lattice(
+            *args, _make(_Symmetry, symmetry), _make(_Basis, basis), **kwargs
+        )

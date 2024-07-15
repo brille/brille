@@ -75,9 +75,7 @@ def simplify_expression(what, expression, forced_defines=None):
     # Go through all forced defines and replace them with their values
     for name, enabled in forced_defines.items():
         if name in expression:
-            expression = expression.replace(
-                f"defined({name})", "1" if enabled else "0"
-            )
+            expression = expression.replace(f"defined({name})", "1" if enabled else "0")
 
     # Now comes the ugly part, simplify as long as there's something
     modified = True
@@ -103,9 +101,9 @@ def simplify_expression(what, expression, forced_defines=None):
         match = alone_in_parentheses_rx.search(expression)
         if match:
             expression = (
-                expression[:match.start()]
+                expression[: match.start()]
                 + match.group("inside")
-                + expression[match.end():]
+                + expression[match.end() :]
             )
             modified = True
 
@@ -140,7 +138,7 @@ def simplify_expression(what, expression, forced_defines=None):
                                 expression = (
                                     expression[: match.start()]
                                     + repl
-                                    + expression[i + 1:]
+                                    + expression[i + 1 :]
                                 )
                                 break
 
@@ -693,7 +691,7 @@ def acme(toplevel_file, output) -> List[str]:
         while i != len(lines):
             if lines[i].strip() == "// {{includes}}":
                 sorted_includes = sort_includes(new_includes[0])
-                lines = lines[:i] + sorted_includes + lines[i + 1:]
+                lines = lines[:i] + sorted_includes + lines[i + 1 :]
                 new_includes.pop(0)
                 if not new_includes:
                     break
@@ -708,7 +706,7 @@ def acme(toplevel_file, output) -> List[str]:
     if copyrights:
         for i, line in enumerate(lines):
             if line.strip() == "{{copyright}}":
-                lines = lines[:i] + sort_copyrights(copyrights) + lines[i + 1:]
+                lines = lines[:i] + sort_copyrights(copyrights) + lines[i + 1 :]
                 break
         else:
             logging.warning(

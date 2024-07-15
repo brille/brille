@@ -15,16 +15,18 @@ def get_cmake():
     # If cmake is a known module, import it and use it to tell us its binary directory
     from importlib.util import find_spec
 
-    if find_spec('cmake').loader is not None:
+    if find_spec("cmake").loader is not None:
         import cmake
-        return str(Path(cmake.CMAKE_BIN_DIR) / 'cmake')
 
-    return 'cmake'
+        return str(Path(cmake.CMAKE_BIN_DIR) / "cmake")
+
+    return "cmake"
 
 
 def get_ninja_cmake_args():
     from importlib.util import find_spec
-    if find_spec('ninja').loader is not None:
+
+    if find_spec("ninja").loader is not None:
         import ninja
 
         ninja_executable_path = Path(ninja.BIN_DIR) / "ninja"
@@ -134,18 +136,14 @@ class CMakeBuild(build_ext):
             build_temp.mkdir(parents=True)
 
         # skip building the testing target and single-header target, etc.
-        build_args += ['--target', '_brille']
+        build_args += ["--target", "_brille"]
 
         cmake = get_cmake()
-        subprocess.run(
-            [cmake, ext.sourcedir, *cmake_args], cwd=build_temp, check=True
-        )
-        subprocess.run(
-            [cmake, "--build", ".", *build_args], cwd=build_temp, check=True
-        )
+        subprocess.run([cmake, ext.sourcedir, *cmake_args], cwd=build_temp, check=True)
+        subprocess.run([cmake, "--build", ".", *build_args], cwd=build_temp, check=True)
 
 
 setup(
-    ext_modules=[CMakeExtension('brille._brille')],
+    ext_modules=[CMakeExtension("brille._brille")],
     cmdclass=dict(build_ext=CMakeBuild),
 )

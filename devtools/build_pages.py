@@ -60,7 +60,7 @@ echo_run rsync -a --delete "${{html_dir}}/" /build/pages
 
 
 def find_wheel(p):
-    return [x.name for x in p.iterdir() if x.is_file() and 'cp39-musllinux' in str(x)]
+    return [x.name for x in p.iterdir() if x.is_file() and "cp39-musllinux" in str(x)]
 
 
 def main(build_wheel, wheelhouse, output):
@@ -77,12 +77,14 @@ def main(build_wheel, wheelhouse, output):
 
     if len(wheel) != 1:
         # Build the musllinux wheel
-        image = get_image(client, 'quay.io/pypa/musllinux_1_1_x86_64')
-        volumes = get_volumes(client, {'build': folder, 'conan': None})
+        image = get_image(client, "quay.io/pypa/musllinux_1_1_x86_64")
+        volumes = get_volumes(client, {"build": folder, "conan": None})
         print(volumes)
-        write_entrypoint(ENTRYPOINT, folder, 'cp39-cp39')
+        write_entrypoint(ENTRYPOINT, folder, "cp39-cp39")
         try:
-            result = client.run(image, ['sh', '/build/entrypoint.sh'], volumes=volumes, tty=True)
+            result = client.run(
+                image, ["sh", "/build/entrypoint.sh"], volumes=volumes, tty=True
+            )
             print(result)
         except exceptions.DockerException as ex:
             raise RuntimeError(ex)
@@ -90,23 +92,48 @@ def main(build_wheel, wheelhouse, output):
 
     # Use the built wheel to build the documentation
     if len(wheel) != 1:
-        raise RuntimeError(f"Failed to find single musllinux wheel; found {wheel} instead")
-    image = get_image(client, 'docker.io/brille/docact:v5.0.0')
-    volumes = get_volumes(client, {'wheelhouse': folder, 'build': get_folder(output), 'conan': None})
-    write_entrypoint(PAGES_ENTRYPOINT, folder, sub={'wheel': wheel[0]})
+        raise RuntimeError(
+            f"Failed to find single musllinux wheel; found {wheel} instead"
+        )
+    image = get_image(client, "docker.io/brille/docact:v5.0.0")
+    volumes = get_volumes(
+        client, {"wheelhouse": folder, "build": get_folder(output), "conan": None}
+    )
+    write_entrypoint(PAGES_ENTRYPOINT, folder, sub={"wheel": wheel[0]})
     try:
-        result = client.run(image, ['sh', '/wheelhouse/entrypoint.sh'], volumes=volumes, tty=True)
+        result = client.run(
+            image, ["sh", "/wheelhouse/entrypoint.sh"], volumes=volumes, tty=True
+        )
     except exceptions.DockerException:
         raise RuntimeError()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description='Build image-based Sphinx documentation locally for brille')
-    parser.add_argument('-s', '--skip-wheel', action='store_true', help='Skip building the musl linux wheel if it already exists in WHEELHOUSE')
-    parser.add_argument('-w', '--wheelhouse', type=str, default='wheelhouse', help='Wheelhouse directory, default="wheelhouse"')
-    parser.add_argument('-o', '--output', type=str, default='pages_build', help='Output HTML paged directory, default="pages_build"')
+
+    parser = argparse.ArgumentParser(
+        description="Build image-based Sphinx documentation locally for brille"
+    )
+    parser.add_argument(
+        "-s",
+        "--skip-wheel",
+        action="store_true",
+        help="Skip building the musl linux wheel if it already exists in WHEELHOUSE",
+    )
+    parser.add_argument(
+        "-w",
+        "--wheelhouse",
+        type=str,
+        default="wheelhouse",
+        help='Wheelhouse directory, default="wheelhouse"',
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        default="pages_build",
+        help='Output HTML paged directory, default="pages_build"',
+    )
     args = parser.parse_args()
 
     main(not args.skip_wheel, args.wheelhouse, args.output)
-

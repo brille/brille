@@ -39,16 +39,18 @@ def main():
 
     client = get_client()
     image = get_image(client)
-    folder = get_folder('cmake_build')
-    volumes = get_volumes(client, {'build': folder, 'conan': None})
+    folder = get_folder("cmake_build")
+    volumes = get_volumes(client, {"build": folder, "conan": None})
 
     write_entrypoint(ENTRYPOINT, folder)
     try:
-        result = client.run(image, ['sh', '/build/entrypoint.sh'], volumes=volumes, tty=True)
+        result = client.run(
+            image, ["sh", "/build/entrypoint.sh"], volumes=volumes, tty=True
+        )
         print(result)
     except exceptions.DockerException as ex:
         raise RuntimeError(ex)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -24,10 +24,12 @@ Plotting utilities for ``brille``
 .. autosummary::
     :toctree: _generate
 """
+
 from importlib.util import find_spec
+
 __all__ = []
 
-if find_spec('matplotlib') is None:
+if find_spec("matplotlib") is None:
     print("Matplotlib not found; plotting functions will not be available")
 else:
     import numpy as np
@@ -35,12 +37,18 @@ else:
     from mpl_toolkits.mplot3d.axes3d import Axes3D
     from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 
-    __all__.extend([
-        'plot', 'plot_points', 'plot_points_with_lines', 'plot_bz',
-        'plot_polyhedron', 'plot_tetrahedron', 'plot_tetrahedra',
-        'make_colours'
-    ])
-
+    __all__.extend(
+        [
+            "plot",
+            "plot_points",
+            "plot_points_with_lines",
+            "plot_bz",
+            "plot_polyhedron",
+            "plot_tetrahedron",
+            "plot_tetrahedra",
+            "make_colours",
+        ]
+    )
 
     def _check_axes(axs=None):
         if axs is None:
@@ -50,7 +58,6 @@ else:
                 axs = Axes3D(pp.figure())
             pp.gcf().add_axes(axs)
         return axs
-
 
     def plot(*args, **kwds):
         """A gateway plotting function which infers intention from its input.
@@ -85,6 +92,7 @@ else:
             exception is raised.
         """
         from .bound import BrillouinZone, Polyhedron, __grid_types__
+
         if len(args) == 1:
             if isinstance(args[0], (BrillouinZone, *__grid_types__)):
                 return plot_bz(*args, **kwds)
@@ -93,13 +101,14 @@ else:
             else:
                 return plot_points(*args, **kwds)
         if len(args) == 2:
-            if (isinstance(args[1], np.ndarray)) and not issubclass(args[1].dtype.type, np.integer):
+            if (isinstance(args[1], np.ndarray)) and not issubclass(
+                args[1].dtype.type, np.integer
+            ):
                 return plot_points_with_lines(*args, **kwds)
             else:
                 return plot_tetrahedra(*args, **kwds)
         else:
             raise Exception("Unknown number of non-keyword arguments for plot")
-
 
     def plot_points(x, axs=None, title=None, show=True):
         """Plot points.
@@ -124,7 +133,6 @@ else:
             axs.set_title(title)
         if show:
             pp.show()
-
 
     def plot_points_with_lines(x, y, axs=None, title=None, show=True):
         """Plot points with lines.
@@ -158,10 +166,20 @@ else:
         if show:
             pp.show()
 
-
-    def plot_bz(bz, axs=None, origin=None, Q=None, units='invA', irreducible=True,
-                face_vectors=False, show=True,
-                color='b', edgecolor='k', linewidth=1, alpha=0.2):
+    def plot_bz(
+        bz,
+        axs=None,
+        origin=None,
+        Q=None,
+        units="invA",
+        irreducible=True,
+        face_vectors=False,
+        show=True,
+        color="b",
+        edgecolor="k",
+        linewidth=1,
+        alpha=0.2,
+    ):
         """Plot a :py:class:`BrillouinZone` or related object.
 
         Draw the faces of a first Brillouin zone and/or irreducible Brillouin zone
@@ -238,12 +256,13 @@ else:
             The value of `axs` after plotting.
         """
         from .bound import __grid_types__
+
         axs = _check_axes(axs)
         if isinstance(bz, __grid_types__):
             if Q is None:
-                if units == 'rlu':
+                if units == "rlu":
                     Q = bz.rlu
-                elif units == 'invA':
+                elif units == "invA":
                     Q = bz.invA
             bz = bz.BrillouinZone
         if origin is not None and not isinstance(origin, np.ndarray):
@@ -251,55 +270,59 @@ else:
         if origin is None or origin.size != 3 or origin.ndim > 1:
             origin = np.array((0, 0, 0))
         # we always draw the 1st Brillouin zone
-        if units == 'rlu':
+        if units == "rlu":
             verts = bz.vertices
-        elif units == 'primitive':
+        elif units == "primitive":
             verts = bz.vertices_primitive
         else:
             verts = bz.vertices_invA
         bzcolor = color if not irreducible else "w"
         bzedgecolor = edgecolor if not irreducible else "0.5"
-        bzlinestyle = '-' if not irreducible else '--'
+        bzlinestyle = "-" if not irreducible else "--"
         bzalpha = alpha if not irreducible else 0
 
         # the 1st Brillouin zone has on-face points equal to half the normals
-        polybz, xyz_min, xyz_max = _make_poly_collection(verts,
-                                                         bz.vertices_per_face,
-                                                         origin=origin,
-                                                         color=bzcolor,
-                                                         edgecolor=bzedgecolor,
-                                                         linestyle=bzlinestyle,
-                                                         linewidth=linewidth,
-                                                         alpha=bzalpha)
+        polybz, xyz_min, xyz_max = _make_poly_collection(
+            verts,
+            bz.vertices_per_face,
+            origin=origin,
+            color=bzcolor,
+            edgecolor=bzedgecolor,
+            linestyle=bzlinestyle,
+            linewidth=linewidth,
+            alpha=bzalpha,
+        )
         if irreducible:
-            if units == 'rlu':
+            if units == "rlu":
                 ir_verts = bz.ir_vertices
-            elif units == 'primitive':
+            elif units == "primitive":
                 ir_verts = bz.ir_vertices_primitive
             else:
                 ir_verts = bz.ir_vertices_invA
             if ir_verts.size > 0:
-                polyir, _, _ = _make_poly_collection(ir_verts,
-                                                     bz.ir_vertices_per_face,
-                                                     origin=origin,
-                                                     color=color,
-                                                     edgecolor=edgecolor,
-                                                     linestyle='-',
-                                                     linewidth=linewidth,
-                                                     alpha=alpha)
+                polyir, _, _ = _make_poly_collection(
+                    ir_verts,
+                    bz.ir_vertices_per_face,
+                    origin=origin,
+                    color=color,
+                    edgecolor=edgecolor,
+                    linestyle="-",
+                    linewidth=linewidth,
+                    alpha=alpha,
+                )
                 axs.add_collection3d(polyir)
         axs.add_collection3d(polybz)
         if face_vectors:
-            if units == 'rlu':
+            if units == "rlu":
                 norms = bz.normals
                 point = bz.points
-            elif units == 'primitive':
+            elif units == "primitive":
                 norms = bz.normals_primitive
                 point = bz.points_primitive
             else:
                 norms = bz.normals_invA
                 point = bz.points_invA
-            fvecs = [np.array([p, p+n]) for p, n in zip(point, norms)]
+            fvecs = [np.array([p, p + n]) for p, n in zip(point, norms)]
             lcol = Line3DCollection(fvecs)
             axs.add_collection3d(lcol)
         axs.set_xlim(left=xyz_min[0], right=xyz_max[0])
@@ -313,9 +336,16 @@ else:
             pp.show()
         return axs
 
-
-    def _make_poly_collection(verts, vpf, origin=None, color='b', edgecolor='k',
-                              linestyle='-', linewidth=1, alpha=0.5):
+    def _make_poly_collection(
+        verts,
+        vpf,
+        origin=None,
+        color="b",
+        edgecolor="k",
+        linestyle="-",
+        linewidth=1,
+        alpha=0.5,
+    ):
         # vpf lists the ordered vertices which make up each facet
         # for each facet, pick-out the vertices which define its polygon face
         patches = [np.array([verts[j, :] for j in i]) for i in vpf]
@@ -327,40 +357,50 @@ else:
         xyz_min = np.array([x.min() for x in np.vsplit(verts.transpose(), 3)])
         xyz_max = np.array([x.max() for x in np.vsplit(verts.transpose(), 3)])
         # plus some nice-for-plotting padding
-        dif = xyz_max-xyz_min
-        xyz_min -= dif/20
-        xyz_max += dif/20
+        dif = xyz_max - xyz_min
+        xyz_min -= dif / 20
+        xyz_max += dif / 20
         # and create the collection of polygons in 3D
-        collection = Poly3DCollection(patches, edgecolor=edgecolor,
-                                      linestyle=linestyle, linewidth=linewidth,
-                                      alpha=alpha)
+        collection = Poly3DCollection(
+            patches,
+            edgecolor=edgecolor,
+            linestyle=linestyle,
+            linewidth=linewidth,
+            alpha=alpha,
+        )
         # which requires that the face color be set after the fact
         collection.set_facecolor(color)
         return (collection, xyz_min, xyz_max)
 
-
     def __cube(p_0, p_1):
         """Return the patches of a cube bounded by points p_0 and p_1."""
-        d_x = np.array((p_1[0]-p_0[0], 0, 0))
-        d_y = np.array((0, p_1[1]-p_0[1], 0))
-        d_z = np.array((0, 0, p_1[2]-p_0[2]))
-        verts = p_0+np.array([d_x-d_x,      # 0 (000)
-                              d_x,          # 1 (100)
-                              d_x+d_y,      # 2 (110)
-                              d_y,          # 3 (010)
-                              d_z,          # 4 (001)
-                              d_z+d_x,      # 5 (101)
-                              d_z+d_x+d_y,  # 6 (111)
-                              d_z+d_y])     # 7 (011)
-        idx = np.array([[0, 1, 2, 3],   # (000)-(100)-(110)-(010)
-                        [0, 1, 5, 4],   # (000)-(100)-(101)-(001)
-                        [0, 4, 7, 3],   # (000)-(001)-(011)-(010)
-                        [4, 5, 6, 7],   # (001)-(101)-(111)-(011)
-                        [6, 2, 1, 5],   # (111)-(110)-(100)-(101)
-                        [2, 6, 7, 3]])  # (110)-(111)-(011)-(010)
+        d_x = np.array((p_1[0] - p_0[0], 0, 0))
+        d_y = np.array((0, p_1[1] - p_0[1], 0))
+        d_z = np.array((0, 0, p_1[2] - p_0[2]))
+        verts = p_0 + np.array(
+            [
+                d_x - d_x,  # 0 (000)
+                d_x,  # 1 (100)
+                d_x + d_y,  # 2 (110)
+                d_y,  # 3 (010)
+                d_z,  # 4 (001)
+                d_z + d_x,  # 5 (101)
+                d_z + d_x + d_y,  # 6 (111)
+                d_z + d_y,
+            ]
+        )  # 7 (011)
+        idx = np.array(
+            [
+                [0, 1, 2, 3],  # (000)-(100)-(110)-(010)
+                [0, 1, 5, 4],  # (000)-(100)-(101)-(001)
+                [0, 4, 7, 3],  # (000)-(001)-(011)-(010)
+                [4, 5, 6, 7],  # (001)-(101)-(111)-(011)
+                [6, 2, 1, 5],  # (111)-(110)-(100)-(101)
+                [2, 6, 7, 3],
+            ]
+        )  # (110)-(111)-(011)-(010)
         patches = [verts[x] for x in idx]
         return patches
-
 
     def plot_polyhedron(poly, axs=None, setlims=True, show=True, **kwds):
         """Plot a single polyhedron.
@@ -415,9 +455,9 @@ else:
         # pylint: disable=no-member
         axs = _check_axes(axs)
         # the 1st Brillouin zone has on-face points equal to half the normals
-        coll, xyz_min, xyz_max = _make_poly_collection(poly.vertices,
-                                                       poly.faces,
-                                                       **kwds)
+        coll, xyz_min, xyz_max = _make_poly_collection(
+            poly.vertices, poly.faces, **kwds
+        )
         axs.add_collection3d(coll)
         if setlims:
             axs.set_xlim(left=xyz_min[0], right=xyz_max[0])
@@ -426,7 +466,6 @@ else:
         if show:
             pp.show()
         return axs
-
 
     def plot_tetrahedron(verts, axs=None, show=True, **kwds):
         """Plot a single tetrahedron.
@@ -471,9 +510,9 @@ else:
         :py:class:`matplotlib:axes:Axes`
             The value of `axs` after plotting.
         """
-        if not (verts.ndim == 2 and verts.shape[0]==4 and verts.shape[1]==3):
-            raise RuntimeError('Input are not the vertices of a tetrahedron')
-        vpf = np.array([[0,1,2],[0,3,1],[3,2,1],[0,2,3]])
+        if not (verts.ndim == 2 and verts.shape[0] == 4 and verts.shape[1] == 3):
+            raise RuntimeError("Input are not the vertices of a tetrahedron")
+        vpf = np.array([[0, 1, 2], [0, 3, 1], [3, 2, 1], [0, 2, 3]])
         pc, _, _ = _make_poly_collection(verts, vpf, **kwds)
         # Add the Poly3DCollection to existing or new axes:
         axs = _check_axes(axs)
@@ -481,7 +520,6 @@ else:
         if show:
             pp.show()
         return axs
-
 
     def plot_tetrahedra(allverts, tetidx, axs=None, **kwds):
         """Plot a number of tetrahedra.
@@ -514,30 +552,33 @@ else:
 
         """
         if not (allverts.ndim == 2 and allverts.shape[1] == 3):
-            raise RuntimeError('Vertices are not the correct shape')
+            raise RuntimeError("Vertices are not the correct shape")
         if isinstance(tetidx, list):
             tetidx = np.array(tetidx)
         if not (tetidx.ndim == 2 and tetidx.shape[1] == 4):
-            raise RuntimeError('Tetrahedra indexes are not the correct shape')
+            raise RuntimeError("Tetrahedra indexes are not the correct shape")
         colours = make_colours(tetidx.shape[0], **kwds)
         # we want to ensure all tetrahedra end up in the same set of axes
         axs = _check_axes(axs)
         for tet, colour in zip(tetidx, colours):
             plot_tetrahedron(allverts[tet], color=colour, **kwds)
 
-
     def make_colours(n, color=None, **kwds):
         if color is None:
             from matplotlib.colors import get_named_colors_mapping
+
             color = get_named_colors_mapping().keys()
 
         from collections.abc import Iterable
+
         if isinstance(color, Iterable):
             color = list(color)
-        if isinstance(color, str) or (isinstance(color, (list, tuple)) and len(color) == 3):
+        if isinstance(color, str) or (
+            isinstance(color, (list, tuple)) and len(color) == 3
+        ):
             color = [color]
         if not isinstance(color, np.ndarray):
             color = np.array(color)
         if color.shape[0] < n:
-            color = np.tile(color, 1+n//color.shape[0])
+            color = np.tile(color, 1 + n // color.shape[0])
         return color[0:n]

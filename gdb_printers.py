@@ -19,19 +19,19 @@ class BrillePrinter:
 
 class BrilleLatticePrinter(BrillePrinter):
     def _to_string(self):
-        return str(self.method('string_repr'))
+        return str(self.method("string_repr"))
 
 
 class BrilleArrayPrinter(BrillePrinter):
     def _to_string(self):
-        string = str(self.method('to_string')).replace(r"\n", "\n")
+        string = str(self.method("to_string")).replace(r"\n", "\n")
         return f"\n{string}"
 
 
 class BrilleLatVecPrinter(BrillePrinter):
     def _to_string(self):
         array = BrilleArrayPrinter(self.val)
-        lattice = BrilleLatticePrinter(self.val['lattice'])
+        lattice = BrilleLatticePrinter(self.val["lattice"])
         return f"\n{lattice.to_string()}\n{array.to_string()}"
 
 

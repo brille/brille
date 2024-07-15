@@ -12,14 +12,15 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('.'))
+
+sys.path.insert(0, os.path.abspath("."))
 import brille._brille as brille_module
 
 # -- Project information -----------------------------------------------------
 
-project = 'brille'
-copyright = '2020, Gregory Tucker'
-author = 'Gregory Tucker'
+project = "brille"
+copyright = "2020, Gregory Tucker"
+author = "Gregory Tucker"
 
 version = brille_module.__version__  # just the 'short' version
 release = brille_module.version  # the 'full' version information
@@ -31,21 +32,21 @@ release = brille_module.version  # the 'full' version information
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.napoleon',
-    'breathe',
-    'sphinxcontrib.katex',
-    'sphinxcontrib.tikz',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
+    "breathe",
+    "sphinxcontrib.katex",
+    "sphinxcontrib.tikz",
     #'exhale',
 ]
 
 # Useful mappings: https://gist.github.com/bskinn/0e164963428d4b51017cebdb6cda5209
 intersphinx_mapping = {
-  'euphonic': ('https://euphonic.readthedocs.io/en/stable/', None),
-  'brilleu': ('https://brille.github.io/brilleu/latest/', None),
-  'numpy': ('https://numpy.org/doc/stable/', None),
+    "euphonic": ("https://euphonic.readthedocs.io/en/stable/", None),
+    "brilleu": ("https://brille.github.io/brilleu/latest/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
 }
 
 # The image now has sphinxcontrib-katex v0.9.10, which uses katex 0.16.10
@@ -61,13 +62,13 @@ napoleon_use_ivar = True
 napoleon_use_param = False
 napoleon_use_admonition_for_notes = True
 
-tikz_proc_suite = 'pdf2svg'  # We are building exclusively in our own container, no ReadTheDocs ghostscript restriction
+tikz_proc_suite = "pdf2svg"  # We are building exclusively in our own container, no ReadTheDocs ghostscript restriction
 
-breathe_projects = {'brille': '_build/doxygenxml/'}
-breathe_default_project = 'brille'
+breathe_projects = {"brille": "_build/doxygenxml/"}
+breathe_default_project = "brille"
 # The naming of this breath directive seems backwards, but for it to make any sense
 # the keys must be the extensions and their values the associated domain(s)
-breathe_domain_by_extension = {'h': 'cpp', 'hpp': 'cpp', 'tpp': 'cpp'}
+breathe_domain_by_extension = {"h": "cpp", "hpp": "cpp", "tpp": "cpp"}
 
 # # setup the exhale extension
 # exhale_args = {
@@ -88,20 +89,20 @@ breathe_domain_by_extension = {'h': 'cpp', 'hpp': 'cpp', 'tpp': 'cpp'}
 
 autosummary_generate = True
 
-autoclass_content = 'both'
+autoclass_content = "both"
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
-source_suffice = '.rst'
-master_doc = 'index'
+source_suffice = ".rst"
+master_doc = "index"
 
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 # exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-exclude_patterns = ['Thumbs.db', '.DS_Store']
+exclude_patterns = ["Thumbs.db", ".DS_Store"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -120,35 +121,44 @@ exclude_patterns = ['Thumbs.db', '.DS_Store']
 #     html_context = {'css_files': ['_static/theme_overrides.css']}
 
 # Alternatively, just specify a theme:
-html_theme = 'sphinx_rtd_theme'
-html_logo = '../brille.svg'
+html_theme = "sphinx_rtd_theme"
+html_logo = "../brille.svg"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 
 def call_and_check(command, **kwds):
     from subprocess import call, CalledProcessError
+
     try:
         retcode = call(command, **kwds)
         if retcode < 0:
-            sys.stderr.write(f'{call} error code: {-retcode}\n')
+            sys.stderr.write(f"{call} error code: {-retcode}\n")
     except (CalledProcessError, OSError) as e:
-        sys.stderr.write(f'{call} execution failed: {e}\n')
+        sys.stderr.write(f"{call} execution failed: {e}\n")
 
 
 # again, following from github.com/pybind/pybind11/blob/stable/docs/conf.py:
 def generate_doxygen_xml(app):
-    build_dir = os.path.join(app.confdir, '_build')
+    build_dir = os.path.join(app.confdir, "_build")
     if not os.path.exists(build_dir):
         os.mkdir(build_dir)
 
-    call_and_check('doxygen', cwd=app.confdir)
-    call_and_check([
-        'breathe-apidoc', '--output-dir=_build/breathe', '-f', '-g', 'class,namespace', '_build/doxygenxml/'
-    ], cwd=app.confdir)
+    call_and_check("doxygen", cwd=app.confdir)
+    call_and_check(
+        [
+            "breathe-apidoc",
+            "--output-dir=_build/breathe",
+            "-f",
+            "-g",
+            "class,namespace",
+            "_build/doxygenxml/",
+        ],
+        cwd=app.confdir,
+    )
 
 
 def setup(app):
