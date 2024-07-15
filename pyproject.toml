@@ -29,8 +29,15 @@ classifiers=[
   "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
   "Operating System :: Microsoft :: Windows :: Windows 10",
   "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS :: MacOS X",
   "Programming Language :: C++",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Topic :: Scientific/Engineering :: Physics",
 ]
 dependencies = [
@@ -75,3 +82,20 @@ skip = ["cp36-*", "cp37-*", "pp*"]  # all skipped for speed, except on Windows w
 select = "*-musllinux*"
 before-test = "echo 'Override building numpy since no wheels are provided'"
 test-command = "echo 'Override test command under musl libc until we can install a numpy wheel'"
+
+
+[tool.ruff]
+line-length = 88
+extend-exclude = [
+  "docs/tutorials/*",  # some tutorial python files are referernced by line number, so do not reformat automatically
+  "profile/euphonic/*",  # out-of-date Euphoic profiling scripts
+]
+
+[tool.ruff.lint]
+extend-select = [
+  "UP",  # pyupgrade
+]
+
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"

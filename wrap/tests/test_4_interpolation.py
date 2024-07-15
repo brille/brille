@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Run tests of the interpolation functionality."""
+
 import unittest
 import numpy as np
 
@@ -89,6 +90,7 @@ def complex_scalar(Q):
 def setup_grid(iscomplex=False, halfN=(2, 2, 2)):
     """Create a grid object for interpolating."""
     from brille import Lattice, BrillouinZone, BZTrellisQcc, BZTrellisQdd
+
     lat = Lattice(((1, 1, 1), (90, 90, 90)), real_space=False)
     bz = BrillouinZone(lat)
     max_volume = lat.volume_star / (8 * np.prod(halfN))
@@ -105,10 +107,7 @@ def define_Q_points(rand=False, N=10):
         # the tests only work if the Q points are already within the first BZ
         Q = np.random.rand(N, 3) - 0.5  # (-0.5,0.5)
     else:
-        Q = np.array([[0, 0, 0],
-                      [0.1, 0, 0],
-                      [0, 0.1, 0],
-                      [0, 0, 0.1]], dtype='double')
+        Q = np.array([[0, 0, 0], [0.1, 0, 0], [0, 0.1, 0], [0, 0, 0.1]], dtype="double")
     return Q
 
 
@@ -128,7 +127,13 @@ def fe_analytic(Q, E, p):
     T = p[3]  # Temperature, K
     A = p[4]  # scale-factor
     w = fe_dispersion(Q, p)
-    S = A / np.pi * (E / 1 - np.exp(-11.602 * E / T)) * (4 * g * w) / ((E ** 2 - w ** 2) ** 2 + 4 * (g * E) ** 2)
+    S = (
+        A
+        / np.pi
+        * (E / 1 - np.exp(-11.602 * E / T))
+        * (4 * g * w)
+        / ((E**2 - w**2) ** 2 + 4 * (g * E) ** 2)
+    )
     return S
 
 
@@ -141,7 +146,7 @@ class Interpolate(unittest.TestCase):
         Qi = define_Q_points()
         bzg.fill(sqwfunc_ones(bzg.rlu), (1,), bzg.rlu, (0, 3))
         interpolated_ones, _ = bzg.interpolate_at(Qi)
-        self.assertTrue(np.allclose(interpolated_ones, 1.))
+        self.assertTrue(np.allclose(interpolated_ones, 1.0))
 
     def test_b_x(self):
         """Test with data as Qx."""
@@ -243,7 +248,10 @@ class Interpolate(unittest.TestCase):
     def test_i_iron_self_consistency(self):
         """Test with data as iron spinwaves, but test only *at* grid points."""
         from brille import Lattice, BrillouinZone, BZTrellisQdc
-        lat = Lattice(((2.87, 2.87, 2.87), np.pi / 2 * np.array((1, 1, 1))), spacegroup="Im-3m")
+
+        lat = Lattice(
+            ((2.87, 2.87, 2.87), np.pi / 2 * np.array((1, 1, 1))), spacegroup="Im-3m"
+        )
         bz = BrillouinZone(lat)  # constructs an irreducible Bz by default
         bzg = BZTrellisQdc(bz, 0.125)
         Q = bzg.rlu
@@ -257,6 +265,7 @@ class Interpolate(unittest.TestCase):
     def test_j_stored_data_references(self):
         """Ensure that the reference count for stored data is incremented"""
         from sys import getrefcount as r
+
         bzg = setup_grid()
         val = sqwfunc_xyz(bzg.rlu)
         vec = vecfun_rotz(bzg.rlu, np.pi / 180 * 40)
@@ -268,5 +277,5 @@ class Interpolate(unittest.TestCase):
         self.assertTrue(vecr + 1 == r(vec))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

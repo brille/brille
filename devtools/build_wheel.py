@@ -30,20 +30,23 @@ def main(variant=None):
 
     client = get_client()
     image = get_image(client)
-    folder = get_folder('wheelhouse')
-    volumes = get_volumes(client, {'build': folder, 'conan': None})
+    folder = get_folder("wheelhouse")
+    volumes = get_volumes(client, {"build": folder, "conan": None})
 
     write_entrypoint(ENTRYPOINT, folder, variant=variant)
     try:
-        result = client.run(image, ['sh', '/build/entrypoint.sh'], volumes=volumes, tty=True)
+        result = client.run(
+            image, ["sh", "/build/entrypoint.sh"], volumes=volumes, tty=True
+        )
         print(result)
     except exceptions.DockerException as ex:
-        raise RuntimeError()
+        raise RuntimeError(ex)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from argparse import ArgumentParser
+
     parser = ArgumentParser()
-    parser.add_argument('-p', '--python', type=str, default='cp312-cp312')
+    parser.add_argument("-p", "--python", type=str, default="cp312-cp312")
     args = parser.parse_args()
     main(variant=args.python)

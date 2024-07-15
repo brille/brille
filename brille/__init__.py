@@ -32,12 +32,78 @@ connected point network.
 .. autosummary::
     :toctree: _generate
 """
-from .bound import *
+
+from .bound import (
+    __version__,
+    version,
+    AngleUnit,
+    LengthUnit,
+    Bravais,
+    RotatesLike,
+    NodeType,
+    real_space_tolerance,
+    reciprocal_space_tolerance,
+    ApproxConfig,
+    Basis,
+    HallSymbol,
+    Spacegroup,
+    Pointgroup,
+    Symmetry,
+    PointSymmetry,
+    PrimitiveTransform,
+    BrillouinZone,
+    Polyhedron,
+    LPolyhedron,
+    SortingStatus,
+    BZTrellisQcc,
+    BZTrellisQdc,
+    BZTrellisQdd,
+    BZMeshQcc,
+    BZMeshQdc,
+    BZMeshQdd,
+    BZNestQcc,
+    BZNestQdc,
+    BZNestQdd,
+    __grid_types__,
+)
 from .lattice import Lattice
 from . import utils
+from . import plotting
 
-try:
-    from . import plotting
-except ModuleNotFoundError:
-    # Build servers don't have Matplotlib installed; plotting not tested
-    pass
+
+__all__ = [
+    "__version__",
+    "version",
+    "AngleUnit",
+    "LengthUnit",
+    "Bravais",
+    "RotatesLike",
+    "NodeType",
+    "real_space_tolerance",
+    "reciprocal_space_tolerance",
+    "ApproxConfig",
+    "Basis",
+    "HallSymbol",
+    "Spacegroup",
+    "Pointgroup",
+    "Symmetry",
+    "PointSymmetry",
+    "PrimitiveTransform",
+    "BrillouinZone",
+    "Polyhedron",
+    "LPolyhedron",
+    "SortingStatus",
+    "BZTrellisQcc",
+    "BZTrellisQdc",
+    "BZTrellisQdd",
+    "BZMeshQcc",
+    "BZMeshQdc",
+    "BZMeshQdd",
+    "BZNestQcc",
+    "BZNestQdc",
+    "BZNestQdd",
+    "__grid_types__",
+    "Lattice",
+    "utils",
+    "plotting",
+]
