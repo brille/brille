@@ -80,6 +80,7 @@ skip = ["cp36-*", "cp37-*", "pp*"]  # all skipped for speed, except on Windows w
 
 [[tool.cibuildwheel.overrides]]
 select = "cp38-musllinux*"
+test-requires = []
 before-test = "echo 'Override building numpy since no wheels are provided'"
 test-command = "echo 'Override test command under musl libc until we can install a numpy wheel'"
 
