@@ -66,6 +66,7 @@ test-requires = ["numpy", "pytest"]
 test-command = "pytest {package}/wrap/tests"
 build-verbosity = 1
 skip = ["cp36-*", "cp37-*", "pp*"]  # all skipped for speed, except on Windows where PyPy builds don't work(?)
+test-skip = "cp38-musllinux*"
 
 # GitHub Actions + cibuildwheel + delvewheel leads to memory access errors that are not present
 # for cibuildwheel with or without delvewheel (but without GitHub Actions).
@@ -78,12 +79,6 @@ skip = ["cp36-*", "cp37-*", "pp*"]  # all skipped for speed, except on Windows w
 # before-build = "pip install delvewheel"
 # repair-wheel-command = "delvewheel repair -w {dest_dir} -v {wheel}"
 
-[[tool.cibuildwheel.overrides]]
-select = "*-musllinux*"
-before-test = "echo 'Override building numpy since no wheels are provided'"
-test-command = "echo 'Override test command under musl libc until we can install a numpy wheel'"
-
-
 [tool.ruff]
 line-length = 88
 extend-exclude = [
@@ -95,7 +90,6 @@ extend-exclude = [
 extend-select = [
   "UP",  # pyupgrade
 ]
-
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
