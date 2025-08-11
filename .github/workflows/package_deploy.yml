@@ -36,22 +36,16 @@ jobs:
       fail-fast: false
       matrix:
         variant:
-          - { os: ubuntu-22.04, platform: 'manylinux' }
-          - { os: ubuntu-22.04, platform: 'musllinux' }
+          - { os: ubuntu-24.04, platform: 'manylinux' }
+          - { os: ubuntu-24.04, platform: 'musllinux' }
           - { os: macos-13, platform: 'macosx' }  # Intel support
           - { os: macos-14, platform: 'macosx' }  # Apple silicon support
-          - { os: windows-2022, platform: "win" }
+          - { os: windows-2025, platform: "win" }
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      # https://cibuildwheel.pypa.io/en/stable/faq/#macos-building-cpython-38-wheels-on-arm64
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.8
-        if: runner.os == 'macOS' && runner.arch == 'ARM64'
 
       - uses: pypa/cibuildwheel@v2.19.2
         env:
@@ -70,7 +64,7 @@ jobs:
   draft:
     name: Deploy packages
     needs: [source, cibuildwheel]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: github.event_name == 'release'
     permissions:
       id-token: write
@@ -115,7 +109,7 @@ jobs:
       uses: actions/download-artifact@v4
       id: path
       with:
-        name: cibw-wheels-musllinux-ubuntu-22.04
+        name: cibw-wheels-musllinux-ubuntu-24.04
         path: wheelhouse
 
     - name: Sphinx Docker build
