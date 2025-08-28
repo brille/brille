@@ -65,8 +65,7 @@ archs = ["auto64"]
 test-requires = ["numpy", "pytest"]
 test-command = "pytest {package}/wrap/tests"
 build-verbosity = 1
-skip = ["cp36-*", "cp37-*", "pp*"]  # all skipped for speed, except on Windows where PyPy builds don't work(?)
-test-skip = "cp38-musllinux*"
+skip = ["cp38-*", "cp39-*"]  # pypy builds no longer on by default
 
 # GitHub Actions + cibuildwheel + delvewheel leads to memory access errors that are not present
 # for cibuildwheel with or without delvewheel (but without GitHub Actions).
