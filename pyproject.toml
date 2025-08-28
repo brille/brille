@@ -21,12 +21,13 @@ maintainers = [
   {name = "Gregory Tucker", email = "gregory.tucker@ess.eu"},
 ]
 description='Irreducible Brillouin zone symmetry and interpolation.'
-readme = "README.md"
+readme = {file="README.md", content-type="text/markdown"}
+license="AGPL-3.0-or-later"
+license-files=["COPYING", "lib/*/LICEN[CS]E*"]
 requires-python = ">=3.10"
 classifiers=[
-  "Development Status :: 2 - Pre-Alpha",
+  "Development Status :: 3 - Alpha",
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
   "Operating System :: Microsoft :: Windows :: Windows 10",
   "Operating System :: POSIX :: Linux",
   "Operating System :: MacOS :: MacOS X",
