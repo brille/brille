@@ -21,7 +21,7 @@ class BrilleRecipe(ConanFile):
         self.requires("catch2/3.6.0")
         self.requires("highfive/2.9.0")
         if self.settings.os == "Macos":
-            self.requires("llvm-openmp/21.1.0")
+            self.requires("llvm-openmp/20.1.6")
 
     def layout(self):
         cmake_layout(self)
