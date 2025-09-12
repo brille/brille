@@ -19,7 +19,7 @@ jobs:
     name: Build Source distribution
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0
     - run: pipx run build --sdist
@@ -36,24 +36,18 @@ jobs:
       fail-fast: false
       matrix:
         variant:
-          - { os: ubuntu-22.04, platform: 'manylinux' }
-          - { os: ubuntu-22.04, platform: 'musllinux' }
+          - { os: ubuntu-24.04, platform: 'manylinux' }
+          - { os: ubuntu-24.04, platform: 'musllinux' }
           - { os: macos-13, platform: 'macosx' }  # Intel support
           - { os: macos-14, platform: 'macosx' }  # Apple silicon support
-          - { os: windows-2022, platform: "win" }
+          - { os: windows-2025, platform: "win" }
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      # https://cibuildwheel.pypa.io/en/stable/faq/#macos-building-cpython-38-wheels-on-arm64
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.8
-        if: runner.os == 'macOS' && runner.arch == 'ARM64'
-
-      - uses: pypa/cibuildwheel@v2.19.2
+      - uses: pypa/cibuildwheel@v3.1.4
         env:
           CIBW_BUILD: "*-${{ matrix.variant.platform }}*"
           MACOSX_DEPLOYMENT_TARGET: "10.15"  # must be 10.14 for 'full' C++17 support, CIBW uses 10.9 if not set!
@@ -70,7 +64,7 @@ jobs:
   draft:
     name: Deploy packages
     needs: [source, cibuildwheel]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: github.event_name == 'release'
     permissions:
       id-token: write
@@ -101,11 +95,11 @@ jobs:
     needs: [cibuildwheel]
     steps:
     - name: Checkout brille repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         path: repository
     - name: Checkout brille.github.io repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
         repository: brille/brille.github.io
@@ -115,7 +109,7 @@ jobs:
       uses: actions/download-artifact@v4
       id: path
       with:
-        name: cibw-wheels-musllinux-ubuntu-22.04
+        name: cibw-wheels-musllinux-ubuntu-24.04
         path: wheelhouse
 
     - name: Sphinx Docker build
