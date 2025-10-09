@@ -135,7 +135,7 @@ public:
   : _shape(o._shape), _inpt(o._inpt), _sub(o._sub), _fixed(o._fixed), _first(o._first)
   {}
   explicit SubIt(const SubIt<T>* o)
-  : _shape(o->_shape), _inpt(o->_inpt), _sub(o->_sub), _fixed(o->_fixed), _first(o->first)
+  : _shape(o->_shape), _inpt(o->_inpt), _sub(o->_sub), _fixed(o->_fixed), _first(o->_first)
   {}
 
   SubIt& operator=(const SubIt<T>& o){
@@ -248,7 +248,7 @@ public:
   : _shape(o._shape), _inpt(o._inpt), _sub(o._sub), _fixed(o._fixed), _first(o._first)
   {}
   explicit SubIt2(const SubIt2<T>* o)
-  : _shape(o->_shape), _inpt(o->_inpt), _sub(o->_sub), _fixed(o->_fixed), _first(o->first)
+  : _shape(o->_shape), _inpt(o->_inpt), _sub(o->_sub), _fixed(o->_fixed), _first(o->_first)
   {}
 
   SubIt2& operator=(const SubIt2<T>& o){

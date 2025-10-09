@@ -26,10 +26,10 @@ jobs:
       fail-fast: false
       matrix:
         variant:
-          - { os: ubuntu-22.04} # current Ubuntu latest
-          - { os: macos-13}     # last Intel macOS
-          - { os: macos-14}     # current macOS latest, arm64
-          - { os: windows-2022} # current Windows latest
+          - { os: ubuntu-24.04}
+          - { os: macos-15}
+          - { os: macos-15-intel }
+          - { os: windows-2025}
         python-version: ["3.10"]
         cmake-type: ['Release']
 
