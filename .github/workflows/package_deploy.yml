@@ -38,8 +38,8 @@ jobs:
         variant:
           - { os: ubuntu-24.04, platform: 'manylinux' }
           - { os: ubuntu-24.04, platform: 'musllinux' }
-          - { os: macos-13, platform: 'macosx' }  # Intel support
-          - { os: macos-14, platform: 'macosx' }  # Apple silicon support
+          - { os: macos-15-intel, platform: 'macosx' }  # Intel support
+          - { os: macos-15, platform: 'macosx' }  # Apple silicon support
           - { os: windows-2025, platform: "win" }
 
     steps:
