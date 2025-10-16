@@ -15,7 +15,8 @@ dynamic_version(PROJECT_PREFIX "MY_BRILLE_"
 message(STATUS "DynamicVersion says : ${BRILLE_VERSION_SAFE} : ${BRILLE_VERSION}")
 # So that we can print it to the console along with the specified build type
 if (NOT SKBUILD)
-	project(brille LANGUAGES CXX VERSION ${BRILLE_VERSION} )
+	set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES "${CMAKE_CURRENT_LIST_DIR}/cmake/conan_provider.cmake")
+	project(brille LANGUAGES CXX VERSION ${BRILLE_VERSION_SAFE} )
 else()
 	project(${SKBUILD_PROJECT_NAME} LANGUAGES CXX VERSION ${SKBUILD_PROJECT_VERSION})
 	set(BRILLE_VERSION ${SKBUILD_PROJECT_VERSION})
