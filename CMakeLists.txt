@@ -27,8 +27,7 @@ message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
 
 set(BRILLE_VERSION_HEADER_DIRECTORY "${CMAKE_BINARY_DIR}/gen")
 configure_file(version.hpp.in ${BRILLE_VERSION_HEADER_DIRECTORY}/version.hpp)
-add_library(version_lib version.cpp)
-target_include_directories(version_lib PUBLIC ${BRILLE_VERSION_HEADER_DIRECTORY})
+add_custom_target(version_lib ALL DEPENDS ${BRILLE_VERSION_HEADER_DIRECTORY}/version.hpp)
 add_dependencies(version_lib MY_BRILLE_Version)
 set_property(SOURCE version.hpp.in APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.version)
 
