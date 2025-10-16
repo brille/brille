@@ -2,3 +2,4 @@
 
 *.png binary
 *.castep_bin binary
+.git_archival.txt export-subst
