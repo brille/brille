@@ -1,11 +1,38 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.24..3.26)
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 cmake_policy(SET CMP0017 NEW) # Prefer cmake's own files for include/find_package before CMAKE_MODULE_PATH
 cmake_policy(SET CMP0148 NEW) # Conform to no FindPythonInterp and FindPythonLibs (needed for Pybind11)
 
+# Read the version of brille
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake")
-set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES "${CMAKE_CURRENT_LIST_DIR}/cmake/conan_provider.cmake")
-project(brille)
+include(DynamicVersion)
+dynamic_version(PROJECT_PREFIX "MY_BRILLE_"
+	OUTPUT_VERSION BRILLE_VERSION_SAFE
+	OUTPUT_VERSION_FULL BRILLE_VERSION
+	OUTPUT_COMMIT BRILLE_COMMIT
+	OUTPUT_SHORT_HASH BRILLE_HASH
+)
+message(STATUS "DynamicVersion says : ${BRILLE_VERSION_SAFE} : ${BRILLE_VERSION}")
+# So that we can print it to the console along with the specified build type
+if (NOT SKBUILD)
+	project(brille LANGUAGES CXX VERSION ${BRILLE_VERSION} )
+else()
+	project(${SKBUILD_PROJECT_NAME} LANGUAGES CXX VERSION ${SKBUILD_PROJECT_VERSION})
+	set(BRILLE_VERSION ${SKBUILD_PROJECT_VERSION})
+endif()
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif(NOT CMAKE_BUILD_TYPE)
+message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
+
+set(BRILLE_VERSION_HEADER_DIRECTORY "${CMAKE_BINARY_DIR}/gen")
+configure_file(version.hpp.in ${BRILLE_VERSION_HEADER_DIRECTORY}/version.hpp)
+add_library(version_lib version.cpp)
+target_include_directories(version_lib PUBLIC ${BRILLE_VERSION_HEADER_DIRECTORY})
+add_dependencies(version_lib MY_BRILLE_Version)
+set_property(SOURCE version.hpp.in APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.version)
+
+
 set(BRILLE_LIBRARY_TARGET brille)
 set(BRILLE_PYTHON_MODULE _brille)
 set(BRILLE_PYTHON_DESTINATION brille)
@@ -50,9 +77,6 @@ else()
 endif()
 
 set(CMAKE_MACOSX_RPATH OFF)
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Debug)
-endif(NOT CMAKE_BUILD_TYPE)
 
 if (${BRILLE_LOGLEVEL} STREQUAL "VERBOSE")
   message(STATUS "Verbose logging emitted at runtime")
@@ -95,18 +119,13 @@ endif()
 
 find_package(pybind11 REQUIRED)
 
-# Read the version of brille
-include(checkgit)
-checkGitSetup(BRILLE) # defines/creates version.hpp; and library 'git_version'
-# So that we can print it to the console along with the specified build type
-message(STATUS "Build brille v${BRILLE_VERSION} with type ${CMAKE_BUILD_TYPE}")
 
 if (NOT SKBUILD)
 # Create a single header by contatenating all headers in src/
 add_custom_target(single_header
   COMMAND ${Python3_EXECUTABLE} acme.py ${BRILLE_SINGLE_HEADER} -o ${CMAKE_BINARY_DIR}
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  DEPENDS git_version
+  DEPENDS version_lib
 )
 add_custom_target(library DEPENDS single_header ${BRILLE_LIBRARY_TARGET})
 endif()
@@ -139,7 +158,9 @@ add_subdirectory(lib)
 add_subdirectory(src)  # important
 
 foreach(CXX_TARGET IN LISTS CXX_TARGETS)
-  addGitVersion(${CXX_TARGET})
+  # ensure the configured version.hpp can be found:
+  target_include_directories(${CXX_TARGET} PUBLIC ${BRILLE_VERSION_HEADER_DIRECTORY})
+  add_dependencies(${CXX_TARGET} version_lib)
 endforeach()
 
 if(BRILLE_BUILD_TESTING)

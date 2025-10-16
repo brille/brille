@@ -3,16 +3,16 @@
 //! \file
 namespace brille::version{
     //! `project` git repository revision information at build time
-    auto constexpr git_revision = u8"@GIT_HASH@";
+    auto constexpr git_revision = u8"@BRILLE_HASH@";
     //! `project` git repository branch at build time
-    auto constexpr git_branch = u8"@GIT_BRANCH@";
+    auto constexpr git_branch = u8"@BRILLE_BRANCH@";
     //! build date and time in YYYY-MM-DDThh:mm format
-    auto constexpr build_datetime = u8"@GIT_CONFIGURE_TIME@";
+    auto constexpr build_datetime = u8"@BRILLE_CONFIGURE_TIME@";
     //! `project` version
-    auto constexpr version_number = u8"@GIT_SAFE_VERSION@";
+    auto constexpr version_number = u8"@BRILLE_SAFE_VERSION@";
     //! hostname of the build machine
-    auto constexpr build_hostname = u8"@GIT_HOSTNAME@";
+    auto constexpr build_hostname = u8"@BRILLE_HOSTNAME@";
     //! version with metadata included
-    auto constexpr meta_version = u8"@GIT_VERSION@";
+    auto constexpr meta_version = u8"@BRILLE_VERSION@";
 }
 #endif
