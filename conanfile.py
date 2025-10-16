@@ -23,5 +23,9 @@ class BrilleRecipe(ConanFile):
         if self.settings.os == "Macos":
             self.requires("llvm-openmp/20.1.6")
 
+    def configure(self):
+        if self.settings.os == "Macos":
+            sef.options["llvm-openmp/*"].shared = True
+
     def layout(self):
         cmake_layout(self)

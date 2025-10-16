@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24..3.26)
+cmake_minimum_required(VERSION 3.26)
 cmake_policy(SET CMP0076 NEW) # Ensure target_sources converts relative paths
 cmake_policy(SET CMP0017 NEW) # Prefer cmake's own files for include/find_package before CMAKE_MODULE_PATH
 cmake_policy(SET CMP0148 NEW) # Conform to no FindPythonInterp and FindPythonLibs (needed for Pybind11)
@@ -76,7 +76,10 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-set(CMAKE_MACOSX_RPATH OFF)
+if (APPLE)
+    set(CMAKE_MACOSX_RPATH ON)
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
+endif()
 
 if (${BRILLE_LOGLEVEL} STREQUAL "VERBOSE")
   message(STATUS "Verbose logging emitted at runtime")
