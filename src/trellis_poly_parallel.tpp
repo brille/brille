@@ -19,6 +19,10 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #endif
 
 #include "is_musl.h"
+#include <iostream>
+template<class> void print_is_musl() {
+  std::cout << "is_musl: " << std::endl;
+}
 
 template<class I>
 static void add_to_maps(const I n_points, I& n_kept, std::vector<I>& map_idx, std::vector<I>& map, const I i)
@@ -384,13 +388,24 @@ PolyTrellis<T,R,S,A>::part_two(
     // Triangulate the node polyhedron into tetrahedra (the class name LQPolyTet is misleading...)
     polyhedron::LQPolyTet<S,A> tri_cut{};
     // this uses modified TetGen, which is now thread safe :)
-    tri_cut = polyhedron::LQPolyTet(this_node, contains_Gamma);
+    /*
+     * ^ 2025-10-17 -- this statement appears to be wrong
+     *
+     * v For now, OMP critical sections _should_ let this work
+     */
+#pragma omp critical
+    {
+      tri_cut = polyhedron::LQPolyTet(this_node, contains_Gamma);
+    }
     if (tri_cut.get_vertices().size(0)<4){
       //something went wrong.
       /* A (somehow) likely culprit is that a face is missing from the cut
       cube and therefor is not a piecewise linear complex. try to re-form
       the input polyhedron and then re-triangulate.*/
-      tri_cut = polyhedron::LQPolyTet(this_node.convex_hull(), contains_Gamma);
+#pragma omp critical
+      {
+        tri_cut = polyhedron::LQPolyTet(this_node.convex_hull(), contains_Gamma);
+      }
       if (tri_cut.get_vertices().size(0)<4)
         fatal_tri += 1;
       else

@@ -10,6 +10,7 @@
 #include "lattice_dual.hpp"
 #include "process_id.hpp"
 
+
 using namespace brille;
 using namespace brille::lattice;
 using namespace brille::math;
@@ -509,7 +510,7 @@ TEST_CASE("Equivalent atom error for CaHgO2","[trellis][interpolation][63]"){
     std::vector<ind_t> val_shape{trellis.get_hkl().size(0), n_modes, 1u};
     Array<double> values(val_shape, 1.0);
     std::vector<ind_t> vec_shape{trellis.get_hkl().size(0), n_modes, n_modes};
-    Array<std::complex<double>> vectors(vec_shape, std::complex<double>(1.0));
+    Array<std::complex<double>> vectors(vec_shape, std::complex<double>(1.0, 0.0));
 
     std::array<ind_t,3> val_elements{{1, 0, 0}};
     Interpolator<double> val(values, val_elements, RotatesLike::vector, LengthUnit::real_lattice);
