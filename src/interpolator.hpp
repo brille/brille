@@ -20,17 +20,12 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief Class for linear interpolation of arbitrary data
 */
-// #include <vector>
-// #include <array>
 #include <utility>
-#include <mutex>
-// #include <cassert>
-// #include <functional>
-#include <omp.h>
 #include "phonon.hpp"
 #include "permutation.hpp"
 #include "permutation_table.hpp"
 #include "rotates.hpp"
+#include "thread_pool.h"
 namespace brille {
 
 /*! \brief A function to calculate a scalar property of two arrays

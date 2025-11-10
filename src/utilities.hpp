@@ -24,6 +24,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <algorithm>
 #include "approx_float.hpp"
 #include "math.hpp"
+#include "thread_pool.h"
 
 namespace brille{
 

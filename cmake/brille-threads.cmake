@@ -1,0 +1,5 @@
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
+foreach(TARGET IN LISTS CXX_TARGETS)
+    target_link_libraries(${TARGET} PRIVATE Threads::Threads)
+endforeach()

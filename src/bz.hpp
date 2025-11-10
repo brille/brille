@@ -20,18 +20,17 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief Defines a Brillouin zone class
 */
-#include <omp.h>
 
 #include <utility>
 #include "neighbours.hpp"
 #include "transform.hpp"
 #include "polyhedron_flex.hpp"
-#include "phonon.hpp"
 #include "hdf_interface.hpp"
 #include "array_l_.hpp"
 #include "bz_config.hpp"
 #include "approx_float.hpp"
 #include "approx_config.hpp"
+#include "thread_pool.h"
 
 namespace brille {
 /*! \brief An object to hold information about the first Brillouin zone of a
@@ -657,8 +656,7 @@ public:
            associated Q point is inside our irreducible reciprocal space.
   */
   template <class T>
-  std::vector<bool> isinside_wedge(const lattice::LVec<T> &p,
-                                   const bool pos = false) const {
+  std::vector<bool> isinside_wedge(const lattice::LVec<T> &p, const bool pos = false) const {
     bool isouter = this->_outer.is_same(p.lattice());
     bool isinner = this->_inner.is_same(p.lattice());
     if (!(isouter || isinner)) {
@@ -668,10 +666,8 @@ public:
       throw std::runtime_error(msg);
     }
     std::vector<bool> out(p.size(0), true);
-    auto normals =
-        isouter ? get_ir_wedge_normals() : get_primitive_ir_wedge_normals();
-    if (normals.size(
-            0)) { // with no normals *all* points are "inside" the wedge
+    if (auto normals = isouter ? get_ir_wedge_normals() : get_primitive_ir_wedge_normals(); normals.size(0)) {
+      // with no normals *all* points are "inside" the wedge
       // If a pointgroup has inversion symmetry then for every point, p, there
       // is an equivalent point, -p. This indicates that a point p is already in
       // the irreducible wedge if it has n̂ᵢ⋅p ≥ 0 for all irredudible-bounding-
@@ -688,14 +684,31 @@ public:
       // when constructing the irreducible Brillouin zone we need to only
       // consider the ≥0 case so that we end up with a convex polyhedron. The
       // ir_polyhedron accessor method mirrors the half-polyhedron in this case,
-      // so when identifying whether a point is inside of the irreducible
+      // so when identifying whether a point is inside the irreducible
       // Brillouin zone we must allow for the ≤0 case as well.
-      cmp c = pos || no_ir_mirroring ? cmp::ge : cmp::le_ge;
-#pragma omp parallel for default(none) shared(out, normals, p, c)              \
-    schedule(dynamic)
-      for (long long i = 0; i < p.size(0); ++i) // separately changed to ind_t
-        //TODO Add tolerance here?
-        out[i] = dot(normals, p.view(i)).all(c, 0.);
+
+      const auto pool = ThreadPool::getInstance();
+      const auto workers=pool->size();
+      auto make_task = [&, c = pos || no_ir_mirroring ? cmp::ge : cmp::le_ge](const size_t thread) {
+        auto [first, last] = thread_slice(p.size(0), workers, thread);
+        auto task = [&,frst=first, lst=last]() {
+          for (size_t i=frst; i<lst; ++i) {
+            //TODO Add tolerance here?
+            out[i] = dot(normals, p.view(i)).all(c, 0.);
+          }
+        };
+        return task;
+      };
+      for (size_t thread=0; thread < workers; ++thread) {
+        pool->enqueue(make_task(thread));
+      }
+      pool->wait();
+
+//    cmp c = pos || no_ir_mirroring ? cmp::ge : cmp::le_ge;
+// #pragma omp parallel for default(none) shared(out, normals, p, c) schedule(dynamic)
+//       for (long long i = 0; i < p.size(0); ++i) // separately changed to ind_t
+//         //TODO Add tolerance here?
+//         out[i] = dot(normals, p.view(i)).all(c, 0.);
     }
     return out;
   }

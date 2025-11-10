@@ -173,7 +173,7 @@ if(BRILLE_BUILD_TESTING)
   catch_discover_tests(${TESTING_TARGET})
 endif()
 
-include(brille-openmp)
+include(brille-threads)
 include(brille-hdf5)
 include(brille-doxygen)
 

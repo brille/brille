@@ -53,8 +53,8 @@ public:
   }
 
   [[nodiscard]] bool has_second() const {
-    for (const auto & pair: data_) for (const auto & x: pair.second){
-      if (x.first == MapVertexType::SecondAppended || x.first == MapVertexType::SecondPristine) return true;
+    for (const auto &[_, m]: data_) for (const auto & [vt, _]: m){
+      if (vt == MapVertexType::SecondAppended || vt == MapVertexType::SecondPristine) return true;
     }
     return false;
   }
@@ -66,8 +66,8 @@ public:
 
   [[nodiscard]] const data_t & data() const {return data_;}
 
-  void append(ind_t node, rel_t value) { data_[node].push_back(value); }
-  void set(ind_t node, ind_t vertex, rel_t value) { data_[node][vertex] = value; }
+  void append(const ind_t node, const rel_t &value) { data_[node].push_back(value); }
+  void set(const ind_t node, const ind_t vertex, const rel_t &value) { data_[node][vertex] = value; }
 
   [[nodiscard]] size_t size() const {return data_.size();}
 
@@ -77,33 +77,33 @@ public:
 //      v.resize(len);
 //      return v;
 //  }
-  map_t & get(ind_t node) {return data_[node]; }
+  map_t & get(const ind_t node) {return data_[node]; }
 
-  [[nodiscard]] const map_t & get(ind_t node) const {return data_.at(node);}
-  [[nodiscard]] rel_t get(ind_t node, ind_t vertex) const {
+  [[nodiscard]] const map_t & get(const ind_t node) const {return data_.at(node);}
+  [[nodiscard]] rel_t get(const ind_t node, const ind_t vertex) const {
     const auto & d{data_};
-    if (auto search=d.find(node); search != d.end()){
+    if (const auto search=d.find(node); search != d.end()){
       if (vertex < search->second.size())
         return search->second[vertex];
       throw std::runtime_error("Out-of-bounds vertex index!");
     }
     throw std::runtime_error("Node index not found!");
   }
-  [[nodiscard]] ind_t decode(ind_t appended_offset, ind_t node, ind_t vertex) const {
-    auto type_index = get(node, vertex);
-    switch(type_index.first){
-    case MapVertexType::Pristine: return type_index.second;
-    case MapVertexType::Appended: return appended_offset + type_index.second;
+  [[nodiscard]] ind_t decode(const ind_t appended_offset, const ind_t node, const ind_t vertex) const {
+    const auto [fst, snd] = get(node, vertex);
+    switch(fst){
+    case MapVertexType::Pristine: return snd;
+    case MapVertexType::Appended: return appended_offset + snd;
     default: throw std::runtime_error("Only pristine and appended can be decoded");
     }
   }
-  [[nodiscard]] std::vector<ind_t> decode(ind_t appended_offset, ind_t node) const {
+  [[nodiscard]] std::vector<ind_t> decode(const ind_t appended_offset, const ind_t node) const {
     std::vector<ind_t> out;
     out.reserve(data_.at(node).size());
-    for (const auto & x: data_.at(node)){
-      switch(x.first){
-      case MapVertexType::Pristine: out.push_back(x.second); break;
-      case MapVertexType::Appended: out.push_back(appended_offset + x.second); break;
+    for (const auto &[fst, snd]: data_.at(node)){
+      switch(fst){
+      case MapVertexType::Pristine: out.push_back(snd); break;
+      case MapVertexType::Appended: out.push_back(appended_offset + snd); break;
       default:  throw std::runtime_error("Only pristine and appended can be decoded");
       }
     }

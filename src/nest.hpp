@@ -21,17 +21,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief A class holding a triangulated tetrahedral mesh and data for interpolation
 */
 #include <deque>
-// #include <set>
-// #include <vector>
-// #include <array>
-// #include <tuple>
-// #include <utility>
-// #include <algorithm>
-// #include <omp.h>
-// #include "array.hpp"
-// #include "array2.hpp"
-// #include "utilities.hpp"
-// #include "debug.hpp"
 #include "triangulation_simple.hpp"
 #include "interpolatordual.hpp"
 #include "approx_config.hpp"
@@ -377,10 +366,10 @@ public:
     }
     return std::make_tuple(vals, vecs);
   }
-  std::tuple<brille::Array<DataValues>, brille::Array<DataVectors>>
+
+  std::tuple<Array<DataValues>, Array<DataVectors>>
   interpolate_at(const vert_t& x, const int threads) const {
     this->check_before_interpolating(x);
-    omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     // not used in parallel region
     auto valsh = data_.values().shape();
     auto vecsh = data_.vectors().shape();
@@ -394,24 +383,32 @@ public:
     // Interpolator2::interpolate_at through the constructor:
     brille::Array2<DataValues> vals2(vals);
     brille::Array2<DataVectors> vecs2(vecs);
-    // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
+
     ind_t unfound=0;
-    auto t = approx_.reciprocal<double>();
-    auto n = approx_.digit();
-    auto xsize = brille::utils::u2s<long long, ind_t>(x.size(0));
-  #pragma omp parallel for default(none) shared(x, vals2, vecs2) reduction(+:unfound) firstprivate(xsize, t, n) schedule(dynamic)
-    for (long long si=0; si<xsize; ++si){
-      auto i = brille::utils::s2u<ind_t, long long>(si);
-      auto iw = root_.indices_weights(vertices_, x.extract(i), t, n);
-      if (iw.size()){
-        data_.interpolate_at(iw, vals2, vecs2, i);
-      } else {
-        ++unfound;
-      }
-    }
+    std::mutex unfound_mutex;
+    const auto pool = ThreadPool::getInstance();
+    if (threads > 0) pool->resize(threads); else pool->resize();
+    const auto workers = pool->size();
+    auto task = [&](const size_t worker) {
+      auto [f, l] = thread_slice(x.size(0), workers, worker);
+      return [&,first=f,last=l]() {
+        auto t = approx_.reciprocal<double>();
+        auto n = approx_.digit();
+        for (size_t i=first; i<last; ++i) {
+          if (auto iw = root_.indices_weights(vertices_, x.extract(i), t, n); iw.size()){
+            data_.interpolate_at(iw, vals2, vecs2, i);
+          } else {
+            std::unique_lock lock(unfound_mutex);
+            ++unfound;
+          }
+        }
+      };
+    };
+    for (size_t thread=0; thread<workers; ++thread) pool->enqueue(task(thread));
+    pool->wait();
+
     if (unfound > 0){
-      std::string msg = std::to_string(unfound) + " points not found in Nest";
-      throw std::runtime_error(msg);
+      throw std::runtime_error(std::to_string(unfound) + " points not found in Nest");
     }
     return std::make_tuple(vals, vecs);
   }
