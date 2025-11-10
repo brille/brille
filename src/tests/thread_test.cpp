@@ -1,5 +1,6 @@
 #include <iostream>
 #include <numeric>
+#include <algorithm>
 #include <catch2/catch_test_macros.hpp>
 
 #include "thread_pool.h"
@@ -159,6 +160,6 @@ TEST_CASE("lambda capture of lambda parameter shared between calls in parallel",
   std::vector<int> expected(reports.size());
   std::iota(expected.begin(), expected.end(), 1);
 
-  REQUIRE(reports.size() == workers);
+  REQUIRE(static_cast<size_t>(reports.size()) == static_cast<size_t>(workers));
   REQUIRE(!std::is_permutation(reports.begin(), reports.end(), expected.begin()));
 }
