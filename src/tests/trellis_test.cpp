@@ -2,7 +2,6 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #include <tuple>
-#include <omp.h>
 #include <complex>
 #include <filesystem>
 #include "debug.hpp"
@@ -50,6 +49,7 @@ TEST_CASE("BrillouinZoneTrellis3 vertex accessors","[trellis][accessors]"){
                             {half_pi, half_pi, half_pi}, spg);
   BrillouinZone bz(lat);
   double max_volume{bz.get_ir_polyhedron().volume()/50}; // previous maximum, 0.002, gave ~8 intersecting nodes
+  std::cout << "Construct the BrillouinZoneTrellis3 with max volume " << max_volume << "\n";
   BrillouinZoneTrellis3<double,double,double> bzt(bz, max_volume);
 
   // there should be trellis vertices of some sort:
@@ -172,11 +172,15 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation timing","[.][trellis][timing]"){
   auto Q = LVec<double>(LengthUnit::inverse_angstrom, lat, nQ);
   for (auto& i: Q.valItr()) i = distribution(generator);
 
-  brille::Array<double> intvals;
-  brille::Array<std::complex<double>> intvecs;
+  Array<double> intvals;
+  Array<std::complex<double>> intvecs;
   auto timer = Stopwatch<>();
-  int max_threads = omp_get_max_threads()+1;
+  auto max_threads = static_cast<int>(std::thread::hardware_concurrency()) + 1;
+
+  const auto pool = ThreadPool::getInstance();
+
   for (int threads=1; threads<max_threads; ++threads){
+    pool->resize(threads); // resize outside timed region!
     bool again = true;
     timer.tic();
     while (again && timer.elapsed()<10000){
@@ -224,7 +228,7 @@ TEST_CASE("BrillouinZoneTrellis3 interpolation profiling","[.][trellis][profilin
   auto Q = LQVec<double>(lat, nQ);
   for (auto& i: Q.valItr()) i = distribution(generator);
 
-  int threads = omp_get_max_threads();
+  auto threads = static_cast<int>(std::thread::hardware_concurrency());
   auto timer = Stopwatch<>();
   timer.tic();
   auto [vals_intres, vecs_intres] = bzt.ir_interpolate_at(Q, threads);

@@ -23,11 +23,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 */
 #include <set>
 #include <utility>
-// #include <vector>
-// #include <array>
-#include <omp.h>
-// #include <cassert>
-// #include <algorithm>
 #include "array_.hpp" // defines bArray
 #include "tetgen.h"
 #include "polyhedron_flex.hpp"
@@ -235,19 +230,27 @@ public:
     return this->unsafe_contains(tet, x);
   }
   [[nodiscard]] std::set<size_t> collect_keys() const {
-    auto ntets = brille::utils::u2s<long long, ind_t>(this->number_of_tetrahedra());
-    ind_t nvert = this->number_of_vertices();
     std::set<size_t> keys;
-    #pragma omp parallel for default(none) shared(ntets, keys, nvert)
-    for (long long si=0; si<ntets; ++si){
-      auto i = brille::utils::s2u<ind_t, long long>(si);
-      auto v = vertices_per_tetrahedron.view(i).to_std();
-      std::set<size_t> t = permutation_table_keys_from_indicies(v.begin(), v.end(), nvert);
-      #pragma omp critical
-      {
-        keys.insert(t.begin(), t.end());
-      }
-    }
+    std::mutex keys_mutex;
+    const auto pool = ThreadPool::getInstance();
+    const auto workers = pool->size();
+    auto task = [&](const size_t worker) {
+      auto [f, l] = thread_slice(number_of_tetrahedra(), workers, worker);
+      return [&,first=f,last=l]() {
+        const ind_t n_vert = this->number_of_vertices();
+        for (size_t i=first; i<last; ++i) {
+          const auto v = vertices_per_tetrahedron.view(i).to_std();
+          const auto table = permutation_table_keys_from_indicies(v.begin(), v.end(), n_vert);
+          {
+            std::unique_lock keys_lock(keys_mutex);
+            keys.insert(table.begin(), table.end());
+          }
+        }
+      };
+    };
+    for (size_t thread=0; thread<workers; ++thread) pool->enqueue(task(thread));
+    pool->wait();
+
     return keys;
   }
 protected:
@@ -445,47 +448,48 @@ public:
   [[nodiscard]] std::set<size_t> collect_keys() const {return layers.back().collect_keys();}
 private:
   [[nodiscard]] TetMap connect(const size_t high, const size_t low) const{
-    omp_set_num_threads(omp_get_max_threads());
     Stopwatch<> stopwatch;
-    if (brille::printer.datetime()) stopwatch.tic(); // we only need to start the timer if we are printing timing information
+    if (printer.datetime()) stopwatch.tic(); // we only need to start the timer if we are printing timing information
     TetMap map(layers[high].number_of_tetrahedra());
-    auto mapsize = brille::utils::u2s<long long, size_t>(map.size());
-#if defined(__GNUC__) && !defined(__llvm__) && __GNUC__ < 9
-// this version is necessary with g++ <= 8.3.0
-#pragma omp parallel for default(none) shared(map, mapsize) schedule(dynamic)
-#else
-// this version is necessary with g++ == 9.2.0
-#pragma omp parallel for default(none) shared(map, mapsize, high, low) schedule(dynamic)
-#endif
-    for (long ui=0; ui<mapsize; ++ui){
-      auto i = brille::utils::s2u<ind_t, long long>(ui);
-      // initialize the map
-      map[i] = TetSet();
-      auto cchi = layers[high].get_circum_centres().view(i);
-      // get a Polyhedron object for the ith higher-tetrahedra in case we need it
-      auto tethi = layers[high].get_tetrahedron(i);
-      std::vector<double> sumrad;
-      for (double r: layers[low].get_circum_radii()) sumrad.push_back(layers[high].get_circum_radii()[i]+r);
-      // if two circumsphere centers are closer than the sum of their radii
-      // they are close enough to possibly overlap:
-      auto close_enough = norm(layers[low].get_circum_centres() - cchi).each_is(brille::cmp::le, sumrad);
-      for (ind_t j=0; j < close_enough.size(); ++j) if (close_enough[j])
-      {
-        bool add = false;
-        // check if any vertex of the jth lower-tetrahedra is inside of the ith higher-tetrahedra
-        for (ind_t k=0; k<4u; ++k)
-        {
-          if (!add && layers[high].contains(i, layers[low].get_vertex_positions().view(layers[low].get_vertices_per_tetrahedron().val(j,k))))
-            add = true;
+
+    const auto pool = ThreadPool::getInstance();
+    const auto workers = pool->size();
+    auto task = [&](const size_t worker) {
+      auto [f, l] = thread_slice(map.size(), workers, worker);
+      return [&,first=f,last=l]() {
+        for (size_t i=first; i<last; ++i) {
+          // initialize the map
+          map[i] = TetSet();
+          auto cc_high = layers[high].get_circum_centres().view(i);
+          // get a Polyhedron object for the ith higher-tetrahedra in case we need it
+          auto tet_high = layers[high].get_tetrahedron(i);
+          std::vector<double> sum_rad;
+          for (const double r: layers[low].get_circum_radii()) {
+            sum_rad.push_back(layers[high].get_circum_radii()[i]+r);
+          }
+          // if two circumsphere centers are closer than the sum of their radii
+          // they are close enough to possibly overlap:
+          auto close_enough = norm(layers[low].get_circum_centres() - cc_high).each_is(brille::cmp::le, sum_rad);
+          for (ind_t j=0; j < close_enough.size(); ++j) if (close_enough[j]) {
+            bool add = false;
+            // check if any vertex of the jth lower-tetrahedra is inside the ith higher-tetrahedra
+            for (ind_t k=0; k<4u; ++k) {
+              if (!add && layers[high].contains(i, layers[low].get_vertex_positions().view(layers[low].get_vertices_per_tetrahedron().val(j,k))))
+                add = true;
+            }
+            // even if no vertex is inside the ith higher-tetrahedra, the two tetrahedra
+            // can overlap -- and checking for this overlap is complicated.
+            // make the Polyhedron class do the heavy lifting.
+            // if (add || tet_high.intersects(ll.get_tetrahedron(j))) map[i].push_back(j);
+            if (add || layers[low].get_tetrahedron(j).intersects(tet_high)) map[i].push_back(j);
+          }
         }
-        // even if no vertex is inside of the ith higher-tetrahedra, the two tetrahedra
-        // can overlap -- and checking for this overlap is complicated.
-        // make the Polyhedron class do the heavy lifting.
-        // if (add || tethi.intersects(ll.get_tetrahedron(j))) map[i].push_back(j);
-        if (add || layers[low].get_tetrahedron(j).intersects(tethi)) map[i].push_back(j);
-      }
-    }
-    if (brille::printer.datetime()) stopwatch.toc();
+      };
+    };
+    for (size_t thread=0; thread<workers; ++thread) pool->enqueue(task(thread));
+    pool->wait();
+
+    if (printer.datetime()) stopwatch.toc();
     info_update_if(brille::printer.datetime(), "Connect ",layers[high].number_of_tetrahedra()," to ",layers[low].number_of_tetrahedra()," completed in ",stopwatch.elapsed()," ms");
     // we now have a TetMap which contains, for every tetrahedral index of the
     // higher level, all tetrahedral indices of the lower level which touch the

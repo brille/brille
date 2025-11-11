@@ -102,7 +102,6 @@ void BrillouinZone::_moveinto_prim(const LVec<double>& Q, LVec<double>& q, LVec<
 
 bool BrillouinZone::moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int>& tau, const int threads) const {
   profile_update("BrillouinZone::moveinto called with ",threads," threads");
-  omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   bool already_same = _inner.is_same(Q.lattice());
   LVec<double> Qprim(Q.type(), _inner);
   LVec<double> qprim(q.type(), _inner);
@@ -164,7 +163,6 @@ bool BrillouinZone::moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int>& 
 
 bool BrillouinZone::ir_moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int>& tau, std::vector<size_t>& Ridx, std::vector<size_t>& invRidx, const int threads) const {
   profile_update("BrillouinZone::ir_moveinto called with ",threads," threads");
-  omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   /* The Point group symmetry information has all rotation matrices defined
      * in the conventional unit cell -- which is our `_outer`.
      * Consequently, we must work in the outer lattice here.  */
@@ -296,55 +294,124 @@ bool BrillouinZone::ir_moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int
 }
 
 
+// bool BrillouinZone::ir_moveinto_wedge(const LVec<double>& Q, LVec<double>& q, std::vector<size_t>& R, const int threads) const {
+//   omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
+//   /* The Pointgroup symmetry information comes from, effectively, spglib which
+//   has all rotation matrices defined in the conventional unit cell -- which is
+//   our `_outer`. Consequently we must work in the _outer here.  */
+//   if (!_outer.is_same(Q.lattice()))
+//     throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
+//   // ensure q and R can hold one for each Q.
+//   ind_t nQ = Q.size(0);
+//   auto Qshape = Q.shape();
+//   q.resize(Qshape);
+//   R.resize(nQ);
+//   auto lat = Q.lattice();
+//   // OpenMP 2 (VS) doesn't like unsigned loop counters
+//   size_t n_outside{0};
+//   auto snQ = brille::utils::u2s<long long, ind_t>(nQ);
+// #pragma omp parallel default(none) shared(R, q, Q, lat, snQ) reduction(+:n_outside)
+//   {
+//     // get the PointSymmetry object, containing all operations
+//     auto psym = this->_outer.pointgroup_symmetry();
+//     if (time_reversal) psym = psym.add_space_inversion();
+//     auto eidx = psym.find_identity_index();
+//     std::array<double, 3> q_j{0,0,0}; // temporary result storage
+//     std::vector<std::array<int, 9>> r_transpose;
+//     for (const auto& r: psym.getall()) r_transpose.push_back(transpose(r));
+// #pragma omp for schedule(dynamic)
+//     for (long long si = 0; si < snQ; ++si) {
+//       auto i = brille::utils::s2u<ind_t, long long>(si);
+//       // any q already in the irreducible zone need no rotation → identity
+//       bool inside{_inside_wedge_outer(Q.view(i))};
+//       if (inside){
+//         q.set(i, Q.view(i));
+//         R[i] = eidx;
+//       } else {
+//         // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
+//         for (ind_t j = 0; j < psym.size(); ++j) if (inside) break; else {
+//             // The point symmetry matrices relate *real space* vectors! We must use their transposes' to rotate reciprocal space vectors.
+//             brille::utils::multiply_matrix_vector(q_j.data(), r_transpose[j].data(), Q.ptr(i));
+//             auto lq_j = from_std_like(Q, q_j);
+//             if (_inside_wedge_outer(lq_j)) { /* store the result */
+//               q.set(i, lq_j); // keep Rⱼᵀ⋅Qᵢ as qᵢᵣ
+//               R[i] = psym.get_inverse_index(j); // and (Rⱼᵀ)⁻¹ ∈ G, such that Q = (Rⱼᵀ)⁻¹⋅qᵢᵣ
+//               inside = true;
+//             }
+//           }
+//       }
+//       if (!inside) ++n_outside;
+//     }
+//   }
+//   if (n_outside > 0) for (ind_t i=0; i<nQ; ++i) if (!_inside_wedge_outer(q.view(i))){
+//         std::string msg = "Q = " + Q.to_string(i);
+//         msg += " is outside of the irreducible reciprocal space wedge ";
+//         msg += " , irQ = " + q.to_string(i);
+//         throw std::runtime_error(msg);
+//         return false;
+//       }
+//   return n_outside == 0;
+// }
+
+
 bool BrillouinZone::ir_moveinto_wedge(const LVec<double>& Q, LVec<double>& q, std::vector<size_t>& R, const int threads) const {
-  omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
   /* The Pointgroup symmetry information comes from, effectively, spglib which
   has all rotation matrices defined in the conventional unit cell -- which is
   our `_outer`. Consequently we must work in the _outer here.  */
   if (!_outer.is_same(Q.lattice()))
     throw std::runtime_error("Q points provided to ir_moveinto must be in the standard lattice used to define the BrillouinZone object");
   // ensure q and R can hold one for each Q.
-  ind_t nQ = Q.size(0);
-  auto Qshape = Q.shape();
+  const ind_t nQ = Q.size(0);
+  const auto Qshape = Q.shape();
   q.resize(Qshape);
   R.resize(nQ);
   auto lat = Q.lattice();
-  // OpenMP 2 (VS) doesn't like unsigned loop counters
-  size_t n_outside{0};
-  auto snQ = brille::utils::u2s<long long, ind_t>(nQ);
-#pragma omp parallel default(none) shared(R, q, Q, lat, snQ) reduction(+:n_outside)
-  {
-    // get the PointSymmetry object, containing all operations
+
+  const auto pool = ThreadPool::getInstance();
+  if (threads > 0) pool->resize(threads); else pool->resize();
+  const auto workers = pool->size();
+  std::vector outside_counts(workers, 0u);
+  auto make_task = [&](const size_t thread) {
+    // setup for this thread:
     auto psym = this->_outer.pointgroup_symmetry();
     if (time_reversal) psym = psym.add_space_inversion();
-    auto eidx = psym.find_identity_index();
+    const auto eidx = psym.find_identity_index();
     std::array<double, 3> q_j{0,0,0}; // temporary result storage
     std::vector<std::array<int, 9>> r_transpose;
     for (const auto& r: psym.getall()) r_transpose.push_back(transpose(r));
-#pragma omp for schedule(dynamic)
-    for (long long si = 0; si < snQ; ++si) {
-      auto i = brille::utils::s2u<ind_t, long long>(si);
-      // any q already in the irreducible zone need no rotation → identity
-      bool inside{_inside_wedge_outer(Q.view(i))};
-      if (inside){
-        q.set(i, Q.view(i));
-        R[i] = eidx;
-      } else {
-        // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
-        for (ind_t j = 0; j < psym.size(); ++j) if (inside) break; else {
+    const auto [first, last] = thread_slice(nQ, workers, thread);
+    // the actual task that the thread should execute // capture the thread number to avoid all threads sharing it
+    auto task = [&,frst=first,lst=last,iam=thread]() {
+      for (size_t i=frst; i<lst; ++i) {
+        bool inside{_inside_wedge_outer(Q.view(i))};
+        if (inside){
+          q.set(i, Q.view(i));
+          R[i] = eidx;
+        } else {
+          // for others find the jᵗʰ operation which moves qᵢ into the irreducible zone
+          for (ind_t j = 0; j < psym.size(); ++j) {
+            if (inside) break;
             // The point symmetry matrices relate *real space* vectors! We must use their transposes' to rotate reciprocal space vectors.
-            brille::utils::multiply_matrix_vector(q_j.data(), r_transpose[j].data(), Q.ptr(i));
-            auto lq_j = from_std_like(Q, q_j);
-            if (_inside_wedge_outer(lq_j)) { /* store the result */
+            utils::multiply_matrix_vector(q_j.data(), r_transpose[j].data(), Q.ptr(i));
+            if (const auto lq_j = from_std_like(Q, q_j); _inside_wedge_outer(lq_j)) {
+              /* store the result */
               q.set(i, lq_j); // keep Rⱼᵀ⋅Qᵢ as qᵢᵣ
               R[i] = psym.get_inverse_index(j); // and (Rⱼᵀ)⁻¹ ∈ G, such that Q = (Rⱼᵀ)⁻¹⋅qᵢᵣ
               inside = true;
             }
           }
+        }
+        if (!inside) ++outside_counts[iam];
       }
-      if (!inside) ++n_outside;
-    }
+    };
+    return task;
+  };
+  for (size_t thread=0; thread < workers; ++thread) {
+    pool->enqueue(make_task(thread));
   }
+  pool->wait();
+  const auto n_outside = std::accumulate(outside_counts.begin(), outside_counts.end(), 0u);
+
   if (n_outside > 0) for (ind_t i=0; i<nQ; ++i) if (!_inside_wedge_outer(q.view(i))){
         std::string msg = "Q = " + Q.to_string(i);
         msg += " is outside of the irreducible reciprocal space wedge ";
@@ -352,5 +419,5 @@ bool BrillouinZone::ir_moveinto_wedge(const LVec<double>& Q, LVec<double>& q, st
         throw std::runtime_error(msg);
         return false;
       }
-  return true; // otherwise we hit the runtime error above
+  return n_outside == 0;
 }

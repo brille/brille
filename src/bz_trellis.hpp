@@ -163,8 +163,7 @@ public:
       // POLYHEDRON otherwise the interpolation will fail or give garbage back.
       ir_q = x;
     } else if (!bz_.ir_moveinto(x, ir_q, tau, rot, invrot, args...)){
-      std::string msg;
-      msg = "Moving all points into the irreducible Brillouin zone failed.";
+      const std::string msg = "Moving all points into the irreducible Brillouin zone failed.";
       throw std::runtime_error(msg);
     }
     auto [vals, vecs] = this->super_t::interpolate_at(brille::get_xyz(ir_q), args...);
@@ -174,7 +173,7 @@ public:
     PointSymmetry psym = bz_.get_pointgroup_symmetry();
     if constexpr (NO_MOVE) {
       // set rot and invrot to the identity symmetry operation (which is not necessarily the 0th one)
-      auto identity = psym.find_identity_index();
+      const auto identity = psym.find_identity_index();
       std::fill(rot.begin(), rot.end(), identity);
       std::fill(invrot.begin(), invrot.end(), identity);
     }

@@ -20,15 +20,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief A class holding a triangulated tetrahedral mesh and data for interpolation
 */
-// #include <set>
-// #include "array.hpp"
-// #include "array2.hpp"
-// #include <vector>
-// #include <array>
-// #include <omp.h>
 #include "interpolatordual.hpp"
-// #include "utilities.hpp"
-// #include "permutation.hpp"
 #include <queue>
 #include <utility>
 #include "triangulation_layers.hpp"
@@ -158,7 +150,6 @@ public:
   }
   std::tuple<brille::Array<DataValues>,brille::Array<DataVectors>>
   interpolate_at(const vert_t& x, const int threads) const {
-    omp_set_num_threads( (threads > 0) ? threads : omp_get_max_threads() );
     this->check_before_interpolating(x);
     // not used in parallel region
     auto valsh = data_.values().shape();
@@ -166,21 +157,28 @@ public:
     valsh[0] = x.size(0);
     vecsh[0] = x.size(0);
     // shared between threads
-    brille::Array<DataValues> vals(valsh);
-    brille::Array<DataVectors> vecs(vecsh);
+    Array<DataValues> vals(valsh);
+    Array<DataVectors> vecs(vecsh);
     // vals and vecs are row-ordered contiguous by default, so we can create
     // mutable data-sharing Array2 objects for use with
     // Interpolator2::interpolate_at through the constructor:
-    brille::Array2<DataValues> vals2(vals);
-    brille::Array2<DataVectors> vecs2(vecs);
-    // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
-    long xsize = brille::utils::u2s<long, ind_t>(x.size(0));
-#pragma omp parallel for default(none) shared(x, vals2, vecs2, xsize) schedule(dynamic)
-    for (long si=0; si<xsize; ++si){
-      auto i = brille::utils::s2u<ind_t, long>(si);
-      auto verts_weights = this->mesh.locate(x.view(i));
-      data_.interpolate_at(verts_weights, vals2, vecs2, i);
-    }
+    Array2<DataValues> vals2(vals);
+    Array2<DataVectors> vecs2(vecs);
+
+    const auto pool = ThreadPool::getInstance();
+    if (threads > 0) pool->resize(threads); else pool->resize();
+    const auto workers = pool->size();
+    auto task = [&](const size_t worker) {
+      auto [f, l] = thread_slice(x.size(0), workers, worker);
+      return [&,first=f,last=l]() {
+        for (size_t i=first; i<last; ++i) {
+          data_.interpolate_at(mesh.locate(x.view(i)), vals2, vecs2, i);
+        }
+      };
+    };
+    for (size_t i=0; i<workers; ++i) pool->enqueue(task(i));
+    pool->wait();
+
     return std::make_tuple(vals, vecs);
   }
   //! Return the neighbours for which a passed boolean array holds true

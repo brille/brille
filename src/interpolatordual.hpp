@@ -159,7 +159,7 @@ public:
   \param j The second point index
   \return The permutation vector \f$\mathbf{p}_{ij}\f$
   */
-  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
+  template<typename I, typename=std::enable_if_t<std::is_integral_v<I>> >
   std::vector<ind_t> get_permutation(I, I) const;
   /*! \brief Return the permutation vectors for a set of indexed points
 
@@ -169,9 +169,9 @@ public:
           \f$\left\{\mathbf{p}_{01}, \mathbf{p}_{02}, \ldots, \mathbf{p}_{0n}\right\}\f$
           where the subscripts index `indices`.
   */
-  template<typename I, typename=std::enable_if_t<std::is_integral<I>::value> >
+  template<typename I, typename=std::enable_if_t<std::is_integral_v<I>> >
   std::vector<std::vector<ind_t>>
-  get_permutations(const std::vector<I>&) const;
+  get_permutations(const std::vector<I>& indices) const;
   /*! \brief Return the permutation vectors for a set of indexed points
 
   \param iw The point indices and their interpolation weights for which to
@@ -398,11 +398,11 @@ DualInterpolator<T,R>::cost_matrix(const ind_t i0, const ind_t i1) const {
 template<class T, class R>
 void
 DualInterpolator<T,R>::sort(){
-  std::set<size_t> keys = permutation_table_.keys();
+  const std::set<size_t> keys = permutation_table_.keys();
   // find the keys corresponding to one triangular part of the matrix (i<j)
   std::vector<std::array<ind_t,2>> tri_ij;
   tri_ij.reserve(keys.size()/2);
-  ind_t no = this->size();
+  const ind_t no = this->size();
   for (const auto & key: keys){
     auto i = static_cast<ind_t>(key/no);
     if (static_cast<size_t>(i)*static_cast<size_t>(no+1) < key)
@@ -411,12 +411,20 @@ DualInterpolator<T,R>::sort(){
   debug_update("Finding permutations for ",keys.size()," connections between the ",no," vertices");
   // now find the permutations in parallel
   std::mutex m;
-  auto nok = brille::utils::u2s<long long, size_t>(tri_ij.size());
-  #pragma omp parallel for default(none) shared(tri_ij, m, nok)
-  for (long long sk=0; sk<nok; ++sk){
-    auto k = brille::utils::s2u<size_t, long long>(sk);
-    this->determine_permutation_ij(tri_ij[k][0], tri_ij[k][1], m);
-  }
+
+  const auto pool = ThreadPool::getInstance();
+  const auto workers = pool->size();
+  auto task = [&](const size_t worker) {
+    auto [f, l] = thread_slice(tri_ij.size(), workers, worker);
+    return [&,first=f,last=l]() {
+      for (size_t k=first; k<last; ++k) {
+        determine_permutation_ij(tri_ij[k][0], tri_ij[k][1], m);
+      }
+    };
+  };
+  for (size_t i=0; i<workers; ++i) pool->enqueue(task(i));
+  pool->wait();
+
   debug_update("Done");
 }
 

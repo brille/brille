@@ -296,7 +296,7 @@ cost lapjv(idx dim, const cost *restrict assign_cost, bool verbose,
   #if _OPENMP >= 201307
   #pragma omp simd
   #endif
-  for (idx i = 0; i < dim; i++) {
+  for (idx i = 0; i < dim; ++i) {
     matches[i] = 0;
   }
 

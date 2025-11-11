@@ -27,7 +27,8 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "array_.hpp" // defines bArray
 #include "primitive.hpp"
 #include "array_l_.hpp"
-#include "omp.h"
+#include "thread_pool.h"
+
 namespace brille::lattice {
 
 //! The datatype of the P PrimitiveTransform matrix
@@ -163,27 +164,31 @@ LVec<S> parallel_transform_to_primitive(const Lattice<double>& lat, const LVec<T
   if (!lat.is_same(a.lattice()))
     throw std::runtime_error("transform_to_primitive requires a common Standard lattice");
   // different lattices can/should we check if the new lattice is the primitive lattice of the input lattice?
-  PrimitiveTransform PT(lat.bravais());
+  const PrimitiveTransform PT(lat.bravais());
   if (PT.does_nothing()) return LVec<S>(a);
   assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
   LengthUnit lu = a.type();
-  std::array<int, 9> transform{0,0,0,0,0,0,0,0,0};
-  switch (lu) {
-  case LengthUnit::angstrom: transform = PT.get_invP(); break;
-  case LengthUnit::inverse_angstrom: transform = PT.get_6Pt(); break;
-  default: throw std::runtime_error("Not implemented");
+
+  LVec<S> out(lu, lat.primitive(), a.shape());
+
+  if (LengthUnit::angstrom != lu && LengthUnit::inverse_angstrom != lu) {
+    throw std::runtime_error("Non angstrom or inverse angstrom length unit not implemented");
   }
-  auto sh = a.shape();
-  LVec<S> out(lu, lat.primitive(), sh);
-  auto na = static_cast<int64_t>(a.size(0));
-  auto t_ptr = transform.data();
-  if (threads < 1) threads = omp_get_max_threads();
-  omp_set_num_threads(threads);
-#pragma omp parallel for default(none) shared(out, t_ptr, a, na)
-  for (int64_t si=0; si<na; ++si){
-    auto i = static_cast<ind_t>(si);
-    brille::utils::multiply_matrix_vector(out.ptr(i), t_ptr, a.ptr(i));
-  }
+
+  const auto pool = ThreadPool::getInstance();
+  if (threads) pool->resize(threads); else pool->resize();
+  const auto workers = pool->size();
+  auto task = [&](const size_t worker) {
+    auto [f, l] = thread_slice(a.size(0), workers, worker);
+    return [&,first=f,last=l]() {
+      auto transform = (LengthUnit::inverse_angstrom == lu) ? PT.get_6P() : PT.get_invPt();
+      for (size_t i=first; i<last; ++i) {
+        utils::multiply_matrix_vector(out.ptr(i), transform.data(), a.ptr(i));
+      }
+    };
+  };
+  for (size_t thread=0; thread<workers; ++thread) pool->enqueue(task(thread));
+  pool->wait();
 
   if (LengthUnit::inverse_angstrom == lu){
     out /= S(6); // correct for having used 6 * Pt
@@ -203,27 +208,28 @@ LVec<S> parallel_transform_from_primitive(const Lattice<double>& lat, const LVec
   if (!lat.primitive().is_same(a.lattice()))
     throw std::runtime_error("transform_from_primitive requires a common primitive lattice");
   // different lattices can/should we check if the newlattice is the primitive lattice of the input lattice?
-  PrimitiveTransform PT(lat.bravais());
+  const PrimitiveTransform PT(lat.bravais());
   if (PT.does_nothing()) return LVec<S>(a);
   assert(a.stride().back() == 1u && a.size(a.ndim()-1)==3);
   LengthUnit lu = a.type();
-  std::array<int, 9> transform{0,0,0,0,0,0,0,0,0};
-  switch (lu) {
-  case LengthUnit::angstrom: transform = PT.get_6P(); break;
-  case LengthUnit::inverse_angstrom: transform = PT.get_invPt(); break;
-  default: throw std::runtime_error("Not implemented");
+  if (LengthUnit::angstrom != lu && LengthUnit::inverse_angstrom != lu) {
+    throw std::runtime_error("Non angstrom or inverse angstrom length unit not implemented");
   }
-  auto sh = a.shape();
-  LVec<S> out(lu, lat, sh);
-  auto na = static_cast<int64_t>(a.size(0));
-  auto t_ptr = transform.data();
-  if (threads < 1) threads = omp_get_max_threads();
-  omp_set_num_threads(threads);
-#pragma omp parallel for default(none) shared(out, t_ptr, a, na)
-  for (int64_t si=0; si<na; ++si){
-    auto i = static_cast<ind_t>(si);
-    brille::utils::multiply_matrix_vector(out.ptr(i), t_ptr, a.ptr(i));
-  }
+  LVec<S> out(lu, lat, a.shape());
+  const auto pool = ThreadPool::getInstance();
+  if (threads) pool->resize(threads); else pool->resize();
+  const auto workers = pool->size();
+  auto task = [&](const size_t worker) {
+    auto [f, l] = thread_slice(a.size(0), workers, worker);
+    return [&,first=f,last=l]() {
+      auto transform = (LengthUnit::angstrom == lu) ? PT.get_6P() : PT.get_invPt();
+      for (size_t i=first; i<last; ++i) {
+        utils::multiply_matrix_vector(out.ptr(i), transform.data(), a.ptr(i));
+      }
+    };
+  };
+  for (size_t thread=0; thread<workers; ++thread) pool->enqueue(task(thread));
+  pool->wait();
 
   if (LengthUnit::angstrom == lu){
     out /= S(6); // since we used 6P instead of P
