@@ -44,7 +44,6 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <cassert>
 #endif
 
-#include "is_musl.h"
 #include <iostream>
 
 namespace brille::polytrellis {
@@ -887,10 +886,6 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
 
 
   const auto pool = ThreadPool::getInstance();
-#ifdef __MUSL__
-  info_update("musl libc and OpenMP cause a segmentation violation in tests -- forcing single-threaded triangulation");
-  pool->resize(1);
-#endif
   const auto workers = pool->size();
   // initialize the thread-pair data for each worker
   for (size_t worker=0; worker<workers; ++worker) {
@@ -987,8 +982,7 @@ PolyTrellis<T,R,S,A>::part_one(const poly_t& poly, const A<S>& all_points, std::
 
   /* Now combine the per-thread VertexMapSets and VertexIndexMaps */
   profile_update(" Start vertex maps reduction");
-  auto comb = vertex_maps::parallel_reduce(thread_pairs); // TODO possible location of error
-  // auto comb = vertex_maps::reduce(thread_pairs);
+  auto comb = vertex_maps::parallel_reduce(thread_pairs);
   profile_update("  End of PolyTrellis part_one");
   return std::make_tuple(poly_stash, comb.first, comb.second);
 }
@@ -1042,12 +1036,7 @@ PolyTrellis<T,R,S,A>::part_two(
 
   profile_update("Cube and Poly node indexes collected");
 
-
   const auto pool = ThreadPool::getInstance();
-#ifdef __MUSL__
-  info_update("musl libc and OpenMP cause a segmentation violation in tests -- forcing single-threaded triangulation");
-  pool->resize(1);
-#endif
   const auto workers = pool->size();
 
   auto cube_task = [&](const size_t thread) {
