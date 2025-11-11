@@ -69,6 +69,10 @@ test-command = "pytest {package}/wrap/tests"
 build-verbosity = 1
 skip = ["cp38-*", "cp39-*"]  # pypy builds no longer on by default
 
+[[tool.cibuildwheel.overrides]]
+select = "*-musllinux*"
+test-command = "echo 'Skipping tests on musllinux due to difficulty setting thread stack size'"
+
 [tool.ruff]
 line-length = 88
 extend-exclude = [

@@ -1,23 +1,9 @@
 #include "thread_pool.h"
-#if defined(__linux__) && !defined(__GLIBC__)
-#include <pthread.h>
-size_t thread_stack_size() {
-  pthread_attr_t attr;
-  pthread_attr_init(&attr);
-  size_t stacksize;
-  pthread_attr_getstacksize(&attr, &stacksize);
-  pthread_attr_destroy(&attr);
-  return stacksize;
-}
-#endif
 
 // Retrieve the singleton instance:
 brille::ThreadPool * brille::ThreadPool::getInstance() {
   std::lock_guard lock(instance_mutex_);
   if (instance_ == nullptr) {
-#if defined(__linux__) && !defined(__GLIBC__)
-    std::cout << "Create ThreadPool with thread stack size = " << thread_stack_size() << " bytes\n";
-#endif
     instance_ = new ThreadPool();
   }
   return instance_;
