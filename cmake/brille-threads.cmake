@@ -6,6 +6,6 @@ foreach(TARGET IN LISTS CXX_TARGETS)
         # Set thread stack size to 8MB on Linux (the apparent default for glibc)
         # musllibc has default 128k https://wiki.musl-libc.org/functional-differences-from-glibc
         # which is a problem for using tetgen since it has many large stack arrays.
-        target_link_options(${TARGET} "-Wl,-z,stack-size=8388608")
+        target_link_options(${TARGET} PRIVATE "-Wl,-z,stack-size=8388608")
     endif()
 endforeach()
