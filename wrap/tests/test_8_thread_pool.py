@@ -96,7 +96,8 @@ def pool_workers(setting):
         env["BRILLE_NUM_THREADS"] = setting
     result = subprocess.run([sys.executable, "-c", code], capture_output=True, timeout=300, env=env)
     assert result.returncode == 0, result.stderr.decode()[-2000:]
-    return int(result.stdout)
+    # the last line: importing brille without matplotlib prints a notice to stdout
+    return int(result.stdout.decode().split()[-1])
 
 
 @pytest.mark.skipif(not sys.platform.startswith("linux"), reason="counts threads through /proc")
