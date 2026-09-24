@@ -89,7 +89,8 @@ bool Interpolator<T>::rip_axial(
     const ind_t b_{this->branches()}, s_{this->branch_span()};
     const std::array<int,9> ident = {1,0,0, 0,1,0, 0,0,1};
     auto [f, l] = thread_slice(x.size(0), workers, thread);
-    auto task = [&,first=f,last=l]() {
+    // b_, s_ and ident are local to make_task, so the task must own copies
+    auto task = [&,first=f,last=l,b_,s_,ident]() {
       for (size_t i=first; i<last; ++i) {
         auto xi = x.ptr(i);
         if (!approx_float::matrix(3, ident.data(), ptsym.get(r[i]).data())){

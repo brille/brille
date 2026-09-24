@@ -381,7 +381,8 @@ bool BrillouinZone::ir_moveinto_wedge(const LVec<double>& Q, LVec<double>& q, st
     for (const auto& r: psym.getall()) r_transpose.push_back(transpose(r));
     const auto [first, last] = thread_slice(nQ, workers, thread);
     // the actual task that the thread should execute // capture the thread number to avoid all threads sharing it
-    auto task = [&,frst=first,lst=last,iam=thread]() {
+    // psym, eidx and r_transpose are local to make_task, so the task must own copies
+    auto task = [&,frst=first,lst=last,iam=thread,psym=std::move(psym),eidx,r_transpose=std::move(r_transpose)]() {
       for (size_t i=frst; i<lst; ++i) {
         bool inside{_inside_wedge_outer(Q.view(i))};
         if (inside){
