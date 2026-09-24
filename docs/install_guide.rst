@@ -13,11 +13,19 @@ With an up-to-date version of ``pip`` you can install brille via
 
 .. code-block:: bash
 
-  pip install brille
+  python -m pip install brille
 
-This will download a precompiled binary of the latest released version of the
-module or download its source code and compile the module if a precompiled
-binary does not exist for your system.
+This downloads a precompiled wheel of the latest release, or downloads the
+source code and compiles it if no wheel matches your system (see
+`building from source`_). Wheels are published for
+
+* Linux on x86-64 with glibc 2.28 or later (manylinux_2_28), or with musl libc
+  (musllinux_1_2),
+* macOS 14 or later, on Apple silicon and Intel,
+* Windows on x86-64.
+
+The plotting functions in :py:mod:`brille.plotting` need matplotlib, which you
+can install alongside via ``python -m pip install "brille[plotting]"``.
 
 Note:
   Windows systems must have the Microsoft Visual C++ Redistributable binaries in
@@ -34,101 +42,70 @@ Note:
   `Microsoft <https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads>`_.
 
 
-
-source
-======
-If your development environment has `git <https://git-scm.com/>`_, Python ≥ 3.6,
-a C++17 compliant compiler, and `CMake <https://cmake.org/>`_ ≥ 3.13,
-then you can build the latest version of brille from source via
+building from source
+====================
+You need Python 3.10 or later, a C++17 compiler, and an internet connection.
+Then build and install the latest version of brille with
 
 .. code-block:: bash
 
   git clone https://github.com/brille/brille
   cd brille
-  python setup.py install
+  python -m pip install .
 
-.. role:: bash(code)
-  :language: bash
-  :class: highlight
+The build uses `scikit-build-core <https://scikit-build-core.readthedocs.io>`_
+with `Conan <https://conan.io>`_, which fetches and builds HDF5, HighFive,
+pybind11 and Catch2 from ConanCenter; ``pip`` installs both into an isolated
+build environment, so keep build isolation on (don't pass
+``--no-build-isolation``). The first build takes several minutes while HDF5
+compiles; later builds reuse Conan's cache.
 
-Note:
-  The CMake build will look for pybind11 and Catch2 header files on your system.
-  If they are not present or not a supported version, they will be downloaded
-  automatically from their respective Github repositories.
-
-debug
------
-If you encounter the need to debug the :py:mod:`~brille._brille` module, you can
-compile and install with debugging symbols via
+debugging symbols
+-----------------
+The build is always an optimised release build, and the module is stripped.
+On Linux and macOS you can keep debugging symbols, for use with a debugger or a
+native profiler such as ``py-spy --native``, with
 
 .. code-block:: bash
 
-   git clone https://github.com/brille/brille
-   cd brille
-   python setup.py debug_install
-
-which is an alias for ``python setup.py build --debug install``
+   python -m pip install . -C cmake.define.CMAKE_CXX_FLAGS=-g -C cmake.define.CMAKE_STRIP=/bin/true
 
 
 development
 -----------
 If you plan to modify the pure Python submodules, e.g.,
-:py:mod:`brille.plotting`, you may benefit from
-constructing from source using the ``develop`` option.
+:py:mod:`brille.plotting`, install in editable mode:
 
 .. code-block:: bash
 
-    git clone https://github.com/brille/brille
-    cd brille
-    python setup.py develop
+    python -m pip install -e .
 
-This allows any modifications to the Python source files to be immediately
-available to the Python interpreter; where otherwise the ``install`` command
-would need to be re-run (which rebuilds the C++ module) each time you would like
-to test your modifications.
+Changes to the Python source files are then available immediately. Changes to
+the C++ source still need the command to be run again, which rebuilds the
+module.
+
+CMake and the C++ tests
+-----------------------
+The Python module, the C++ library and the `Catch2 <https://github.com/catchorg/Catch2>`_
+based tests can also be built directly with `CMake <https://cmake.org/>`_ 3.26 or later.
+CMake runs Conan itself, so install it into the Python environment first:
+
+.. code-block:: bash
+
+    python -m pip install conan setuptools_scm numpy
+    cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D Python3_EXECUTABLE=$(which python)
+    cmake --build build --config Release -j
+    ctest --test-dir build -C Release
 
 
 restricted user access
 ======================
-On some systems the default installation location used by ``pip install`` and
-``python setup.py install`` is read-only for standard users.
+On some systems the default installation location used by ``pip install`` is
+read-only for standard users.
 While one could use an administrator or root account to perform the install in
-such a case, a safer alternative is to specify a user-accessible installation
-directory via
+such a case, a safer alternative is a virtual environment, or a user-accessible
+installation directory via
 
 .. code-block:: bash
 
-  pip install --user brille
-
-or
-
-.. code-block:: bash
-
-  python setup.py --user install
-
-
-legacy linux systems
-====================
-If the available compiler and ``pip`` versions are too old and can not be upgraded
-you may find that ``pip`` reports that the manylinux2010 versions available
-on PyPI are incompatible with your system and building from source may also fail.
-This is known to apply to RHEL7 based systems but may affect others as well.
-
-In such a case you can produce a suitable installable package on another system by
-replicating the manylinux build system.
-For the specific case of RHEL7, starting on a system with `devtoolset-7` installed run
-
-.. code-block:: bash
-
-    scl enable devtoolset-7 bash
-    git clone https://github.com/brille/brille.git
-    python3 -m pip wheel -w wheelhouse brille
-
-which produces a file like ``brille-0.5.0-cp36-cp36m-linux_x86_64.whl`` that can be copied to the target system.
-To install the `brille` package on the target machine one then runs
-
-.. code-block:: bash
-
-    pip install --user brille-0.5.0-cp36-cp36m-linux_x86_64.whl
-
-or similar.
+  python -m pip install --user brille

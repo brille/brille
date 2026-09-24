@@ -25,6 +25,7 @@ You can use ``brille`` to:
   motivation
   memory_usage
   threads
+  phase_convention
   tutorial
 
 .. toctree::

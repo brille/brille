@@ -122,6 +122,11 @@ Note
 
   Integer values outside of the mapped range (or missing) are replaced by 3.
 
+  Phonon eigenvectors (:py:class:`RotatesLike` `Gamma`) must use the "cell"
+  phase convention, in which they are periodic in reciprocal space.
+  Eigenvectors in the "atom" convention, which phonopy uses, give wrong results
+  without an error; see :ref:`phase_convention` for how to convert them.
+
 )pbdoc");
 
 
@@ -223,6 +228,11 @@ Note
   +-------+------------------------------------+
 
   Integer values outside of the mapped range (or missing) are replaced by 3.
+
+  Phonon eigenvectors (:py:class:`RotatesLike` `Gamma`) must use the "cell"
+  phase convention, in which they are periodic in reciprocal space.
+  Eigenvectors in the "atom" convention, which phonopy uses, give wrong results
+  without an error; see :ref:`phase_convention` for how to convert them.
 
   Mapping of integers to scalar cost function:
 
