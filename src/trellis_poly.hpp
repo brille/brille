@@ -328,7 +328,7 @@ public:
     typename data_t::value_in_t vals2(vals_out);
     typename data_t::vector_in_t vecs2(vecs_out);
     // OpenMP < v3.0 (VS uses v2.0) requires signed indexes for omp parallel
-    size_t missing{0};
+    std::atomic<size_t> missing{0};
     ThreadException thread_ex;
 
     const auto pool = ThreadPool::getInstance();
@@ -354,7 +354,7 @@ public:
     thread_ex.rethrow(); // only throws if error(s) were caught
     if (missing){
       std::ostringstream oss;
-      oss << "interpolate_at failed to find " << missing << " point" << (missing > 1 ? "s." : ".");
+      oss << "interpolate_at failed to find " << missing.load() << " point" << (missing > 1 ? "s." : ".");
       throw std::runtime_error(oss.str());
     }
     return std::make_tuple(vals_out, vecs_out);
@@ -1060,7 +1060,8 @@ PolyTrellis<T,R,S,A>::part_two(
     };
   };
   // Handle all polyhedron nodes (this almost certainly needs to be parallel)
-  ind_t fatal_tri{0}, fatal_miss{0}, fatal_match{0}, hiccups{0};
+  ind_t fatal_tri{0}, hiccups{0}; // guarded by tetgen_mutex
+  std::atomic<ind_t> fatal_miss{0}, fatal_match{0};
   std::mutex tetgen_mutex;
   auto poly_task = [&](const size_t thread) {
     auto [f, l] = thread_slice(polys, workers, thread);
@@ -1250,8 +1251,8 @@ PolyTrellis<T,R,S,A>::part_two(
   if (fatal_tri + fatal_miss + fatal_match){
     std::stringstream msg;
     if (fatal_tri) msg << fatal_tri << " Error(s) determining cut cube triangulation; ";
-    if (fatal_match) msg << fatal_match << " Multiple matches of a triangulated vertex; ";
-    if (fatal_miss) msg << fatal_miss << " Missing known vertex for triangulated vertex";
+    if (fatal_match) msg << fatal_match.load() << " Multiple matches of a triangulated vertex; ";
+    if (fatal_miss) msg << fatal_miss.load() << " Missing known vertex for triangulated vertex";
     throw std::runtime_error(msg.str());
   }
   debug_update_if(hiccups, "Bad vertex indexing occurred ", hiccups, " times");
