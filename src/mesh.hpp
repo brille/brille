@@ -21,6 +21,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief A class holding a triangulated tetrahedral mesh and data for interpolation
 */
 #include "interpolatordual.hpp"
+#include <atomic>
 #include <queue>
 #include <utility>
 #include "triangulation_layers.hpp"
@@ -168,17 +169,27 @@ public:
     const auto pool = ThreadPool::getInstance();
     if (threads > 0) pool->resize(threads); else pool->resize();
     const auto workers = pool->size();
+    std::atomic<size_t> missing{0};
     auto task = [&](const size_t worker) {
       auto [f, l] = thread_slice(x.size(0), workers, worker);
       return [&,first=f,last=l]() {
         for (size_t i=first; i<last; ++i) {
-          data_.interpolate_at(mesh.locate(x.view(i)), vals2, vecs2, i);
+          // round-off can put a point on the mesh surface just outside every tetrahedron
+          if (auto verts_weights = mesh.locate(x.view(i)); verts_weights.size()) {
+            data_.interpolate_at(verts_weights, vals2, vecs2, i);
+          } else {
+            ++missing;
+          }
         }
       };
     };
     for (size_t i=0; i<workers; ++i) pool->enqueue(task(i));
     pool->wait();
 
+    if (missing) {
+      throw std::runtime_error(std::to_string(missing.load()) + " of " + std::to_string(x.size(0))
+                               + " points not found in tetrahedral mesh");
+    }
     return std::make_tuple(vals, vecs);
   }
   //! Return the neighbours for which a passed boolean array holds true

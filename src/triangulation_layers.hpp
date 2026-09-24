@@ -413,6 +413,9 @@ public:
     ind_t idx = layers[0].unsafe_locate(x,vw);
     // use the layer-connection map to restrict the search in the next layer's tetrahedra
     for (size_t i=1; i<layers.size(); ++i){
+      // a point outside every tetrahedron of the previous layer (e.g., by round-off
+      // on the surface) returned the not-found sentinel, which has no connections
+      if (idx >= layers[i-1].number_of_tetrahedra()) return {};
       const TetSet& tosearch = connections[i-1][idx];
       idx = layers[i].unsafe_locate(tosearch, x, vw);
     }
