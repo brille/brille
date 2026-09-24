@@ -105,3 +105,23 @@ def test_brille_num_threads_sizes_the_pool():
     """BRILLE_NUM_THREADS sets the pool size when no thread count is given; bad values are ignored."""
     assert pool_workers("3") == 3
     assert pool_workers("not-a-number") == pool_workers(None)
+
+
+def test_sorting_complex_eigenvectors_does_not_deadlock():
+    """Mode sorting calls pool-parallel Hermitian products from inside pool tasks.
+
+    Waiting for the pool from one of its own workers never returned, so
+    fill(..., sort=True) hung for complex eigenvectors.
+    """
+    result = run("""
+        import numpy as np
+        from brille import BrillouinZone, BZMeshQdc, Lattice
+        lattice = Lattice(((3, 3, 3), (90, 90, 90)), spacegroup="P 1", basis=([[0, 0, 0]], [0]))
+        bz = BrillouinZone(lattice)
+        grid = BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 50)
+        q = np.asarray(grid.rlu)
+        a = 2 * np.pi * q[:, 0]
+        vectors = np.stack([np.cos(a), np.sin(a), np.zeros_like(a)], axis=1)[:, None, :] * np.exp(1j * a)[:, None, None]
+        grid.fill(np.ones((len(q), 1)), (1,), np.ascontiguousarray(vectors), (0, 3, 0, 2, 1), sort=True)
+        """)
+    assert result.returncode == 0, result.stderr.decode()[-2000:]

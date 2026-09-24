@@ -229,3 +229,34 @@ TEST_CASE("BRILLE_NUM_THREADS sets the default thread count", "[thread]") {
     REQUIRE(default_thread_count() == cores);
   }
 }
+
+TEST_CASE("ThreadPool runs nested parallel sections serially instead of deadlocking", "[thread]") {
+  const auto pool = ThreadPool::getInstance();
+  pool->resize(3);
+  const auto workers = pool->size();
+  std::atomic<size_t> inner{0};
+  std::atomic<bool> nested_on_worker{true};
+  for (size_t w=0; w<workers; ++w) {
+    pool->enqueue([&, pool]() {
+      nested_on_worker = nested_on_worker && ThreadPool::on_worker_thread();
+      pool->resize(7); // ignored on a worker
+      for (size_t i=0; i<workers; ++i) pool->enqueue([&]() { ++inner; });
+      pool->wait();
+    });
+  }
+  pool->wait();
+  REQUIRE(nested_on_worker);
+  REQUIRE(inner == workers * workers);
+  REQUIRE(pool->size() == workers);
+  REQUIRE_FALSE(ThreadPool::on_worker_thread());
+}
+
+TEST_CASE("ThreadPool rethrows exceptions from nested tasks", "[thread]") {
+  const auto pool = ThreadPool::getInstance();
+  pool->resize(2);
+  pool->enqueue([pool]() {
+    pool->enqueue([]() { throw std::runtime_error("nested failure"); });
+    pool->wait();
+  });
+  REQUIRE_THROWS_WITH(pool->wait(), "nested failure");
+}

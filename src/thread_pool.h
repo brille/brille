@@ -61,9 +61,24 @@ namespace brille {
 
         static ThreadPool * getInstance();
 
+        /*! \brief Whether the calling thread is one of the pool's workers
+
+        Code that uses the pool can itself run inside a pool task (e.g., a
+        Hermitian product inside a mode-sorting cost function). Waiting there
+        for the pool would wait for the calling worker too, and never return,
+        so on a worker thread enqueue() runs the task at once, wait() returns,
+        and resize() and refresh() do nothing: nested parallel sections run
+        serially, as nested OpenMP regions did.
+        */
+        static bool on_worker_thread();
+
         // Enqueue task for execution by the thread pool
         void enqueue(std::function<void()> task)
         {
+            if (on_worker_thread()) {
+                task(); // nested: run now, on this worker
+                return;
+            }
             {
                 std::unique_lock lock(queue_mutex_);
                 tasks_.emplace(std::move(task));
@@ -79,6 +94,7 @@ namespace brille {
         }
 
         void resize(const size_t num_threads = default_thread_count()) {
+            if (on_worker_thread()) return; // a worker cannot replace the pool it runs in
             if (threads_.size() != num_threads) {
                 refresh(num_threads);
             }
@@ -86,6 +102,7 @@ namespace brille {
 
         // Resize the pool to a specified number of threads
         void refresh(const size_t num_threads = default_thread_count()) {
+            if (on_worker_thread()) return;
             if (!threads_.empty()) {
                 clear();
                 threads_.clear();
@@ -95,6 +112,7 @@ namespace brille {
             // Creating worker threads
             for (size_t i = 0; i < num_threads; ++i) {
                 threads_.emplace_back([this] {
+                    mark_worker_thread();
                     while (true) {
                         std::function<void()> task;
                         // The reason for putting the below code
@@ -150,6 +168,7 @@ namespace brille {
 
         // Wait for all threads to finish their work, then rethrow any exception a task threw
         void wait() {
+            if (on_worker_thread()) return; // nested tasks already ran in enqueue()
             {
                 std::unique_lock lock(queue_mutex_);
                 wait_condition_.wait(lock, [this] {
@@ -159,6 +178,7 @@ namespace brille {
             errors_.rethrow();
         }
     private:
+        static void mark_worker_thread();
         // Stop all threads (in destructor or before resizing as part of a refresh)
         void clear() {
             {
