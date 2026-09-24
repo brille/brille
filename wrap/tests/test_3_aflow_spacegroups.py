@@ -24,7 +24,7 @@ def n2chr(n):
 class AflowTest(unittest.TestCase):
     def test_aflow_crystaldatabase(self):
         from numpy import zeros, isclose
-        from brille import Lattice, BrillouinZone, PointSymmetry
+        from brille import Lattice, BrillouinZone, PointSymmetry, Symmetry
 
         tested = 0
         failed = 0
@@ -43,10 +43,10 @@ class AflowTest(unittest.TestCase):
                 bz = BrillouinZone(lat)
                 vol_bz = bz.polyhedron.volume
                 vol_ir = bz.ir_polyhedron.volume
-                if not isclose(vol_ir, vol_bz / PointSymmetry(afl[0]).size):
+                if not isclose(vol_ir, vol_bz / PointSymmetry(Symmetry(afl[0])).size):
                     failed += 1
                     failed_afl.append(afl)
-                    failed_ratio.append(vol_ir / vol_bz * PointSymmetry(afl[0]).size)
+                    failed_ratio.append(vol_ir / vol_bz * PointSymmetry(Symmetry(afl[0])).size)
                     hall_groups_failed[afl[0] - 1] += 1
                 else:
                     hall_groups_passed[afl[0] - 1] += 1
