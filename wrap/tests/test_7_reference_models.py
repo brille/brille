@@ -69,11 +69,12 @@ def _hang_watchdog():
 _DUPLICATE_POINT = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="#26: 'Duplicate intersection point' while meshing")
 _NO_IR_ZONE = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="#28: no irreducible Brillouin zone found")
 _UNREFINED = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="#30: mesh ignores max_size on the explicit route")
+# A hang cannot be xfailed: the watchdog would kill the worker.
+_PSEUDO_CUBIC = pytest.mark.skip(reason="#29: R lattice within 6 ppm of fcc; a 4e-6 zone edge stalls TetGen refinement")
 KNOWN_FAILURES = {
-    ("hall", 146): _DUPLICATE_POINT,
-    ("hall", 228): _DUPLICATE_POINT,
+    ("hall", 146): _PSEUDO_CUBIC,
     ("explicit", 5): _DUPLICATE_POINT,
-    ("explicit", 146): _DUPLICATE_POINT,
+    ("explicit", 146): _PSEUDO_CUBIC,
     **{("explicit", n): _NO_IR_ZONE for n in (22, 197, 199, 203)},
     **{("explicit", n): _UNREFINED for n in (127, 200, 201, 215, 221)},
 }
@@ -104,12 +105,25 @@ def filled(number, route="hall", convention="cell"):
     raise RuntimeError(f"no interior mesh vertices for ITA {number}, even at {points_per_ir} points per IR volume")
 
 
+# Checking one query costs ~(3N)³: ITA 228's 192-atom cell (576 modes) takes ~2 s per query.
+# Budget as many queries as a 144-mode cell could afford in 480.
+UNFOLDING_BUDGET = 480 * 144**3
+
+
 def unfolding_queries(setup, number):
-    """Every point-group image, shifted by a random reciprocal lattice vector, of every interior vertex."""
+    """Every point-group image, shifted by a random reciprocal lattice vector, of interior vertices.
+
+    Uses a random subset of the interior vertices (at least one) when all of them
+    would exceed UNFOLDING_BUDGET, so that every operation is still exercised.
+    """
     cr = setup.model.crystal
+    rng = np.random.default_rng(number)
     vertices = setup.vertices[interior_vertex_indices(setup)]
-    return point_group_images(vertices, cr.rotations, np.random.default_rng(number), max_shift=2,
-                              translations=cr.translations)
+    operations = len(np.unique(np.asarray(cr.rotations).reshape(-1, 9), axis=0))
+    keep = max(1, UNFOLDING_BUDGET // (operations * (3 * cr.natoms) ** 3))
+    if len(vertices) > keep:
+        vertices = vertices[np.sort(rng.choice(len(vertices), keep, replace=False))]
+    return point_group_images(vertices, cr.rotations, rng, max_shift=2, translations=cr.translations)
 
 
 @pytest.mark.parametrize("number", SPACE_GROUPS)
