@@ -2,6 +2,7 @@
 #include <numeric>
 #include <algorithm>
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 #include "thread_pool.h"
 
@@ -127,7 +128,7 @@ TEST_CASE("ThreadPool can work in parallel", "[thread]") {
 }
 
 
-TEST_CASE("lambda capture of lambda parameter shared between calls in parallel", "[thread]") {
+TEST_CASE("task lambdas capture their producer's parameters by value", "[thread]") {
   const auto pool = ThreadPool::getInstance();
   pool->resize(std::thread::hardware_concurrency());
   const auto workers = pool->size();
@@ -135,31 +136,50 @@ TEST_CASE("lambda capture of lambda parameter shared between calls in parallel",
   reports.reserve(workers);
   std::mutex report_mutex;
   auto job = [&](const size_t worker) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    return [&] {
-      const auto ms = std::chrono::milliseconds(rand() % 1000);
-      std::this_thread::sleep_for(ms);
-      {
-        std::unique_lock lock(report_mutex);
-        // We might expect that worker is set by the call that constructed this lambda
-        // but (on gcc 15.2, at least) worker is shared between invocations, such that
-        // we get the _last_ call's value (if the sleep is sufficiently long)
-        reports.push_back(1+static_cast<int>(worker));
-        std::cout << "Job " << worker << " checking in\n";
-        lock.unlock();
-      }
+    // Capturing `worker` by reference ([&]) would leave the task referring to
+    // this call's parameter after the call returns: undefined behaviour, which
+    // with gcc 15 typically reports the last worker's value from every task.
+    return [&, index=worker] {
+      // finish in reverse order, so that any sharing would be visible
+      std::this_thread::sleep_for(std::chrono::milliseconds(5 * (workers - index)));
+      std::unique_lock lock(report_mutex);
+      reports.push_back(1+static_cast<int>(index));
     };
   };
   for (size_t worker=0; worker < workers; ++worker) pool->enqueue(job(worker));
   pool->wait();
 
-  std::cout << "reports = [";
-  for (const auto & r: reports) std::cout << r << ", ";
-  std::cout << "]\n";
-
   std::vector<int> expected(reports.size());
   std::iota(expected.begin(), expected.end(), 1);
 
   REQUIRE(static_cast<size_t>(reports.size()) == static_cast<size_t>(workers));
-  REQUIRE(!std::is_permutation(reports.begin(), reports.end(), expected.begin()));
+  REQUIRE(std::is_permutation(reports.begin(), reports.end(), expected.begin()));
+}
+TEST_CASE("ThreadPool rethrows task exceptions from wait", "[thread]") {
+  const auto pool = ThreadPool::getInstance();
+  pool->resize(4);
+  std::atomic<size_t> finished{0};
+  for (size_t i=0; i<pool->size(); ++i) {
+    pool->enqueue([&finished, i]() {
+      if (i == 1) throw std::runtime_error("task 1 failed");
+      ++finished;
+    });
+  }
+  REQUIRE_THROWS_WITH(pool->wait(), "task 1 failed");
+  // the other tasks still ran to completion
+  REQUIRE(finished == pool->size() - 1);
+  // and the error was consumed: the pool is usable again
+  pool->enqueue([&finished]() { ++finished; });
+  REQUIRE_NOTHROW(pool->wait());
+  REQUIRE(finished == pool->size());
+}
+
+TEST_CASE("ThreadPool combines exceptions from several tasks", "[thread]") {
+  const auto pool = ThreadPool::getInstance();
+  pool->resize(4);
+  for (size_t i=0; i<3; ++i) {
+    pool->enqueue([]() { throw std::runtime_error("failed"); });
+  }
+  REQUIRE_THROWS_WITH(pool->wait(), Catch::Matchers::StartsWith("3 exceptions occurred"));
+  REQUIRE_NOTHROW(pool->wait());
 }

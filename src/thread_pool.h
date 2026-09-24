@@ -9,6 +9,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "thread_exception.h"
+
 namespace brille {
     // Class that represents a simple thread pool
     class ThreadPool {
@@ -32,6 +34,8 @@ namespace brille {
         std::condition_variable wait_condition_;
         // Flag to indicate whether the thread pool should stop or not
         bool stop_ = false;
+        // Exceptions thrown by tasks, rethrown by wait()
+        ThreadException errors_;
     protected:
         // Constructor to creates a thread pool with given number of threads
         explicit ThreadPool(const size_t num_threads = std::thread::hardware_concurrency()) {
@@ -123,23 +127,28 @@ namespace brille {
                             wait_condition_.notify_all();
 
                         }
-                        task();
+                        // An exception escaping a thread calls std::terminate,
+                        // so keep it for wait() to rethrow on the calling thread
+                        try {
+                            task();
+                        } catch (...) {
+                            errors_.capture();
+                        }
                         wait_condition_.notify_all();
                     }
                 });
             }
         }
 
-        // Wait for all threads to finish their work
+        // Wait for all threads to finish their work, then rethrow any exception a task threw
         void wait() {
-            std::unique_lock lock(queue_mutex_);
-            // std::cout << wait_count_ << " waiting " << " and " << tasks_.size() << " tasks" << std::endl;
-            wait_condition_.wait(lock, [this] {
-                // std::cout << wait_count_ << " of " << threads_.size() << " waiting and " << tasks_.size() << " tasks" << std::endl;
-                return tasks_.empty() && wait_count_ >= threads_.size();
-            });
-            // std::cout << wait_count_ << " waiting " << " and " << tasks_.size() << " tasks" << std::endl;
-            // lock.unlock();
+            {
+                std::unique_lock lock(queue_mutex_);
+                wait_condition_.wait(lock, [this] {
+                    return tasks_.empty() && wait_count_ >= threads_.size();
+                });
+            }
+            errors_.rethrow();
         }
     private:
         // Stop all threads (in destructor or before resizing as part of a refresh)
