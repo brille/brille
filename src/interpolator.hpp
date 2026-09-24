@@ -95,6 +95,8 @@ protected:
   element_t<ind_t> _funtype;
   costfun_t _scalarfun; //!< A function to calculate differences between the scalars at two stored points
   costfun_t _vectorfun; //!< A function to calculate differences between the vectors at two stored points
+  bool normalize_{false}; //!< Whether each interpolated branch is scaled to unit norm
+  std::vector<double> metric_; //!< Diagonal inner-product metric for that norm; empty means the identity
   //costfun_t _matrixfun; //!< A function to calculate the differences between matrices at two stored points
 public:
   bool operator!=(const Interpolator<T>& other) const {
@@ -105,6 +107,8 @@ public:
     if (lenunit_ != other.lenunit_) return true;
     if (_costmult != other._costmult) return true;
     if (_funtype != other._funtype) return true;
+    if (normalize_ != other.normalize_) return true;
+    if (metric_ != other.metric_) return true;
     return false;
   }
   /*! \brief Constructor without data and with optional cost function types
@@ -347,6 +351,43 @@ public:
   brille::Array<T> array(void) const {return brille::Array<T>(data_,shape_);}
   //! Return the sub-array character specifier
   element_t<ind_t> elements(void) const {return _elements;}
+  /*! \brief Scale each interpolated branch to unit norm, or stop doing so
+
+  Linear interpolation between unit vectors gives vectors shorter than one, so
+  quantities built from them, like structure factors, come out too small.
+  With normalization on, each branch v of an interpolation result becomes
+  \f$ v / \sqrt{|\langle v | M | v \rangle|} \f$ for a diagonal metric \f$M\f$.
+  The identity metric gives the ordinary norm; \f$\eta = \mathrm{diag}(1,\ldots,-1,\ldots)\f$
+  keeps the sign of \f$\langle v|\eta|v\rangle\f$, as Bogoliubov vectors need.
+
+  Vector and matrix parts must be in Cartesian units or unitless: in lattice
+  units their length depends on the lattice, which the Interpolator does not know.
+
+  \param normalize whether to normalize
+  \param metric    one weight per element of a branch, or empty for the identity
+  */
+  void set_normalization(const bool normalize, std::vector<double> metric = {}) {
+    if (normalize && data_.size(0) > 0) this->check_normalizable();
+    if (!metric.empty() && data_.size(0) > 0 && metric.size() != this->branch_span()){
+      throw std::runtime_error("The metric needs one weight for each of the "
+        + std::to_string(this->branch_span()) + " elements of a branch, not "
+        + std::to_string(metric.size()));
+    }
+    normalize_ = normalize;
+    metric_ = std::move(metric);
+  }
+  //! Whether interpolated branches are normalized
+  [[nodiscard]] bool normalization() const {return normalize_;}
+  //! Throw unless vector and matrix parts are in Cartesian units or unitless
+  void check_normalizable() const {
+    const bool has_vectors = _elements[1] > 0 || _elements[2] > 0;
+    if (has_vectors && (lenunit_ == LengthUnit::real_lattice || lenunit_ == LengthUnit::reciprocal_lattice)){
+      throw std::runtime_error("Normalizing vectors needs them in Cartesian units (LengthUnit angstrom "
+        "or inverse_angstrom) or without units; in lattice units their length depends on the lattice");
+    }
+  }
+  //! The diagonal metric used for normalization; empty for the identity
+  [[nodiscard]] const std::vector<double>& metric() const {return metric_;}
   /*! \brief Perform linear interpolation between a set of stored points with
              provided weights
 
@@ -618,6 +659,7 @@ private:
   // interpolate_at_*
   void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<ind_t>&, const std::vector<double>&, bArray<T>&, const ind_t, const bool) const;
   void interpolate_at_mix(const std::vector<std::vector<ind_t>>&, const std::vector<std::pair<ind_t,double>>&, bArray<T>&, const ind_t, const bool) const;
+  void normalize_branches(T*) const;
 
   public:
   template<class HF> std::enable_if_t<std::is_base_of_v<HighFive::Object, HF>, bool>
@@ -631,6 +673,8 @@ private:
     group.createDataSet("lenunit", lenunit_);
     group.createDataSet("costmult", _costmult);
     group.createDataSet("funtype", _funtype);
+    group.createDataSet("normalize", static_cast<int>(normalize_));
+    if (!metric_.empty()) group.createDataSet("metric", metric_);
     return ok;
   }
   [[nodiscard]] bool to_hdf(const std::string& f, const std::string& d, const unsigned p=HighFive::File::OpenOrCreate) const {
@@ -655,7 +699,16 @@ private:
     group.getDataSet("costmult").read(c);
     group.getDataSet("funtype").read(f);
     //
-    return {d, s, e, r, l, static_cast<int>(f[0]), static_cast<int>(f[1]), c};
+    Interpolator<T> out(d, s, e, r, l, static_cast<int>(f[0]), static_cast<int>(f[1]), c);
+    // files written before normalization existed have neither entry
+    if (group.exist("normalize")){
+      int n{0};
+      group.getDataSet("normalize").read(n);
+      std::vector<double> m;
+      if (group.exist("metric")) group.getDataSet("metric").read(m);
+      out.set_normalization(n != 0, m);
+    }
+    return out;
   }
   static Interpolator<T> from_hdf(const std::string& filename, const std::string& dataset){
     HighFive::File file(filename, HighFive::File::ReadOnly);
