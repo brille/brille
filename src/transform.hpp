@@ -176,12 +176,12 @@ LVec<S> parallel_transform_to_primitive(const Lattice<double>& lat, const LVec<T
   }
 
   const auto pool = ThreadPool::getInstance();
-  if (threads) pool->resize(threads); else pool->resize();
+  if (threads > 0) pool->resize(threads); else pool->resize();
   const auto workers = pool->size();
   auto task = [&](const size_t worker) {
     auto [f, l] = thread_slice(a.size(0), workers, worker);
     return [&,first=f,last=l]() {
-      auto transform = (LengthUnit::inverse_angstrom == lu) ? PT.get_6P() : PT.get_invPt();
+      auto transform = (LengthUnit::inverse_angstrom == lu) ? PT.get_6Pt() : PT.get_invP();
       for (size_t i=first; i<last; ++i) {
         utils::multiply_matrix_vector(out.ptr(i), transform.data(), a.ptr(i));
       }
@@ -217,7 +217,7 @@ LVec<S> parallel_transform_from_primitive(const Lattice<double>& lat, const LVec
   }
   LVec<S> out(lu, lat, a.shape());
   const auto pool = ThreadPool::getInstance();
-  if (threads) pool->resize(threads); else pool->resize();
+  if (threads > 0) pool->resize(threads); else pool->resize();
   const auto workers = pool->size();
   auto task = [&](const size_t worker) {
     auto [f, l] = thread_slice(a.size(0), workers, worker);

@@ -25,7 +25,7 @@ bool Interpolator<T>::rip_recip(
     return false;
 
   const auto pool = ThreadPool::getInstance();
-  if (nthreads) pool->resize(nthreads); else pool->resize();
+  if (nthreads > 0) pool->resize(nthreads); else pool->resize();
   const auto workers = pool->size();
   auto task = [&](const size_t worker) {
     auto [f, l] = thread_slice(x.size(0), workers, worker);

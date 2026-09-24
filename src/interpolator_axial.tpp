@@ -73,7 +73,7 @@ bool Interpolator<T>::rip_axial(
 ) const {
   profile_update("Start Interpolator::rip_axial method");
   const auto pool = ThreadPool::getInstance();
-  if (nthreads) pool->resize(nthreads); else pool->resize();
+  if (nthreads > 0) pool->resize(nthreads); else pool->resize();
   const auto workers = pool->size();
 
   auto no = this->count_scalars_vectors_matrices();

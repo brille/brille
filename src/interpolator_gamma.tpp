@@ -167,7 +167,7 @@ bool Interpolator<T>::rip_gamma_complex(
   }
 
   const auto pool = ThreadPool::getInstance();
-  if (nthreads) pool->resize(nthreads); else pool->resize();
+  if (nthreads > 0) pool->resize(nthreads); else pool->resize();
   const auto workers = pool->size();
 
   auto make_task = [&](const size_t thread) {
