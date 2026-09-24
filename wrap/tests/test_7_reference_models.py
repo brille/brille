@@ -65,16 +65,15 @@ def _hang_watchdog():
 
 
 # (route, ITA number) pairs, for SEED, on which brille fails before the test can
-# check anything. Crashes are skipped rather than xfailed: they take down the
-# test process.
-_CRASHES = pytest.mark.skip(reason="#26: mesh construction crashes the process for this crystal")
+# check anything.
+_DUPLICATE_POINT = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="#26: 'Duplicate intersection point' while meshing")
 _NO_IR_ZONE = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="#28: no irreducible Brillouin zone found")
 _UNREFINED = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="#30: mesh ignores max_size on the explicit route")
 KNOWN_FAILURES = {
-    ("hall", 146): _CRASHES,
-    ("hall", 228): _CRASHES,
-    ("explicit", 5): _CRASHES,
-    ("explicit", 146): _CRASHES,
+    ("hall", 146): _DUPLICATE_POINT,
+    ("hall", 228): _DUPLICATE_POINT,
+    ("explicit", 5): _DUPLICATE_POINT,
+    ("explicit", 146): _DUPLICATE_POINT,
     **{("explicit", n): _NO_IR_ZONE for n in (22, 197, 199, 203)},
     **{("explicit", n): _UNREFINED for n in (127, 200, 201, 215, 221)},
 }
@@ -175,29 +174,57 @@ def test_continuity_across_zone_faces():
     assert np.abs(inside - outside).max() < 1e-4
 
 
-@pytest.mark.xfail(strict=True, reason="#24: a point round-off outside the irreducible mesh segfaults")
-def test_surface_vertices_do_not_crash():
-    """Run in a subprocess, since the failure is a segmentation fault."""
-    script = textwrap.dedent(
-        f"""
-        import sys
-        sys.path.insert(0, {str(HERE)!r})
-        import numpy as np
-        from harness import BornVonKarman, aflow_crystal, build, interpolate, primitive
-        cr = primitive(aflow_crystal(70, np.random.default_rng(0)))
-        setup = build(BornVonKarman(cr), points_per_ir=30, route="explicit")
+RAISED = 3  # exit status of a subprocess whose brille call raised RuntimeError
+
+
+class BrilleRaised(Exception):
+    """A subprocess's brille call raised RuntimeError, rather than crashing or succeeding."""
+
+
+def run_isolated(script, *args, timeout=300):
+    """Run a script in a subprocess. A crash fails; a RuntimeError raises BrilleRaised."""
+    result = subprocess.run([sys.executable, "-c", script, *args], capture_output=True, timeout=timeout)
+    stderr = result.stderr.decode()[-2000:]
+    if result.returncode == RAISED:
+        raise BrilleRaised(stderr)
+    assert result.returncode == 0, f"exit {result.returncode}\n{stderr}"
+
+
+_SURFACE_SCRIPT = textwrap.dedent(
+    f"""
+    import sys
+    sys.path.insert(0, {str(HERE)!r})
+    import numpy as np
+    from harness import BornVonKarman, aflow_crystal, build, interpolate, primitive
+    cr = primitive(aflow_crystal(70, np.random.default_rng(0)))
+    setup = build(BornVonKarman(cr), points_per_ir=30, route="explicit")
+    try:
         interpolate(setup, setup.vertices)
-        """
-    )
-    result = subprocess.run([sys.executable, "-c", script], capture_output=True, timeout=300)
-    assert result.returncode == 0, result.stderr.decode()[-2000:]
+    except RuntimeError as error:
+        print(error, file=sys.stderr)
+        sys.exit({RAISED})
+    """
+)
+
+
+def test_surface_vertices_do_not_crash():
+    """#24: surface points that round off outside the mesh raise instead of segfaulting."""
+    try:
+        run_isolated(_SURFACE_SCRIPT)
+    except BrilleRaised as error:
+        assert "not found in tetrahedral mesh" in str(error)
+
+
+@pytest.mark.xfail(strict=True, raises=BrilleRaised, reason="#24: surface points round off outside the mesh")
+def test_surface_vertices_interpolate():
+    run_isolated(_SURFACE_SCRIPT)
 
 
 # Meshing every AFLOW lattice, the way test_3 builds them, in a subprocess each.
 # Indices into aflow_lattices.json of lattices that currently fail.
-_SEGFAULT = pytest.mark.xfail(strict=True, reason="#26: mesh construction segfaults")
+_DUPLICATE = pytest.mark.xfail(strict=True, raises=BrilleRaised, reason="#26: 'Duplicate intersection point' while meshing")
 AFLOW_MESH_FAILURES = {
-    **{i: _SEGFAULT for i in (9, 14, 152, 166, 179, 195, 303, 313, 344, 359, 371, 381)},
+    **{i: _DUPLICATE for i in (9, 14, 152, 166, 179, 195, 303, 313, 344, 359, 371, 381)},
     327: pytest.mark.xfail(strict=True, reason="#29: mesh construction hangs (R3)"),
     # near-degenerate monoclinic (beta = 90.04 deg): ~5000 vertices instead of ~100, ~40 s alone
     28: pytest.mark.xfail(strict=False, reason="#4: mesh over-refines; slow, times out under load"),
@@ -222,12 +249,15 @@ def test_aflow_lattice_meshes(index):
         import sys, json, brille
         hall, lengths, angles, symbol = json.loads(sys.argv[1])
         bz = brille.BrillouinZone(brille.Lattice((lengths, angles), spacegroup=symbol))
-        brille.BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 100)
+        try:
+            brille.BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 100)
+        except RuntimeError as error:
+            print(error, file=sys.stderr)
+            sys.exit(RAISED)
         """
-    )
+    ).replace("RAISED", str(RAISED))
     entry = json.dumps(aflow_lattices()[index])
     try:
-        result = subprocess.run([sys.executable, "-c", code, entry], capture_output=True, timeout=AFLOW_MESH_TIMEOUT)
+        run_isolated(code, entry, timeout=AFLOW_MESH_TIMEOUT)
     except subprocess.TimeoutExpired:
         pytest.fail(f"meshing {entry} took more than {AFLOW_MESH_TIMEOUT} s")
-    assert result.returncode == 0, f"{entry}: exit {result.returncode}\n{result.stderr.decode()[-1000:]}"
