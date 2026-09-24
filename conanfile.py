@@ -17,15 +17,8 @@ class BrilleRecipe(ConanFile):
 
     def requirements(self):
         self.requires("pybind11/2.13.1")
-        # self.requires("hdf5/1.12.0")
         self.requires("catch2/3.6.0")
         self.requires("highfive/2.9.0")
-        if self.settings.os == "Macos":
-            self.requires("llvm-openmp/20.1.6")
-
-    def configure(self):
-        if self.settings.os == "Macos":
-            self.options["llvm-openmp/*"].shared = True
 
     def layout(self):
         cmake_layout(self)

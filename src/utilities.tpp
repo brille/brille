@@ -50,22 +50,22 @@ template<class T, class R, class S, class I>
 // std::enable_if_t<std::is_unsigned_v<I>>
 void
 mul_arrays(T* C, const I n, const I l, const I m, const R* A, const S* B){
-  for (I i=0;i<n*m;i++) C[i]=T(0);
-  for (I i=0;i<n;i++) for (I j=0;j<m;j++) for (I k=0;k<l;k++) C[i*m+j] += static_cast<T>(A[i*l+k]*B[k*m+j]);
+  for (I i=0;i<n*m;++i) C[i]=T(0);
+  for (I i=0;i<n;++i) for (I j=0;j<m;++j) for (I k=0;k<l;++k) C[i*m+j] += static_cast<T>(A[i*l+k]*B[k*m+j]);
 }
 template<class T, class R, class S, class I>
 // std::enable_if_t<std::is_unsigned_v<I>>
 void
 mul_arrays(std::complex<T>* C, const I n, const I l, const I m, const R* A, const std::complex<S>* B){
-  for (I i=0;i<n*m;i++) C[i]=std::complex<T>(0);
-  for (I i=0;i<n;i++) for (I j=0;j<m;j++) for (I k=0;k<l;k++) C[i*m+j] += static_cast<S>(A[i*l+k])*B[k*m+j];
+  for (I i=0;i<n*m;++i) C[i]=std::complex<T>(0);
+  for (I i=0;i<n;++i) for (I j=0;j<m;++j) for (I k=0;k<l;++k) C[i*m+j] += static_cast<S>(A[i*l+k])*B[k*m+j];
 }
 template<class T, class R, class S, class I>
 // std::enable_if_t<std::is_unsigned_v<I>>
 void
 mul_arrays(std::complex<T>* C, const I n, const I l, const I m, const std::complex<R>* A, const S* B){
-  for (I i=0;i<n*m;i++) C[i]=std::complex<T>(0);
-  for (I i=0;i<n;i++) for (I j=0;j<m;j++) for (I k=0;k<l;k++) C[i*m+j] += A[i*l+k]*static_cast<R>(B[k*m+j]);
+  for (I i=0;i<n*m;++i) C[i]=std::complex<T>(0);
+  for (I i=0;i<n;++i) for (I j=0;j<m;++j) for (I k=0;k<l;++k) C[i*m+j] += A[i*l+k]*static_cast<R>(B[k*m+j]);
 }
 template<class T, class R, class S, class I>
 // std::enable_if_t<std::is_unsigned_v<I>>
@@ -338,15 +338,28 @@ template<class I, class T> std::complex<T> hermitian_product(const I n, const st
   return h_dot;
 }
 template<class I, class T> std::complex<T> hermitian_product(const I n, const std::complex<T>* a, const std::complex<T>* b){
-  T hr{0}, hi{0};
-  long long sn = u2s<long long>(n);
-  #pragma omp parallel for shared(a,b) reduction(+: hr,hi)
-  for (long long si=0; si<sn; ++si){
-    std::complex<T> h = std::conj(a[si])*b[si];
-    hr += h.real();
-    hi += h.imag();
-  }
-  return std::complex<T>(hr,hi);
+  const auto pool = ThreadPool::getInstance();
+  const auto workers = pool->size();
+  // temporary per-worker storage
+  std::vector<T> hr(workers, T(0)), hi(workers, T(0));
+  auto task = [&](const size_t worker) {
+    auto [f, l] = thread_slice(n, workers, worker);
+    // capturing worker by reference would cause all threads to share the same value
+    return [&,first=f,last=l,i_am=worker]() {
+      T re{0}, im{0};
+      for (size_t i=first; i<last; ++i) {
+        auto h = std::conj(a[i]) * b[i];
+        re += h.real();
+        im += h.imag();
+      }
+      hr[i_am] = re;
+      hi[i_am] = im;
+    };
+  };
+  for (size_t i=0; i<workers; ++i) pool->enqueue(task(i));
+  pool->wait();
+  // collect the partial sums
+  return std::complex<T>(std::accumulate(hr.begin(), hr.end(), T(0)), std::accumulate(hi.begin(), hi.end(), T(0)));
 }
 
 

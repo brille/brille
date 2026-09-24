@@ -15,6 +15,8 @@ dynamic_version(PROJECT_PREFIX "MY_BRILLE_"
 # message(STATUS "DynamicVersion says : ${BRILLE_VERSION_SAFE} : ${BRILLE_VERSION}")
 if (NOT SKBUILD)
 	set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES "${CMAKE_CURRENT_LIST_DIR}/cmake/conan_provider.cmake")
+	# see conan/cmake4.profile; set before project() so the provider keeps it
+	set(CONAN_HOST_PROFILE "default;auto-cmake;${CMAKE_CURRENT_LIST_DIR}/conan/cmake4.profile" CACHE STRING "Conan host profile")
 	project(brille LANGUAGES CXX VERSION ${BRILLE_VERSION_SAFE} )
 else()
 	project(${SKBUILD_PROJECT_NAME} LANGUAGES CXX VERSION ${SKBUILD_PROJECT_VERSION})
@@ -173,7 +175,7 @@ if(BRILLE_BUILD_TESTING)
   catch_discover_tests(${TESTING_TARGET})
 endif()
 
-include(brille-openmp)
+include(brille-threads)
 include(brille-hdf5)
 include(brille-doxygen)
 

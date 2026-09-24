@@ -194,11 +194,19 @@ TEST_CASE("BrillouinZone moveinto hexagonal extended","[bz_][moveinto][.timing]"
   //    jitter    -- estimate the timing uncertainty assuming counting statistics in both timer and splits
   auto timer = Stopwatch<>();
   // setup explicit-number-of-threads region:
-  omp_set_dynamic(0); // disables dynamic teams
-  auto max_threads = omp_get_max_threads();
+
+  // omp_set_dynamic(0); // disables dynamic teams
+  // auto max_threads = omp_get_max_threads();
+
+  const auto pool = ThreadPool::getInstance();
+  auto max_threads = std::thread::hardware_concurrency();
+
   std::vector<double> times;
-  for (int threads=1; threads<max_threads; ++threads){
-    omp_set_num_threads(threads);
+  for (size_t threads=1; threads<=max_threads; ++threads){
+
+    // omp_set_num_threads(threads);
+    pool->resize(threads);
+
     timer.tic();
     bz.moveinto(Q,Q,tau);
     times.push_back(timer.toc()); // keep the split-time (in msec)

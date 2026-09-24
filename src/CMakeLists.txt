@@ -67,6 +67,7 @@ list(APPEND CXX_SOURCES
   spg_database.cpp
   symmetry.cpp
   vertex_map_set.cpp
+        thread_pool.cpp
 )
 
 foreach(CXX_SOURCE IN LISTS CXX_SOURCES)

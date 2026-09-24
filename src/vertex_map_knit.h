@@ -173,11 +173,20 @@ parallel_reduce(const std::vector<std::pair<VertexMapSet<T, A>, VertexIndexMap>>
   auto isodd = static_cast<size_t>(2 * out_len + 1) == input.size();
   output.reserve((isodd ? out_len + 1 : out_len));
   output.resize(out_len);
-#pragma omp parallel for default(none) shared(input, output, out_len)
-  for (int64_t idx = 0; idx < out_len; ++idx) {
-    auto i = static_cast<size_t>(idx);
-    output[i] = combine(input[2 * i], input[2 * i + 1]);
-  }
+
+  const auto pool = ThreadPool::getInstance();
+  const auto workers = pool->size();
+  auto task = [&](const size_t worker) {
+    auto [f, l] = thread_slice(out_len, workers, worker);
+    return [&,first=f,last=l]() {
+      for (size_t i=first; i<last; ++i) {
+        output[i] = combine(input[2*i], input[2*i+1]);
+      }
+    };
+  };
+  for (size_t thread=0; thread<workers; ++thread) pool->enqueue(task(thread));
+  pool->wait();
+
   if (isodd) output.push_back(input.back());
   return output;
 }

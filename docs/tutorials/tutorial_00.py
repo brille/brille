@@ -29,7 +29,7 @@ def centre_to_corner(X):
 
 
 # use_c=False ensures the Euphonic C module is *not* used.
-# but *need* to use the brille C++ module, and parallel=True ensures we do so with OpenMP
+# but *need* to use the brille C++ module, and parallel=True ensures we do so with multiple threads
 scattering_lengths = {'Na': 3.63, 'Cl': 9.577}  # in fm
 nacl = getBrillEuObj('NaCl', max_volume=1e-5, parallel=True, sort=True, scattering_lengths=scattering_lengths)
 

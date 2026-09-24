@@ -1,3 +1,5 @@
+#include <algorithm>
+
 template<class T> template<class R> bool LQPolyhedron<T>::operator!=(const LQPolyhedron<R>& that) const {
   bool vertices_permuted{false};
   if (_vertices != that._vertices){
@@ -219,17 +221,41 @@ template<class T> LQPolyhedron<T> LQPolyhedron<T>::apply(const PointSymmetry& ps
 }
 
 
+// // geometric properties in relation to another point or polyhedron
+// template<class T> template<class R> [[nodiscard]] std::vector<bool> LQPolyhedron<T>::contains(const LQVec<R>& x) const {
+//   std::vector<bool> out(x.size(0));
+//   // TODO Move n and p to per-thread variables instead of shared?
+//   auto n = this->face_normals();
+//   auto p = this->face_points();
+// #pragma omp parallel for default(none) shared(out, n, p, x) schedule(dynamic)
+//   for (ind_t i=0; i<x.size(0); ++i){
+//     // FIXME, consider increasing the tolerance here!
+//     out[i] = dot(n, x.view(i) - p).all(cmp::le, 0.);
+//   }
+//   return out;
+// }
+
 // geometric properties in relation to another point or polyhedron
 template<class T> template<class R> [[nodiscard]] std::vector<bool> LQPolyhedron<T>::contains(const LQVec<R>& x) const {
-  std::vector<bool> out(x.size(0));
-  // TODO Move n and p to per-thread variables instead of shared?
-  auto n = this->face_normals();
-  auto p = this->face_points();
-#pragma omp parallel for default(none) shared(out, n, p, x) schedule(dynamic)
-  for (ind_t i=0; i<x.size(0); ++i){
-    // FIXME, consider increasing the tolerance here!
-    out[i] = dot(n, x.view(i) - p).all(cmp::le, 0.);
-  }
+  std::vector<int> pre_out(x.size(0));
+  const auto pool = ThreadPool::getInstance();
+  const auto workers = pool->size();
+  auto task = [&](const size_t worker) {
+    auto [f, l] = thread_slice(x.size(0), workers, worker);
+    return [&,first=f,last=l]() {
+      auto n = face_normals();
+      auto p = face_points();
+      for (size_t i=first; i<last; ++i) {
+        // FIXME, consider increasing the tolerance here!
+        preout[i] = dot(n, x.view(i) - p).all(cmp::le, 0.) ? 1 : 0;
+      }
+    };
+  };
+  for (size_t thread=0; thread<workers; ++thread) pool->enqueue(task(thread));
+  pool->wait();
+  std::vector<bool> out;
+  out.reserve(x.size(0));
+  std::transform(pre_out.begin(), pre_out.end(), std::back_inserter(out), [](const int tf){return tf == 1;});
   return out;
 }
 
