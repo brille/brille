@@ -1,7 +1,10 @@
 name: Main
 
 on:
+  # Pull requests run on pull_request only; push covers merges into main,
+  # so a push to a PR branch no longer runs the same jobs twice.
   push:
+    branches: [main]
   pull_request:
 #  workflow_dispatch:
 #    inputs:
@@ -12,7 +15,7 @@ on:
 #        default: false
 
 concurrency :
-  group: "${{ github.workflow }}-${{ github.ref == 'refs/head/main' && github.run_number || github.ref }}"
+  group: "${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.run_number || github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -27,15 +30,15 @@ jobs:
       matrix:
         variant:
           - { os: ubuntu-24.04}
-          - { os: macos-15}
-          - { os: macos-15-intel }
+          - { os: macos-26 }
+          - { os: macos-26-intel }
           - { os: windows-2025}
         python-version: ["3.10"]
         cmake-type: ['Release']
 
     steps:
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -51,12 +54,12 @@ jobs:
           echo "path=$(conan config home)" >> $GITHUB_OUTPUT
 
       - name: Cache conan
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ steps.conan-cache-key.outputs.path }}
           key: conan-${{ matrix.variant.os }}-${{ steps.conan-cache-key.outputs.key }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 

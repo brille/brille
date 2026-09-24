@@ -17,14 +17,14 @@ defaults:
 jobs:
   source:
     name: Build Source distribution
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
     - run: pipx run build --sdist
     - run: pipx run twine check dist/*
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v7
       with:
         name: dist
         path: dist/*.tar.gz
@@ -38,16 +38,16 @@ jobs:
         variant:
           - { os: ubuntu-24.04, platform: 'manylinux' }
           - { os: ubuntu-24.04, platform: 'musllinux' }
-          - { os: macos-15-intel, platform: 'macosx' }  # Intel support
-          - { os: macos-15, platform: 'macosx' }  # Apple silicon support
+          - { os: macos-26-intel, platform: 'macosx' }  # Intel support
+          - { os: macos-26, platform: 'macosx' }  # Apple silicon support
           - { os: windows-2025, platform: "win" }
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: pypa/cibuildwheel@v3.1.4
+      - uses: pypa/cibuildwheel@v3.4.1
         env:
           CIBW_BUILD: "*-${{ matrix.variant.platform }}*"
           MACOSX_DEPLOYMENT_TARGET: "14"  # CIBW complains if lower
@@ -56,7 +56,7 @@ jobs:
         run: git diff --exit-code
         shell: bash
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: "cibw-wheels-${{ matrix.variant.platform }}-${{ matrix.variant.os }}"
           path: wheelhouse/*.whl
@@ -72,7 +72,7 @@ jobs:
     environment: release
 
     steps:
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@v8
       id: download
       with:
         path: artifacts
@@ -95,18 +95,18 @@ jobs:
     needs: [cibuildwheel]
     steps:
     - name: Checkout brille repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v7
       with:
         path: repository
     - name: Checkout brille.github.io repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
         repository: brille/brille.github.io
         token: ${{ secrets.BRILLE_GITHUB_IO_TOKEN }}
         path: io
     - name: Download musl libc musllinux wheels
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       id: path
       with:
         name: cibw-wheels-musllinux-ubuntu-24.04
