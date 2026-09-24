@@ -60,6 +60,9 @@ wheel.packages = ["brille"]
 build.targets = ["_brille"]
 build.verbose = true
 
+[tool.scikit-build-core-conan]
+profile = "conan/wheel.profile"  # see conan/cmake4.profile
+
 [tool.setuptools_scm]
 
 [tool.cibuildwheel]
