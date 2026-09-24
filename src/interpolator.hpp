@@ -371,7 +371,7 @@ public:
               interpolation result
   \param invr An index into `ps` for the inverse of the operation required
               for each interpolation result
-  \param nth  The number of OpenMP threads that this method should utilize
+  \param nth  The number of threads that this method should utilize
 
   This method is a gateway switching on how the stored data transforms under
   application of a symmetry operation.

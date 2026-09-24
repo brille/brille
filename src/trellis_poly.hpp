@@ -307,8 +307,8 @@ public:
 
   \param x       one or more points at which to perform linear interpolation of
                  the stored data.
-  \param threads the number of OpenMP threads to use; the return value of
-                 `omp_get_max_threads()` will be used if `threads` < 1.
+  \param threads the number of threads to use; the number of logical cores
+                 will be used if `threads` < 1.
   \returns a tuple of the interpolated eigenvalues and eigenvectors for all
            points in `x`
   */

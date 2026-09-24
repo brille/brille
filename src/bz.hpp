@@ -716,8 +716,8 @@ public:
     \param[in] Q A reference to lattice::LVec list of Q points
     \param[out] q The reduced reciprocal lattice vectors
     \param[out] tau The reciprocal lattice zone centres
-    \param threads The number of OpenMP threads to use, if less than one the
-                   number returned by `omp_get_max_threads()` is used instead.
+    \param threads The number of threads to use, if less than one the
+                   number of logical cores is used instead.
     \return true
   */
   bool moveinto(const lattice::LVec<double> &Q, lattice::LVec<double> &q,
@@ -730,7 +730,7 @@ public:
     @param [out] tau The conventional reciprocal lattice zone centres
     @param [out] Ridx The pointgroup operation index for R
     @param [out] invRidx The pointgroup operation index for R⁻¹
-    @param [in] threads An optional number of OpenMP threads to use
+    @param [in] threads An optional number of threads to use
     @return the success status
     @note `Ridx` and `invRidx` index the `PointSymmetry` object accessible via
     `BrillouinZone::get_pointgroup_symmetry()`;
@@ -744,7 +744,7 @@ public:
   \param [in] Q a refernce to a lattice::LVec list of Q points
   \param [out] q The irreducible reduced reciprocal lattice vectors
   \param [out] R The pointgroup operation matrix for R
-  \param [in] threads An optional number of OpenMP threads to use
+  \param [in] threads An optional number of threads to use
   \return the success status
   */
   bool ir_moveinto_wedge(const lattice::LVec<double> &Q,

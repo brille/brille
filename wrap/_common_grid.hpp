@@ -317,8 +317,8 @@ R"pbdoc(
   useparallel : bool, optional
     Whether a serial or parallel code should be utilised
   threads : int, optional
-    How many OpenMP workers should be utilised; if this value is less than one
-    the environment variable ``OMP_NUM_THREADS`` will be used.
+    How many parallel threads should be utilised; if this value is less than one,
+    one thread per logical core is used.
   do_not_move_points: bool, optional
     If ``True`` the provided **Q** points must already lie within the first Brillouin
     zone. No check is made to verify this requirement and if any **Q** lie outside
@@ -453,8 +453,8 @@ R"pbdoc(
   useparallel : bool, optional
     Whether a serial or parallel code should be utilised
   threads : int, optional
-    How many OpenMP workers should be utilised; if this value is less than one
-    the environment variable ``OMP_NUM_THREADS`` will be used.
+    How many parallel threads should be utilised; if this value is less than one,
+    one thread per logical core is used.
   do_not_move_points: bool, optional
     If ``True`` the provided **Q** points must already lie within the first Brillouin
     zone. No check is made to verify this requirement and if any **Q** lie outside

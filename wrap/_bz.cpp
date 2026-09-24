@@ -419,9 +419,7 @@ void wrap_brillouinzone(py::module & m){
       units of the reciprocal lattice.
     threads : integer, optional
       The number of parallel threads that should be used. If this value is less
-      than one the maximum number of OpenMP threads will be used -- this value
-      can be controlled by the environment variable ``OMP_NUM_THREADS`` and is
-      typically the number of logical cores if not explicitly set.
+      than one, one thread per logical core is used.
 
     Returns
     -------
@@ -476,9 +474,7 @@ void wrap_brillouinzone(py::module & m){
       units of the reciprocal lattice.
     threads : integer, optional
       The number of parallel threads that should be used. If this value is less
-      than one the maximum number of OpenMP threads will be used -- this value
-      can be controlled by the environment variable ``OMP_NUM_THREADS`` and is
-      typically the number of logical cores if not explicitly set.
+      than one, one thread per logical core is used.
 
     Returns
     -------
@@ -536,9 +532,7 @@ void wrap_brillouinzone(py::module & m){
       units of the reciprocal lattice.
     threads : integer, optional (default 0)
       The number of parallel threads that should be used. If this value is less
-      than one the maximum number of OpenMP threads will be used -- this value
-      can be controlled by the environment variable ``OMP_NUM_THREADS`` and is
-      typically the number of logical cores if not explicitly set.
+      than one, one thread per logical core is used.
 
     Returns
     -------

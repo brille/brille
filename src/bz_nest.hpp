@@ -69,7 +69,7 @@ public:
 
   \param x        One or more points expressed in the same reciprocal lattice as
                   the stored `BrillouinZone`
-  \param nth      the number of parallel OpenMP workers to utilize
+  \param nth      the number of parallel threads to utilize
   \param no_move  If all provided points are *already* within the irreducible
                   Brillouin zone this optional parameter can be used to skip a
                   call to `BrillouinZone::ir_moveinto`.
