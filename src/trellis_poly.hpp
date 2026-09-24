@@ -307,7 +307,7 @@ public:
 
   \param x       one or more points at which to perform linear interpolation of
                  the stored data.
-  \param threads the number of threads to use; the number of logical cores
+  \param threads the number of threads to use; `default_thread_count()`
                  will be used if `threads` < 1.
   \returns a tuple of the interpolated eigenvalues and eigenvectors for all
            points in `x`

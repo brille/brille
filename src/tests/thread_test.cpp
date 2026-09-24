@@ -5,6 +5,9 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 #include "thread_pool.h"
+#include <cstdlib>
+#include <optional>
+#include <string>
 
 using namespace brille;
 
@@ -182,4 +185,47 @@ TEST_CASE("ThreadPool combines exceptions from several tasks", "[thread]") {
   }
   REQUIRE_THROWS_WITH(pool->wait(), Catch::Matchers::StartsWith("3 exceptions occurred"));
   REQUIRE_NOTHROW(pool->wait());
+}
+
+namespace {
+  //! Set (or with nullptr, unset) an environment variable, restoring it on destruction
+  class ScopedEnv {
+    std::string name_;
+    std::optional<std::string> old_;
+    static void set(const std::string & name, const char * value) {
+#ifdef _WIN32
+      _putenv_s(name.c_str(), value ? value : ""); // an empty value removes it
+#else
+      if (value) setenv(name.c_str(), value, 1); else unsetenv(name.c_str());
+#endif
+    }
+  public:
+    ScopedEnv(std::string name, const char * value): name_(std::move(name)) {
+      if (const char * old = std::getenv(name_.c_str())) old_ = old;
+      set(name_, value);
+    }
+    ~ScopedEnv() { set(name_, old_ ? old_->c_str() : nullptr); }
+  };
+}
+
+TEST_CASE("BRILLE_NUM_THREADS sets the default thread count", "[thread]") {
+  const auto cores = std::max(1u, std::thread::hardware_concurrency());
+  {
+    ScopedEnv env("BRILLE_NUM_THREADS", nullptr);
+    REQUIRE(default_thread_count() == cores);
+  }
+  {
+    ScopedEnv env("BRILLE_NUM_THREADS", "3");
+    REQUIRE(default_thread_count() == 3u);
+    const auto pool = ThreadPool::getInstance();
+    pool->resize();
+    REQUIRE(pool->size() == 3u);
+    // an explicit count still wins
+    pool->resize(2);
+    REQUIRE(pool->size() == 2u);
+  }
+  for (const char * bad: {"0", "-2", "abc", "4x", ""}) {
+    ScopedEnv env("BRILLE_NUM_THREADS", bad);
+    REQUIRE(default_thread_count() == cores);
+  }
 }

@@ -1,4 +1,17 @@
 #include "thread_pool.h"
+#include <cstdlib>
+
+size_t brille::default_thread_count() {
+  if (const char* value = std::getenv("BRILLE_NUM_THREADS")) {
+    char* end = nullptr;
+    const long count = std::strtol(value, &end, 10);
+    if (end != value && *end == '\0' && count > 0) return static_cast<size_t>(count);
+  }
+  // hardware_concurrency may return 0 when it cannot tell, and a pool without
+  // workers would never run its tasks
+  const auto cores = std::thread::hardware_concurrency();
+  return cores > 0 ? cores : 1;
+}
 
 // Retrieve the singleton instance:
 brille::ThreadPool * brille::ThreadPool::getInstance() {

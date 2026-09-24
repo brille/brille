@@ -12,6 +12,14 @@
 #include "thread_exception.h"
 
 namespace brille {
+    /*! \brief The number of threads to use when none is requested
+
+    The value of the environment variable BRILLE_NUM_THREADS, if it is a positive
+    integer; otherwise one thread per logical core. Read on every call, so a
+    change to the environment takes effect the next time the pool is sized.
+    */
+    size_t default_thread_count();
+
     // Class that represents a simple thread pool
     class ThreadPool {
     private:
@@ -38,7 +46,7 @@ namespace brille {
         ThreadException errors_;
     protected:
         // Constructor to creates a thread pool with given number of threads
-        explicit ThreadPool(const size_t num_threads = std::thread::hardware_concurrency()) {
+        explicit ThreadPool(const size_t num_threads = default_thread_count()) {
             refresh(num_threads);
         }
         // Destructor to stop the thread pool
@@ -70,14 +78,14 @@ namespace brille {
             return threads_.size();
         }
 
-        void resize(const size_t num_threads = std::thread::hardware_concurrency()) {
+        void resize(const size_t num_threads = default_thread_count()) {
             if (threads_.size() != num_threads) {
                 refresh(num_threads);
             }
         }
 
         // Resize the pool to a specified number of threads
-        void refresh(const size_t num_threads = std::thread::hardware_concurrency()) {
+        void refresh(const size_t num_threads = default_thread_count()) {
             if (!threads_.empty()) {
                 clear();
                 threads_.clear();
