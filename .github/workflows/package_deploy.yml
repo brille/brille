@@ -49,7 +49,10 @@ jobs:
 
       - uses: pypa/cibuildwheel@v3.4.1
         env:
-          CIBW_BUILD: "*-${{ matrix.variant.platform }}*"
+          # Pull requests build one CPython per platform: 3.12, whose musllinux
+          # wheel the sphinx job installs (the docs image is Alpine 3.20, Python
+          # 3.12). Releases and manual runs build every supported version.
+          CIBW_BUILD: ${{ github.event_name == 'pull_request' && format('cp312-{0}*', matrix.variant.platform) || format('*-{0}*', matrix.variant.platform) }}
           MACOSX_DEPLOYMENT_TARGET: "14"  # CIBW complains if lower
 
       - name: Verify clean directory

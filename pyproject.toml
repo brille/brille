@@ -22,7 +22,7 @@ description='Irreducible Brillouin zone symmetry and interpolation.'
 readme = {file="README.md", content-type="text/markdown"}
 license="AGPL-3.0-or-later"
 license-files=["COPYING", "lib/*/LICEN[CS]E*"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers=[
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Science/Research",
@@ -32,7 +32,6 @@ classifiers=[
   "Programming Language :: C++",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -70,7 +69,7 @@ archs = ["auto64"]
 test-requires = ["numpy", "pytest"]
 test-command = "pytest {package}/wrap/tests"
 build-verbosity = 1
-skip = ["cp38-*", "cp39-*"]  # pypy builds no longer on by default
+skip = ["cp38-*", "cp39-*", "cp310-*", "cp314t-*"]  # below requires-python; free-threaded builds re-enable the GIL (no free-threading support declared)
 
 [[tool.cibuildwheel.overrides]]
 select = "*-musllinux*"
