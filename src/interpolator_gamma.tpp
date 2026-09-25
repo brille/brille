@@ -178,6 +178,13 @@ bool Interpolator<T>::rip_gamma_complex(
         auto xi = x.ptr(i);
         auto Rii = ridx[i];
         auto iRii = invRidx[i];
+        // an anti-unitary operation T·R transforms with R, then conjugates:
+        // e(-Rq) = [Γ(q;R) e(q)]*  (the inverse of T·R is T·R⁻¹)
+        const bool conjugate = pgt.antiunitary(Rii);
+        if (conjugate){
+          Rii = pgt.unitary_partner(Rii);
+          iRii = pgt.unitary_partner(iRii);
+        }
         for (ind_t b=0; b<b_; ++b){
           // scalar elements do not need to be rotated, so skip them
           ind_t o = b*s_ + no[0];
@@ -228,6 +235,7 @@ bool Interpolator<T>::rip_gamma_complex(
             for (ind_t j=0; j<no[2]*9u; ++j) xi[o+j] = tA[j];
           }
         }
+        if (conjugate) for (ind_t j=0; j<b_*s_; ++j) xi[j] = std::conj(xi[j]);
       }
     };
   };
