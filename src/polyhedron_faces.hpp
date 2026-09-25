@@ -11,6 +11,8 @@
 #include "array_l_.hpp"
 #include "geometry.hpp"
 #include "approx_float.hpp"
+#include "plane_set.hpp"
+#include "thread_pool.h"
 
 namespace brille::polyhedron{
   template<class T, template<class> class A> std::enable_if_t<isBareArray<T,A>, A<T>>
@@ -314,9 +316,29 @@ namespace brille::polyhedron{
     template<class T, class R, template<class> class A, template<class> class B>
     [[nodiscard]] std::enable_if_t<isArray<T,A> && isArray<R,B>, std::vector<bool>>
     contains(const A<T>& v, const B<R>& x, const T t=T(0), const int n=1) const {
-      std::vector<std::atomic<int>> tmp(x.size(0));
       A<T> pa, pb, pc;
       std::tie(pa, pb, pc) = this->planes(v);
+      if constexpr (isLatVec<T,A> && isLatVec<R,B> && std::is_floating_point_v<T> && std::is_floating_point_v<R>) {
+        if (x.same_lattice(pa) && x.type() == pa.type() && x.size(1) == 3u) {
+          // the same test on plain numbers, split across the thread pool (see PlaneSet)
+          const PlaneSet planes(pa, pb, pc, static_cast<double>(t), n);
+          std::vector<char> inside(x.size(0), 0);
+          const auto pool = ThreadPool::getInstance();
+          const auto workers = pool->size();
+          for (size_t worker=0; worker<workers; ++worker){
+            auto [first, last] = thread_slice(x.size(0), workers, worker);
+            pool->enqueue([&, first=first, last=last](){
+              for (size_t i=first; i<last; ++i){
+                const auto ii = static_cast<ind_t>(i);
+                inside[i] = planes.inside({static_cast<double>(x.val(ii,0)), static_cast<double>(x.val(ii,1)), static_cast<double>(x.val(ii,2))}) ? 1 : 0;
+              }
+            });
+          }
+          pool->wait();
+          return {inside.begin(), inside.end()};
+        }
+      }
+      std::vector<std::atomic<int>> tmp(x.size(0));
 //      const auto x_size = utils::u2s<long long>(x.size(0));
 //      // making this parallel *also* makes it significantly slower!?
 //#pragma omp parallel for default(none) shared(tmp, pa, pb, pc, x, x_size) schedule(dynamic)

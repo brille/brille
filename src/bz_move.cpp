@@ -1,4 +1,6 @@
 #include "bz.hpp"
+#include "plane_set.hpp"
+#include <atomic>
 
 using namespace brille;
 using namespace brille::lattice;
@@ -11,94 +13,158 @@ using namespace brille::lattice;
  * parallel execution -- likely something with memory access in the underpinning
  * `Array2` class?
  * */
-std::pair<LVec<double>, LVec<int>>
-part_moveinto_prim(const LVec<double> & Q, const LVec<double> & normals,
-                   const LVec<int> & taus, const Array2<double> & tau_lens,
-                   double ftol, int atol, const LVec<double> & pa,
-                   const LVec<double> & pb, const LVec<double> & pc) {
-  LVec<double> q(Q.type(), Q.lattice(), Q.size(0));
-  LVec<int> tau(Q.type(), Q.lattice(), Q.size(0));
-  auto max_count = taus.size(0);
-  for (ind_t i=0; i<Q.size(0); ++i){
-    auto Q_i = Q.view(i); // avoid fetching from the shared array multiple times
-    auto tau_i = Q_i.round();
-    auto q_i = Q_i - tau_i;
-    auto last_shift = tau_i;
-    auto count = 0 * max_count;
-    while (count++ < max_count && !point_inside_all_planes(pa, pb, pc, q_i, ftol, atol)){
-      auto qi_dot_normals = dot(q_i, normals);
-      auto N_hkl = (qi_dot_normals / tau_lens).round().to_std();
-      if (std::any_of(N_hkl.begin(), N_hkl.end(), [](int a){return a > 0.;})) {
+
+namespace {
+/* The first Brillouin zone as plain numbers, for moving many points into it.
+
+The previous implementation built lattice-aware temporaries (views,
+differences, cross and dot products) for every plane and point: profiling
+showed ~46 % of its time in shared_ptr reference counting and ~11 % in
+malloc/free, which also stopped it from scaling with threads. This does the
+same arithmetic, in the same order and with the same helpers, on plain arrays,
+so the results are unchanged.
+*/
+struct FirstZone {
+  using v3 = std::array<double, 3>;
+  PlaneSet planes;                // the zone's faces, for point_inside_all_planes
+  std::vector<v3> normals;        // unit face normals (hkl)
+  std::vector<std::array<int, 3>> taus; // the face-centre reciprocal lattice vectors
+  std::vector<double> tau_lens;
+  std::array<double, 9> metric{}; // of the points' LengthUnit, for dot(q, normals)
+
+  FirstZone(const LVec<double>& pa, const LVec<double>& pb, const LVec<double>& pc,
+            const LVec<double>& n, const LVec<int>& t, const Array2<double>& tl, double f, int at)
+  : planes(pa, pb, pc, f, at), metric(pa.lattice().metric(pa.type())) {
+    for (ind_t j=0; j<n.size(0); ++j){
+      normals.push_back({n.val(j,0), n.val(j,1), n.val(j,2)});
+      taus.push_back({t.val(j,0), t.val(j,1), t.val(j,2)});
+      tau_lens.push_back(tl.val(j,0));
+    }
+  }
+  [[nodiscard]] bool inside(const v3& q) const { return planes.inside(q); }
+  // move one point into the first Brillouin zone
+  void move(const v3& Q, double* q_out, int* tau_out) const {
+    std::array<int, 3> tau, last_shift;
+    v3 q;
+    for (int k=0; k<3; ++k){
+      tau[k] = static_cast<int>(std::round(Q[k]));
+      q[k] = Q[k] - tau[k];
+    }
+    last_shift = tau;
+    const auto max_count = static_cast<ind_t>(taus.size());
+    ind_t count{0};
+    std::vector<double> qdn(normals.size());
+    std::vector<int> N(normals.size());
+    while (count++ < max_count && !inside(q)){
+      v3 mq;
+      brille::utils::mul_mat_vec(mq.data(), 3u, metric.data(), q.data()); // dot(q, normals)
+      for (size_t j=0; j<normals.size(); ++j){
+        double d{0};
+        for (int k=0; k<3; ++k) d += mq[k] * normals[j][k];
+        qdn[j] = d;
+        N[j] = static_cast<int>(std::round(qdn[j] / tau_lens[j]));
+      }
+      if (std::any_of(N.begin(), N.end(), [](int n){return n > 0;})) {
         int max_nm{0};
-        ind_t max_at{0};
-        for (ind_t j=0; j<N_hkl.size(); ++j) {
+        size_t max_at{0};
+        for (size_t j=0; j<N.size(); ++j){
+          const bool shift_nonzero = taus[j][0] + last_shift[0] != 0 || taus[j][1] + last_shift[1] != 0
+                                  || taus[j][2] + last_shift[2] != 0;
           // protect against oscillating by ±τ
-          if (N_hkl[j] > 0 && N_hkl[j] >= max_nm &&
-              (0 == max_nm ||
-               (norm(taus.view(j) + last_shift).all(brille::cmp::gt, 0.) &&
-                qi_dot_normals[j] > qi_dot_normals[max_at]))
-          ) {
-            max_nm = N_hkl[max_at = j];
+          if (N[j] > 0 && N[j] >= max_nm && (0 == max_nm || (shift_nonzero && qdn[j] > qdn[max_at]))) {
+            max_nm = N[max_at = j];
           }
         }
-        q_i -= taus.view(max_at) * static_cast<double>(max_nm); // ensure we subtract LVec<double>
-        tau_i += taus.view(max_at) * max_nm; // but add LVec<int>
-        last_shift = taus.view(max_at) * max_nm;
+        for (int k=0; k<3; ++k){
+          q[k] -= static_cast<double>(taus[max_at][k]) * static_cast<double>(max_nm);
+          tau[k] += taus[max_at][k] * max_nm;
+          last_shift[k] = taus[max_at][k] * max_nm;
+        }
       }
     }
-    q.set(i, q_i);
-    tau.set(i, tau_i);
+    for (int k=0; k<3; ++k){ q_out[k] = q[k]; tau_out[k] = tau[k]; }
   }
+};
+
+/* The irreducible wedge test, _inside_wedge_outer, as plain numbers.
+
+dot(normals, p).all(c, 0, ftol, atol) on lattice vectors, repeated for every
+point and every trial operation, was ~99 % of ir_moveinto after the first-zone
+step was made fast. This keeps its arithmetic and comparisons, including that
+the le_ge case compares without tolerance (Array2::all's two-argument form).
+*/
+struct IrWedge {
+  using v3 = std::array<double, 3>;
+  std::vector<v3> weighted;       // metric · normal, as same_lattice_dot computes it
+  std::vector<v3> plain;          // the normals, for the star-lattice case
+  bool star{false};
+  brille::cmp expr;
+  double ftol;
+  int atol;
+
+  IrWedge(const LVec<double>& normals, const LVec<double>& like, brille::cmp c, double f, int at)
+  : expr(c), ftol(f), atol(at) {
+    if (normals.size(0) == 0) return;
+    star = normals.star_lattice(like);
+    const auto metric = normals.lattice().metric(normals.type());
+    for (ind_t i=0; i<normals.size(0); ++i){
+      v3 n{normals.val(i,0), normals.val(i,1), normals.val(i,2)}, mn;
+      brille::utils::mul_mat_vec(mn.data(), 3u, metric.data(), n.data());
+      weighted.push_back(mn);
+      plain.push_back(n);
+    }
+  }
+  [[nodiscard]] bool inside(const v3& p) const {
+    if (weighted.empty()) return true;
+    std::array<double, 64> small{};
+    std::vector<double> large;
+    double* d = small.data();
+    if (weighted.size() > small.size()) { large.resize(weighted.size()); d = large.data(); }
+    for (size_t i=0; i<weighted.size(); ++i){
+      double out{0};
+      if (star) {
+        for (int k=0; k<3; ++k) out += plain[i][k] * p[k];
+        out *= brille::math::two_pi;
+      } else {
+        for (int k=0; k<3; ++k) out += weighted[i][k] * p[k];
+      }
+      d[i] = out;
+    }
+    auto all = [&](brille::cmp e, double t, int n){
+      brille::Comparer<double,double> op(e, t, t, n);
+      for (size_t i=0; i<weighted.size(); ++i) if (!op(d[i], 0.)) return false;
+      return true;
+    };
+    if (brille::cmp::le_ge == expr) return all(brille::cmp::le, 0., 1) || all(brille::cmp::ge, 0., 1);
+    return all(expr, ftol, atol);
+  }
+};
+
+std::pair<LVec<double>, LVec<int>>
+fast_moveinto_prim(const LVec<double>& Q, const LVec<double>& normals, const LVec<int>& taus,
+                   const Array2<double>& tau_lens, double ftol, int atol,
+                   const LVec<double>& pa, const LVec<double>& pb, const LVec<double>& pc, int threads) {
+  const FirstZone zone(pa, pb, pc, normals, taus, tau_lens, ftol, atol);
+  LVec<double> q(Q.type(), Q.lattice(), Q.size(0));
+  LVec<int> tau(Q.type(), Q.lattice(), Q.size(0));
+  const auto pool = ThreadPool::getInstance();
+  if (threads > 0) pool->resize(threads); else pool->resize();
+  const auto workers = pool->size();
+  const ind_t n = Q.size(0);
+  for (size_t worker=0; worker<workers; ++worker){
+    auto [first, last] = thread_slice(n, workers, worker);
+    pool->enqueue([&, first=first, last=last](){
+      for (size_t i=first; i<last; ++i){
+        const auto ii = static_cast<ind_t>(i);
+        zone.move({Q.val(ii,0), Q.val(ii,1), Q.val(ii,2)}, q.ptr(ii), tau.ptr(ii));
+      }
+    });
+  }
+  pool->wait();
   return std::make_pair(q, tau);
 }
+} // namespace
 
-/*\brief Run the move into routine in parallel with each thread getting a subset
- *
- * This method is no longer used since it is slower in parallel than calling the
- * internal function once for the whole array. Future developments may make it
- * worthwhile again.
- * */
-/*
-void BrillouinZone::_moveinto_prim(const LVec<double>& Q, LVec<double>& q, LVec<int>& tau, const LVec<double>& pa, const LVec<double>& pb, const LVec<double>& pc, int threads) const {
-  profile_update("BrillouinZone::_moveinto_prim called with ",threads," threads");
-//  if (threads < 1) threads = omp_get_max_threads();
-  threads = 1;
-  omp_set_num_threads( threads );
-  // Q, q, tau *must* be in the primitive lattice already
-
-  // the face centre points and normals in the primitive lattice
-  auto normals = this->get_primitive_normals();
-  normals = normals/norm(normals); // ensure they're normalised
-  auto taus = (2.0*this->get_primitive_points()).round(); // the points *must* be the face center vectors!
-  auto tau_lens = norm(taus);
-
-  std::vector<std::pair<LVec<double>, LVec<int>>> pairs;
-  pairs.resize(threads);
-
-  std::vector<ind_t> bounds;
-  bounds.reserve(threads+1);
-  ind_t chunk = Q.size(0) / static_cast<ind_t>(threads);
-  for (int i=0; i<threads; ++i) bounds.push_back(static_cast<ind_t>(i) * chunk);
-  bounds.push_back(Q.size(0));
-#pragma omp parallel default(none) shared(pairs, normals, taus, tau_lens, Q, pa, pb, pc, bounds)
-  {
-    auto index = omp_get_thread_num();
-    pairs[index] = part_moveinto_prim(
-        Q.view(bounds[index], bounds[index+1]).decouple(),
-        normals, taus, tau_lens, float_tolerance, approx_tolerance,
-        pa, pb, pc);
-  }
-  profile_update("BrillouinZone::_moveinto_prim parallel section done");
-
-  q = std::move(pairs[0].first);
-  tau = std::move(pairs[0].second);
-  for (int i=1; i<threads; ++i){
-    q = cat(0, q, pairs[i].first);
-    tau = cat(0, tau, pairs[i].second);
-  }
-  profile_update("BrillouinZone::_moveinto_prim finished with ",threads," threads");
-}
-*/
 
 bool BrillouinZone::moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int>& tau, const int threads) const {
   profile_update("BrillouinZone::moveinto called with ",threads," threads");
@@ -137,7 +203,7 @@ bool BrillouinZone::moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int>& 
   normals = normals/norm(normals); // ensure they're normalised
   auto taus = (2.0*this->get_primitive_points()).round(); // the points *must* be the face center vectors!
   auto tau_lens = norm(taus);
-  auto q_tau = part_moveinto_prim(Qsl, normals, taus, tau_lens, float_tolerance, approx_tolerance, pa, pb, pc);
+  auto q_tau = fast_moveinto_prim(Qsl, normals, taus, tau_lens, float_tolerance, approx_tolerance, pa, pb, pc, threads);
   if (transform_needed){ // then we need to transform back q and tau
     q   = parallel_transform_from_primitive(_outer, q_tau.first, threads);
     tau = parallel_transform_from_primitive(_outer, q_tau.second, threads);
@@ -253,34 +319,46 @@ bool BrillouinZone::ir_moveinto(const LVec<double>& Q, LVec<double>& q, LVec<int
 //  }
 
   PointSymmetry psym = this->get_pointgroup_symmetry();
-  auto eidx = psym.find_identity_index();
+  const auto eidx = psym.find_identity_index();
   std::vector<std::array<int, 9>> r_transpose;
-  for (const auto& r: psym.getall()) r_transpose.push_back(transpose(r));
-  std::array<double,3> q_j{0,0,0}; // temporary result storage
-  for (ind_t i = 0; i < Q.size(0); ++i) {
-    bool inside{_inside_wedge_outer(q.view(i))};
-    if (inside){
-      // any q already in the irreducible zone need no rotation → identity
-      invRidx[i] = Ridx[i] = eidx;
-    } else {
-      // find the jᵗʰ operation which moves qᵢ into the irreducible zone
-      for (ind_t j = 0; j < psym.size(); ++j) if (inside) break; else {
-        // The point symmetry matrices relate *real space* vectors!
-        // We must use their transposes' to rotate reciprocal space vectors.
-        utils::multiply_matrix_vector(q_j.data(), r_transpose[j].data(), q.ptr(i));
-        auto lq_j = from_std_like(q, q_j);
-        if (_inside_wedge_outer(lq_j)) {
-          /* store the result */
-          // and (Rⱼᵀ)⁻¹ ∈ G, such that Qᵢ = (Rⱼᵀ)⁻¹⋅qᵢᵣ + τᵢ.
-          q.set(i, lq_j);   // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
-          invRidx[i] = j; // Rⱼ *is* the inverse of what we want for output
-          Ridx[i] = psym.get_inverse_index(j); // find the index of Rⱼ⁻¹
-          inside = true;
-        }
-      }
-    }
-    if (!inside) ++n_outside;
+  std::vector<size_t> inverse_index;
+  for (size_t j=0; j<psym.size(); ++j){
+    r_transpose.push_back(transpose(psym.get(j)));
+    inverse_index.push_back(psym.get_inverse_index(j));
   }
+  const IrWedge wedge(get_ir_wedge_normals(), q, no_ir_mirroring ? brille::cmp::ge : brille::cmp::le_ge,
+                      float_tolerance, approx_tolerance);
+  std::atomic<size_t> outside{0};
+  const auto pool = ThreadPool::getInstance();
+  if (threads > 0) pool->resize(threads); else pool->resize();
+  const auto workers = pool->size();
+  for (size_t worker=0; worker<workers; ++worker){
+    auto [first, last] = thread_slice(nQ, workers, worker);
+    pool->enqueue([&, first=first, last=last](){
+      for (size_t si=first; si<last; ++si){
+        const auto i = static_cast<ind_t>(si);
+        const std::array<double,3> qi{q.val(i,0), q.val(i,1), q.val(i,2)};
+        bool inside = wedge.inside(qi);
+        if (inside){
+          invRidx[i] = Ridx[i] = eidx;
+        } else {
+          std::array<double,3> q_j{0,0,0};
+          for (size_t j = 0; j < r_transpose.size() && !inside; ++j) {
+            utils::multiply_matrix_vector(q_j.data(), r_transpose[j].data(), qi.data());
+            if (wedge.inside(q_j)) {
+              for (int k=0; k<3; ++k) q.ptr(i)[k] = q_j[k]; // keep Rⱼᵀ⋅qᵢ as qᵢᵣ
+              invRidx[i] = j; // Rⱼ *is* the inverse of what we want for output
+              Ridx[i] = inverse_index[j]; // find the index of Rⱼ⁻¹
+              inside = true;
+            }
+          }
+        }
+        if (!inside) ++outside;
+      }
+    });
+  }
+  pool->wait();
+  n_outside = outside;
 
   profile_update("BrillouinZone::ir_moveinto finished with ",threads," threads");
   if (n_outside) for (ind_t i=0; i<nQ; ++i) if (!_inside_wedge_outer(q.view(i))){
