@@ -13,6 +13,18 @@ size_t brille::default_thread_count() {
   return cores > 0 ? cores : 1;
 }
 
+namespace {
+  thread_local bool is_pool_worker{false};
+}
+
+bool brille::ThreadPool::on_worker_thread() {
+  return is_pool_worker;
+}
+
+void brille::ThreadPool::mark_worker_thread() {
+  is_pool_worker = true;
+}
+
 // Retrieve the singleton instance:
 brille::ThreadPool * brille::ThreadPool::getInstance() {
   std::lock_guard lock(instance_mutex_);

@@ -50,7 +50,9 @@ def test_mesh_surface_points_do_not_crash():
     result = run("""
         import numpy as np
         from brille import BrillouinZone, BZMeshQdc, Lattice
-        lattice = Lattice(((4.023643, 4.900927, 3.288319), (98.972989, 86.236629, 88.466529)), spacegroup="-P 1")
+        # exact values: rounding them moves the geometry and the failure goes away
+        lattice = Lattice(((4.023643249400513, 4.90092739265187, 3.2883192254392677),
+                           (98.97298894274488, 86.2366290402097, 88.46652897945151)), spacegroup="-P 1")
         bz = BrillouinZone(lattice)
         mesh = BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 30)
         mesh.fill(np.ones(len(mesh.rlu)), (1,), mesh.rlu, (0, 3))
@@ -70,7 +72,8 @@ def test_exception_in_worker_reaches_python():
     """
     result = run("""
         from brille import BrillouinZone, BZMeshQdc, Lattice
-        bz = BrillouinZone(Lattice(((3.580975428, 3.5819754212, 3.5869753869), (90.0, 90.04, 90.0)), spacegroup="P 1 m 1"))
+        # exact values from aflow_lattices.json: 3.5819754212, one bit different, meshes fine
+        bz = BrillouinZone(Lattice(((3.580975428, 3.5819754211999997, 3.5869753869), (90.0, 90.04, 90.0)), spacegroup="P 1 m 1"))
         try:
             BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 100)
         except RuntimeError as error:
@@ -105,3 +108,23 @@ def test_brille_num_threads_sizes_the_pool():
     """BRILLE_NUM_THREADS sets the pool size when no thread count is given; bad values are ignored."""
     assert pool_workers("3") == 3
     assert pool_workers("not-a-number") == pool_workers(None)
+
+
+def test_sorting_complex_eigenvectors_does_not_deadlock():
+    """Mode sorting calls pool-parallel Hermitian products from inside pool tasks.
+
+    Waiting for the pool from one of its own workers never returned, so
+    fill(..., sort=True) hung for complex eigenvectors.
+    """
+    result = run("""
+        import numpy as np
+        from brille import BrillouinZone, BZMeshQdc, Lattice
+        lattice = Lattice(((3, 3, 3), (90, 90, 90)), spacegroup="P 1", basis=([[0, 0, 0]], [0]))
+        bz = BrillouinZone(lattice)
+        grid = BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 50)
+        q = np.asarray(grid.rlu)
+        a = 2 * np.pi * q[:, 0]
+        vectors = np.stack([np.cos(a), np.sin(a), np.zeros_like(a)], axis=1)[:, None, :] * np.exp(1j * a)[:, None, None]
+        grid.fill(np.ones((len(q), 1)), (1,), np.ascontiguousarray(vectors), (0, 3, 0, 2, 1), sort=True)
+        """)
+    assert result.returncode == 0, result.stderr.decode()[-2000:]
