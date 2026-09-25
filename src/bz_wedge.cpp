@@ -482,3 +482,118 @@ bool BrillouinZone::wedge_triclinic(){
   }
   return false;
 }
+
+bool BrillouinZone::wedge_dirichlet(){
+  profile_update("Start BrillouinZone::wedge_dirichlet");
+  using mat_t = std::array<long long, 9>;
+  using vec_t = std::array<long long, 3>;
+  // The point symmetry matrices W act on real space vectors, so Wᵀ acts on
+  // reciprocal lattice coordinates; over the whole group {Wᵀ} = {(W⁻¹)ᵀ}.
+  const auto ps = this->get_pointgroup_symmetry();
+  std::vector<mat_t> rs;
+  for (size_t j=0; j<ps.size(); ++j){
+    const auto w = ps.get(j);
+    mat_t r{};
+    for (int a=0; a<3; ++a) for (int b=0; b<3; ++b) r[3*a+b] = w[3*b+a];
+    rs.push_back(r);
+  }
+  auto apply = [](const mat_t& r, const vec_t& v){
+    vec_t o{0, 0, 0};
+    for (int a=0; a<3; ++a) for (int b=0; b<3; ++b) o[a] += r[3*a+b] * v[b];
+    return o;
+  };
+  // the invariant metric M = Σ RᵀR
+  mat_t m{};
+  for (const auto& r: rs) for (int a=0; a<3; ++a) for (int b=0; b<3; ++b)
+    for (int k=0; k<3; ++k) m[3*a+b] += r[3*k+a] * r[3*k+b];
+  // a point fixed only by the identity; which one only changes the wedge's shape
+  const std::array<vec_t, 4> candidates{{{7, 3, 1}, {11, 5, 2}, {13, 7, 3}, {17, 11, 4}}};
+  const vec_t* p{nullptr};
+  for (const auto& c: candidates){
+    const auto fixed = std::count_if(rs.begin(), rs.end(), [&](const auto& r){ return apply(r, c) == c; });
+    if (fixed == 1) { p = &c; break; }
+  }
+  if (p == nullptr) return false;
+  // one plane xᵀn ≥ 0 per operation other than the identity, n = M(p - Rp)
+  std::vector<vec_t> normals;
+  for (const auto& r: rs){
+    const auto rp = apply(r, *p);
+    if (rp == *p) continue;
+    const vec_t d{(*p)[0] - rp[0], (*p)[1] - rp[1], (*p)[2] - rp[2]};
+    auto n = apply(m, d);
+    auto g = std::gcd(std::gcd(std::abs(n[0]), std::abs(n[1])), std::abs(n[2]));
+    for (auto& x: n) x /= g;
+    if (std::find(normals.begin(), normals.end(), n) == normals.end()) normals.push_back(n);
+  }
+  auto cross = [](const vec_t& a, const vec_t& b){
+    return vec_t{a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0]};
+  };
+  auto dot = [](const vec_t& a, const vec_t& b){ return a[0]*b[0] + a[1]*b[1] + a[2]*b[2]; };
+  const std::array<vec_t, 3> axes{{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}};
+  _irreducible = _first;
+  auto to_lvec = [&](const vec_t& v){
+    return LQVec<double>(_outer, bArray<double>::from_std(std::vector<std::array<double,3>>{
+      {static_cast<double>(v[0]), static_cast<double>(v[1]), static_cast<double>(v[2])}}));
+  };
+  for (const auto& n: normals){
+    // two integer vectors in the plane xᵀn = 0
+    std::vector<vec_t> in_plane;
+    for (const auto& e: axes){
+      const auto u = cross(n, e);
+      if (u != vec_t{0, 0, 0}) in_plane.push_back(u);
+    }
+    auto u = in_plane[0];
+    auto v = in_plane[1];
+    if (cross(u, v) == vec_t{0, 0, 0}) v = in_plane[2];
+    // cut keeps the side opposite (b - a) × (c - a); here that must be xᵀn > 0,
+    // and u × v is parallel to n (as coordinate triples)
+    if (dot(cross(u, v), n) > 0) std::swap(u, v);
+    const auto gamma = to_lvec({0, 0, 0});
+    _irreducible = _irreducible.one_cut(gamma, to_lvec(u), to_lvec(v), float_tolerance, approx_tolerance);
+  }
+  // Most planes are redundant, and each costs a test per point in ir_moveinto.
+  // Keep those holding a face of the polyhedron: a face has at least three
+  // vertices on its plane, to round-off, and a redundant plane has none.
+  // Γ is on every plane, however its round-off makes the test come out.
+  const auto vertices = _irreducible.vertices().hkl();
+  double size{0};
+  for (ind_t i=0; i<vertices.size(0); ++i) for (int k=0; k<3; ++k) size = std::max(size, std::abs(vertices.val(i, k)));
+  auto is_gamma = [&](const ind_t i){
+    double extent{0};
+    for (int k=0; k<3; ++k) extent = std::max(extent, std::abs(vertices.val(i, k)));
+    return extent <= 1e-12 * size;
+  };
+  auto on_plane = [&](const vec_t& n, const ind_t i){
+    if (is_gamma(i)) return true;
+    double nx{0}, n1{0}, extent{0};
+    for (int k=0; k<3; ++k){
+      nx += static_cast<double>(n[k]) * vertices.val(i, k);
+      n1 += std::abs(static_cast<double>(n[k]));
+      extent = std::max(extent, std::abs(vertices.val(i, k)));
+    }
+    return std::abs(nx) <= 1e-8 * n1 * extent;
+  };
+  std::vector<vec_t> kept;
+  for (const auto& n: normals){
+    int count{0};
+    for (ind_t i=0; i<vertices.size(0); ++i) if (on_plane(n, i)) ++count;
+    if (count >= 3) kept.push_back(n);
+  }
+  // every face through Γ must lie on a kept plane; if one does not, keep all
+  for (const auto& face: _irreducible.faces().faces()){
+    if (std::none_of(face.begin(), face.end(), is_gamma)) continue;
+    auto holds = [&](const vec_t& n){ return std::all_of(face.begin(), face.end(), [&](const auto i){ return on_plane(n, i); }); };
+    if (std::none_of(kept.begin(), kept.end(), holds)) { kept = normals; break; }
+  }
+  LVec<double> wedge(LengthUnit::inverse_angstrom, _outer, 0u);
+  for (const auto& n: kept){
+    // xᵀn is the dot product of x with the real space vector n
+    auto nr = LVec<double>(LengthUnit::angstrom, _outer, bArray<double>::from_std(std::vector<std::array<double,3>>{
+      {static_cast<double>(n[0]), static_cast<double>(n[1]), static_cast<double>(n[2])}}));
+    wedge = cat(0, wedge, nr.star());
+  }
+  this->set_ir_wedge_normals(wedge);
+  const bool success = this->check_ir_polyhedron();
+  profile_update("  End BrillouinZone::wedge_dirichlet ", success ? "succeeded" : "failed");
+  return success;
+}
