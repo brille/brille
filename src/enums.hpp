@@ -36,7 +36,7 @@ enum class AngleUnit { not_provided, radian, degree, pi };
 */
 enum class LengthUnit { none, angstrom, inverse_angstrom, real_lattice, reciprocal_lattice };
 
-/*! \brief An enumeration to differentiate betwee Node types
+/*! \brief An enumeration to differentiate between Node types
 
 \see AssumedNullNode, FoundNullNode, NullNode, CubeNode, PolyNode
 */

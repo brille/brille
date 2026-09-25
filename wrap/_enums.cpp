@@ -22,7 +22,10 @@ namespace py = pybind11;
 void wrap_enums(py::module &m){
   using namespace brille;
   py::enum_<AngleUnit>(m, "AngleUnit", R"pbdoc(
-  The units of a number representing an angle
+  The units of a number representing an angle.
+
+  >>> from brille import AngleUnit
+  >>> r = AngleUnit.radian
   )pbdoc")
     .value("not_provided", AngleUnit::not_provided, R"pbdoc(unknown, will be inferred)pbdoc")
     .value("radian", AngleUnit::radian, R"pbdoc(radian)pbdoc")
@@ -30,16 +33,28 @@ void wrap_enums(py::module &m){
     .value("pi", AngleUnit::pi, R"pbdoc(radian divided by pi)pbdoc");
 
   py::enum_<LengthUnit>(m, "LengthUnit", R"pbdoc(
-  The units of a number representing a length
+  The units of a number representing a length.
+
+  >>> from brille import LengthUnit
+  >>> a = LengthUnit.angstrom
   )pbdoc")
-    .value("none", LengthUnit::none)
-    .value("angstrom", LengthUnit::angstrom, R"pbdoc(10⁻¹⁰ meter)pbdoc")
+    .value("none", LengthUnit::none, R"pbdoc(A default value, the used value may be inferred)pbdoc")
+    .value("angstrom", LengthUnit::angstrom, R"pbdoc(10\ :sup:`-10` meter)pbdoc")
     .value("inverse_angstrom", LengthUnit::inverse_angstrom, R"pbdoc(1 / angstrom)pbdoc")
     .value("real_lattice", LengthUnit::real_lattice, R"pbdoc(fractional coordinates of real lattice)pbdoc")
     .value("reciprocal_lattice", LengthUnit::reciprocal_lattice, R"pbdoc(fractional coordinates of reciprocal lattice)pbdoc");
 
   py::enum_<NodeType>(m, "NodeType", R"pbdoc(
-  The units of a number representing a length
+  An enumeration to differentiate between Node types of the :py:class:`brille._brille.BZTrellisQdd`,
+  :py:class:`brille._brille.BZTrellisQdc`, and :py:class:`brille._brille.BZTrellisQcc`, classes.
+
+  The return type of the methods, e.g.,
+  :py:meth:`~brille._brille.BZTrellisQdc.node_at_type`,
+  :py:meth:`~brille._brille.BZTrellisQdc.node_containing_type`, and
+  :py:meth:`~brille._brille.BZTrellisQdc.all_node_types`.
+
+  >>> from brill import NodeType
+  >>> nt = NodeType.polygon
   )pbdoc")
       .value("assumed_null", NodeType::assumed_null, R"pbdoc(Indicates a node which should be null but no explicit check was performed)pbdoc")
       .value("found_null", NodeType::found_null, R"pbdoc(A node which an explicit check found to be null)pbdoc")

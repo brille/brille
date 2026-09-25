@@ -57,9 +57,10 @@ As a teaser, the two lattices `lat0` and `lat1` are identically the same:
 
 .. code-block:: python
 
+  from brille import HallSymbol, Lattice
+
   a = 5.69  # angstrom, the approximate lattice constant for NaCl
 
-  lat0 = brille.Direct((a, a, a), (90, 90, 90), '-F 4 2 3')
+  lat0 = Lattice(([a, a, a], [90, 90, 90]), spacegroup='-F 4 2 3')
 
-  lat1 = brille.Direct((a, a, a), (90, 90, 90))
-  lat1.spacegroup = brille.Symmetry('-F 4 2 3').generators
+  lat1 = Lattice(([a, a, a], [90, 90, 90]), symmetry=HallSymbol('-F 4 2 3').generators)

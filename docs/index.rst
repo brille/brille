@@ -7,7 +7,7 @@
 brille
 ======
 
-You can use ``brille`` to:
+You can use :py:mod:`brille` to:
 
 - access spacegroup and pointgroup symmetry operations
 - determine the first Brillouin zone for a given real space crystallographic
@@ -33,7 +33,7 @@ You can use ``brille`` to:
   :caption: API documents
 
   brille
-  plotting
+  visualisation
   utils
   doxygen
   undoc_brille

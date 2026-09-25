@@ -66,6 +66,7 @@ def vis_polyhedron(polyhedron: VisPolyhedron, **kwargs):
     kwargs
         Optional keyword arguments for the VisPolyhedron constructor. Only used if a Polyhedron or LPolyhedron
         is provided as input.
+
         face_color : Union[str, vispy.color.Color]
             The face color used for Polyhedron or LPolyhedron object input.
         edge_color : Union[str, vispy.color.Color]
@@ -90,6 +91,7 @@ def vis_polyhedra(polyhedra: List[VisPolyhedron], **kwargs):
     kwargs
         Optional keyword arguments for the VisPolyhedron constructor. Only used if a Polyhedron or LPolyhedron
         is provided in the polyhedron list.
+
         face_color : Union[List[Union[str, vispy.color.Color]],Union[str, vispy.color.Color]]
             A single face color used for all Polyhedron and LPolyhedron objects or a list of colors which will be tiled
             to the size of the full polyhedra list.
