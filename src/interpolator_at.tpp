@@ -46,6 +46,7 @@ void Interpolator<T>::interpolate_at_mix(
         ox[b*s_+s] += weights[x]*dx[perms[x][b]*s_+s];
     }
   }
+  if (this->normalizes()) this->normalize_branches(ox);
 }
 
 
@@ -123,5 +124,29 @@ void Interpolator<T>::interpolate_at_mix(
         for (ind_t s=0; s<s_; ++s) ox[b*s_+s] += idx_wgt[i].second*dx[p*s_+s];
       }
     }
+  }
+  if (this->normalizes()) this->normalize_branches(ox);
+}
+
+template<class T>
+void Interpolator<T>::normalize_branches(T* ox) const {
+  const ind_t b_{this->branches()}, s_{this->branch_span()};
+  if (normalize_ == Normalization::on) this->check_normalizable();
+  if (!metric_.empty() && metric_.size() != s_){
+    throw std::runtime_error("The normalization metric has " + std::to_string(metric_.size())
+      + " weights but a branch has " + std::to_string(s_) + " elements");
+  }
+  for (ind_t b=0; b<b_; ++b){
+    T* v = ox + b*s_;
+    double inner{0};
+    for (ind_t s=0; s<s_; ++s){
+      double sq;
+      if constexpr (is_complex<T>::value) sq = std::norm(v[s]); else sq = static_cast<double>(v[s]*v[s]);
+      inner += (metric_.empty() ? 1.0 : metric_[s]) * sq;
+    }
+    // a zero (or metric-null) vector has no direction to keep
+    if (inner == 0.) continue;
+    const double scale = 1.0 / std::sqrt(std::abs(inner));
+    for (ind_t s=0; s<s_; ++s) v[s] *= scale;
   }
 }

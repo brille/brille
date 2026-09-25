@@ -4,6 +4,7 @@
 #include <pybind11/complex.h>
 #include <thread>
 #include <tuple>
+#include <optional>
 
 #include "_array.hpp"
 #include "_c_to_python.hpp"
@@ -277,6 +278,58 @@ Note
     return a2py(cobj.data().vectors().array());
   },R"pbdoc(
     Return a shared view of the stored eigenvectors
+  )pbdoc");
+
+  cls.def("set_vector_normalization",[](Class& cobj, std::optional<bool> normalize, std::optional<std::vector<double>> metric){
+    const auto mode = !normalize ? brille::Normalization::automatic
+                    : *normalize ? brille::Normalization::on : brille::Normalization::off;
+    cobj.set_vector_normalization(mode, metric.value_or(std::vector<double>{}));
+  }, "normalize"_a=true, "metric"_a=py::none(), R"pbdoc(
+    Choose when interpolated eigenvectors are scaled to unit norm
+
+    Linear interpolation between unit eigenvectors gives vectors shorter than
+    one wherever neighbouring eigenvectors differ, so structure factors computed
+    from them come out too small. Normalization scales each interpolated branch
+    :math:`v` to :math:`v/\sqrt{|\langle v|M|v\rangle|}`.
+
+    By default it is automatic: eigenvectors stored in Cartesian units
+    (:py:class:`LengthUnit` ``angstrom`` or ``inverse_angstrom``, as Euphonic
+    stores them) are normalized, and those in lattice units, whose length depends
+    on the lattice, are not. The choice survives :py:meth:`fill` and saving to HDF5.
+
+    Parameters
+    ----------
+    normalize : bool or None, optional
+      ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
+      lattice units; ``False`` never does; ``None`` restores the automatic default.
+    metric : float, vector-like, optional
+      A diagonal metric :math:`M`, one weight per element of a branch (for
+      phonons, :math:`3N`). The default is the identity, the ordinary norm.
+      For Bogoliubov (spin-wave) vectors use
+      :math:`\eta=\mathrm{diag}(1,\ldots,1,-1,\ldots,-1)`; the sign of
+      :math:`\langle v|\eta|v\rangle` is kept.
+  )pbdoc");
+
+  cls.def_property_readonly("normalizes_vectors",[](const Class& cobj){
+    return cobj.data().vectors().normalizes();
+  },R"pbdoc(
+    Whether interpolated eigenvectors are normalized, given the stored data; see :py:meth:`set_vector_normalization`
+  )pbdoc");
+
+  cls.def_property_readonly("vector_normalization",[](const Class& cobj){
+    switch (cobj.data().vectors().normalization()){
+      case brille::Normalization::on: return std::string("on");
+      case brille::Normalization::off: return std::string("off");
+      default: return std::string("automatic");
+    }
+  },R"pbdoc(
+    When eigenvectors are normalized: ``"automatic"`` (the default), ``"on"`` or ``"off"``
+  )pbdoc");
+
+  cls.def_property_readonly("vector_metric",[](const Class& cobj){
+    return cobj.data().vectors().metric();
+  },R"pbdoc(
+    The diagonal metric used to normalize eigenvectors; empty for the identity
   )pbdoc");
 }
 

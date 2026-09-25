@@ -534,6 +534,7 @@ public:
   template<typename... A> void set_value_cost_info(A... args) { data_.set_value_cost_info(args...); }
   //! Replace the eigenvector data cost information stored in the object
   template<typename... A> void set_vector_cost_info(A... args) {data_.set_vector_cost_info(args...);}
+  template<typename... A> void set_vector_normalization(A... args) {data_.set_vector_normalization(args...);}
   //! Return the number of bytes used per Q point
   [[nodiscard]] size_t bytes_per_point() const {return data_.bytes_per_point(); }
   //! Determine the sorting permutation for every connected pair of vertices in the PolyhedronTrellis

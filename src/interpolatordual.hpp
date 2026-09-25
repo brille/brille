@@ -189,6 +189,9 @@ public:
   void replace_data(Interpolator<T>& val, Interpolator<R>& vec){
     if (vec.size() != val.size() || vec.branches() != val.branches())
       throw std::runtime_error("The values and vectors must have matching number of points and branches");
+    // keep the normalization chosen before (re)filling; this checks the metric
+    // against the new data before anything is replaced
+    vec.set_normalization(vectors_.normalization(), vectors_.metric());
     values_ = val;
     vectors_ = vec;
     this->update_permutation_table();
@@ -235,6 +238,10 @@ public:
   \param elcost The scalar, vector, and matrix relative cost scaling
   \see Interpolator::set_cost_info
   */
+  //! Normalize interpolated eigenvectors \see Interpolator::set_normalization
+  template<class M> void set_vector_normalization(const M mode, std::vector<double> metric = {}){
+    vectors_.set_normalization(mode, std::move(metric));
+  }
   void set_vector_cost_info(const int csf, const int cvf, const element_t<double>& elcost){
     vectors_.set_cost_info(csf, cvf, elcost);
   }
