@@ -27,6 +27,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "tetgen.h"
 #include "tetgen_lock.h"
 #include "polyhedron_flex.hpp"
+#include "tetrahedron_overlap.hpp"
 namespace brille {
 
 /*! \brief A single triangulated layer of the hierarchy for Mesh3
@@ -56,6 +57,11 @@ public:
   [[nodiscard]] const tetr_t& get_vertices_per_tetrahedron() const {return vertices_per_tetrahedron;}
   [[nodiscard]] const vert_t& get_circum_centres() const {return circum_centres;}
   [[nodiscard]] const std::vector<double>& get_circum_radii() const {return circum_radii;}
+  //! Pointers to the positions of tetrahedron idx's vertices; idx must exist
+  [[nodiscard]] std::array<const double *, 4> tetrahedron_vertices(const ind_t idx) const {
+    const ind_t* i = vertices_per_tetrahedron.ptr(idx);
+    return {vertex_positions.ptr(i[0]), vertex_positions.ptr(i[1]), vertex_positions.ptr(i[2]), vertex_positions.ptr(i[3])};
+  }
   [[nodiscard]] poly_t get_tetrahedron(const ind_t idx) const {
     if (nTetrahedra <= idx)
       throw std::out_of_range("The requested tetrahedron does not exist.");
@@ -465,8 +471,6 @@ private:
           // initialize the map
           map[i] = TetSet();
           auto cc_high = layers[high].get_circum_centres().view(i);
-          // get a Polyhedron object for the ith higher-tetrahedra in case we need it
-          auto tet_high = layers[high].get_tetrahedron(i);
           std::vector<double> sum_rad;
           for (const double r: layers[low].get_circum_radii()) {
             sum_rad.push_back(layers[high].get_circum_radii()[i]+r);
@@ -482,10 +486,9 @@ private:
                 add = true;
             }
             // even if no vertex is inside the ith higher-tetrahedra, the two tetrahedra
-            // can overlap -- and checking for this overlap is complicated.
-            // make the Polyhedron class do the heavy lifting.
-            // if (add || tet_high.intersects(ll.get_tetrahedron(j))) map[i].push_back(j);
-            if (add || layers[low].get_tetrahedron(j).intersects(tet_high)) map[i].push_back(j);
+            // can overlap; cutting one by the other's faces compared computed
+            // points and failed on round-off, so decide with exact predicates
+            if (add || tetrahedra_overlap(layers[high].tetrahedron_vertices(i), layers[low].tetrahedron_vertices(j))) map[i].push_back(j);
           }
         }
       };
