@@ -44,9 +44,18 @@ zone.
 The modified version is included as part of this repository.
 
 # Installation
-From the root folder of this repository use Python 3 to build and install this
-library.
+Pre-built wheels for Linux, macOS and Windows are on PyPI:
 
-`python setup.py install`
+`python -m pip install brille`
 
-Alternatively, the python module, C++ library, and [catch2](https://github.com/catchorg/Catch2) based tests can be built directly using `cmake`.
+To build from source you need Python 3.10 or later, a C++17 compiler and an
+internet connection. From the root folder of this repository run
+
+`python -m pip install .`
+
+The build uses [scikit-build-core](https://scikit-build-core.readthedocs.io)
+with [Conan](https://conan.io), which fetches and builds HDF5, HighFive,
+pybind11 and Catch2; the first build takes several minutes while HDF5 compiles.
+Alternatively, the Python module, C++ library, and [Catch2](https://github.com/catchorg/Catch2)
+based tests can be built directly with CMake 3.26 or later; see the
+[installation guide](https://brille.github.io/stable/install_guide.html).

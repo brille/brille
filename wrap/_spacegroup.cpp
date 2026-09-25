@@ -20,7 +20,12 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 void wrap_spacegroup(pybind11::module & m){
   using namespace pybind11::literals;
   using namespace brille;
-  pybind11::class_<Spacegroup> cls(m,"Spacegroup");
+  pybind11::class_<Spacegroup> cls(m,"Spacegroup",
+                                   R"pbdoc(The space group information as in :py:mod:`spglib:
+
+  Equivalent to the struct `SpacegroupType` from
+  `spg_database.h <https://github.com/spglib/spglib/blob/develop/src/spg_database.h>`_
+)pbdoc");
 
   cls.def(pybind11::init<int>(),"Hall number"_a);
 

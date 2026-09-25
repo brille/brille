@@ -27,4 +27,6 @@ The pybind-wrapped objects fully documented (in C++ doc strings) thus far are
   module/bz
   module/grids
   module/symmetry
+  module/enum
+  module/tolerance
   module/everything

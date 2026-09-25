@@ -329,13 +329,13 @@ class BrillouinZone(unittest.TestCase):
                 vol_bz = bz.polyhedron.volume
                 vol_ir = bz.ir_polyhedron.volume
                 tested += 1
-                if not np.isclose(vol_ir, vol_bz / br_py.PointSymmetry(i).size):
-                    # print(dlat,": ",vol_ir," != ",vol_bz/br_py.PointSymmetry(i).size)
+                if not np.isclose(vol_ir, vol_bz / br_py.PointSymmetry(br_py.Symmetry(i)).size):
+                    # print(dlat,": ",vol_ir," != ",vol_bz/br_py.PointSymmetry(br_py.Symmetry(i)).size)
                     failed += 1
                     failed_spg.append(spacegroup)
                     failed_ptg.append(pointgroup)
                     failed_lat.append(lat)
-                    failed_ratio.append(vol_ir / vol_bz * br_py.PointSymmetry(i).size)
+                    failed_ratio.append(vol_ir / vol_bz * br_py.PointSymmetry(br_py.Symmetry(i)).size)
             except Exception as err:
                 errored += 1
                 errored_spg.append(spacegroup)

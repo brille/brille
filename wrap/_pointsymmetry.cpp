@@ -32,11 +32,17 @@ void wrap_pointsymmetry(pybind11::module & m){
   with none of its translations.
   )pbdoc");
 
-  // TODO: As part of removing the 'Hall number' this intializer should go.
-  // But also we may not need *any* Python initializer of a Point Group Symmetry
+  // Deprecated: as part of removing the 'Hall number' this initializer will go.
   cls.def(pybind11::init([](int hall, int time_reversal){
+    if (PyErr_WarnEx(PyExc_DeprecationWarning,
+        "PointSymmetry(Hall_number, time_reversal) is deprecated and will be removed; "
+        "use PointSymmetry(Symmetry(...)) or Lattice(...).pointgroup instead. "
+        "Time-reversal symmetry is set on BrillouinZone.", 1) < 0)
+      throw pybind11::error_already_set();
     return Spacegroup(hall).get_pointgroup_symmetry(time_reversal);}),
-    "Hall_number"_a,"time_reversal"_a=0);
+    "Hall_number"_a,"time_reversal"_a=0, R"pbdoc(
+    Deprecated: use ``PointSymmetry(Symmetry(...))`` or :py:attr:`Lattice.pointgroup`.
+    )pbdoc");
 
   cls.def(pybind11::init([](const Symmetry & sym){
        return PointSymmetry(get_unique_rotations(sym.getallr(), 0));

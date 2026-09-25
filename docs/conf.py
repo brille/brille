@@ -47,7 +47,12 @@ intersphinx_mapping = {
     "euphonic": ("https://euphonic.readthedocs.io/en/stable/", None),
     "brilleu": ("https://brille.github.io/brilleu/latest/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
+    "vispy": ("https://vispy.org", None),
+    "matplotlib": ("https://matplotlib.org/stable/", None),
 }
+
+# brille.vis imports vispy at module level; let autodoc document it without vispy installed
+autodoc_mock_imports = ["vispy"]
 
 # The image now has sphinxcontrib-katex v0.9.10, which uses katex 0.16.10
 # # Some :math:`[LaTeX]` directives insert '\r' into the string passed to katex?
