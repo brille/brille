@@ -27,17 +27,18 @@ def test_python_threads_run_during_a_long_interpolation():
     grid = filled_grid()
     q = queries(30_000, 2)
     worker = threading.Thread(target=lambda: grid.ir_interpolate_at(q, threads=1))
-    ticks = 0
     start = time.perf_counter()
+    ticks = [start]
     worker.start()
     while worker.is_alive():
-        ticks += 1  # pure-Python work, possible only while brille does not hold the GIL
-        time.sleep(0.001)
-    elapsed = time.perf_counter() - start
+        time.sleep(0.001)  # actually sleeps longer on some systems (about 8 ms on macOS runners)
+        ticks.append(time.perf_counter())  # pure-Python work, possible only while brille does not hold the GIL
+    elapsed = ticks[-1] - start
     worker.join()
-    # a held GIL would allow at most a tick or two; ~1 ms ticks over the whole call show it was released
+    # With the GIL held the main thread cannot run until brille returns: one gap spans
+    # the whole call. Released, the gaps are only as long as the sleep resolution.
     assert elapsed > 0.1
-    assert ticks > 0.3 * elapsed / 0.001
+    assert max(b - a for a, b in zip(ticks, ticks[1:])) < 0.25 * elapsed
 
 
 def test_concurrent_calls_match_serial_results():
