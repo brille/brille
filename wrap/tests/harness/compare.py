@@ -2,8 +2,8 @@
 
 Eigenvectors are only defined up to a phase, and inside a degenerate group
 only up to a unitary mixing. Comparing projectors onto each group removes
-both ambiguities. The metric parameter (requirement R1 in ``DEFICIENCIES.md``)
-is the identity for phonons; for Bogoliubov modes the projector becomes
+both ambiguities. The metric parameter, so that spin-wave modes can be compared
+too, is the identity for phonons; for Bogoliubov modes the projector becomes
 ``Σ v v† η``.
 """
 from typing import NamedTuple

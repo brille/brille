@@ -1,8 +1,8 @@
 """Reference models that can be evaluated exactly at any q.
 
-:py:class:`ReferenceModel` is the interface every model implements (requirement
-R4 in ``DEFICIENCIES.md``). A model returns :py:class:`Modes`, which carry the
-inner-product metric their eigenvectors are orthonormal in (requirement R1):
+:py:class:`ReferenceModel` is the interface every model implements, so that
+spin-wave models can replace the phonon one. A model returns :py:class:`Modes`, which carry the
+inner-product metric their eigenvectors are orthonormal in:
 ``None`` means the ordinary inner product, as for phonons; a Bogoliubov model
 would return ``η = diag(1,…,1,−1,…,−1)``.
 """

@@ -1,4 +1,4 @@
-"""Time each stage of brille's interpolation pipeline separately (DEFICIENCIES.md #27).
+"""Time each stage of brille's interpolation pipeline separately.
 
 Run from ``wrap/tests``::
 

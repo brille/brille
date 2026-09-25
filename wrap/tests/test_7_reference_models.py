@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Compare brille against reference models evaluated exactly at every q.
 
-See ``DEFICIENCIES.md`` (#22) for the purpose of these tests. Known failures
-are marked ``xfail(strict=True)`` with the deficiency number, so a fix shows up
-as an unexpected pass.
+The reference models check the physics-critical paths: symmetry unfolding of
+eigenvectors, phase conventions, and meshing real lattices. Known failures are
+marked ``xfail(strict=True)`` with a reason naming the problem, so a fix shows
+up as an unexpected pass.
 
 Crystals sit on real lattices from ``aflow_lattices.json`` and are given to
 brille two ways (see :py:func:`harness.brille_lattice`):
@@ -15,8 +16,8 @@ brille two ways (see :py:func:`harness.brille_lattice`):
 
 By default a representative set of space groups is tested; set
 ``BRILLE_HARNESS_FULL=1`` to sweep all 230 and to mesh every AFLOW lattice.
-Run the full sweep with ``OMP_NUM_THREADS=1 OMP_WAIT_POLICY=passive pytest -n 12``
-(pytest-xdist): see #17 for why the environment variables matter.
+Run the full sweep with ``BRILLE_NUM_THREADS=1 pytest -n 12`` (pytest-xdist):
+each worker process otherwise starts one brille thread per core.
 """
 import faulthandler
 import json
@@ -52,8 +53,8 @@ SEED = 20260923
 POINTS_PER_IR = 100
 HERE = Path(__file__).parent
 
-# brille holds the GIL throughout its C++ calls (#16), so a Python-level watchdog
-# such as pytest-timeout cannot interrupt a hang (#29); faulthandler's C thread can.
+# brille holds the GIL throughout its C++ calls, so a Python-level watchdog such as
+# pytest-timeout cannot interrupt a hang in brille; faulthandler's C thread can.
 TEST_TIMEOUT = float(os.environ.get("BRILLE_HARNESS_TIMEOUT", 300))
 
 
@@ -66,11 +67,11 @@ def _hang_watchdog():
 
 # (route, ITA number) pairs, for SEED, on which brille fails before the test can
 # check anything.
-_DUPLICATE_POINT = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="#26: 'Duplicate intersection point' while meshing")
-_NO_IR_ZONE = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="#28: no irreducible Brillouin zone found")
-_UNREFINED = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="#30: mesh ignores max_size on the explicit route")
+_DUPLICATE_POINT = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="meshing raises 'Duplicate intersection point' (near-coincident polyhedron points)")
+_NO_IR_ZONE = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="no irreducible Brillouin zone found for this centred lattice")
+_UNREFINED = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="the mesh ignores max_size on the explicit route")
 # A hang cannot be xfailed: the watchdog would kill the worker.
-_PSEUDO_CUBIC = pytest.mark.skip(reason="#29: R lattice within 6 ppm of fcc; a 4e-6 zone edge stalls TetGen refinement")
+_PSEUDO_CUBIC = pytest.mark.skip(reason="hangs: this R lattice is within 6 ppm of fcc, and a 4e-6 zone edge stalls TetGen refinement")
 KNOWN_FAILURES = {
     ("hall", 146): _PSEUDO_CUBIC,
     ("explicit", 5): _DUPLICATE_POINT,
@@ -144,7 +145,7 @@ def test_reference_model_has_crystal_symmetry(number):
 
 @pytest.mark.parametrize("route, number", _unfolding_params())
 def test_gamma_unfolding(route, number):
-    """#8: brille's Γ-table rotation, atom permutation and phase reproduce the exact eigenvectors."""
+    """brille's Γ-table rotation, atom permutation and phase reproduce the exact eigenvectors."""
     setup = filled(number, route)
     q = unfolding_queries(setup, number)
     values, vectors = interpolate(setup, q)
@@ -154,7 +155,7 @@ def test_gamma_unfolding(route, number):
     assert worst["norm_error"] < 1e-10
 
 
-@pytest.mark.xfail(strict=True, reason="#25: brille assumes eigenvectors periodic in q (cell phase convention)")
+@pytest.mark.xfail(strict=True, reason="brille needs eigenvectors periodic in q (the cell phase convention; see docs/phase_convention.rst)")
 def test_gamma_unfolding_atom_phase_convention():
     number = 14
     setup = filled(number, convention="atom")
@@ -163,7 +164,7 @@ def test_gamma_unfolding_atom_phase_convention():
     assert compare_modes(setup.model.modes(q), values, vectors).worst()["projector_error"] < 1e-8
 
 
-@pytest.mark.xfail(strict=True, raises=RuntimeError, reason="#6: time reversal is added as inversion, which has no atom mapping")
+@pytest.mark.xfail(strict=True, raises=RuntimeError, reason="time reversal is added as inversion, which has no atom mapping")
 def test_time_reversal_without_inversion():
     number = 19
     cr = crystal(number)
@@ -176,7 +177,7 @@ def test_time_reversal_without_inversion():
     assert compare_modes(model.modes(q), values, vectors).worst()["projector_error"] < 1e-8
 
 
-@pytest.mark.xfail(strict=True, reason="#23: the mesh does not match itself across equivalent zone faces")
+@pytest.mark.xfail(strict=True, reason="the mesh does not match itself across equivalent zone faces (see GitHub #114)")
 def test_continuity_across_zone_faces():
     # triclinic: the first AFLOW P1 lattice is metrically cubic, and a cube's zone meshes consistently
     setup = filled(2)
@@ -222,26 +223,26 @@ _SURFACE_SCRIPT = textwrap.dedent(
 
 
 def test_surface_vertices_do_not_crash():
-    """#24: surface points that round off outside the mesh raise instead of segfaulting."""
+    """Surface points that round off outside the mesh raise instead of segfaulting."""
     try:
         run_isolated(_SURFACE_SCRIPT)
     except BrilleRaised as error:
         assert "not found in tetrahedral mesh" in str(error)
 
 
-@pytest.mark.xfail(strict=True, raises=BrilleRaised, reason="#24: surface points round off outside the mesh")
+@pytest.mark.xfail(strict=True, raises=BrilleRaised, reason="surface points round off outside the mesh and are not snapped back inside")
 def test_surface_vertices_interpolate():
     run_isolated(_SURFACE_SCRIPT)
 
 
 # Meshing every AFLOW lattice, the way test_3 builds them, in a subprocess each.
 # Indices into aflow_lattices.json of lattices that currently fail.
-_DUPLICATE = pytest.mark.xfail(strict=True, raises=BrilleRaised, reason="#26: 'Duplicate intersection point' while meshing")
+_DUPLICATE = pytest.mark.xfail(strict=True, raises=BrilleRaised, reason="meshing raises 'Duplicate intersection point' (near-coincident polyhedron points)")
 AFLOW_MESH_FAILURES = {
     **{i: _DUPLICATE for i in (9, 14, 152, 166, 179, 195, 303, 313, 344, 359, 371, 381)},
-    327: pytest.mark.xfail(strict=True, reason="#29: mesh construction hangs (R3)"),
+    327: pytest.mark.xfail(strict=True, reason="hangs: this R lattice is within 6 ppm of fcc, and a 4e-6 zone edge stalls TetGen refinement"),
     # near-degenerate monoclinic (beta = 90.04 deg): ~5000 vertices instead of ~100, ~40 s alone
-    28: pytest.mark.xfail(strict=False, reason="#4: mesh over-refines; slow, times out under load"),
+    28: pytest.mark.xfail(strict=False, reason="the mesh over-refines near a pseudo-symmetric cell; slow, times out under load"),
 }
 AFLOW_MESH_TIMEOUT = 240  # below the hang watchdog, so a slow mesh fails rather than kills the worker
 
@@ -257,7 +258,7 @@ def _aflow_params():
 
 @pytest.mark.parametrize("index", _aflow_params())
 def test_aflow_lattice_meshes(index):
-    """#26, #29: every real lattice can be meshed without crashing or hanging."""
+    """Every real lattice can be meshed without crashing or hanging."""
     code = textwrap.dedent(
         """
         import sys, json, brille

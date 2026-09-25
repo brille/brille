@@ -101,7 +101,7 @@ def build(model: ReferenceModel, points_per_ir=30, time_reversal=False, length_u
     n = cr.natoms
     grid.fill(
         np.ascontiguousarray(modes.values[:, :, None]),
-        # scalars only, but LengthUnit "none" throws at query time (#19)
+        # scalars only, but LengthUnit "none" throws at query time for this RotatesLike
         np.array([1, 0, 0, 0, LENGTH_UNIT["real_lattice"], 0, 0]),
         np.array([1.0, 0.0, 0.0]),
         np.ascontiguousarray(_to_unit(modes.vectors, cr.lattice, length_unit)),
