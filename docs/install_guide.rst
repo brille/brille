@@ -44,7 +44,7 @@ Note:
 
 building from source
 ====================
-You need Python 3.10 or later, a C++17 compiler, and an internet connection.
+You need Python 3.11 or later, a C++17 compiler, and an internet connection.
 Then build and install the latest version of brille with
 
 .. code-block:: bash

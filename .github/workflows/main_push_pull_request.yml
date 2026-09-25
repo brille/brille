@@ -33,7 +33,7 @@ jobs:
           - { os: macos-26 }
           - { os: macos-26-intel }
           - { os: windows-2025}
-        python-version: ["3.10"]
+        python-version: ["3.11"]
         cmake-type: ['Release']
 
     steps:

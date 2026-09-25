@@ -48,7 +48,7 @@ Pre-built wheels for Linux, macOS and Windows are on PyPI:
 
 `python -m pip install brille`
 
-To build from source you need Python 3.10 or later, a C++17 compiler and an
+To build from source you need Python 3.11 or later, a C++17 compiler and an
 internet connection. From the root folder of this repository run
 
 `python -m pip install .`
