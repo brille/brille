@@ -4,7 +4,10 @@
 #include <functional>
 #include <mutex>
 #include <queue>
+#include <shared_mutex>
 #include <thread>
+#include <unordered_map>
+#include <utility>
 
 #include <iostream>
 #include <sstream>
@@ -20,30 +23,47 @@ namespace brille {
     */
     size_t default_thread_count();
 
-    // Class that represents a simple thread pool
+    /*! \brief A process-wide pool of worker threads
+
+    Parallel sections enqueue tasks and then wait for them. Each calling thread
+    is its own task group: wait() returns once the tasks *that thread* enqueued
+    have finished, and rethrows only their exceptions, so several threads (e.g.,
+    Python threads with the GIL released) can use the pool at the same time.
+
+    The pool is resized only while no thread is between enqueue() and wait();
+    otherwise resize() keeps the current size. Callers split their work by the
+    size() they read, so any size gives correct results.
+    */
     class ThreadPool {
     private:
+        //! Tasks enqueued by one calling thread, and the exceptions they threw
+        struct Group {
+            size_t pending{0};
+            ThreadException errors;
+        };
         // The singleton pointer:
         static ThreadPool* instance_;
         // A mutex for the instance
         static std::mutex instance_mutex_;
         // Vector to store worker threads
         std::vector<std::thread> threads_;
-        // Queue of tasks
-        std::queue<std::function<void()> > tasks_;
-        // Mutex to synchronize access to shared data
+        // The number of worker threads, readable while the pool is in use
+        std::atomic<size_t> size_{0};
+        // Queue of tasks, each with the thread that enqueued it
+        std::queue<std::pair<std::thread::id, std::function<void()>>> tasks_;
+        // The task groups, one per calling thread with tasks outstanding
+        std::unordered_map<std::thread::id, Group> groups_;
+        // Mutex to synchronize access to the queue and the groups
         std::mutex queue_mutex_;
         // Condition variable to signal changes in the state of the tasks queue
         std::condition_variable cv_;
-        // A counter to indicate whether any threads are waiting
-        std::atomic_uint64_t wait_count_{0};
-        // std::size_t wait_count_{0};
-        std::mutex wait_count_mutex_;
-        std::condition_variable wait_condition_;
+        // Signalled when a group's last task finishes
+        std::condition_variable done_;
+        // Held shared by each thread between its first enqueue() and wait(),
+        // and exclusively by resize(), which only proceeds when it is free
+        std::shared_mutex use_mutex_;
         // Flag to indicate whether the thread pool should stop or not
         bool stop_ = false;
-        // Exceptions thrown by tasks, rethrown by wait()
-        ThreadException errors_;
     protected:
         // Constructor to creates a thread pool with given number of threads
         explicit ThreadPool(const size_t num_threads = default_thread_count()) {
@@ -72,41 +92,47 @@ namespace brille {
         */
         static bool on_worker_thread();
 
-        // Enqueue task for execution by the thread pool
+        // Enqueue task for execution by the thread pool, in the calling thread's group
         void enqueue(std::function<void()> task)
         {
             if (on_worker_thread()) {
                 task(); // nested: run now, on this worker
                 return;
             }
+            if (!holds_use_lock()) {
+                use_mutex_.lock_shared();
+                holds_use_lock() = true;
+            }
             {
                 std::unique_lock lock(queue_mutex_);
-                tasks_.emplace(std::move(task));
+                const auto id = std::this_thread::get_id();
+                ++groups_[id].pending;
+                tasks_.emplace(id, std::move(task));
             }
             // Wake one worker
             cv_.notify_one();
-            // Wake any waiters due to the queue state change
-            wait_condition_.notify_all();
         }
 
         [[nodiscard]] size_t size() const {
-            return threads_.size();
+            return size_;
         }
 
+        //! Resize the pool, unless it is in use; then keep the current size
         void resize(const size_t num_threads = default_thread_count()) {
             if (on_worker_thread()) return; // a worker cannot replace the pool it runs in
-            if (threads_.size() != num_threads) {
-                refresh(num_threads);
-            }
+            if (size_ == num_threads) return;
+            std::unique_lock use(use_mutex_, std::try_to_lock);
+            if (!use.owns_lock()) return; // another thread's tasks are outstanding
+            refresh(num_threads);
         }
 
-        // Resize the pool to a specified number of threads
+        // Replace the worker threads; the pool must not be in use
         void refresh(const size_t num_threads = default_thread_count()) {
             if (on_worker_thread()) return;
             if (!threads_.empty()) {
                 clear();
                 threads_.clear();
-                std::unique_lock lock(queue_mutex_); // there are no threads now. Is this lock really necessary?
+                std::unique_lock lock(queue_mutex_);
                 stop_ = false;
             }
             // Creating worker threads
@@ -114,71 +140,77 @@ namespace brille {
                 threads_.emplace_back([this] {
                     mark_worker_thread();
                     while (true) {
-                        std::function<void()> task;
-                        // The reason for putting the below code
-                        // here is to unlock the queue before
-                        // executing the task so that other
-                        // threads can perform enqueue tasks
+                        std::pair<std::thread::id, std::function<void()>> item;
                         {
-                            // Locking the queue so that data
-                            // can be shared safely
                             std::unique_lock lock(queue_mutex_);
-                            ++wait_count_;
-                            // Notify any waiters due to the wait count change
-                            wait_condition_.notify_all();
-
-                            // Waiting until there is a task to
-                            // execute or the pool is stopped
+                            // Wait until there is a task, or the pool is stopped
                             cv_.wait(lock, [this] {
                                 return !tasks_.empty() || stop_;
                             });
-                            --wait_count_;
-                            // Notify any waiters due to the wait count change
-                            wait_condition_.notify_all();
-
-                            // exit the thread in case the pool
-                            // is stopped and there are no tasks
+                            // exit the thread in case the pool is stopped and there are no tasks
                             if (stop_ && tasks_.empty()) {
                                 return;
                             }
-                            // Get the next task from the queue
-                            task = std::move(tasks_.front());
+                            item = std::move(tasks_.front());
                             tasks_.pop();
-                            // std::stringstream s;
-                            // s << "A thread woke up to do a job! ";
-                            // s << wait_count_ << " waiting, " << tasks_.size() << " jobs remain";
-                            // std::cout << s.str() << std::endl;
-
-                            // Notify any waiters due to the queue change
-                            wait_condition_.notify_all();
-
                         }
                         // An exception escaping a thread calls std::terminate,
-                        // so keep it for wait() to rethrow on the calling thread
+                        // so keep it for the owner's wait() to rethrow
                         try {
-                            task();
+                            item.second();
                         } catch (...) {
-                            errors_.capture();
+                            ThreadException * errors;
+                            {
+                                std::unique_lock lock(queue_mutex_);
+                                errors = &groups_[item.first].errors;
+                            }
+                            errors->capture();
                         }
-                        wait_condition_.notify_all();
+                        {
+                            std::unique_lock lock(queue_mutex_);
+                            if (--groups_[item.first].pending == 0) done_.notify_all();
+                        }
                     }
                 });
             }
+            size_ = num_threads;
         }
 
-        // Wait for all threads to finish their work, then rethrow any exception a task threw
+        //! Wait for the calling thread's tasks, then rethrow any exception they threw
         void wait() {
             if (on_worker_thread()) return; // nested tasks already ran in enqueue()
+            const auto id = std::this_thread::get_id();
+            ThreadException * errors{nullptr};
             {
                 std::unique_lock lock(queue_mutex_);
-                wait_condition_.wait(lock, [this] {
-                    return tasks_.empty() && wait_count_ >= threads_.size();
+                done_.wait(lock, [&] {
+                    auto group = groups_.find(id);
+                    return group == groups_.end() || group->second.pending == 0;
                 });
+                if (auto group = groups_.find(id); group != groups_.end()) errors = &group->second.errors;
             }
-            errors_.rethrow();
+            if (holds_use_lock()) {
+                holds_use_lock() = false;
+                use_mutex_.unlock_shared();
+            }
+            if (errors == nullptr) return;
+            // forget the group whether or not it holds an exception
+            auto forget = [&] {
+                std::unique_lock lock(queue_mutex_);
+                groups_.erase(id);
+            };
+            try {
+                errors->rethrow();
+            } catch (...) {
+                forget();
+                throw;
+            }
+            forget();
         }
     private:
         static void mark_worker_thread();
+        // Whether the calling thread holds use_mutex_ shared (between enqueue and wait)
+        static bool & holds_use_lock();
         // Stop all threads (in destructor or before resizing as part of a refresh)
         void clear() {
             {
@@ -188,8 +220,6 @@ namespace brille {
             }
             // Notify all threads
             cv_.notify_all();
-            // Notify waiter so they re-evaluate
-            wait_condition_.notify_all();
             // Joining all worker threads to ensure they have
             // completed their tasks
             for (auto& thread : threads_) {

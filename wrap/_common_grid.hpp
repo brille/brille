@@ -40,7 +40,8 @@ void def_grid_fill(py::class_<Grid<T,R,S>>& cls){
     profile_update("  End of 'fill' operation");
     if (sort){
       profile_update("Start of 'sort' operation");
-      cobj.sort();
+      // only the sort runs without the GIL: replacing the data can release numpy buffers
+      { py::gil_scoped_release release; cobj.sort(); }
       profile_update("  End of 'sort' operation");
     }
   },
@@ -145,7 +146,8 @@ Note
     profile_update("  End of 'fill' operation with cost information");
     if (sort){
       profile_update("Start of 'sort' operation");
-      cobj.sort();
+      // only the sort runs without the GIL: replacing the data can release numpy buffers
+      { py::gil_scoped_release release; cobj.sort(); }
       profile_update("  End of 'sort' operation");
     }
   },
@@ -354,11 +356,12 @@ void def_grid_ir_interpolate(py::class_<Grid<T,R,S>>& cls){
     const int maxth(static_cast<int>(brille::default_thread_count()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
     if (no_move) {
-      auto [val, vec] = cobj.template ir_interpolate_at<true>(qv, nthreads);
+      // qv shares the numpy buffer and outlives the release; the results are brille-owned
+      auto [val, vec] = [&]{ py::gil_scoped_release release; return cobj.template ir_interpolate_at<true>(qv, nthreads); }();
       profile_update("  End of 'ir_interpolate_at' operation");
       return std::make_tuple(brille::a2py(val), brille::a2py(vec));
     } else {
-      auto [val, vec] = cobj.ir_interpolate_at(qv, nthreads);
+      auto [val, vec] = [&]{ py::gil_scoped_release release; return cobj.ir_interpolate_at(qv, nthreads); }();
       profile_update("  End of 'ir_interpolate_at' operation");
       return std::make_tuple(brille::a2py(val), brille::a2py(vec));
     }
@@ -491,11 +494,11 @@ void def_grid_interpolate(py::class_<Grid<T,R,S>>& cls){
     const int maxth(static_cast<int>(brille::default_thread_count()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
     if (no_move) {
-      auto [val, vec] = cobj.template interpolate_at<true>(qv, nthreads);
+      auto [val, vec] = [&]{ py::gil_scoped_release release; return cobj.template interpolate_at<true>(qv, nthreads); }();
       profile_update("  End of 'interpolate_at' operation");
       return std::make_tuple(brille::a2py(val), brille::a2py(vec));
     } else {
-      auto [val, vec] = cobj.interpolate_at(qv, nthreads);
+      auto [val, vec] = [&]{ py::gil_scoped_release release; return cobj.interpolate_at(qv, nthreads); }();
       profile_update("  End of 'interpolate_at' operation");
       return std::make_tuple(brille::a2py(val), brille::a2py(vec));
     }
@@ -549,7 +552,7 @@ void def_grid_sort(py::class_<Grid<T,R,S>>& cls){
   using namespace brille;
   using Class = Grid<T,R,S>;
 
-  cls.def("sort",&Class::sort);
+  cls.def("sort",&Class::sort, py::call_guard<py::gil_scoped_release>());
 
   cls.def("set_flags_weights",
   [](Class& cobj,
@@ -563,7 +566,7 @@ void def_grid_sort(py::class_<Grid<T,R,S>>& cls){
     std::tie(vec_rl,vec_lu,vec_sf,vec_vf,vec_wght)=set_check(pyvecfnc,pyvecwght);
     cobj.set_value_cost_info(val_sf, val_vf, val_wght);
     cobj.set_vector_cost_info(vec_sf, vec_vf, vec_wght);
-    if (sort) cobj.sort();
+    if (sort) { py::gil_scoped_release release; cobj.sort(); }
   },
   "values_flags"_a, "values_weights"_a, "vectors_flags"_a, "vectors_weights"_a,
   "sort"_a=false,

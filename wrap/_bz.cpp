@@ -173,6 +173,7 @@ void wrap_brillouinzone(py::module & m){
     cfg.wedge_search(wedge_search);
     return BrillouinZone(lat, cfg);
   }),
+  py::call_guard<py::gil_scoped_release>(),
   "lattice"_a,
   "use_primitive"_a=true,
   "search_length"_a=1,
@@ -197,6 +198,7 @@ void wrap_brillouinzone(py::module & m){
             cfg.wedge_search(wedge_search);
             return BrillouinZone(lat, cfg, ac);
           }),
+          py::call_guard<py::gil_scoped_release>(),
           "lattice"_a,
           "approx_config"_a,
           "use_primitive"_a=true,
@@ -410,7 +412,11 @@ void wrap_brillouinzone(py::module & m){
     auto Qv = LQVec<double>(b.get_lattice(),  sp); // view
     auto qv = LQVec<double>(b.get_lattice(), sp.shape(), sp.stride()); // output
     auto tauv = LQVec<int>(b.get_lattice(), sp.shape(), sp.stride()); // output
-    bool success = b.moveinto(Qv,qv,tauv,threads);
+    bool success;
+    {
+      py::gil_scoped_release release; // Qv keeps the numpy buffer alive; outputs are brille-owned
+      success = b.moveinto(Qv,qv,tauv,threads);
+    }
     if (!success) throw std::runtime_error("failed to move all Q into the first Brillouin Zone");
     return py::make_tuple(brille::a2py(qv), brille::a2py(tauv));
   }, "Q"_a, "threads"_a=0, R"pbdoc(
@@ -444,7 +450,12 @@ void wrap_brillouinzone(py::module & m){
     auto qv = LQVec<double>(b.get_lattice(), sp.shape(), sp.stride()); // output
     auto tauv = LQVec<int>(b.get_lattice(), sp.shape(), sp.stride()); // output
     std::vector<size_t> rotidx(Qv.numel()/3), invrotidx(Qv.numel()/3);
-    if (!b.ir_moveinto(Qv, qv, tauv, rotidx, invrotidx, threads))
+    bool moved;
+    {
+      py::gil_scoped_release release;
+      moved = b.ir_moveinto(Qv, qv, tauv, rotidx, invrotidx, threads);
+    }
+    if (!moved)
       throw std::runtime_error("Moving points into irreducible zone failed.");
     // get the pointgroup symmetry operations indexed by rotidx and invrotidx
     PointSymmetry ptsym = b.get_pointgroup_symmetry();
@@ -507,7 +518,12 @@ void wrap_brillouinzone(py::module & m){
     auto qv = LQVec<double>(b.get_lattice(), sp.shape(), sp.stride()); // output
     std::vector<std::array<int,9>> rots(Qv.numel()/3);
     std::vector<size_t> ridx(Qv.numel()/3);
-    if (!b.ir_moveinto_wedge(Qv, qv, ridx, threads))
+    bool moved;
+    {
+      py::gil_scoped_release release;
+      moved = b.ir_moveinto_wedge(Qv, qv, ridx, threads);
+    }
+    if (!moved)
       throw std::runtime_error("Moving points into irreducible zone failed.");
     // prepare Python outputs
     // The rotations array has an extra dimension compared to q and tau

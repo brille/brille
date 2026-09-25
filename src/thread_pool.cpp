@@ -25,6 +25,11 @@ void brille::ThreadPool::mark_worker_thread() {
   is_pool_worker = true;
 }
 
+bool & brille::ThreadPool::holds_use_lock() {
+  thread_local bool holds{false};
+  return holds;
+}
+
 // Retrieve the singleton instance:
 brille::ThreadPool * brille::ThreadPool::getInstance() {
   std::lock_guard lock(instance_mutex_);
