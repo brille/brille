@@ -133,7 +133,7 @@ TEST_CASE("BrillouinZone moveinto","[bz_]"){
     auto Qmq = Q-q;
     auto Qmqmtau = Q-(q+tau);
     for (auto i: Q.subItr()){
-      REQUIRE_THAT(Q[i], Catch::Matchers::WithinRel(q[i] + tau[i], 1e-12));
+      REQUIRE_THAT(Q[i], Catch::Matchers::WithinAbs(q[i] + tau[i], 1e-12));
       REQUIRE(brille::approx_float::scalar(Qmq[i], static_cast<double>(tau[i])));
       REQUIRE(brille::approx_float::scalar(std::abs(Qmqmtau[i]), 0.));
     }
