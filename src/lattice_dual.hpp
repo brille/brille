@@ -192,7 +192,7 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(lengths, angles, lu, au, snap_to_symmetry);
-    set_metrics();
+    set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
   }
   /*! \brief Lattice basis vectors and Symmetry constructor
@@ -211,7 +211,7 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
-    set_metrics();
+    set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
   }
   /*! \brief Lattice parameters and Hermann-Maunguin spacegroup information constructor
@@ -232,7 +232,7 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(lengths, angles, lu, au, snap_to_symmetry);
-    set_metrics();
+    set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
   }
   /*! \brief Lattice parameters and string-encoded spacegroup information constructor
@@ -252,7 +252,7 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(lengths, angles, lu, au, snap_to_symmetry);
-    set_metrics();
+    set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
   }
   /*! \brief Lattice basis vectors and Hermann-Maunguin spacegroup information constructor
@@ -272,7 +272,7 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(MatrixVectors::column == mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
-    set_metrics();
+    set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
   }
   /*! \brief Lattice basis vectors and string-encoded spacegroup information constructor
@@ -291,7 +291,7 @@ public:
     _bravais = _space.getcentring();
     set_point_symmetry();
     set_vectors(MatrixVectors::column == mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
-    set_metrics();
+    set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
   }
 
@@ -475,6 +475,7 @@ private:
         T(0),  T(0),             math::two_pi / dv[2]
     };
     set_vectors(B, LengthUnit::inverse_angstrom);
+    if (snap_to_symmetry) symmetrize_real_metric();
   }
   /*! \brief Set the real and reciprocal basis vector matrices
    *
@@ -496,16 +497,120 @@ private:
     } else {
       throw std::runtime_error("LengthUnit should be angstrom or inverse angstrom");
     }
-    if (snap_to_symmetry){
+    if (snap_to_symmetry && !symmetrize_real_metric()){
       snap_basis_vectors_to_symmetry(LengthUnit::angstrom == lu);
     }
   }
-  void set_metrics() {
+  /*! \brief Make the metric exactly invariant under the point group
+
+  Basis vectors from another program (e.g., a primitive cell from spglib) carry
+  round-off, so their metric G is invariant under the point group operations W
+  only approximately. The geometry built on it (zone faces, the irreducible
+  wedge) then has near-coincident features instead of coincident ones. The
+  average (1/N) Σ WᵀGW is invariant. Each of its entries is computed as a fixed
+  integer combination of the six entries of G, so entries that are equal by
+  symmetry are identical, not just close.
+  The vectors keep their orientation: with A = QU, UᵀU = G and U upper
+  triangular, the new vectors are A U⁻¹ Uₛ, where Uₛᵀ Uₛ is the average.
+  Only round-off is removed: if the average differs from G by more than
+  `metric_round_off` relative to G, nothing changes.
+  \return whether the metric is now invariant
+  */
+  /*! \brief The average of a metric over the point group
+
+  (1/N) Σ WᵀGW for the real space metric, or (1/N) Σ W G Wᵀ for the reciprocal
+  one, since reciprocal coordinates transform by W⁻ᵀ and {W⁻¹} = {W}. Each entry
+  is a fixed integer combination of the upper triangle of G, summed in a fixed
+  order, so entries equal by symmetry are bit-for-bit identical.
+  */
+  [[nodiscard]] matrix_t invariant_average(const matrix_t & g, const bool reciprocal) const {
+    const auto & ws = _point.getall();
+    if (ws.size() < 2) return g;
+    matrix_t gs{};
+    for (int i=0; i<3; ++i) for (int j=0; j<3; ++j){
+      // coefficients of the upper triangle G[k,l], k <= l, in the sum's [i,j]
+      std::array<long long, 9> c{};
+      for (const auto & w: ws) for (int k=0; k<3; ++k) for (int l=0; l<3; ++l){
+        const long long wki = reciprocal ? w[3*i+k] : w[3*k+i];
+        const long long wlj = reciprocal ? w[3*j+l] : w[3*l+j];
+        c[3*std::min(k,l) + std::max(k,l)] += wki * wlj;
+      }
+      T sum{0};
+      for (int k=0; k<3; ++k) for (int l=k; l<3; ++l) if (c[3*k+l]) sum += static_cast<T>(c[3*k+l]) * g[3*k+l];
+      gs[3*i+j] = sum / static_cast<T>(ws.size());
+    }
+    return gs;
+  }
+  //! The largest change, relative to the metric, that symmetrizing may make
+  static constexpr T metric_round_off{T(1e-10)};
+  [[nodiscard]] static bool only_round_off(const matrix_t & g, const matrix_t & gs) {
+    T scale{0}, change{0};
+    for (int k=0; k<9; ++k) {
+      scale = std::max(scale, std::abs(g[k]));
+      change = std::max(change, std::abs(gs[k] - g[k]));
+    }
+    return change <= metric_round_off * scale;
+  }
+  bool symmetrize_real_metric(){
+    const auto g = metric_from_column_vectors(_real_vectors);
+    const auto gs = invariant_average(g, false);
+    if (!only_round_off(g, gs)) return false;
+    bool same{true};
+    for (int k=0; k<3; ++k) for (int l=k; l<3; ++l) same &= gs[3*k+l] == g[3*k+l];
+    if (same) return true;
+    auto upper_cholesky = [](const matrix_t & m){
+      matrix_t u{};
+      u[0] = std::sqrt(m[0]);
+      u[1] = m[1] / u[0];
+      u[2] = m[2] / u[0];
+      u[4] = std::sqrt(m[4] - u[1] * u[1]);
+      u[5] = (m[5] - u[1] * u[2]) / u[4];
+      u[8] = std::sqrt(m[8] - u[2] * u[2] - u[5] * u[5]);
+      return u;
+    };
+    const auto u = upper_cholesky(g);
+    const auto us = upper_cholesky(gs);
+    // t = U⁻¹ Uₛ by back substitution; both are upper triangular, so t is too
+    matrix_t t{};
+    for (int j=0; j<3; ++j) for (int i=j; i>=0; --i){
+      T x = us[3*i+j];
+      for (int k=i+1; k<=j; ++k) x -= u[3*i+k] * t[3*k+j];
+      t[3*i+j] = x / u[3*i+i];
+    }
+    const auto a = _real_vectors;
+    matrix_t as{};
+    for (int r=0; r<3; ++r) for (int j=0; j<3; ++j) for (int k=0; k<=j; ++k) as[3*r+j] += a[3*r+k] * t[3*k+j];
+    if (!approx_float::matrix(3u, a.data(), as.data())){
+      std::ostringstream msg;
+      msg << "Making the metric invariant under the point group changed the real basis vectors by [";
+      for (int j=0; j<3; ++j){
+        msg << "(";
+        for (int r=0; r<3; ++r) msg << " " << as[3*r+j] - a[3*r+j];
+        msg << " ), ";
+      }
+      msg << "] " << u8"Å";
+      info_update(msg.str());
+    }
+    _real_vectors = as;
+    _reciprocal_vectors = transpose(linear_algebra::mat_inverse(_real_vectors));
+    for (auto & x: _reciprocal_vectors) x *= math::two_pi;
+    return true;
+  }
+  void set_metrics(const bool symmetric=false) {
     // the two metrics are mutually inverse with a factor of 4 * pi^2
     // and of course A and B are *both* made of column vectors, so their
     // metrics are AᵀA and BᵀB *not AAᵀ and BBᵀ!
     _real_metric = metric_from_column_vectors(_real_vectors);
     _reciprocal_metric = metric_from_column_vectors(_reciprocal_vectors);
+    if (symmetric) {
+      // AᵀA from invariant-metric vectors is invariant only to round-off
+      const auto real = invariant_average(_real_metric, false);
+      const auto reciprocal = invariant_average(_reciprocal_metric, true);
+      if (only_round_off(_real_metric, real) && only_round_off(_reciprocal_metric, reciprocal)) {
+        _real_metric = real;
+        _reciprocal_metric = reciprocal;
+      }
+    }
   }
   void set_space_symmetry(const std::string& s, const std::string& c=""){
     auto no = string_to_hall_number(s, c);

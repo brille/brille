@@ -161,10 +161,11 @@ public:
       debug_update("Starting wedge search from ", _first.python_string());
       bool success{false};
       if (_outer.is_triclinic()) {
-        success = !has_inversion || this->wedge_triclinic();
+        success = !has_inversion || this->wedge_dirichlet() || this->wedge_triclinic();
       } else {
         success =
-            this->wedge_brute_force()
+            this->wedge_dirichlet()
+            || this->wedge_brute_force()
             // no special 2-fold or mirror handling
             || this->wedge_brute_force(false, false)
             // no special 2-fold handling (but special mirror handling)
@@ -580,6 +581,19 @@ public:
                          bool special_mirrors = true,
                          bool sort_by_length = true, bool sort_one_sym = true);
   bool wedge_triclinic();
+  /*! \brief Cut the irreducible zone by the Dirichlet cone of the point group
+
+  The point group G acting on reciprocal lattice coordinates preserves the
+  integer metric M = Σ RᵀR (R ∈ G). For a point p fixed by no operation but the
+  identity, the cone {x : xᵀM(p - Rp) ≥ 0 for all R ∈ G} is a fundamental domain
+  of G, and it is convex. Every plane has integer coefficients and passes
+  through Γ, so no plane depends on the lattice parameters or on round-off,
+  and no search is needed. Mirror planes and planes containing rotation axes
+  appear as they should, since R preserves M.
+  \return true if the resulting polyhedron has the properties of an
+          irreducible Brillouin zone polyhedron.
+  */
+  bool wedge_dirichlet();
   //  /*!
   //  With the first Brillouin zone and *an* irreducible section of reciprocal
   //  space already identified, this method finds all intersections of

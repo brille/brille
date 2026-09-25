@@ -40,6 +40,27 @@ def test_moveinto(name):
     np.testing.assert_array_equal(np.asarray(tau4), tau)
 
 
+def inside_ir_polyhedron(bz, q, tol=1e-9):
+    """Whether each q is in the irreducible polyhedron.
+
+    Containment in a convex polyhedron survives a linear map, so the faces'
+    planes can be found in lattice units with plain vector arithmetic.
+    """
+    vertices = np.asarray(bz.ir_vertices)
+    centre = vertices.mean(axis=0)
+    inside = np.ones(len(q), dtype=bool)
+    for face in bz.ir_vertices_per_face:
+        polygon = vertices[face]
+        # Newell's normal is robust to nearly collinear vertices
+        normal = np.cross(polygon, np.roll(polygon, -1, axis=0)).sum(axis=0)
+        normal /= np.linalg.norm(normal)
+        point = polygon.mean(axis=0)
+        if np.dot(normal, centre - point) > 0:
+            normal = -normal
+        inside &= (q - point) @ normal <= tol * np.abs(vertices).max()
+    return inside
+
+
 @pytest.mark.parametrize("name", CASES)
 def test_ir_moveinto(name):
     lp, hall, tr = CASES[name]
@@ -49,6 +70,7 @@ def test_ir_moveinto(name):
     np.testing.assert_allclose(np.einsum("nji,nj->ni", R, q) + tau, Q, atol=1e-10)
     np.testing.assert_array_equal(np.einsum("nij,njk->nik", R, invR), np.broadcast_to(np.eye(3, dtype=int), R.shape))
     assert all(bz.isinside(q))
+    assert all(inside_ir_polyhedron(bz, q))
     q4, tau4, R4, invR4 = (np.asarray(x) for x in bz.ir_moveinto(Q, threads=4))
     for a, b in ((q, q4), (tau, tau4), (R, R4), (invR, invR4)):
         np.testing.assert_array_equal(a, b)
