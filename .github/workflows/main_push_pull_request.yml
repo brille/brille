@@ -67,7 +67,9 @@ jobs:
         run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ matrix.cmake-type }} -D Python3_EXECUTABLE=${{ env.pythonInterpreter }}
 
       - name: build
-        run: cmake --build build --config ${{ matrix.cmake-type }} -j
+        # One job per CPU: a bare -j starts all ~100 heavy C++ compiles at once,
+        # which swamps the 7 GB, 3-CPU macOS arm64 runner (39 min instead of ~6)
+        run: cmake --build build --config ${{ matrix.cmake-type }} --parallel "$(python -c 'import os; print(os.cpu_count())')"
 
 #      - name: Setup tmate session on failure
 #        uses: mxschmitt/action-tmate@v3
