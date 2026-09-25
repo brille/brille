@@ -24,6 +24,7 @@ You can use ``brille`` to:
   install_guide
   motivation
   memory_usage
+  threads
   tutorial
 
 .. toctree::

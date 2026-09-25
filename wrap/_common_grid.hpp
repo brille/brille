@@ -11,6 +11,7 @@
 
 #include "bz.hpp"
 #include "utilities.hpp"
+#include "thread_pool.h"
 
 #ifndef WRAP_BRILLE_COMMON_GRID_HPP_
 #define WRAP_BRILLE_COMMON_GRID_HPP_
@@ -287,7 +288,7 @@ void def_grid_ir_interpolate(py::class_<Grid<T,R,S>>& cls){
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
     // perform the interpolation and rotate and vectors/tensors afterwards
-    const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
+    const int maxth(static_cast<int>(brille::default_thread_count()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
     if (no_move) {
       auto [val, vec] = cobj.template ir_interpolate_at<true>(qv, nthreads);
@@ -318,7 +319,8 @@ R"pbdoc(
     Whether a serial or parallel code should be utilised
   threads : int, optional
     How many parallel threads should be utilised; if this value is less than one,
-    one thread per logical core is used.
+    the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+    thread per logical core is used if it is not set.
   do_not_move_points: bool, optional
     If ``True`` the provided **Q** points must already lie within the first Brillouin
     zone. No check is made to verify this requirement and if any **Q** lie outside
@@ -354,7 +356,7 @@ R"pbdoc(
 //    if (qv.size(qv.ndim()-1) != 3)
 //      throw std::runtime_error("Interpolation requires one or more 3-vectors");
 //    // perform the interpolation and rotate and vectors/tensors afterwards
-//    const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
+//    const int maxth(static_cast<int>(brille::default_thread_count()));
 //    int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
 //    auto [val, vec] = cobj.ir_interpolate_at(qv, nthreads, no_move);
 //    profile_update("Interpolated values found");
@@ -423,7 +425,7 @@ void def_grid_interpolate(py::class_<Grid<T,R,S>>& cls){
     if (qv.size(qv.ndim()-1) != 3)
       throw std::runtime_error("Interpolation requires one or more 3-vectors");
     // perform the interpolation and rotate and vectors/tensors afterwards
-    const int maxth(static_cast<int>(std::thread::hardware_concurrency()));
+    const int maxth(static_cast<int>(brille::default_thread_count()));
     int nthreads = (useparallel) ? ((threads < 1) ? maxth : threads) : 1;
     if (no_move) {
       auto [val, vec] = cobj.template interpolate_at<true>(qv, nthreads);
@@ -454,7 +456,8 @@ R"pbdoc(
     Whether a serial or parallel code should be utilised
   threads : int, optional
     How many parallel threads should be utilised; if this value is less than one,
-    one thread per logical core is used.
+    the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+    thread per logical core is used if it is not set.
   do_not_move_points: bool, optional
     If ``True`` the provided **Q** points must already lie within the first Brillouin
     zone. No check is made to verify this requirement and if any **Q** lie outside

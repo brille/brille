@@ -717,7 +717,7 @@ public:
     \param[out] q The reduced reciprocal lattice vectors
     \param[out] tau The reciprocal lattice zone centres
     \param threads The number of threads to use, if less than one the
-                   number of logical cores is used instead.
+                   number from `default_thread_count()` is used instead.
     \return true
   */
   bool moveinto(const lattice::LVec<double> &Q, lattice::LVec<double> &q,

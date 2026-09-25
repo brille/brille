@@ -3,6 +3,7 @@
 Crashes run in a subprocess, so that a regression fails the test instead of
 killing the test process.
 """
+import os
 import subprocess
 import sys
 import textwrap
@@ -76,3 +77,31 @@ def test_exception_in_worker_reaches_python():
             print(error)
         """)
     assert result.returncode == 0, result.stderr.decode()[-2000:]
+
+
+def pool_workers(setting):
+    """Threads started by the first parallel call, with BRILLE_NUM_THREADS set (or unset for None)."""
+    code = textwrap.dedent("""
+        import os
+        import numpy as np
+        from brille import BrillouinZone, Lattice
+        bz = BrillouinZone(Lattice(((4.9, 4.9, 13.8), (90, 90, 120)), spacegroup="-R 3"))
+        before = len(os.listdir("/proc/self/task"))
+        bz.moveinto(np.random.default_rng(0).random((100, 3)))
+        print(len(os.listdir("/proc/self/task")) - before)
+        """)
+    env = {k: v for k, v in os.environ.items() if k != "BRILLE_NUM_THREADS"}
+    env["OPENBLAS_NUM_THREADS"] = "1"
+    if setting is not None:
+        env["BRILLE_NUM_THREADS"] = setting
+    result = subprocess.run([sys.executable, "-c", code], capture_output=True, timeout=300, env=env)
+    assert result.returncode == 0, result.stderr.decode()[-2000:]
+    # the last line: importing brille without matplotlib prints a notice to stdout
+    return int(result.stdout.decode().split()[-1])
+
+
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="counts threads through /proc")
+def test_brille_num_threads_sizes_the_pool():
+    """BRILLE_NUM_THREADS sets the pool size when no thread count is given; bad values are ignored."""
+    assert pool_workers("3") == 3
+    assert pool_workers("not-a-number") == pool_workers(None)

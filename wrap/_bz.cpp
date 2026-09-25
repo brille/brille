@@ -419,7 +419,8 @@ void wrap_brillouinzone(py::module & m){
       units of the reciprocal lattice.
     threads : integer, optional
       The number of parallel threads that should be used. If this value is less
-      than one, one thread per logical core is used.
+      than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
+      or one thread per logical core is used if it is not set.
 
     Returns
     -------
@@ -474,7 +475,8 @@ void wrap_brillouinzone(py::module & m){
       units of the reciprocal lattice.
     threads : integer, optional
       The number of parallel threads that should be used. If this value is less
-      than one, one thread per logical core is used.
+      than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
+      or one thread per logical core is used if it is not set.
 
     Returns
     -------
@@ -532,7 +534,8 @@ void wrap_brillouinzone(py::module & m){
       units of the reciprocal lattice.
     threads : integer, optional (default 0)
       The number of parallel threads that should be used. If this value is less
-      than one, one thread per logical core is used.
+      than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
+      or one thread per logical core is used if it is not set.
 
     Returns
     -------
