@@ -142,6 +142,10 @@ void wrap_brillouinzone(py::module & m){
         lacking space inversion. This affects the found irreducible Brillouin
         zone for such systems. To avoid inadvertently adding time reversal
         symmetry when it is not appropriate, this is ``False`` by default.
+        Time reversal holds for non-magnetic systems. It is anti-unitary: phonon
+        eigenvectors (``RotatesLike.Gamma``) at a time-reversed point
+        :math:`-R\mathbf{q}` are the complex conjugates of those at
+        :math:`R\mathbf{q}`, so no inversion symmetry of the crystal is needed.
     wedge_search: bool
         Controls whether an irreducible Brillouin zone should be found. With
         this set to ``False`` the returned :py:class:`brille._brille.BrillouinZone`

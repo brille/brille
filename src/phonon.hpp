@@ -94,6 +94,8 @@ class GammaTable: public RotateTable {
 //   using ind_t = unsigned;
 private:
   std::vector<ind_t> point2space_; //! maps Rᵣ to Sᵣ
+  std::vector<bool> antiunitary_; //! whether operation r is anti-unitary (time reversal combined with a real operation)
+  std::vector<ind_t> partner_; //! for an anti-unitary r, the index of its unitary partner; otherwise r itself
   // use std::vectors instead of std::map for the mapping since we know the
   // total number of keys and how to calculate their positions in the vector
   ind_t n_atoms;
@@ -113,17 +115,22 @@ public:
   }
   bool construct(const lattice_t& dlat, const int time_reversal=0, double e_tol=0., int n_tol=1){
     lattice_ = dlat;
-    auto ps = dlat.pointgroup_symmetry();
+    const auto crystal = dlat.pointgroup_symmetry();
+    // With time reversal, the operations that map q are those of the crystal
+    // plus -R for each of them. Time reversal is anti-unitary: in a crystal
+    // without inversion, -R is not a spacegroup operation and has no atom
+    // mapping. Such an operation is time reversal T combined with the real
+    // operation R, and e(-Rq) = [Γ(q;R) e(q)]*, so it takes R's atom mapping
+    // and phases, and the transformed eigenvector is complex conjugated.
+    auto ps = time_reversal ? crystal.add_space_inversion() : crystal;
     auto spgsym = dlat.spacegroup_symmetry();
-    if (time_reversal){
-      ps = ps.add_space_inversion();
-      spgsym = spgsym.add_space_inversion();
-    }
     Basis bs = dlat.basis();
     // resize all vectors/arrays
     n_atoms = static_cast<ind_t>(bs.size());
     n_sym_ops = static_cast<ind_t>(ps.size());
     point2space_.resize(n_sym_ops);
+    antiunitary_.assign(n_sym_ops, false);
+    partner_.resize(n_sym_ops);
     l_mapping.resize(n_atoms*n_sym_ops);
     v_mapping.resize(n_atoms*n_sym_ops);
     vectors_ = bArray<double>({n_atoms*n_sym_ops+1u, 3u}, 0.); // always put (0,0,0) first
@@ -131,7 +138,18 @@ public:
     // -- this mapping is likely not invertable, but it shouldn't (doesn't?)
     //    matter. I think.
     for (ind_t i=0; i<ps.size(); ++i){
-      point2space_[i] = static_cast<ind_t>(spgsym.find_matrix_index(ps.get(i)));
+      partner_[i] = i;
+      if (!crystal.has(ps.get(i))){
+        // -R with R in the crystal's point group
+        auto real_op = ps.get(i);
+        for (auto& e: real_op) e = -e;
+        const auto p = static_cast<ind_t>(ps.find_index(real_op));
+        if (p >= ps.size() || !crystal.has(real_op))
+          throw std::runtime_error("A time-reversed operation has no real partner in the point group");
+        antiunitary_[i] = true;
+        partner_[i] = p;
+      }
+      point2space_[i] = static_cast<ind_t>(spgsym.find_matrix_index(ps.get(partner_[i])));
       if (point2space_[i]>=spgsym.size()){
         info_update("The point group operation\n",ps.get(i),"was not found in the spacegroup!");
         throw std::runtime_error("Something has gone wrong with the correspondence of spacegroup to pointgroup");
@@ -165,6 +183,10 @@ public:
     vectors_.resize(count); // not really necessary memory copy?
     return true;
   }
+  //! Whether operation r is anti-unitary, i.e., time reversal combined with a real operation
+  [[nodiscard]] bool antiunitary(const size_t r) const {return antiunitary_[r];}
+  //! The unitary operation whose atom mapping and phases an anti-unitary operation r uses; r itself otherwise
+  [[nodiscard]] size_t unitary_partner(const size_t r) const {return partner_[r];}
   template<class Ik, class Ir>
   ind_t F0(Ik k, Ir r) const {
     return l_mapping[this->calc_key(k,r)];
