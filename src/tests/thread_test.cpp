@@ -260,3 +260,51 @@ TEST_CASE("ThreadPool rethrows exceptions from nested tasks", "[thread]") {
   });
   REQUIRE_THROWS_WITH(pool->wait(), "nested failure");
 }
+
+TEST_CASE("ThreadPool keeps concurrent callers' tasks and exceptions apart", "[thread]") {
+  const auto pool = ThreadPool::getInstance();
+  pool->resize(4);
+  std::atomic<size_t> good_done{0};
+  std::atomic<bool> good_threw{false}, bad_threw{false};
+  std::thread good([&]() {
+    for (int round=0; round<20; ++round) {
+      for (size_t i=0; i<8; ++i) pool->enqueue([&]() {
+        std::this_thread::sleep_for(std::chrono::microseconds(200));
+        ++good_done;
+      });
+      try { pool->wait(); } catch (...) { good_threw = true; }
+    }
+  });
+  std::thread bad([&]() {
+    for (int round=0; round<20; ++round) {
+      for (size_t i=0; i<8; ++i) pool->enqueue([i]() {
+        std::this_thread::sleep_for(std::chrono::microseconds(150));
+        if (i == 3) throw std::runtime_error("bad caller");
+      });
+      try { pool->wait(); } catch (const std::runtime_error &) { bad_threw = true; }
+    }
+  });
+  good.join();
+  bad.join();
+  REQUIRE(good_done == 20u * 8u); // every one of the good caller's tasks had run when its wait() returned
+  REQUIRE_FALSE(good_threw);       // and it never saw the other caller's exceptions
+  REQUIRE(bad_threw);
+}
+
+TEST_CASE("ThreadPool is not resized while another thread's tasks are outstanding", "[thread]") {
+  const auto pool = ThreadPool::getInstance();
+  pool->resize(3);
+  std::atomic<bool> enqueued{false}, release{false};
+  std::thread user([&]() {
+    pool->enqueue([&]() { while (!release) std::this_thread::sleep_for(std::chrono::milliseconds(1)); });
+    enqueued = true;
+    pool->wait();
+  });
+  while (!enqueued) std::this_thread::sleep_for(std::chrono::milliseconds(1));
+  pool->resize(5); // in use: keeps its size
+  REQUIRE(pool->size() == 3u);
+  release = true;
+  user.join();
+  pool->resize(5); // idle again
+  REQUIRE(pool->size() == 5u);
+}
