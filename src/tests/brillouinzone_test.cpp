@@ -368,11 +368,28 @@ TEST_CASE("Irreducible Brillouin zone for mp-917","[bz_][materialsproject]"){
   REQUIRE(write_read_test(bz, "mp-917"));
 }
 
-TEST_CASE("No irreducible Brillouin zone for inconsistent parameters and symmetry","[bz_]"){
+TEST_CASE("Inconsistent lattice parameters and symmetry are refused","[bz_]"){
+  // a hexagonal cell is not invariant under a four-fold rotation
   double a{3.5}, c{12.9}, alpha{90}, gamma{120};
   std::string spacegroup = "P 4";
-  auto lat = Direct<double>({a,a,c}, {alpha,alpha,gamma}, spacegroup);
-  REQUIRE_THROWS( BrillouinZone(lat));
+  REQUIRE_THROWS_AS(Direct<double>({a,a,c}, {alpha,alpha,gamma}, spacegroup), std::invalid_argument);
+}
+
+TEST_CASE("Operations that do not map a centred lattice onto itself are refused","[bz_]"){
+  // 'R 3 -2' lost the quote of 'R 3 -2"' (R3m); its mirrors swap the obverse and reverse settings
+  REQUIRE_THROWS_AS(Direct<double>({9.619, 9.619, 3.1499}, {90., 90., 120.}, "R 3 -2"), std::invalid_argument);
+  REQUIRE_NOTHROW(Direct<double>({9.619, 9.619, 3.1499}, {90., 90., 120.}, "R 3 -2\""));
+}
+
+TEST_CASE("Lattice symmetry counts","[bz_]"){
+  auto count = [](const std::array<double,3> & lengths, const std::array<double,3> & angles, const std::string & symmetry){
+    return BrillouinZone(Direct<double>(lengths, angles, symmetry)).lattice_symmetry_counts();
+  };
+  REQUIRE(count({4., 4., 4.}, {90., 90., 90.}, "P 1") == std::make_pair<size_t, size_t>(48, 48));
+  REQUIRE(count({3., 3., 5.}, {90., 90., 120.}, "-P 6 2") == std::make_pair<size_t, size_t>(24, 24));
+  REQUIRE(count({4.02, 4.90, 3.29}, {98.97, 86.24, 88.47}, "-P 1") == std::make_pair<size_t, size_t>(2, 2));
+  // an R lattice within 6 ppm of face-centred cubic
+  REQUIRE(count({6.885854708699999, 6.885854708699999, 8.4334670046}, {90., 90., 120.}, "R 3") == std::make_pair<size_t, size_t>(12, 48));
 }
 
 TEST_CASE("Nb irreducible Brillouin Zone", "[bz_]"){

@@ -50,7 +50,11 @@ class TetTriLayer{
   tidx_t neighbours_per_tetrahedron; // (nTetrahedra,)(1+,)
   vert_t circum_centres; // (nTetrahedra, 3);
   std::vector<double> circum_radii; // (nTetrahedra,)
+  bool refinement_limited_{false}; // refinement stopped at the point limit
 public:
+  //! Whether refinement stopped because it added the most points allowed
+  [[nodiscard]] bool refinement_limited() const {return refinement_limited_;}
+  void refinement_limited(const bool limited) {refinement_limited_ = limited;}
   [[nodiscard]] ind_t number_of_vertices() const {return nVertices;}
   [[nodiscard]] ind_t number_of_tetrahedra() const {return nTetrahedra;}
   [[nodiscard]] const vert_t& get_vertex_positions() const {return vertex_positions;}
@@ -383,6 +387,10 @@ public:
     this->find_connections();
   }
   TetTri(std::vector<TetTriLayer> l, std::vector<TetMap> c): layers(std::move(l)), connections(std::move(c)) {}
+  //! Whether refinement of any layer stopped because it added the most points allowed
+  [[nodiscard]] bool refinement_limited() const {
+    return std::any_of(layers.begin(), layers.end(), [](const auto & l){return l.refinement_limited();});
+  }
   //
   void find_connections(const size_t highest=0){
     if (highest < layers.size()-1)
@@ -637,7 +645,9 @@ triangulate_one_layer(const bArray<T>& verts,
     throw std::runtime_error(msg);
   }
   verbose_update("Constructing TetTriLayer object");
-  return TetTriLayer(tgo);
+  TetTriLayer layer(tgo);
+  layer.refinement_limited(max_mesh_points > 0 && tgo.numberofpoints - tgi.numberofpoints >= max_mesh_points);
+  return layer;
 }
 
 //! Triangulate all layers of the TetTri hierarchy
@@ -652,19 +662,35 @@ triangulate(const bArray<T>& verts,
 //
   profile_update("Create layered triangulation");
   assert(verts.ndim()==2 && verts.size(1)==3);
+  /* Quality refinement never ends if the polyhedron has a feature far smaller
+   * than itself, as the zone of a lattice close to a more symmetric one does,
+   * so unless the caller gives a limit, limit the points each layer may add.
+   * Refinement for quality alone adds at most ~5300 points for any lattice in
+   * AFLOW, and meeting a size constraint needs ~0.4 points per maximum volume;
+   * these limits are far above both. */
+  constexpr int quality_points{10000};
+  auto limit = [&](const double cell_size, const double volume){
+    if (max_mesh_points > 0) return max_mesh_points;
+    if (cell_size <= 0) return quality_points;
+    return static_cast<int>(std::min(1e9, 10 * volume / cell_size + quality_points));
+  };
   std::vector<TetTriLayer> layers;
   if (layer_count < 2){
     profile_update("Less than two layers requested");
-    layers.push_back(triangulate_one_layer(verts, vpf, max_cell_size, max_mesh_points));
+    double volume{0};
+    if (max_cell_size > 0 && max_mesh_points <= 0)
+      volume = triangulate_one_layer(verts, vpf, -1, quality_points).volume_statistics()[0];
+    layers.push_back(triangulate_one_layer(verts, vpf, max_cell_size, limit(max_cell_size, volume)));
   } else {
     profile_update(layer_count," layers requested");
     // the highest-layer is the most-basic tetrahedral triangulation for the input
-    layers.push_back(triangulate_one_layer(verts, vpf, -1, max_mesh_points));
+    layers.push_back(triangulate_one_layer(verts, vpf, -1, limit(-1, 0)));
+    const double volume = layers[0].volume_statistics()[0];
     if (max_cell_size > 0.0){
       std::array<double,3> layer_vol_stats = layers[0].volume_statistics();
       profile_update("Highest layer has volume total, min, max: ", layer_vol_stats);
       double highest_maxvol = layer_vol_stats[2];
-      TetTriLayer lowest = triangulate_one_layer(verts, vpf, max_cell_size, max_mesh_points);
+      TetTriLayer lowest = triangulate_one_layer(verts, vpf, max_cell_size, limit(max_cell_size, volume));
       layer_vol_stats = lowest.volume_statistics();
       profile_update(" Lowest layer has volume total, min, max: ", layer_vol_stats);
       double lowest_maxvol = layer_vol_stats[2];
@@ -673,7 +699,7 @@ triangulate(const bArray<T>& verts,
       profile_update("So an exponent of ",exponent," will be used.");
       for (int i=layer_count-1; i>1; --i){ // start from second highest layer, finish at second lowest
         double layer_maxvol = lowest_maxvol * std::pow(static_cast<double>(i), exponent);
-        layers.push_back(triangulate_one_layer(verts, vpf, layer_maxvol, max_mesh_points));
+        layers.push_back(triangulate_one_layer(verts, vpf, layer_maxvol, limit(layer_maxvol, volume)));
       }
       // keep the lowest layer as well
       layers.push_back(lowest);

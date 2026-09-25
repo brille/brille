@@ -33,7 +33,22 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
   std::string pyclass_name = std::string("BZMeshQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());
   // Initializer (BrillouinZone, max-volume, is-volume-rlu)
-  cls.def(py::init<BrillouinZone,double,int,int>(), py::call_guard<py::gil_scoped_release>(), "brillouin_zone"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1);
+  cls.def(py::init([](const BrillouinZone& bz, const double max_size, const int num_levels, const int max_points){
+    auto mesh = [&]{
+      py::gil_scoped_release release;
+      return Class(bz, max_size, num_levels, max_points);
+    }();
+    if (mesh.refinement_limited()) {
+      const std::string msg = "Mesh refinement stopped at its limit on added points (max_points, or a default"
+        " far above what refinement normally needs). The mesh is valid but coarser or worse shaped in"
+        " places than requested. This happens near zone features much smaller than the zone, e.g., for"
+        " a lattice close to a more symmetric one.";
+      if (PyErr_WarnEx(PyExc_RuntimeWarning, msg.c_str(), 1) < 0) throw py::error_already_set();
+    }
+    return mesh;
+  }), "brillouin_zone"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1);
+  cls.def_property_readonly("refinement_limited", [](const Class& cobj){return cobj.refinement_limited();},
+    "Whether mesh refinement stopped at its limit on added points");
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
   cls.def_property_readonly("rlu",[](const Class& cobj){
     return brille::a2py(cobj.get_mesh_hkl());

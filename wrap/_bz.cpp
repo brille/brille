@@ -23,6 +23,22 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 namespace py = pybind11;
 
+/* Warn if the lattice is close to a more symmetric one: its zone then has
+ * features far smaller than itself, which make meshes slow and poorly shaped.
+ * The C++ library only counts; warnings are Python's business. */
+static void warn_if_near_symmetry(const brille::BrillouinZone & bz){
+  const auto [exact, near] = bz.lattice_symmetry_counts();
+  if (near <= exact) return;
+  const std::string msg = "This lattice has the symmetry " + brille::holohedry_name(exact)
+    + " but is within 1e-4 of " + brille::holohedry_name(near)
+    + ". Its Brillouin zone is exact, but has faces or edges much smaller than itself,"
+    + " which make meshes slow to build and poorly shaped there."
+    + " If the lattice should have the higher symmetry, give it that symmetry;"
+    + " otherwise pass warn_near_symmetry=False to silence this warning.";
+  const auto category = py::module_::import("brille._brille").attr("NearSymmetryWarning");
+  if (PyErr_WarnEx(category.ptr(), msg.c_str(), 1) < 0) throw py::error_already_set();
+}
+
 void wrap_brillouinzone(py::module & m){
   using namespace pybind11::literals; // bring in "[name]"_a to be interpreted as py::arg("[name]")
   using namespace brille;
@@ -156,6 +172,13 @@ void wrap_brillouinzone(py::module & m){
         like :math:`I4/mmm` but constructed with :math:`\gamma=120^\circ`) the
         algorithm will fail to find an appropriate irreducible Brillouin zone
         and an error will be raised. (Set to ``True`` by default).
+    warn_near_symmetry: bool
+        Keyword only. Whether to warn, with a
+        :py:class:`brille.NearSymmetryWarning`, when the lattice is within
+        1e-4 of a lattice with more symmetry operations (e.g., rhombohedral
+        but nearly cubic). Such a zone has faces or edges much smaller than
+        itself, which make meshes slow and poorly shaped. The zone is not
+        changed. (Set to ``True`` by default).
   )pbdoc");
   cls.def(py::init([](
     const lattice::Lattice<double> & lat,
@@ -163,7 +186,8 @@ void wrap_brillouinzone(py::module & m){
     const int search_length,
     const bool time_reversal_symmetry,
     const bool wedge_search,
-    const bool divide_primitive
+    const bool divide_primitive,
+    const bool warn_near_symmetry
     ){
     auto cfg = BrillouinZoneConfig();
     cfg.primitive(use_primitive);
@@ -171,15 +195,21 @@ void wrap_brillouinzone(py::module & m){
     cfg.divide_primitive(divide_primitive);
     cfg.time_reversal(time_reversal_symmetry);
     cfg.wedge_search(wedge_search);
-    return BrillouinZone(lat, cfg);
+    auto bz = [&]{
+      py::gil_scoped_release release;
+      return BrillouinZone(lat, cfg);
+    }();
+    if (warn_near_symmetry) warn_if_near_symmetry(bz);
+    return bz;
   }),
-  py::call_guard<py::gil_scoped_release>(),
   "lattice"_a,
   "use_primitive"_a=true,
   "search_length"_a=1,
   "time_reversal_symmetry"_a=false,
   "wedge_search"_a=true,
-  "divide_primitive"_a=true
+  "divide_primitive"_a=true,
+  py::kw_only(),
+  "warn_near_symmetry"_a=true
   );
   cls.def(py::init([](
               const lattice::Lattice<double> & lat,
@@ -188,7 +218,8 @@ void wrap_brillouinzone(py::module & m){
               const int search_length,
               const bool time_reversal_symmetry,
               const bool wedge_search,
-              const bool divide_primitive
+              const bool divide_primitive,
+              const bool warn_near_symmetry
           ){
             auto cfg = BrillouinZoneConfig();
             cfg.primitive(use_primitive);
@@ -196,18 +227,36 @@ void wrap_brillouinzone(py::module & m){
             cfg.divide_primitive(divide_primitive);
             cfg.time_reversal(time_reversal_symmetry);
             cfg.wedge_search(wedge_search);
-            return BrillouinZone(lat, cfg, ac);
+            auto bz = [&]{
+              py::gil_scoped_release release;
+              return BrillouinZone(lat, cfg, ac);
+            }();
+            if (warn_near_symmetry) warn_if_near_symmetry(bz);
+            return bz;
           }),
-          py::call_guard<py::gil_scoped_release>(),
           "lattice"_a,
           "approx_config"_a,
           "use_primitive"_a=true,
           "search_length"_a=1,
           "time_reversal_symmetry"_a=false,
           "wedge_search"_a=true,
-          "divide_primitive"_a=true
+          "divide_primitive"_a=true,
+          py::kw_only(),
+          "warn_near_symmetry"_a=true
   );
 
+  cls.def("lattice_symmetry_counts", &CLS::lattice_symmetry_counts, "exact"_a=1e-10, "near"_a=1e-4, R"pbdoc(
+  The number of symmetry operations of the lattice itself, exactly and nearly
+
+  Counts the lattice's own symmetries (its holohedry, not the crystal's
+  symmetry) within `exact` and within `near`, relative to the lattice metric.
+
+  Returns
+  -------
+  tuple[int, int]
+      The counts within `exact` and within `near`; more near than exact
+      symmetries mean the lattice is close to a more symmetric one.
+  )pbdoc");
   // return the internal Lattice object
   cls.def_property_readonly("lattice", [](const CLS &b){ return b.get_lattice();},
   R"pbdoc(
