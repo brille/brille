@@ -42,25 +42,64 @@ def norms(g, metric=None):
     return np.einsum("qbi,i,qbi->qb", v.conj(), m, v).real
 
 
-def test_off_by_default_and_interpolation_shortens_vectors():
+def filled_in_lattice_units():
+    g = grid()
+    q = np.asarray(g.rlu)
+    g.fill(np.ones((len(q), 2)), (1,), unit_vectors(q), (0, 3, 0, GAMMA, REAL_LATTICE))
+    return g
+
+
+def test_cartesian_eigenvectors_are_normalized_by_default():
     g = filled()
+    assert g.vector_normalization == "automatic"
+    assert g.normalizes_vectors
+    assert list(g.vector_metric) == []
+    np.testing.assert_allclose(norms(g), 1, atol=1e-12)
+
+
+def test_without_normalization_interpolation_shortens_vectors():
+    g = filled()
+    g.set_vector_normalization(False)
+    assert g.vector_normalization == "off"
     assert not g.normalizes_vectors
     n = norms(g)
     assert n.max() <= 1 + 1e-12
     assert n.min() < 0.99  # the interpolated vectors really are short
 
 
-def test_normalization_gives_unit_vectors():
+def test_lattice_units_are_not_normalized_by_default():
+    """A vector's length in lattice units depends on the lattice, which the interpolator doesn't know."""
+    g = filled_in_lattice_units()
+    assert g.vector_normalization == "automatic"
+    assert not g.normalizes_vectors
+    assert norms(g).min() < 0.99  # left as interpolated, and no error
+
+
+def test_forcing_normalization_refuses_lattice_units():
+    g = filled_in_lattice_units()
+    with pytest.raises(RuntimeError, match="Cartesian units"):
+        g.set_vector_normalization(True)
+    # and refilling a force-normalized grid with lattice-unit vectors fails before changing it
     g = filled()
-    g.set_vector_normalization()
-    assert g.normalizes_vectors
-    assert list(g.vector_metric) == []
+    g.set_vector_normalization(True)
+    q = np.asarray(g.rlu)
+    with pytest.raises(RuntimeError, match="Cartesian units"):
+        g.fill(np.ones((len(q), 2)), (1,), unit_vectors(q), (0, 3, 0, GAMMA, REAL_LATTICE))
+    np.testing.assert_allclose(norms(g), 1, atol=1e-12)
+
+
+def test_none_restores_the_automatic_default():
+    g = filled()
+    g.set_vector_normalization(False)
+    g.set_vector_normalization(None)
+    assert g.vector_normalization == "automatic"
     np.testing.assert_allclose(norms(g), 1, atol=1e-12)
 
 
 def test_metric_normalization_keeps_the_sign():
     g = filled()
     eta = [1.0, 1.0, -1.0]
+    g.set_vector_normalization(False)
     before = norms(g, eta)
     g.set_vector_normalization(metric=eta)
     after = norms(g, eta)
@@ -74,42 +113,22 @@ def test_metric_must_match_the_branch_length():
         g.set_vector_normalization(metric=[1.0, 1.0])
 
 
-def test_turning_normalization_off_again():
-    g = filled()
-    g.set_vector_normalization()
+def test_setting_survives_fill():
+    g = grid()
     g.set_vector_normalization(False)
+    filled(g)
+    assert g.vector_normalization == "off"
     assert norms(g).min() < 0.99
 
 
-def test_setting_survives_fill():
-    g = grid()
-    g.set_vector_normalization()
-    filled(g)
-    np.testing.assert_allclose(norms(g), 1, atol=1e-12)
-
-
-def test_setting_survives_hdf5(tmp_path):
+@pytest.mark.parametrize("normalize, metric, mode", [
+    (None, None, "automatic"), (True, [1.0, 1.0, -1.0], "on"), (False, None, "off")])
+def test_setting_survives_hdf5(tmp_path, normalize, metric, mode):
     g = filled()
-    g.set_vector_normalization(metric=[1.0, 1.0, -1.0])
+    g.set_vector_normalization(normalize, metric)
     path = str(tmp_path / "grid.h5")
     g.to_file(path)
     loaded = BZMeshQdc.from_file(path)
-    assert loaded.normalizes_vectors
-    assert list(loaded.vector_metric) == [1.0, 1.0, -1.0]
-    np.testing.assert_allclose(norms(loaded, [1, 1, -1]), norms(g, [1, 1, -1]), atol=1e-12)
-
-
-def test_lattice_units_are_refused():
-    """A vector's length in lattice units depends on the lattice, which the interpolator doesn't know."""
-    g = grid()
-    q = np.asarray(g.rlu)
-    g.fill(np.ones((len(q), 2)), (1,), unit_vectors(q), (0, 3, 0, GAMMA, REAL_LATTICE))
-    with pytest.raises(RuntimeError, match="Cartesian units"):
-        g.set_vector_normalization()
-    # and refilling a normalizing grid with lattice-unit vectors fails before changing it
-    g = filled()
-    g.set_vector_normalization()
-    with pytest.raises(RuntimeError, match="Cartesian units"):
-        g.fill(np.ones((len(q), 2)), (1,), unit_vectors(q), (0, 3, 0, GAMMA, REAL_LATTICE))
-    np.testing.assert_allclose(norms(g), 1, atol=1e-12)
-
+    assert loaded.vector_normalization == mode
+    assert list(loaded.vector_metric) == (metric or [])
+    np.testing.assert_allclose(norms(loaded), norms(g), atol=1e-12)

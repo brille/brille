@@ -239,8 +239,8 @@ public:
   \see Interpolator::set_cost_info
   */
   //! Normalize interpolated eigenvectors \see Interpolator::set_normalization
-  void set_vector_normalization(const bool normalize, std::vector<double> metric = {}){
-    vectors_.set_normalization(normalize, std::move(metric));
+  template<class M> void set_vector_normalization(const M mode, std::vector<double> metric = {}){
+    vectors_.set_normalization(mode, std::move(metric));
   }
   void set_vector_cost_info(const int csf, const int cvf, const element_t<double>& elcost){
     vectors_.set_cost_info(csf, cvf, elcost);

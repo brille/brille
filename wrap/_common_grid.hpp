@@ -270,27 +270,28 @@ Note
     Return a shared view of the stored eigenvectors
   )pbdoc");
 
-  cls.def("set_vector_normalization",[](Class& cobj, bool normalize, std::optional<std::vector<double>> metric){
-    cobj.set_vector_normalization(normalize, metric.value_or(std::vector<double>{}));
+  cls.def("set_vector_normalization",[](Class& cobj, std::optional<bool> normalize, std::optional<std::vector<double>> metric){
+    const auto mode = !normalize ? brille::Normalization::automatic
+                    : *normalize ? brille::Normalization::on : brille::Normalization::off;
+    cobj.set_vector_normalization(mode, metric.value_or(std::vector<double>{}));
   }, "normalize"_a=true, "metric"_a=py::none(), R"pbdoc(
-    Scale each interpolated eigenvector to unit norm, or stop doing so
+    Choose when interpolated eigenvectors are scaled to unit norm
 
     Linear interpolation between unit eigenvectors gives vectors shorter than
     one wherever neighbouring eigenvectors differ, so structure factors computed
-    from them come out too small. With normalization on, each interpolated
-    branch :math:`v` becomes :math:`v/\sqrt{|\langle v|M|v\rangle|}`.
-    Normalization is off unless set, and it survives :py:meth:`fill` and saving
-    to HDF5.
+    from them come out too small. Normalization scales each interpolated branch
+    :math:`v` to :math:`v/\sqrt{|\langle v|M|v\rangle|}`.
 
-    The eigenvectors must be stored in Cartesian units
+    By default it is automatic: eigenvectors stored in Cartesian units
     (:py:class:`LengthUnit` ``angstrom`` or ``inverse_angstrom``, as Euphonic
-    stores them) or without units. In lattice units a vector's length depends on
-    the lattice, so this raises a RuntimeError.
+    stores them) are normalized, and those in lattice units, whose length depends
+    on the lattice, are not. The choice survives :py:meth:`fill` and saving to HDF5.
 
     Parameters
     ----------
-    normalize : bool, optional
-      Whether to normalize; ``True`` by default.
+    normalize : bool or None, optional
+      ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
+      lattice units; ``False`` never does; ``None`` restores the automatic default.
     metric : float, vector-like, optional
       A diagonal metric :math:`M`, one weight per element of a branch (for
       phonons, :math:`3N`). The default is the identity, the ordinary norm.
@@ -300,9 +301,19 @@ Note
   )pbdoc");
 
   cls.def_property_readonly("normalizes_vectors",[](const Class& cobj){
-    return cobj.data().vectors().normalization();
+    return cobj.data().vectors().normalizes();
   },R"pbdoc(
-    Whether interpolated eigenvectors are normalized; see :py:meth:`set_vector_normalization`
+    Whether interpolated eigenvectors are normalized, given the stored data; see :py:meth:`set_vector_normalization`
+  )pbdoc");
+
+  cls.def_property_readonly("vector_normalization",[](const Class& cobj){
+    switch (cobj.data().vectors().normalization()){
+      case brille::Normalization::on: return std::string("on");
+      case brille::Normalization::off: return std::string("off");
+      default: return std::string("automatic");
+    }
+  },R"pbdoc(
+    When eigenvectors are normalized: ``"automatic"`` (the default), ``"on"`` or ``"off"``
   )pbdoc");
 
   cls.def_property_readonly("vector_metric",[](const Class& cobj){

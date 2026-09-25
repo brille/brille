@@ -46,7 +46,7 @@ void Interpolator<T>::interpolate_at_mix(
         ox[b*s_+s] += weights[x]*dx[perms[x][b]*s_+s];
     }
   }
-  if (normalize_) this->normalize_branches(ox);
+  if (this->normalizes()) this->normalize_branches(ox);
 }
 
 
@@ -125,13 +125,13 @@ void Interpolator<T>::interpolate_at_mix(
       }
     }
   }
-  if (normalize_) this->normalize_branches(ox);
+  if (this->normalizes()) this->normalize_branches(ox);
 }
 
 template<class T>
 void Interpolator<T>::normalize_branches(T* ox) const {
   const ind_t b_{this->branches()}, s_{this->branch_span()};
-  this->check_normalizable();
+  if (normalize_ == Normalization::on) this->check_normalizable();
   if (!metric_.empty() && metric_.size() != s_){
     throw std::runtime_error("The normalization metric has " + std::to_string(metric_.size())
       + " weights but a branch has " + std::to_string(s_) + " elements");
