@@ -25,6 +25,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <utility>
 #include "array_.hpp" // defines bArray
 #include "tetgen.h"
+#include "tetgen_lock.h"
 #include "polyhedron_flex.hpp"
 namespace brille {
 
@@ -618,6 +619,8 @@ triangulate_one_layer(const bArray<T>& verts,
   // The input is now filled with the piecewise linear complex information.
   // so we can call tetrahedralize:
   verbose_update("Calling tetgen::tetrahedralize");
+  std::lock_guard<std::mutex> tetgen_lock(brille::tetgen_mutex()); // TetGen is not thread safe
+
   try {
       tetrahedralize(&tgb, &tgi, &tgo);
   } catch (const std::logic_error& e) {

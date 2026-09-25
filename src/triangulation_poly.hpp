@@ -22,6 +22,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief A class to interact with TetGen in the simplest case
 */
 
+#include "tetgen_lock.h"
 #include "polyhedron_flex.hpp"
 #include "array_tetgen.hpp"
 
@@ -84,6 +85,7 @@ triangulate(const T max_volume, const bool addGamma, const A<T>& points, const F
   // The input is now filled with the piecewise linear complex information.
   // so we can call tetrahedralize:
   debug_update("Calling tetgen::tetrahedralize");
+  std::lock_guard<std::mutex> tetgen_lock(brille::tetgen_mutex()); // TetGen is not thread safe
   try {
     if (addGamma && !gammaPresent){
       tgb.insertaddpoints = 1;
