@@ -28,6 +28,7 @@ design note). Every vertex but the centroids is a named point, and vertices are
 shared between pieces by exact comparison; a centroid is shared by the set of
 vertices it averages.
 */
+#include <iterator>
 #include <map>
 #include <optional>
 #include "lattice_boundary.hpp"
@@ -41,10 +42,24 @@ class LatticeTri {
   std::array<double, 9> cholesky_{};   // rows: a basis with the metric G
   std::vector<std::array<double, 3>> vertices_;          // Λ* coordinates
   std::vector<std::optional<Point>> named_;
+  std::vector<std::set<int>> on_planes_;              // boundary planes each vertex lies on
   std::vector<std::array<size_t, 4>> tetrahedra_;
+  // refinement
+  using edge_t = std::pair<size_t, size_t>;
+  using tet_t = std::array<size_t, 4>;
+  std::set<tet_t> tets_;
+  std::map<edge_t, std::set<tet_t>> edge_tets_;
+  std::map<std::array<long long, 3>, std::vector<size_t>> positions_;
+  using key_t = std::array<long long, 6>;
+  std::map<edge_t, key_t> class_cache_;
+  double min_edge2_{0};
+  double tie_{1e-9};
+  size_t self_paired_ties_{0};
   std::map<std::array<long long, 3>, std::vector<size_t>> buckets_;
   std::map<std::vector<size_t>, size_t> centroids_;
   size_t clipped_{0};
+  std::vector<mat3i> ops_;
+  std::array<double, 3> lo_{}, hi_{};                 // bounding box of the vertices
 
 public:
   /*! \param metric the reciprocal metric in the primitive reciprocal basis
@@ -65,12 +80,38 @@ public:
     double longest{0};
     for (int i = 0; i < 3; ++i) longest = std::max(longest, std::sqrt(rows[3 * i] * rows[3 * i] + rows[3 * i + 1] * rows[3 * i + 1] + rows[3 * i + 2] * rows[3 * i + 2]));
     for (const auto & t: grid.patch(radius + 3 * longest)) process(t);
+    for (size_t i = 0; i < vertices_.size(); ++i) index_position(i);
+    ops_ = ops;
+    lo_ = hi_ = vertices_.front();
+    for (const auto & v: vertices_) for (int i = 0; i < 3; ++i) { lo_[i] = std::min(lo_[i], v[i]); hi_[i] = std::max(hi_[i], v[i]); }
+    for (auto t: tetrahedra_) add(t);
   }
   [[nodiscard]] const Geometry & geometry() const { return boundary_.geometry(); }
   [[nodiscard]] const Boundary & boundary() const { return boundary_; }
   [[nodiscard]] const std::vector<std::array<double, 3>> & vertices() const { return vertices_; }
   [[nodiscard]] const std::vector<std::array<size_t, 4>> & tetrahedra() const { return tetrahedra_; }
   [[nodiscard]] size_t clipped() const { return clipped_; }
+  [[nodiscard]] size_t self_paired_ties() const { return self_paired_ties_; }
+  //! The boundary planes a vertex lies on
+  [[nodiscard]] const std::set<int> & planes_of(const size_t v) const { return on_planes_[v]; }
+
+  /*! \brief Refine the marked tetrahedra once each (with closure)
+
+  Inside the zone this is longest-edge bisection with longest-edge propagation.
+  On its boundary, a triangle splits only along its own longest edge (ties broken
+  by the edge's equivalence class), and splitting a boundary edge splits every
+  equivalent boundary edge too, so paired faces keep matching. A tetrahedron whose
+  longest edge is no longer than twice `min_edge` (Cartesian, Å⁻¹) is not split, so
+  refinement never makes a tetrahedron smaller than the resolution limit.
+  */
+  void refine(const std::vector<tet_t> & marked, const double min_edge = 0) {
+    min_edge2_ = min_edge * min_edge;
+    std::vector<tet_t> todo;
+    for (auto t: marked) { std::sort(t.begin(), t.end()); if (tets_.count(t) && refinable(t)) todo.push_back(t); }
+    std::sort(todo.begin(), todo.end());
+    for (const auto & t: todo) if (tets_.count(t)) split_edge(chosen(t));
+    tetrahedra_.assign(tets_.begin(), tets_.end());
+  }
 
 private:
   void factor() {
@@ -122,6 +163,9 @@ private:
     const size_t id = vertices_.size();
     vertices_.push_back(x);
     named_.emplace_back(p);
+    std::set<int> on;
+    for (size_t j = 0; j < boundary_.planes().size(); ++j) if (geometry().on(p, boundary_.planes()[j])) on.insert(static_cast<int>(j));
+    on_planes_.push_back(on);
     buckets_[key].push_back(id);
     return id;
   }
@@ -135,6 +179,7 @@ private:
     const size_t id = vertices_.size();
     vertices_.push_back(x);
     named_.emplace_back(std::nullopt);
+    on_planes_.push_back(common_planes(ids));
     centroids_[ids] = id;
     return id;
   }
@@ -312,6 +357,225 @@ private:
     }
     const size_t c = centroid(corner_ids);
     for (const auto & tri: triangles) tetrahedra_.push_back({tri[0], tri[1], tri[2], c});
+  }
+
+  // --- refinement -------------------------------------------------------------
+  [[nodiscard]] std::set<int> common_planes(const std::vector<size_t> & ids) const {
+    std::set<int> out = on_planes_[ids[0]];
+    for (size_t k = 1; k < ids.size(); ++k) {
+      std::set<int> both;
+      std::set_intersection(out.begin(), out.end(), on_planes_[ids[k]].begin(), on_planes_[ids[k]].end(), std::inserter(both, both.begin()));
+      out.swap(both);
+    }
+    return out;
+  }
+  static std::array<long long, 3> position_key(const std::array<double, 3> & x) {
+    return {std::llround(x[0] * 1e7), std::llround(x[1] * 1e7), std::llround(x[2] * 1e7)};
+  }
+  void index_position(const size_t id) { positions_[position_key(vertices_[id])].push_back(id); }
+  //! The vertex at x (Λ* coordinates), if any: vertices are far apart compared with round-off
+  [[nodiscard]] std::optional<size_t> vertex_at(const std::array<double, 3> & x) const {
+    const auto k = position_key(x);
+    for (long long a = -1; a <= 1; ++a)
+      for (long long b = -1; b <= 1; ++b)
+        for (long long c = -1; c <= 1; ++c) {
+          auto it = positions_.find({k[0] + a, k[1] + b, k[2] + c});
+          if (it == positions_.end()) continue;
+          for (const auto id: it->second) {
+            double d{0};
+            for (int i = 0; i < 3; ++i) d = std::max(d, std::abs(vertices_[id][i] - x[i]));
+            if (d <= 1e-9) return id;
+          }
+        }
+    return std::nullopt;
+  }
+  static edge_t edge(const size_t a, const size_t b) { return a < b ? edge_t{a, b} : edge_t{b, a}; }
+  static std::array<edge_t, 6> edges(const tet_t & t) {
+    return {edge(t[0], t[1]), edge(t[0], t[2]), edge(t[0], t[3]), edge(t[1], t[2]), edge(t[1], t[3]), edge(t[2], t[3])};
+  }
+  void add(tet_t t) {
+    std::sort(t.begin(), t.end());
+    tets_.insert(t);
+    for (const auto & e: edges(t)) edge_tets_[e].insert(t);
+  }
+  void remove(const tet_t & t) {
+    tets_.erase(t);
+    for (const auto & e: edges(t)) {
+      auto it = edge_tets_.find(e);
+      it->second.erase(t);
+      if (it->second.empty()) edge_tets_.erase(it);
+    }
+  }
+  [[nodiscard]] double length2(const edge_t & e) const {
+    std::array<double, 3> d{};
+    for (int i = 0; i < 3; ++i) d[i] = vertices_[e.first][i] - vertices_[e.second][i];
+    const auto & G = geometry().metric().values();
+    double out{0};
+    for (int i = 0; i < 3; ++i) for (int j = 0; j < 3; ++j) out += d[i] * G[3 * i + j] * d[j];
+    return out;
+  }
+  template <size_t N>
+  [[nodiscard]] std::vector<edge_t> longest(const std::array<edge_t, N> & es) const {
+    double top{0};
+    for (const auto & e: es) top = std::max(top, length2(e));
+    std::vector<edge_t> out;
+    for (const auto & e: es) if (length2(e) >= top * (1 - tie_)) out.push_back(e);
+    return out;
+  }
+  [[nodiscard]] bool refinable(const tet_t & t) const {
+    double top{0};
+    for (const auto & e: edges(t)) top = std::max(top, length2(e));
+    return top > 4 * min_edge2_;
+  }
+  [[nodiscard]] bool boundary_edge(const edge_t & e) const { return !common_planes({e.first, e.second}).empty(); }
+  //! a face of t lying in a boundary plane, used by t alone
+  [[nodiscard]] bool boundary_triangle(const std::array<size_t, 3> & f) const {
+    if (common_planes({f[0], f[1], f[2]}).empty()) return false;
+    const auto it = edge_tets_.find(edge(f[0], f[1]));
+    if (it == edge_tets_.end()) return false;
+    int n{0};
+    for (const auto & t: it->second) if (std::count(t.begin(), t.end(), f[2])) ++n;
+    return n == 1;
+  }
+  [[nodiscard]] std::vector<std::array<size_t, 3>> boundary_triangles(const tet_t & t) const {
+    std::vector<std::array<size_t, 3>> out;
+    for (int skip = 0; skip < 4; ++skip) {
+      std::array<size_t, 3> f{};
+      int j{0};
+      for (int k = 0; k < 4; ++k) if (k != skip) f[j++] = t[k];
+      if (boundary_triangle(f)) out.push_back(f);
+    }
+    return out;
+  }
+  /*! The boundary edges equivalent to e (e included): its images x -> g x + t, for
+  every operation and lattice translation, that are boundary edges of the mesh */
+  [[nodiscard]] std::vector<edge_t> orbit(const edge_t & e) const {
+    std::set<edge_t> seen{e};
+    const auto & a = vertices_[e.first];
+    const auto & b = vertices_[e.second];
+    for (const auto & g: ops_) {
+      std::array<double, 3> ga{}, gb{};
+      for (int i = 0; i < 3; ++i)
+        for (int k = 0; k < 3; ++k) {
+          ga[i] += static_cast<double>(g[3 * i + k]) * a[k];
+          gb[i] += static_cast<double>(g[3 * i + k]) * b[k];
+        }
+      // translations bringing both images inside the bounding box of the vertices
+      std::array<long long, 3> lo{}, hi{};
+      for (int i = 0; i < 3; ++i) {
+        lo[i] = static_cast<long long>(std::ceil(std::max(lo_[i] - ga[i], lo_[i] - gb[i]) - 1e-9));
+        hi[i] = static_cast<long long>(std::floor(std::min(hi_[i] - ga[i], hi_[i] - gb[i]) + 1e-9));
+      }
+      for (long long t0 = lo[0]; t0 <= hi[0]; ++t0)
+        for (long long t1 = lo[1]; t1 <= hi[1]; ++t1)
+          for (long long t2 = lo[2]; t2 <= hi[2]; ++t2) {
+            const auto p = vertex_at({ga[0] + t0, ga[1] + t1, ga[2] + t2});
+            if (!p) continue;
+            const auto q = vertex_at({gb[0] + t0, gb[1] + t1, gb[2] + t2});
+            if (!q) continue;
+            const auto y = edge(*p, *q);
+            if (edge_tets_.count(y) && boundary_edge(y)) seen.insert(y);
+          }
+    }
+    return {seen.begin(), seen.end()};
+  }
+  /*! An invariant label for e's equivalence class, from its position alone: the
+  smallest, over the operations, of the image's direction (up to sign) and its
+  midpoint modulo the lattice, both on a fine grid. Equivalent edges share it
+  whether or not their images are (still) edges of the mesh. */
+  [[nodiscard]] key_t class_key(const edge_t & e) {
+    auto it = class_cache_.find(e);
+    if (it != class_cache_.end()) return it->second;
+    constexpr double fine{1e7};
+    const auto q = static_cast<long long>(fine);
+    const auto & a = vertices_[e.first];
+    const auto & b = vertices_[e.second];
+    std::optional<key_t> best;
+    for (const auto & g: ops_) {
+      std::array<long long, 3> d{}, c{};
+      for (int i = 0; i < 3; ++i) {
+        double ga{0}, gb{0};
+        for (int k = 0; k < 3; ++k) { ga += static_cast<double>(g[3 * i + k]) * a[k]; gb += static_cast<double>(g[3 * i + k]) * b[k]; }
+        d[i] = std::llround((gb - ga) * fine);
+        c[i] = ((std::llround((ga + gb) * fine / 2) % q) + q) % q;
+      }
+      const std::array<long long, 3> nd{-d[0], -d[1], -d[2]};
+      if (nd > d) d = nd;
+      const key_t k{d[0], d[1], d[2], c[0], c[1], c[2]};
+      if (!best || k < *best) best = k;
+    }
+    return class_cache_[e] = *best;
+  }
+  [[nodiscard]] edge_t chosen_2d(const std::array<size_t, 3> & f) {
+    const std::array<edge_t, 3> es{edge(f[0], f[1]), edge(f[0], f[2]), edge(f[1], f[2])};
+    auto cands = longest(es);
+    if (cands.size() > 1) {
+      std::vector<std::pair<key_t, edge_t>> keyed;
+      for (const auto & e: cands) keyed.emplace_back(class_key(e), e);
+      std::sort(keyed.begin(), keyed.end());
+      if (keyed[0].first == keyed[1].first) ++self_paired_ties_;
+      return keyed[0].second;
+    }
+    return cands[0];
+  }
+  [[nodiscard]] edge_t chosen(const tet_t & t) {
+    const auto cands = longest(edges(t));
+    const auto faces = boundary_triangles(t);
+    std::vector<edge_t> ok;
+    for (const auto & e: cands) {
+      bool good{true};
+      for (const auto & f: faces)
+        if (std::count(f.begin(), f.end(), e.first) && std::count(f.begin(), f.end(), e.second)) good &= chosen_2d(f) == e;
+      if (good) ok.push_back(e);
+    }
+    return ok.empty() ? *std::min_element(cands.begin(), cands.end()) : *std::min_element(ok.begin(), ok.end());
+  }
+  void split_edge(const edge_t & e, const int depth = 0, const bool synchronized = false) {
+    if (depth > 1000) throw std::runtime_error("refinement propagated too far");
+    if (!edge_tets_.count(e)) return;
+    const bool on_boundary = boundary_edge(e);
+    // e must be the refinement edge of its boundary triangles and of every tetrahedron
+    // around it. Splitting another edge can change either, so recheck both each time.
+    while (edge_tets_.count(e)) {
+      std::optional<edge_t> other;
+      if (on_boundary)
+        for (const auto & t: edge_tets_.at(e)) {
+          for (const auto & f: boundary_triangles(t))
+            if (std::count(f.begin(), f.end(), e.first) && std::count(f.begin(), f.end(), e.second)) {
+              const auto c = chosen_2d(f);
+              if (c != e) { other = c; break; }
+            }
+          if (other) break;
+        }
+      if (!other)
+        for (const auto & t: edge_tets_.at(e)) { const auto c = chosen(t); if (c != e) { other = c; break; } }
+      if (!other) break;
+      split_edge(*other, depth + 1);
+    }
+    if (!edge_tets_.count(e)) return;
+    // the equivalent boundary edges, found before e is split
+    std::vector<edge_t> partners;
+    if (on_boundary && !synchronized) {
+      for (const auto & f: orbit(e)) if (f != e) partners.push_back(f);
+    }
+    // the midpoint
+    std::array<double, 3> x{};
+    for (int i = 0; i < 3; ++i) x[i] = (vertices_[e.first][i] + vertices_[e.second][i]) / 2;
+    const size_t m = vertices_.size();
+    vertices_.push_back(x);
+    named_.emplace_back(std::nullopt);
+    on_planes_.push_back(common_planes({e.first, e.second}));
+    index_position(m);
+    const auto around = edge_tets_.at(e);
+    for (const auto & t: around) {
+      remove(t);
+      tet_t a = t, b = t;
+      for (auto & v: a) if (v == e.second) v = m;
+      for (auto & v: b) if (v == e.first) v = m;
+      add(a);
+      add(b);
+    }
+    for (const auto & f: partners) split_edge(f, depth + 1, true);
   }
 };
 }

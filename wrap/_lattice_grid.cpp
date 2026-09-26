@@ -145,6 +145,15 @@ void wrap_lattice_grid(py::module & m) {
     return out;
   });
   tri.def_property_readonly("clipped", &LatticeTri::clipped);
+  tri.def_property_readonly("self_paired_ties", &LatticeTri::self_paired_ties);
+  tri.def("planes_of", [](const LatticeTri & t, const size_t v) { const auto & s = t.planes_of(v); return std::vector<int>(s.begin(), s.end()); });
+  tri.def("refine", [](LatticeTri & t, const py::array_t<long long> & marked, const double min_edge) {
+    auto r = marked.unchecked<2>();
+    std::vector<std::array<size_t, 4>> tets;
+    for (py::ssize_t i = 0; i < r.shape(0); ++i) tets.push_back({static_cast<size_t>(r(i, 0)), static_cast<size_t>(r(i, 1)), static_cast<size_t>(r(i, 2)), static_cast<size_t>(r(i, 3))});
+    py::gil_scoped_release release;
+    t.refine(tets, min_edge);
+  }, "marked"_a, "min_edge"_a = 0.0, "Refine the marked tetrahedra (rows of vertex indices) once, with closure");
   tri.def_property_readonly("faces", [](const LatticeTri & t) {
     py::list out;
     for (const auto & f: t.boundary().faces()) out.append(coordinates(t.geometry(), f.vertices));
