@@ -194,6 +194,7 @@ public:
     set_vectors(lengths, angles, lu, au, snap_to_symmetry);
     set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
+    check_symmetry_fits_lattice(snap_to_symmetry);
   }
   /*! \brief Lattice basis vectors and Symmetry constructor
    *
@@ -213,6 +214,7 @@ public:
     set_vectors(MatrixVectors::column ==mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
     set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
+    check_symmetry_fits_lattice(snap_to_symmetry);
   }
   /*! \brief Lattice parameters and Hermann-Maunguin spacegroup information constructor
    *
@@ -234,6 +236,7 @@ public:
     set_vectors(lengths, angles, lu, au, snap_to_symmetry);
     set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
+    check_symmetry_fits_lattice(snap_to_symmetry);
   }
   /*! \brief Lattice parameters and string-encoded spacegroup information constructor
    *
@@ -254,6 +257,7 @@ public:
     set_vectors(lengths, angles, lu, au, snap_to_symmetry);
     set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
+    check_symmetry_fits_lattice(snap_to_symmetry);
   }
   /*! \brief Lattice basis vectors and Hermann-Maunguin spacegroup information constructor
    *
@@ -274,6 +278,7 @@ public:
     set_vectors(MatrixVectors::column == mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
     set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
+    check_symmetry_fits_lattice(snap_to_symmetry);
   }
   /*! \brief Lattice basis vectors and string-encoded spacegroup information constructor
    *
@@ -293,10 +298,66 @@ public:
     set_vectors(MatrixVectors::column == mv ? vectors : transpose(vectors), lu, snap_to_symmetry);
     set_metrics(snap_to_symmetry);
     snap_basis_to_symmetry(snap_to_symmetry);
+    check_symmetry_fits_lattice(snap_to_symmetry);
   }
 
 
+  //! The largest change, relative to the metric, a symmetry operation may make
+  static constexpr T metric_mismatch{T(1e-3)};
 private:
+  /*! \brief Refuse point group operations that are not symmetries of the lattice
+
+  Each operation W must map lattice points to lattice points: for a centred
+  lattice, P⁻¹WP must be an integer matrix, P taking conventional to primitive
+  basis vectors. This is exact. It fails, e.g., for the Hall symbol
+  'R 3 -2' (a mirror of the reverse rhombohedral setting) where 'R 3 -2"' (R3m)
+  was meant.
+  With `snap_to_symmetry`, each must also preserve the metric, WᵀGW = G,
+  after snapping; a hexagonal cell given P 4 symmetry, say, does not. Small
+  differences are allowed, since lattice parameters are measured, up to
+  `metric_mismatch`. Without it the caller has opted out of making lattice
+  and symmetry agree (e.g., to use only the first Brillouin zone), so only
+  the exact check applies.
+  */
+  void check_symmetry_fits_lattice(const bool check_metric) const {
+    const PrimitiveTransform pt(_bravais);
+    const auto p6 = pt.get_6P();
+    const auto pi = pt.get_invP();
+    auto describe = [](const auto & w){
+      std::ostringstream str;
+      str << "[";
+      for (int i=0; i<3; ++i) str << (i ? ", " : "") << "[" << w[3*i] << ", " << w[3*i+1] << ", " << w[3*i+2] << "]";
+      str << "]";
+      return str.str();
+    };
+    T scale{0};
+    for (const auto & x: _real_metric) scale = std::max(scale, std::abs(x));
+    for (const auto & w: _point.getall()){
+      if (pt.does_anything()) {
+        // P⁻¹ W (6P) must be divisible by 6
+        std::array<int, 9> wp{}, m{};
+        for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) for (int k=0; k<3; ++k) wp[3*i+j] += w[3*i+k] * p6[3*k+j];
+        for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) for (int k=0; k<3; ++k) m[3*i+j] += pi[3*i+k] * wp[3*k+j];
+        if (std::any_of(m.begin(), m.end(), [](const int x){ return x % 6 != 0; })) {
+          throw std::invalid_argument("The symmetry operation " + describe(w) + " does not map the "
+            + bravais_string(_bravais) + " lattice onto itself, so it is not a symmetry of this lattice."
+            + " If the symmetry came from a Hall symbol, check for a lost character (e.g., 'R 3 -2' for 'R 3 -2\"').");
+        }
+      }
+      if (!check_metric) continue;
+      T change{0};
+      for (int i=0; i<3; ++i) for (int j=0; j<3; ++j) {
+        T x{0};
+        for (int k=0; k<3; ++k) for (int l=0; l<3; ++l) x += static_cast<T>(w[3*k+i]) * _real_metric[3*k+l] * static_cast<T>(w[3*l+j]);
+        change = std::max(change, std::abs(x - _real_metric[3*i+j]));
+      }
+      if (change > metric_mismatch * scale) {
+        throw std::invalid_argument("The symmetry operation " + describe(w) + " changes the lattice metric by "
+          + std::to_string(change / scale) + " of its largest element, so it is not a symmetry of this lattice."
+          + " Check that the lattice parameters and the symmetry describe the same crystal.");
+      }
+    }
+  }
   void snap_basis_to_symmetry(const bool snap_to_symmetry){
     if (snap_to_symmetry) {
       auto success = _basis.snap_to(_space.getallm());

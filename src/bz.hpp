@@ -31,6 +31,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "approx_float.hpp"
 #include "approx_config.hpp"
 #include "thread_pool.h"
+#include "lattice_symmetry.hpp"
 
 namespace brille {
 /*! \brief An object to hold information about the first Brillouin zone of a
@@ -274,6 +275,19 @@ public:
   //  bool wedge_explicit();
   //! Returns the lattice passed in at construction
   [[nodiscard]] lattice_t get_lattice() const { return _outer; };
+  /*! \brief The number of symmetry operations of the lattice, exactly and nearly
+
+  Counts the lattice's own symmetries (not the crystal's) within `exact` and
+  within `near`, relative to its metric. More near than exact symmetries mean
+  the lattice is close to a more symmetric one, and the zone has features far
+  smaller than itself: e.g., an R lattice within 6 ppm of face-centred cubic
+  has a zone edge 10⁻⁶ of the zone's size. Such features make meshes slow and
+  poorly shaped. The zone is still exact; see `holohedry_name`.
+  */
+  [[nodiscard]] std::pair<size_t, size_t> lattice_symmetry_counts(const double exact=1e-10, const double near=1e-4) const {
+    const auto metric = _outer.primitive().metric(LengthUnit::angstrom);
+    return {lattice_symmetry_count(metric, exact), lattice_symmetry_count(metric, near)};
+  }
   //! Returns the lattice actually used to find the Brillouin zone vertices,
   //! which may be a primitive lattice depending on the flag at creation
   [[nodiscard]] lattice_t get_primitive_lattice() const { return _inner; };

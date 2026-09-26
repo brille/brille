@@ -223,6 +223,12 @@ public:
     return class_t(m, d, a);
   }
 
+  /*! \brief Whether mesh refinement stopped at its limit on added points
+
+  The mesh is valid, but some tetrahedra may be larger or worse shaped than
+  requested; see `triangulate`.
+  */
+  [[nodiscard]] bool refinement_limited() const {return mesh.refinement_limited();}
 private:
   template<class I>
   void construct(const vert_t& vertices,

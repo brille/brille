@@ -76,6 +76,11 @@ PYBIND11_MODULE(_brille, m){
 
   )pbdoc";
   wrap_version(m);
+  // raised by BrillouinZone for lattices close to a more symmetric one
+  m.attr("NearSymmetryWarning") = pybind11::handle(PyErr_NewExceptionWithDoc(
+    "brille._brille.NearSymmetryWarning",
+    "The lattice is close to one with more symmetry, so its Brillouin zone has features much smaller than itself.",
+    PyExc_UserWarning, nullptr));
   wrap_basis(m);
   wrap_lattice(m);
   wrap_brillouinzone(m);
