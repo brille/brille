@@ -19,6 +19,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <pybind11/stl.h>
 #include "lattice_grid.hpp"
 #include "lattice_boundary.hpp"
+#include "lattice_tri.hpp"
 
 namespace py = pybind11;
 
@@ -110,6 +111,45 @@ void wrap_lattice_grid(py::module & m) {
   });
   bnd.def_property_readonly("special_points", [](const Boundary & b) { return coordinates(b.geometry(), b.special_points()); });
   bnd.def_property_readonly("map_count", [](const Boundary & b) { return b.maps().size(); });
+
+  py::class_<LatticeTri> tri(m, "_LatticeTri", R"pbdoc(
+    The structured mesh of the irreducible zone: the grid clipped to the zone.
+
+    Internal: under development; for tests only. Vertices are in the primitive
+    reciprocal lattice basis; the grid lattice is that lattice divided by `n`.
+  )pbdoc");
+  tri.def(py::init([](const py::array_t<double> & metric, const std::vector<py::array_t<long long>> & operations, long long n) {
+    auto g = metric.unchecked<2>();
+    std::array<double, 9> G{};
+    for (int i = 0; i < 3; ++i) for (int k = 0; k < 3; ++k) G[3 * i + k] = g(i, k);
+    std::vector<mat3i> ops;
+    for (const auto & o: operations) {
+      auto a = o.unchecked<2>();
+      mat3i r{};
+      for (int i = 0; i < 3; ++i) for (int k = 0; k < 3; ++k) r[3 * i + k] = a(i, k);
+      ops.push_back(r);
+    }
+    py::gil_scoped_release release;
+    return LatticeTri(G, ops, n);
+  }), "metric"_a, "operations"_a, "n"_a);
+  tri.def_property_readonly("vertices", [](const LatticeTri & t) {
+    py::array_t<double> out({static_cast<py::ssize_t>(t.vertices().size()), py::ssize_t(3)});
+    auto r = out.mutable_unchecked<2>();
+    for (size_t i = 0; i < t.vertices().size(); ++i) for (int k = 0; k < 3; ++k) r(i, k) = t.vertices()[i][k];
+    return out;
+  });
+  tri.def_property_readonly("tetrahedra", [](const LatticeTri & t) {
+    py::array_t<long long> out({static_cast<py::ssize_t>(t.tetrahedra().size()), py::ssize_t(4)});
+    auto r = out.mutable_unchecked<2>();
+    for (size_t i = 0; i < t.tetrahedra().size(); ++i) for (int k = 0; k < 4; ++k) r(i, k) = static_cast<long long>(t.tetrahedra()[i][k]);
+    return out;
+  });
+  tri.def_property_readonly("clipped", &LatticeTri::clipped);
+  tri.def_property_readonly("faces", [](const LatticeTri & t) {
+    py::list out;
+    for (const auto & f: t.boundary().faces()) out.append(coordinates(t.geometry(), f.vertices));
+    return out;
+  });
 
   cls.def("locate", [](const Grid & g, const std::array<double, 3> & x) {
     tetrahedron t{};

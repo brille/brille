@@ -32,7 +32,7 @@ point group operations (acting on those coordinates) are the inputs.
 #include <numeric>
 #include <set>
 #include <tuple>
-#include "exact_geometry.hpp"
+#include "exact_polytope.hpp"
 
 namespace brille::latticetri {
 using exact::Expansion;
@@ -51,11 +51,8 @@ struct FaceMap {
   int to;
 };
 
-//! A convex polygon in a face plane: its vertices, and the plane of each edge (vertex k to k+1)
-struct Polygon {
-  std::vector<Point> vertices;
-  std::vector<Plane> edges;
-};
+using exact::Polygon;
+using exact::Polytope;
 
 class Boundary {
   Geometry geom_;
@@ -104,29 +101,27 @@ private:
     return out;
   }
 
-  struct Vertex { Point point; std::set<int> incident; };
-
   /*! The irreducible polyhedron: a box cut by the zone planes and the cone planes,
   with each vertex named by three planes and its exact set of incident planes. */
   void polyhedron() {
-    std::vector<Plane> all;
+    std::vector<Plane> box;
     for (int i = 0; i < 3; ++i) {
       int3 e{0, 0, 0};
       e[i] = 1;
-      all.push_back(Plane::integer_plane(e, 3));
+      box.push_back(Plane::integer_plane(e, 3));
       e[i] = -1;
-      all.push_back(Plane::integer_plane(e, 3));
+      box.push_back(Plane::integer_plane(e, 3));
     }
-    std::vector<Vertex> vs;
-    for (int a: {0, 1}) for (int b: {2, 3}) for (int c: {4, 5}) vs.push_back({{{all[a], all[b], all[c]}}, {a, b, c}});
+    std::vector<Polytope::Vertex> corners;
+    for (int a: {0, 1}) for (int b: {2, 3}) for (int c: {4, 5}) corners.push_back({{{box[a], box[b], box[c]}}, {a, b, c}});
+    Polytope P(geom_, box, corners);
     // zone planes x·Gτ <= τᵀGτ/2, shortest first
     std::vector<int3> taus;
     for (int a = -2; a <= 2; ++a) for (int b = -2; b <= 2; ++b) for (int c = -2; c <= 2; ++c) if (a || b || c) taus.push_back({a, b, c});
     std::sort(taus.begin(), taus.end(), [&](const int3 & x, const int3 & y) {
       return geom_.metric().form(x, x).estimate() < geom_.metric().form(y, y).estimate();
     });
-    std::vector<Plane> cuts;
-    for (const auto & t: taus) cuts.push_back(Plane::metric_plane(t, t));
+    for (const auto & t: taus) P.cut(Plane::metric_plane(t, t));
     // the Dirichlet cone of the point group under M = Σ gᵀg: x·M(p - g p) >= 0
     std::array<long long, 9> M{};
     for (const auto & g: ops_) for (int i = 0; i < 3; ++i) for (int j = 0; j < 3; ++j) for (int k = 0; k < 3; ++k) M[3 * i + j] += g[3 * k + i] * g[3 * k + j];
@@ -141,106 +136,14 @@ private:
       for (auto & x: c) x /= h;
       if (std::find(normals.begin(), normals.end(), c) == normals.end()) normals.push_back(c);
     }
-    for (const auto & c: normals) cuts.push_back(Plane::integer_plane({-c[0], -c[1], -c[2]}, 0));
-    for (const auto & h: cuts) cut(all, vs, h);
-    // faces: planes (not the box) with at least three vertices
-    for (size_t i = 6; i < all.size(); ++i) {
-      std::vector<Point> fv;
-      for (const auto & v: vs) if (v.incident.count(static_cast<int>(i))) fv.push_back(v.point);
-      if (fv.size() >= 3) {
-        planes_.push_back(all[i]);
-        faces_.push_back(order(fv, all[i], all, vs, static_cast<int>(i)));
-      }
+    for (const auto & c: normals) P.cut(Plane::integer_plane({-c[0], -c[1], -c[2]}, 0));
+    for (const auto & v: P.vertices())
+      for (int i = 0; i < 6; ++i)
+        if (v.incident.count(i)) throw std::runtime_error("the box bounds the zone: enlarge it");
+    for (const int f: P.faces(6)) {
+      planes_.push_back(P.planes()[static_cast<size_t>(f)]);
+      faces_.push_back(P.polygon(f));
     }
-    for (size_t i = 0; i < 6; ++i)
-      for (const auto & v: vs)
-        if (v.incident.count(static_cast<int>(i))) throw std::runtime_error("the box bounds the zone: enlarge it");
-  }
-
-  void cut(std::vector<Plane> & all, std::vector<Vertex> & vs, const Plane & h) {
-    std::vector<int> side(vs.size());
-    bool any_out{false};
-    for (size_t i = 0; i < vs.size(); ++i) { side[i] = geom_.side(vs[i].point, h); any_out |= side[i] > 0; }
-    const int k = static_cast<int>(all.size());
-    all.push_back(h);
-    if (!any_out) {
-      for (size_t i = 0; i < vs.size(); ++i) if (side[i] == 0) vs[i].incident.insert(k);
-      return;
-    }
-    std::vector<Vertex> out;
-    for (size_t u = 0; u < vs.size(); ++u) {
-      if (side[u] <= 0) continue;
-      for (size_t v = 0; v < vs.size(); ++v) {
-        if (side[v] >= 0 || !adjacent(vs, u, v)) continue;
-        std::vector<int> common;
-        std::set_intersection(vs[u].incident.begin(), vs[u].incident.end(), vs[v].incident.begin(), vs[v].incident.end(), std::back_inserter(common));
-        // two of the common planes that meet h in a point
-        bool made{false};
-        for (size_t a = 0; a < common.size() && !made; ++a)
-          for (size_t b = a + 1; b < common.size() && !made; ++b) {
-            Point x{{all[common[a]], all[common[b]], h}};
-            if (geom_.independent(x) == 0) continue;
-            std::set<int> inc(common.begin(), common.end());
-            inc.insert(k);
-            out.push_back({x, inc});
-            made = true;
-          }
-      }
-    }
-    std::vector<Vertex> kept;
-    for (size_t i = 0; i < vs.size(); ++i) {
-      if (side[i] > 0) continue;
-      if (side[i] == 0) vs[i].incident.insert(k);
-      kept.push_back(vs[i]);
-    }
-    for (auto & v: out) kept.push_back(v);
-    vs.swap(kept);
-  }
-
-  static bool adjacent(const std::vector<Vertex> & vs, const size_t u, const size_t v) {
-    std::vector<int> common;
-    std::set_intersection(vs[u].incident.begin(), vs[u].incident.end(), vs[v].incident.begin(), vs[v].incident.end(), std::back_inserter(common));
-    if (common.size() < 2) return false;
-    for (size_t w = 0; w < vs.size(); ++w) {
-      if (w == u || w == v) continue;
-      if (std::includes(vs[w].incident.begin(), vs[w].incident.end(), common.begin(), common.end())) return false;
-    }
-    return true;
-  }
-
-  //! The face's vertices in cyclic order, with the plane of each edge
-  Polygon order(const std::vector<Point> & fv, const Plane & plane, const std::vector<Plane> & all,
-                const std::vector<Vertex> & vs, const int face) const {
-    const auto c = plane.coefficients(geom_.metric());
-    std::array<double, 3> n{c[0].estimate(), c[1].estimate(), c[2].estimate()};
-    std::vector<std::array<double, 3>> x;
-    for (const auto & p: fv) x.push_back(geom_.coordinates(p));
-    std::array<double, 3> m{0, 0, 0};
-    for (const auto & y: x) for (int i = 0; i < 3; ++i) m[i] += y[i] / static_cast<double>(x.size());
-    std::array<double, 3> u{x[0][0] - m[0], x[0][1] - m[1], x[0][2] - m[2]};
-    const std::array<double, 3> w{n[1] * u[2] - n[2] * u[1], n[2] * u[0] - n[0] * u[2], n[0] * u[1] - n[1] * u[0]};
-    std::vector<std::pair<double, size_t>> angle;
-    for (size_t i = 0; i < x.size(); ++i) {
-      const std::array<double, 3> d{x[i][0] - m[0], x[i][1] - m[1], x[i][2] - m[2]};
-      angle.emplace_back(std::atan2(d[0] * w[0] + d[1] * w[1] + d[2] * w[2], d[0] * u[0] + d[1] * u[1] + d[2] * u[2]), i);
-    }
-    std::sort(angle.begin(), angle.end());
-    Polygon out;
-    for (const auto & [a, i]: angle) out.vertices.push_back(fv[i]);
-    // the edge plane between consecutive vertices: another plane both are incident to
-    auto incident_of = [&](const Point & p) -> const std::set<int> & {
-      for (const auto & v: vs) if (geom_.same(v.point, p)) return v.incident;
-      throw std::runtime_error("face vertex not found");
-    };
-    for (size_t k = 0; k < out.vertices.size(); ++k) {
-      const auto & a = incident_of(out.vertices[k]);
-      const auto & b = incident_of(out.vertices[(k + 1) % out.vertices.size()]);
-      int edge{-1};
-      for (int i: a) if (i != face && i >= 6 && b.count(i)) { edge = i; break; }
-      if (edge < 0) throw std::runtime_error("no plane shared by consecutive face vertices");
-      out.edges.push_back(all[edge]);
-    }
-    return out;
   }
 
   //! whether a and b are the same plane with the same inside
@@ -271,30 +174,6 @@ private:
   }
   static mat3i identity() { return {1, 0, 0, 0, 1, 0, 0, 0, 1}; }
 
-  /*! polygon ∩ {n·x <= d}, exactly; empty if the result has no area */
-  [[nodiscard]] Polygon clip(const Polygon & poly, const Plane & face, const Plane & h) const {
-    const size_t n = poly.vertices.size();
-    std::vector<int> s(n);
-    bool out_any{false}, in_any{false};
-    for (size_t k = 0; k < n; ++k) { s[k] = geom_.side(poly.vertices[k], h); out_any |= s[k] > 0; in_any |= s[k] < 0; }
-    if (!out_any) return poly;
-    if (!in_any) return {};
-    Polygon out;
-    for (size_t k = 0; k < n; ++k) {
-      const size_t l = (k + 1) % n;
-      const auto & P = poly.vertices[k];
-      const auto & E = poly.edges[k];
-      if (s[k] < 0 || (s[k] == 0 && s[l] <= 0)) { out.vertices.push_back(P); out.edges.push_back(E); }
-      else if (s[k] == 0) { out.vertices.push_back(P); out.edges.push_back(h); }
-      if ((s[k] < 0 && s[l] > 0) || (s[k] > 0 && s[l] < 0)) {
-        out.vertices.push_back({{face, E, h}});
-        out.edges.push_back(s[k] < 0 ? h : E);
-      }
-    }
-    if (out.vertices.size() < 3) return {};
-    return out;
-  }
-
   /*! Each face F_j split into the convex cells F_j ∩ g(F_i) of positive area */
   void pairing_cells() {
     cells_.assign(planes_.size(), {});
@@ -303,7 +182,7 @@ private:
       const auto & src = faces_[static_cast<size_t>(m.from)];
       Polygon cell = faces_[static_cast<size_t>(m.to)];
       for (const auto & e: src.edges) {
-        cell = clip(cell, planes_[static_cast<size_t>(m.to)], e.mapped(m.g, m.t));
+        cell = exact::clip(geom_, cell, planes_[static_cast<size_t>(m.to)], e.mapped(m.g, m.t));
         if (cell.vertices.empty()) break;
       }
       if (cell.vertices.empty()) continue;
