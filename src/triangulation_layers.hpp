@@ -28,6 +28,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "tetgen_lock.h"
 #include "polyhedron_flex.hpp"
 #include "tetrahedron_overlap.hpp"
+#include <limits>
 namespace brille {
 
 /*! \brief A single triangulated layer of the hierarchy for Mesh3
@@ -192,6 +193,37 @@ public:
       }
     }
     return nTetrahedra;
+  }
+  /*! \brief Find the tetrahedron that x is at most round-off outside of
+
+  A point on the surface of the meshed polyhedron can be outside every
+  tetrahedron by round-off: it was moved there by a symmetry operation, or the
+  mesh's own surface vertices are rounded. This scans every tetrahedron for the
+  one whose smallest barycentric weight is largest. If that weight is no less
+  than `-tolerance`, negative weights are set to zero and the rest scaled to
+  sum to one, i.e., x is moved onto that tetrahedron; otherwise x is outside.
+  \return the tetrahedron index, or `nTetrahedra` if x is outside
+  */
+  ind_t unsafe_locate_nearest(const vert_t& x, std::vector<std::pair<ind_t,double>>& vw, const double tolerance) const {
+    vw.clear();
+    std::array<double,4> ws{}, best_ws{};
+    ind_t best{nTetrahedra};
+    double best_min{-std::numeric_limits<double>::infinity()};
+    for (ind_t idx=0; idx<nTetrahedra; ++idx){
+      this->weights(idx, x, ws);
+      const double smallest = *std::min_element(ws.begin(), ws.end());
+      if (smallest > best_min) {
+        best_min = smallest;
+        best = idx;
+        best_ws = ws;
+      }
+    }
+    if (best >= nTetrahedra || best_min < -tolerance) return nTetrahedra;
+    double total{0};
+    for (auto & w: best_ws) total += (w = std::max(w, 0.));
+    for (ind_t i=0; i<4u; ++i) if (best_ws[i] > 0.)
+      vw.emplace_back(vertices_per_tetrahedron.val(best,i), best_ws[i] / total);
+    return best;
   }
   [[nodiscard]] std::vector<ind_t> neighbours(const ind_t vert) const {
     if (vert >= this->nVertices){
@@ -426,16 +458,20 @@ public:
     std::vector<std::pair<ind_t,double>> vw;
     // find the point within the highest-layer tetrahedra:
     ind_t idx = layers[0].unsafe_locate(x,vw);
+    bool found = idx < layers[0].number_of_tetrahedra();
     // use the layer-connection map to restrict the search in the next layer's tetrahedra
-    for (size_t i=1; i<layers.size(); ++i){
-      // a point outside every tetrahedron of the previous layer (e.g., by round-off
-      // on the surface) returned the not-found sentinel, which has no connections
-      if (idx >= layers[i-1].number_of_tetrahedra()) return {};
+    for (size_t i=1; found && i<layers.size(); ++i){
       const TetSet& tosearch = connections[i-1][idx];
       idx = layers[i].unsafe_locate(tosearch, x, vw);
+      found = idx < layers[i].number_of_tetrahedra();
     }
+    // Not found: x is on the surface and outside by round-off, or the layer
+    // links missed it. Search the finest layer directly, allowing round-off.
+    if (!found) layers.back().unsafe_locate_nearest(x, vw, surface_tolerance);
     return vw;
   }
+  //! How far, in barycentric weight, a point may be outside a tetrahedron and still be located in it
+  static constexpr double surface_tolerance{1e-10};
   // return the neighbouring vertices to a provided mesh-vertex in the lowest layer.
   [[nodiscard]] std::vector<ind_t> neighbours(const bArray<double>& x) const {
     std::vector<std::pair<ind_t,double>> vw = this->locate(x);

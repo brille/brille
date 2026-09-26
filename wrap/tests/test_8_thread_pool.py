@@ -44,8 +44,8 @@ def test_mesh_surface_points_do_not_crash():
     """Mesh vertices on the irreducible zone surface can round off outside every tetrahedron.
 
     TetTri::locate then followed the not-found sentinel into the layer connections and
-    segfaulted in a worker thread. Until such points are snapped back inside, a
-    RuntimeError naming the missing points is the expected outcome.
+    segfaulted in a worker thread. Such points are now located in the tetrahedron they
+    are round-off outside of, so every vertex interpolates.
     """
     result = run("""
         import numpy as np
@@ -56,10 +56,8 @@ def test_mesh_surface_points_do_not_crash():
         bz = BrillouinZone(lattice)
         mesh = BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 30)
         mesh.fill(np.ones(len(mesh.rlu)), (1,), mesh.rlu, (0, 3))
-        try:
-            mesh.ir_interpolate_at(mesh.rlu, threads=4)
-        except RuntimeError as error:
-            assert "not found in tetrahedral mesh" in str(error), error
+        values, _ = mesh.ir_interpolate_at(mesh.rlu, threads=4)
+        assert np.allclose(values, 1, rtol=0, atol=1e-12), values
         """)
     assert result.returncode == 0, result.stderr.decode()[-2000:]
 
