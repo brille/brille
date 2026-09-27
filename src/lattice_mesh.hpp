@@ -193,18 +193,28 @@ public:
     vec3 centre{0, 0, 0};
     for (ind_t i = 0; i < ir_xyz.size(0); ++i) for (int k = 0; k < 3; ++k) centre[k] += ir_xyz.val(i, k) / static_cast<double>(ir_xyz.size(0));
     const auto centre_p = apply(Bi, centre);
+    // A wedge plane passes through Γ, so its normal is that of an irreducible face
+    // through Γ, computed from the face's vertices. brille's wedge normals are only
+    // used to pick those faces: for zones with faces far smaller than themselves it
+    // can take a sliver face on the zone boundary for part of the wedge, and a
+    // sliver's normal is not a lattice direction.
+    const auto gamma_faces = faces_through_gamma(bz);
     const auto normals = bz.get_ir_wedge_normals();
     if (normals.size(0)) {
       const auto xyz = normals.xyz();
       for (ind_t i = 0; i < xyz.size(0); ++i) {
+        const vec3 given{xyz.val(i, 0), xyz.val(i, 1), xyz.val(i, 2)};
+        const auto face = parallel_to(given, gamma_faces);
+        if (!face) continue;
         vec3 c{};
-        for (int k = 0; k < 3; ++k) for (int l = 0; l < 3; ++l) c[k] += Bp[3 * l + k] * xyz.val(i, l);   // Bpᵀ N
+        for (int k = 0; k < 3; ++k) for (int l = 0; l < 3; ++l) c[k] += Bp[3 * l + k] * (*face)[l];   // Bpᵀ N
         auto n = integer_direction(c);
         double side{0};
         for (int k = 0; k < 3; ++k) side += static_cast<double>(n[k]) * centre_p[k];
         if (side < 0) for (auto & x: n) x = -x;
         if (std::find(in.cone.begin(), in.cone.end(), n) == in.cone.end()) in.cone.push_back(n);
       }
+      if (in.cone.empty()) throw std::runtime_error("none of the zone's wedge normals is that of an irreducible face through Γ");
     }
     return in;
   }
@@ -459,7 +469,40 @@ private:
         return n;
       }
     }
-    throw std::runtime_error("an irreducible wedge normal is not a lattice direction");
+    throw std::runtime_error("an irreducible wedge normal, (" + std::to_string(c[0]) + ", " + std::to_string(c[1]) + ", "
+                             + std::to_string(c[2]) + ") on the primitive reciprocal lattice, is not a lattice direction");
+  }
+  //! Unit normals, Cartesian, of the irreducible polyhedron's faces that pass through Γ
+  static std::vector<vec3> faces_through_gamma(const BrillouinZone & bz) {
+    const auto ir = bz.get_ir_polyhedron();
+    const auto xyz = ir.vertices().xyz();
+    double size{0};
+    for (ind_t i = 0; i < xyz.size(0); ++i) for (int k = 0; k < 3; ++k) size = std::max(size, std::abs(xyz.val(i, k)));
+    std::vector<vec3> out;
+    for (const auto & f: ir.faces().faces()) {
+      // Newell's normal and the vertex centre
+      vec3 n{0, 0, 0}, p{0, 0, 0};
+      for (size_t j = 0; j < f.size(); ++j) {
+        const auto a = f[j], b = f[(j + 1) % f.size()];
+        for (int k = 0; k < 3; ++k) {
+          const int k1 = (k + 1) % 3, k2 = (k + 2) % 3;
+          n[k] += (xyz.val(a, k1) - xyz.val(b, k1)) * (xyz.val(a, k2) + xyz.val(b, k2));
+          p[k] += xyz.val(a, k) / static_cast<double>(f.size());
+        }
+      }
+      const double length = std::sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
+      if (length == 0) continue;
+      for (auto & x: n) x /= length;
+      if (std::abs(n[0] * p[0] + n[1] * p[1] + n[2] * p[2]) <= 1e-9 * size) out.push_back(n);
+    }
+    return out;
+  }
+  //! The face normal parallel (either way) to n, if there is one
+  static std::optional<vec3> parallel_to(const vec3 & n, const std::vector<vec3> & faces) {
+    const double length = std::sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
+    for (const auto & f: faces)
+      if (std::abs(f[0] * n[0] + f[1] * n[1] + f[2] * n[2]) >= (1 - 1e-6) * length) return f;
+    return std::nullopt;
   }
   [[nodiscard]] size_t bucket(const std::array<long long, 3> & b) const {
     return static_cast<size_t>((b[0] * dims_[1] + b[1]) * dims_[2] + b[2]);
