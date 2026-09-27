@@ -73,7 +73,8 @@ while an irregular mesh of triangles is also possible:
 
 The :py:mod:`brille._brille` module implements multiple grid types for linear interpolation
 within the first or irreducible Brillouin zone.
-In most cases the :py:class:`~brille._brille.BZTrellisQdc` should be used.
+In most cases the :py:class:`~brille._brille.BZMeshQdc` should be used;
+:ref:`howto_trellis_to_mesh` compares it with :py:class:`~brille._brille.BZTrellisQdc`.
 
 Since the grids are intended to be used with eigenvectors and their associated eigenvalues
 each must support mixed real and complex data.
