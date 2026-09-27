@@ -30,6 +30,9 @@ a bucket grid that finds a point's tetrahedron in constant time.
 #include <string>
 #include <utility>
 #include <vector>
+#if defined(__GLIBC__)
+#include <malloc.h>
+#endif
 #include "array_.hpp"
 #include "bz.hpp"
 #include "hdf_interface.hpp"
@@ -126,6 +129,17 @@ public:
          count is at most this, and `refinement_limited` says so
   */
   static LatticeMesh from_zone(const BrillouinZone & bz, const double max_volume = -1, const int max_points = -1) {
+    auto mesh = build(bz, max_volume, max_points);
+#if defined(__GLIBC__)
+    // Building frees many small allocations, which glibc keeps mapped (about 240 MiB
+    // for 5×10⁴ vertices, four times what the mesh holds): return them
+    malloc_trim(0);
+#endif
+    return mesh;
+  }
+
+private:
+  static LatticeMesh build(const BrillouinZone & bz, const double max_volume, const int max_points) {
     const auto in = inputs(bz);
     const auto & Bp = in.basis;
     const auto ir = bz.get_ir_polyhedron();
@@ -161,6 +175,7 @@ public:
     return mesh;
   }
 
+public:
   [[nodiscard]] bool refinement_limited() const { return limited_; }
   [[nodiscard]] long long divisions() const { return divisions_; }
   [[nodiscard]] ind_t number_of_vertices() const { return positions_.size(0); }
