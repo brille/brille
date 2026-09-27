@@ -78,11 +78,14 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
     if (py::str(a.dtype().attr("kind")).cast<std::string>() == "b") {
       if (static_cast<ind_t>(a.shape(0)) != count)
         throw py::value_error("a boolean where must have one entry per tetrahedron (" + std::to_string(count) + ")");
-      auto m = a.cast<py::array_t<bool>>().unchecked<1>();
+      const py::array_t<bool> mask = py::cast<py::array_t<bool>>(a);
+      auto m = mask.unchecked<1>();
       for (py::ssize_t i = 0; i < m.shape(0); ++i) if (m(i)) out.push_back(static_cast<ind_t>(i));
       return out;
     }
-    auto idx = numpy.attr("asarray")(a, "dtype"_a = "int64").cast<py::array_t<long long>>().unchecked<1>();
+    // a declared type, not auto: GCC 13 takes auto here as dependent and wants `template` before unchecked
+    const py::array_t<long long> indices = py::cast<py::array_t<long long>>(numpy.attr("asarray")(a, "dtype"_a = "int64"));
+    auto idx = indices.unchecked<1>();
     for (py::ssize_t i = 0; i < idx.shape(0); ++i) {
       if (idx(i) < 0 || static_cast<ind_t>(idx(i)) >= count)
         throw py::index_error("tetrahedron index " + std::to_string(idx(i)) + " is not in the mesh (" + std::to_string(count) + ")");
