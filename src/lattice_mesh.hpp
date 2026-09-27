@@ -95,6 +95,15 @@ public:
     bArray<double> points;   //!< the new vertices, Cartesian (Å⁻¹)
   };
   [[nodiscard]] bool refinable() const { return inputs_.has_value(); }
+  //! Whether the triangulation that refinement works on is held (rather than rebuilt when next needed)
+  [[nodiscard]] bool holds_triangulation() const { return static_cast<bool>(tri_); }
+  /*! \brief Free the triangulation that refinement works on
+
+  The mesh is unchanged and can still be refined: the triangulation is rebuilt from
+  what built the mesh and the refinements since, when next needed, which costs a
+  build and a replay of those refinements.
+  */
+  void release_triangulation() { tri_.reset(); }
   /*! \brief Work out refining the tetrahedra `tets` (by index), without changing the mesh
 
   Each marked tetrahedron is bisected once, with closure; boundary edges are split

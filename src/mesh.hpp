@@ -204,6 +204,10 @@ public:
 
   //! Whether the mesh can be refined (not one read from a file without what built it)
   [[nodiscard]] bool refinable() const { return mesh.refinable(); }
+  //! Whether the triangulation refinement works on is held; see `release_triangulation`
+  [[nodiscard]] bool holds_triangulation() const { return mesh.holds_triangulation(); }
+  //! Free the triangulation refinement works on; it is rebuilt when next needed
+  void release_triangulation() { mesh.release_triangulation(); }
   /*! \brief The vertices (Cartesian) that refining the tetrahedra `tets` would add
 
   Nothing is changed. `refine` with the same arguments adds exactly these, in this

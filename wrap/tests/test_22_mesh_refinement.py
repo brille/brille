@@ -161,3 +161,18 @@ def test_refinement_survives_saving(tmp_path):
     planned = mesh.refinement_points(again)
     assert np.array_equal(loaded.refinement_points(again), planned)
     assert np.array_equal(loaded.refine(again, *data_for(planned)), mesh.refine(again, *data_for(planned)))
+
+
+def test_released_triangulation_is_rebuilt_alike():
+    _, bz = zone("hexagonal 6/m")
+    kept = BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 200)
+    released = BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 200)
+    assert not kept.holds_triangulation
+    for step in (7, 5):
+        where = np.arange(0, len(kept.tetrahedra), step)
+        assert np.array_equal(kept.refine(where), released.refine(where))
+        released.release_triangulation()
+        assert kept.holds_triangulation and not released.holds_triangulation
+    where = np.arange(0, len(kept.tetrahedra), 3)
+    assert np.array_equal(kept.refinement_points(where), released.refinement_points(where))
+    assert np.array_equal(np.asarray(kept.tetrahedra), np.asarray(released.tetrahedra))

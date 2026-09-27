@@ -16,6 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
 #include <numeric>
+#if defined(__GLIBC__)
+#include <malloc.h>
+#endif
 #include <optional>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -94,6 +97,23 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
   };
   cls.def_property_readonly("refinable", [](const Class& cobj){return cobj.refinable();},
     "Whether the mesh can be refined; a mesh read from a file written before refinement existed can't be");
+  cls.def_property_readonly("holds_triangulation", [](const Class& cobj){return cobj.holds_triangulation();},
+    "Whether the triangulation that refinement works on is in memory (see release_triangulation)");
+  cls.def("release_triangulation", [](Class& cobj){
+    cobj.release_triangulation();
+#if defined(__GLIBC__)
+    malloc_trim(0);
+#endif
+  },
+R"pbdoc(
+Free the memory refinement holds between refinements.
+
+After :py:meth:`refine` (or :py:meth:`refinement_points`) the mesh keeps the
+triangulation refinement works on, several times the memory of the mesh itself.
+This frees it. The mesh is unchanged and can still be refined: the triangulation
+is rebuilt when next needed, which costs a build of the mesh plus a replay of the
+refinements made so far.
+)pbdoc");
   cls.def("refinement_points", [tetrahedra_of, edge_limit](const Class& cobj, const py::object& where,
                                                            const std::optional<double>& resolution, const double per){
     const auto tets = tetrahedra_of(cobj, where);

@@ -29,6 +29,7 @@ shared between pieces by exact comparison; a centroid is shared by the set of
 vertices it averages.
 */
 #include <atomic>
+#include <cstdint>
 #include <iterator>
 #include <map>
 #include <optional>
@@ -44,14 +45,19 @@ class LatticeTri {
   long long denominator_;              // Λ* coordinates are grid points / denominator_
   std::array<double, 9> cholesky_{};   // rows: a basis with the metric G
   std::vector<std::array<double, 3>> vertices_;          // Λ* coordinates
-  std::vector<std::optional<Point>> named_;
+  std::vector<std::optional<Point>> named_;          // while constructing: each vertex's name, if it has one
   std::vector<std::set<int>> on_planes_;              // boundary planes each vertex lies on
   std::vector<std::array<size_t, 4>> tetrahedra_;
   // refinement
   using edge_t = std::pair<size_t, size_t>;
   using tet_t = std::array<size_t, 4>;
-  std::set<tet_t> tets_;
-  std::map<edge_t, std::set<tet_t>> edge_tets_;
+  // Refinement's indexes: the tetrahedra (a slot each; freed slots are reused) and,
+  // for each edge, the slots of the tetrahedra around it. Kept lean: a refined mesh
+  // holds them for as long as it may be refined again.
+  std::vector<tet_t> slots_;
+  std::vector<std::uint32_t> free_slots_;
+  std::unordered_map<std::uint64_t, std::vector<std::uint32_t>> edge_tets_;
+  bool indexed_{false};
   std::map<std::array<long long, 3>, std::vector<size_t>> positions_;
   using key_t = std::array<long long, 6>;
   std::map<edge_t, key_t> class_cache_;
@@ -176,6 +182,15 @@ public:
       }
     lo_ = hi_ = vertices_.front();
     for (const auto & v: vertices_) for (int i = 0; i < 3; ++i) { lo_[i] = std::min(lo_[i], v[i]); hi_[i] = std::max(hi_[i], v[i]); }
+    // Only construction looks points up by name or position, or tests them exactly:
+    // for 16,000 vertices the lookups hold 12 MiB and the cached point data up to
+    // 180 MiB (12 threads), several times what refinement needs.
+    decltype(names_)().swap(names_);
+    decltype(buckets_)().swap(buckets_);
+    decltype(grid_ids_)().swap(grid_ids_);
+    decltype(centroids_)().swap(centroids_);
+    decltype(named_)().swap(named_);
+    geometry().clear_caches();
   }
   [[nodiscard]] const Geometry & geometry() const { return boundary_.geometry(); }
   [[nodiscard]] const Boundary & boundary() const { return boundary_; }
@@ -197,16 +212,23 @@ public:
   */
   void refine(const std::vector<tet_t> & marked, const double min_edge = 0) {
     // the refinement indexes, built on first use: a mesh that is never refined doesn't need them
-    if (tets_.empty()) {
+    if (!indexed_) {
       for (size_t i = 0; i < vertices_.size(); ++i) index_position(i);
       for (auto t: tetrahedra_) add(t);
+      indexed_ = true;
     }
     min_edge2_ = min_edge * min_edge;
     std::vector<tet_t> todo;
-    for (auto t: marked) { std::sort(t.begin(), t.end()); if (tets_.count(t) && refinable(t)) todo.push_back(t); }
+    for (auto t: marked) { std::sort(t.begin(), t.end()); if (has_tet(t) && refinable(t)) todo.push_back(t); }
     std::sort(todo.begin(), todo.end());
-    for (const auto & t: todo) if (tets_.count(t)) split_edge(chosen(t));
-    tetrahedra_.assign(tets_.begin(), tets_.end());
+    for (const auto & t: todo) if (has_tet(t)) split_edge(chosen(t));
+    // in sorted order, as before these indexes were lean
+    tetrahedra_.clear();
+    std::vector<bool> freed(slots_.size(), false);
+    for (const auto f: free_slots_) freed[f] = true;
+    for (size_t i = 0; i < slots_.size(); ++i) if (!freed[i]) tetrahedra_.push_back(slots_[i]);
+    std::sort(tetrahedra_.begin(), tetrahedra_.end());
+    geometry().clear_caches();
   }
 
 private:
@@ -715,18 +737,40 @@ private:
   static std::array<edge_t, 6> edges(const tet_t & t) {
     return {edge(t[0], t[1]), edge(t[0], t[2]), edge(t[0], t[3]), edge(t[1], t[2]), edge(t[1], t[3]), edge(t[2], t[3])};
   }
+  static std::uint64_t edge_key(const edge_t & e) { return (static_cast<std::uint64_t>(e.first) << 32) | static_cast<std::uint64_t>(e.second); }
+  [[nodiscard]] bool has_edge(const edge_t & e) const { return edge_tets_.count(edge_key(e)) > 0; }
+  //! The tetrahedra around an edge, sorted
+  [[nodiscard]] std::vector<tet_t> tets_around(const edge_t & e) const {
+    std::vector<tet_t> out;
+    if (const auto it = edge_tets_.find(edge_key(e)); it != edge_tets_.end()) for (const auto i: it->second) out.push_back(slots_[i]);
+    std::sort(out.begin(), out.end());
+    return out;
+  }
+  //! The slot of tetrahedron t (sorted), if it is in the mesh
+  [[nodiscard]] std::optional<std::uint32_t> slot_of(const tet_t & t) const {
+    const auto it = edge_tets_.find(edge_key(edge(t[0], t[1])));
+    if (it == edge_tets_.end()) return std::nullopt;
+    for (const auto i: it->second) if (slots_[i] == t) return i;
+    return std::nullopt;
+  }
+  [[nodiscard]] bool has_tet(const tet_t & t) const { return slot_of(t).has_value(); }
   void add(tet_t t) {
     std::sort(t.begin(), t.end());
-    tets_.insert(t);
-    for (const auto & e: edges(t)) edge_tets_[e].insert(t);
+    std::uint32_t i;
+    if (free_slots_.empty()) { i = static_cast<std::uint32_t>(slots_.size()); slots_.push_back(t); }
+    else { i = free_slots_.back(); free_slots_.pop_back(); slots_[i] = t; }
+    for (const auto & e: edges(t)) edge_tets_[edge_key(e)].push_back(i);
   }
   void remove(const tet_t & t) {
-    tets_.erase(t);
+    const auto i = slot_of(t);
+    if (!i) return;
     for (const auto & e: edges(t)) {
-      auto it = edge_tets_.find(e);
-      it->second.erase(t);
-      if (it->second.empty()) edge_tets_.erase(it);
+      auto it = edge_tets_.find(edge_key(e));
+      auto & v = it->second;
+      v.erase(std::find(v.begin(), v.end(), *i));
+      if (v.empty()) edge_tets_.erase(it);
     }
+    free_slots_.push_back(*i);
   }
   [[nodiscard]] double length2(const edge_t & e) const {
     std::array<double, 3> d{};
@@ -753,10 +797,10 @@ private:
   //! a face of t lying in a boundary plane, used by t alone
   [[nodiscard]] bool boundary_triangle(const std::array<size_t, 3> & f) const {
     if (common_planes({f[0], f[1], f[2]}).empty()) return false;
-    const auto it = edge_tets_.find(edge(f[0], f[1]));
+    const auto it = edge_tets_.find(edge_key(edge(f[0], f[1])));
     if (it == edge_tets_.end()) return false;
     int n{0};
-    for (const auto & t: it->second) if (std::count(t.begin(), t.end(), f[2])) ++n;
+    for (const auto i: it->second) if (std::count(slots_[i].begin(), slots_[i].end(), f[2])) ++n;
     return n == 1;
   }
   [[nodiscard]] std::vector<std::array<size_t, 3>> boundary_triangles(const tet_t & t) const {
@@ -796,7 +840,7 @@ private:
             const auto q = vertex_at({gb[0] + t0, gb[1] + t1, gb[2] + t2});
             if (!q) continue;
             const auto y = edge(*p, *q);
-            if (edge_tets_.count(y) && boundary_edge(y)) seen.insert(y);
+            if (has_edge(y) && boundary_edge(y)) seen.insert(y);
           }
     }
     return {seen.begin(), seen.end()};
@@ -854,14 +898,14 @@ private:
   }
   void split_edge(const edge_t & e, const int depth = 0, const bool synchronized = false) {
     if (depth > 1000) throw std::runtime_error("refinement propagated too far");
-    if (!edge_tets_.count(e)) return;
+    if (!has_edge(e)) return;
     const bool on_boundary = boundary_edge(e);
     // e must be the refinement edge of its boundary triangles and of every tetrahedron
     // around it. Splitting another edge can change either, so recheck both each time.
-    while (edge_tets_.count(e)) {
+    while (has_edge(e)) {
       std::optional<edge_t> other;
       if (on_boundary)
-        for (const auto & t: edge_tets_.at(e)) {
+        for (const auto & t: tets_around(e)) {
           for (const auto & f: boundary_triangles(t))
             if (std::count(f.begin(), f.end(), e.first) && std::count(f.begin(), f.end(), e.second)) {
               const auto c = chosen_2d(f);
@@ -870,11 +914,11 @@ private:
           if (other) break;
         }
       if (!other)
-        for (const auto & t: edge_tets_.at(e)) { const auto c = chosen(t); if (c != e) { other = c; break; } }
+        for (const auto & t: tets_around(e)) { const auto c = chosen(t); if (c != e) { other = c; break; } }
       if (!other) break;
       split_edge(*other, depth + 1);
     }
-    if (!edge_tets_.count(e)) return;
+    if (!has_edge(e)) return;
     // the equivalent boundary edges, found before e is split
     std::vector<edge_t> partners;
     if (on_boundary && !synchronized) {
@@ -885,10 +929,9 @@ private:
     for (int i = 0; i < 3; ++i) x[i] = (vertices_[e.first][i] + vertices_[e.second][i]) / 2;
     const size_t m = vertices_.size();
     vertices_.push_back(x);
-    named_.emplace_back(std::nullopt);
     on_planes_.push_back(common_planes({e.first, e.second}));
     index_position(m);
-    const auto around = edge_tets_.at(e);
+    const auto around = tets_around(e);
     for (const auto & t: around) {
       remove(t);
       tet_t a = t, b = t;

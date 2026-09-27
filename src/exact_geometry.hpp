@@ -293,7 +293,7 @@ struct Point {
 /*! \brief Exact geometry on named planes and points for one metric */
 class Geometry {
   Metric G_;
-  std::uint64_t id_;   // unique to this geometry: never reused
+  mutable std::uint64_t id_;   // unique to this geometry and its current caches: never reused
 
   //! What every test on a point needs, computed once per point
   struct PointData {
@@ -406,6 +406,13 @@ public:
   Geometry & operator=(Geometry &&) noexcept = default;
   ~Geometry() = default;
   [[nodiscard]] const Metric & metric() const { return G_; }
+  //! Drop the cached point data, e.g. once a construction that needed it is done
+  void clear_caches() const {
+    std::lock_guard lock(caches_->mutex);
+    caches_->by_thread.clear();
+    // the one-entry shortcut in each thread would now dangle: a new id retires it
+    id_ = next_id();
+  }
 
   //! sign of det of the three planes' normals: zero if they don't meet in a point
   [[nodiscard]] int independent(const Point & p) const {
