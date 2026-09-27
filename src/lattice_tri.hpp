@@ -72,7 +72,7 @@ public:
       \param cone the wedge (see Boundary) */
   LatticeTri(const std::array<double, 9> & metric, const std::vector<mat3i> & ops, const long long n,
              std::optional<std::vector<int3>> cone = std::nullopt)
-      : boundary_(metric, ops, std::move(cone)), denominator_(scale * n) {
+      : boundary_(metric, ops, std::move(cone)), denominator_(scale * n), ops_(ops) {
     factor();
     std::array<double, 9> rows{};
     for (int i = 0; i < 9; ++i) rows[i] = cholesky_[i] / static_cast<double>(n);
@@ -136,7 +136,6 @@ public:
         if (piece->clipped) ++clipped_;
         emit(*piece);
       }
-    ops_ = ops;
     lo_ = hi_ = vertices_.front();
     for (const auto & v: vertices_) for (int i = 0; i < 3; ++i) { lo_[i] = std::min(lo_[i], v[i]); hi_[i] = std::max(hi_[i], v[i]); }
   }
@@ -473,22 +472,58 @@ private:
     return piece;
   }
 
-  /*! The point to fan a face from: the smallest-id point m such that no chord from m
-  runs along the polygon's side, i.e. neither of m's neighbours is followed by a
-  point in line with m (decided exactly). None if no point qualifies; the face is
-  then fanned from its centroid. Both pieces sharing a face choose alike. */
-  [[nodiscard]] std::optional<size_t> fan_vertex(const PieceFace & face, const std::vector<size_t> & ids) const {
-    const size_t n = ids.size();
-    auto in_line = [&](const size_t m, const size_t segment) {   // m on the line of the segment from `segment` to the next point
+  //! Whether no chord from point m runs along the face polygon's side: neither of m's
+  //! neighbours is followed by a point in line with m (decided exactly)
+  [[nodiscard]] bool fan_eligible(const PieceFace & face, const size_t m) const {
+    const size_t n = face.points.size();
+    if (n <= 3) return true;
+    auto in_line = [&](const size_t segment) {   // m on the line of the segment from `segment` to the next point
       return geometry().on(face.points[m], face.edge_planes[face.segment_edge[segment]]);
     };
+    return !in_line((m + 1) % n) && !in_line((m + n - 2) % n);
+  }
+  /*! The point to fan a face inside the zone from: the smallest-id eligible point.
+  None if no point qualifies; the face is then fanned from its centroid. Both pieces
+  sharing the face choose alike. */
+  [[nodiscard]] std::optional<size_t> fan_vertex(const PieceFace & face, const std::vector<size_t> & ids) const {
     std::optional<size_t> best;
-    for (size_t m = 0; m < n; ++m) {
-      if (best && ids[m] > ids[*best]) continue;
-      const size_t next = (m + 1) % n, prev = (m + n - 1) % n;
-      if (n > 3 && (in_line(m, next) || in_line(m, (prev + n - 1) % n))) continue;
-      best = m;
+    for (size_t m = 0; m < ids.size(); ++m)
+      if ((!best || ids[m] < ids[*best]) && fan_eligible(face, m)) best = m;
+    return best;
+  }
+  /*! A label for a point that equivalent points share: the smallest, over the point
+  group, of its image modulo the lattice, on a fine grid */
+  [[nodiscard]] std::array<long long, 3> point_key(const std::array<double, 3> & x) const {
+    constexpr double fine{1e7};
+    const auto q = static_cast<long long>(fine);
+    std::optional<std::array<long long, 3>> best;
+    for (const auto & g: ops_) {
+      std::array<long long, 3> k{};
+      for (int i = 0; i < 3; ++i) {
+        double y{0};
+        for (int j = 0; j < 3; ++j) y += static_cast<double>(g[3 * i + j]) * x[j];
+        k[i] = ((std::llround(y * fine) % q) + q) % q;
+      }
+      if (!best || k < *best) best = k;
     }
+    return *best;
+  }
+  /*! The point to fan a face on the zone boundary from: the eligible point of
+  smallest `point_key`. The face paired with it maps points to points with equal
+  keys, so it chooses the image point and the two fans match. None if no point
+  qualifies, or if two eligible points share the smallest key (a face paired with
+  itself); the face is then fanned from its centroid. */
+  [[nodiscard]] std::optional<size_t> boundary_fan_vertex(const PieceFace & face, const std::vector<size_t> & ids) const {
+    std::optional<size_t> best;
+    std::array<long long, 3> best_key{};
+    bool tied{false};
+    for (size_t m = 0; m < ids.size(); ++m) {
+      if (!fan_eligible(face, m)) continue;
+      const auto key = point_key(vertices_[ids[m]]);
+      if (!best || key < best_key) { best = m; best_key = key; tied = false; }
+      else if (key == best_key) tied = true;
+    }
+    if (tied) return std::nullopt;
     return best;
   }
 
@@ -509,12 +544,12 @@ private:
 
   /*! Name a piece's vertices and split it into tetrahedra.
 
-  A face on the zone boundary is fanned from its centroid, which pairs with its
-  partner face's fan; any other face is fanned from its `fan_vertex`, which the
-  piece on its other side chooses too. The piece is a cone from a corner, over the
-  faces not holding that corner, if some corner is on no boundary face and is the
-  fan vertex of every face it is on (the cone fans those faces from it); otherwise
-  it is a cone from its centroid. */
+  A face on the zone boundary is fanned from its `boundary_fan_vertex`, which its
+  partner face chooses too; any other face from its `fan_vertex`, which the piece on
+  its other side chooses too; either from its centroid if it has no fan vertex. The
+  piece is a cone from a corner, over the faces not holding that corner, if some
+  corner is the fan vertex of every face it is on (the cone fans those faces from
+  it); otherwise it is a cone from its centroid. */
   void emit(const Piece & piece) {
     std::vector<size_t> corner_ids;
     for (const auto & p: piece.corners) corner_ids.push_back(named(p));
@@ -530,14 +565,14 @@ private:
     }
     std::vector<std::optional<size_t>> fan_from;
     for (size_t f = 0; f < piece.faces.size(); ++f)
-      fan_from.push_back(piece.faces[f].boundary ? std::nullopt : fan_vertex(piece.faces[f], face_ids[f]));
+      fan_from.push_back(piece.faces[f].boundary ? boundary_fan_vertex(piece.faces[f], face_ids[f]) : fan_vertex(piece.faces[f], face_ids[f]));
     // the apex: the smallest-id corner that qualifies
     std::optional<size_t> apex;
     for (size_t c = 0; c < corner_ids.size(); ++c) {
       bool ok{true};
       for (size_t f = 0; f < piece.faces.size() && ok; ++f) {
         if (!piece.incident[c].count(piece.faces[f].plane)) continue;
-        ok = !piece.faces[f].boundary && fan_from[f] && face_ids[f][*fan_from[f]] == corner_ids[c];
+        ok = fan_from[f] && face_ids[f][*fan_from[f]] == corner_ids[c];
       }
       if (ok && (!apex || corner_ids[c] < corner_ids[*apex])) apex = c;
     }
@@ -547,7 +582,7 @@ private:
       const auto & face = piece.faces[f];
       if (apex && piece.incident[*apex].count(face.plane)) continue;
       const auto & ids = face_ids[f];
-      if (face.boundary || !fan_from[f]) { fan(ids, triangles); continue; }
+      if (!fan_from[f]) { fan(ids, triangles); continue; }
       vertex_fan(face, ids, *fan_from[f], triangles);
     }
     const size_t c = apex ? corner_ids[*apex] : centroid(corner_ids);
