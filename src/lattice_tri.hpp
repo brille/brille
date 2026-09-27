@@ -28,11 +28,13 @@ design note). Every vertex but the centroids is a named point, and vertices are
 shared between pieces by exact comparison; a centroid is shared by the set of
 vertices it averages.
 */
+#include <atomic>
 #include <iterator>
 #include <map>
 #include <optional>
 #include "lattice_boundary.hpp"
 #include "lattice_grid.hpp"
+#include "thread_pool.h"
 
 namespace brille::latticetri {
 
@@ -82,6 +84,7 @@ public:
     // Only grid tetrahedra that can meet the zone: the pattern's cells over the zone's
     // bounding box, in grid coordinates (n x), widened by the pattern's reach and one cell
     // for round-off. They are made and processed one at a time.
+    pending_t pending;
     std::array<double, 3> zlo{}, zhi{};
     bool first{true};
     for (const auto & f: boundary_.faces())
@@ -112,8 +115,27 @@ public:
           for (const auto & t: grid.pattern()) {
             tetrahedron s{};
             for (int k = 0; k < 4; ++k) s[k] = Grid::shifted(t[k], {a, b, c});
-            process(s);
+            process(s, pending);
           }
+    // The pieces at the boundary are clipped and prepared in parallel, touching
+    // nothing shared, then named and split in order, so the result doesn't depend on
+    // the thread count.
+    std::vector<std::optional<Piece>> pieces(pending.size());
+    {
+      const auto pool = brille::ThreadPool::getInstance();
+      const auto workers = std::max<size_t>(1, pool->size());
+      std::atomic<size_t> next{0};
+      for (size_t w = 0; w < workers; ++w)
+        pool->enqueue([&]() {
+          for (size_t i = next++; i < pending.size(); i = next++) pieces[i] = clip_piece(pending[i].first, pending[i].second);
+        });
+      pool->wait();
+    }
+    for (const auto & piece: pieces)
+      if (piece) {
+        if (piece->clipped) ++clipped_;
+        emit(*piece);
+      }
     ops_ = ops;
     lo_ = hi_ = vertices_.front();
     for (const auto & v: vertices_) for (int i = 0; i < 3; ++i) { lo_[i] = std::min(lo_[i], v[i]); hi_[i] = std::max(hi_[i], v[i]); }
@@ -244,7 +266,27 @@ private:
     return id;
   }
 
-  void process(const tetrahedron & t) {
+  //! A face of a piece, with the points inserted on its polygon's edges
+  struct PieceFace {
+    std::vector<Point> points;                 //!< in cyclic order
+    std::vector<size_t> segment_edge;          //!< the polygon edge holding the segment from point k to k+1
+    std::vector<Plane> edge_planes;            //!< the plane of each polygon edge
+    int plane{-1};                             //!< the piece's plane holding the face
+    bool boundary{false};                      //!< whether that plane is a zone boundary plane
+  };
+  //! A piece of a grid tetrahedron, ready to triangulate
+  struct Piece {
+    std::vector<Point> corners;
+    std::vector<std::set<int>> incident;       //!< the piece planes each corner lies on
+    std::vector<PieceFace> faces;
+    bool changed{false};                       //!< not simply the grid tetrahedron
+    bool clipped{false};
+  };
+
+  using pending_t = std::vector<std::pair<tetrahedron, std::vector<size_t>>>;
+  /*! Keep a grid tetrahedron inside the zone, drop one outside it, and queue one
+  crossing or touching the boundary in `pending` */
+  void process(const tetrahedron & t, pending_t & pending) {
     std::array<Point, 4> corners;
     for (int k = 0; k < 4; ++k) corners[k] = grid_point(t[k]);
     const auto & planes = boundary_.planes();
@@ -262,6 +304,12 @@ private:
                              grid_vertex(t[3], corners[3])});
       return;
     }
+    pending.emplace_back(t, std::move(crossing));
+  }
+
+  //! The part of grid tetrahedron t inside the zone, cut by the boundary planes `crossing`
+  [[nodiscard]] std::optional<Piece> clip_piece(const tetrahedron & t, const std::vector<size_t> & crossing) const {
+    const auto & planes = boundary_.planes();
     std::array<Plane, 4> fp;
     for (int k = 0; k < 4; ++k) {
       std::array<point, 3> f;
@@ -271,9 +319,10 @@ private:
     }
     auto P = Polytope::tetrahedron(geometry(), fp);
     for (const auto j: crossing) P.cut(planes[j]);
-    if (P.flat()) return;
-    if (!crossing.empty()) ++clipped_;
-    triangulate(P);
+    if (P.flat()) return std::nullopt;
+    auto piece = prepare(P);
+    piece.clipped = !crossing.empty();
+    return piece;
   }
 
   //! whether x lies on the polytope (inside or on every plane)
@@ -281,9 +330,10 @@ private:
     return std::all_of(P.planes().begin(), P.planes().end(), [&](const Plane & p) { return geometry().side(x, p) <= 0; });
   }
 
-  //! Insert into each edge of the polygon the candidate points lying strictly inside it
-  [[nodiscard]] std::vector<Point> with_points(const Polytope & P, const Polygon & poly, const Plane & face, const std::vector<Point> & candidates) const {
-    std::vector<Point> out;
+  //! The polygon with the candidate points lying strictly inside its edges inserted
+  [[nodiscard]] PieceFace with_points(const Polytope & P, const Polygon & poly, const Plane & face, const std::vector<Point> & candidates) const {
+    PieceFace out;
+    out.edge_planes = poly.edges;
     const size_t n = poly.vertices.size();
     // the candidates on the face, found once for all its edges
     std::vector<std::pair<const Point *, std::array<double, 3>>> on_face;
@@ -291,7 +341,8 @@ private:
     for (size_t k = 0; k < n; ++k) {
       const auto & a = poly.vertices[k];
       const auto & b = poly.vertices[(k + 1) % n];
-      out.push_back(a);
+      out.points.push_back(a);
+      out.segment_edge.push_back(k);
       std::vector<std::pair<double, Point>> mids;
       const auto xa = geometry().coordinates(a), xb = geometry().coordinates(b);
       for (const auto & [candidate, xx]: on_face) {
@@ -309,7 +360,10 @@ private:
       std::sort(mids.begin(), mids.end(), [](const auto & u, const auto & v) { return u.first < v.first; });
       // the same point may be found twice (e.g. as a special point and a crossing)
       for (const auto & [d, x]: mids)
-        if (!geometry().same(x, out.back())) out.push_back(x);
+        if (!geometry().same(x, out.points.back())) {
+          out.points.push_back(x);
+          out.segment_edge.push_back(k);
+        }
     }
     return out;
   }
@@ -321,7 +375,8 @@ private:
     for (size_t k = 0; k < poly.size(); ++k) triangles.push_back({poly[k], poly[(k + 1) % poly.size()], c});
   }
 
-  void triangulate(const Polytope & P) {
+  //! Everything a piece needs before its vertices are named: this changes nothing shared
+  [[nodiscard]] Piece prepare(const Polytope & P) const {
     const auto & planes = boundary_.planes();
     const auto & cells = boundary_.cells();
     // candidate points: special points near the piece, cell corners and cell-edge crossings
@@ -384,13 +439,13 @@ private:
     }
     // the faces, split into cells on the boundary; then, with every candidate known,
     // insert the points on each part's edges and fan it
-    struct Part { Plane face; Polygon polygon; size_t original; };
+    struct Part { Plane face; Polygon polygon; size_t original; int plane; bool boundary; };
     std::vector<Part> parts;
     bool changed = P.vertices().size() != 4;
     for (const auto & [f, bi]: faces) {
       const auto & face = P.planes()[static_cast<size_t>(f)];
       const auto poly = P.polygon(f);
-      if (bi < 0) { parts.push_back({face, poly, poly.vertices.size()}); continue; }
+      if (bi < 0) { parts.push_back({face, poly, poly.vertices.size(), f, false}); continue; }
       size_t count{0};
       for (const auto & cell: cells[static_cast<size_t>(bi)]) {
         Polygon q = poly;
@@ -400,26 +455,102 @@ private:
         }
         if (q.vertices.empty()) continue;
         for (const auto & v: q.vertices) candidates.push_back(v);
-        parts.push_back({face, q, poly.vertices.size()});
+        parts.push_back({face, q, poly.vertices.size(), f, true});
         ++count;
       }
       if (count > 1) changed = true;
     }
-    std::vector<std::array<size_t, 3>> triangles;
+    Piece piece;
     for (const auto & part: parts) {
-      const auto pts = with_points(P, part.polygon, part.face, candidates);
-      if (pts.size() != part.original) changed = true;
-      std::vector<size_t> ids;
-      for (const auto & p: pts) ids.push_back(named(p));
-      fan(ids, triangles);
+      auto face = with_points(P, part.polygon, part.face, candidates);
+      if (face.points.size() != part.original) changed = true;
+      face.plane = part.plane;
+      face.boundary = part.boundary;
+      piece.faces.push_back(std::move(face));
     }
+    for (const auto & v: P.vertices()) { piece.corners.push_back(v.point); piece.incident.push_back(v.incident); }
+    piece.changed = changed;
+    return piece;
+  }
+
+  /*! The point to fan a face from: the smallest-id point m such that no chord from m
+  runs along the polygon's side, i.e. neither of m's neighbours is followed by a
+  point in line with m (decided exactly). None if no point qualifies; the face is
+  then fanned from its centroid. Both pieces sharing a face choose alike. */
+  [[nodiscard]] std::optional<size_t> fan_vertex(const PieceFace & face, const std::vector<size_t> & ids) const {
+    const size_t n = ids.size();
+    auto in_line = [&](const size_t m, const size_t segment) {   // m on the line of the segment from `segment` to the next point
+      return geometry().on(face.points[m], face.edge_planes[face.segment_edge[segment]]);
+    };
+    std::optional<size_t> best;
+    for (size_t m = 0; m < n; ++m) {
+      if (best && ids[m] > ids[*best]) continue;
+      const size_t next = (m + 1) % n, prev = (m + n - 1) % n;
+      if (n > 3 && (in_line(m, next) || in_line(m, (prev + n - 1) % n))) continue;
+      best = m;
+    }
+    return best;
+  }
+
+  /*! Fan a face from its point `m`, leaving out the segments on a line through m.
+  Whether a segment is on such a line is decided exactly, not from which polygon
+  edge m was found on: a point where the polygon runs straight may be a polygon
+  vertex in one piece and a point inserted on an edge in its neighbour, and both
+  must fan the shared face alike. */
+  void vertex_fan(const PieceFace & face, const std::vector<size_t> & ids, const size_t m, std::vector<std::array<size_t, 3>> & triangles) const {
+    const size_t n = ids.size();
+    for (size_t j = 0; j < n; ++j) {
+      const size_t k = (j + 1) % n;
+      if (j == m || k == m) continue;
+      if (geometry().on(face.points[m], face.edge_planes[face.segment_edge[j]])) continue;
+      triangles.push_back({ids[m], ids[j], ids[k]});
+    }
+  }
+
+  /*! Name a piece's vertices and split it into tetrahedra.
+
+  A face on the zone boundary is fanned from its centroid, which pairs with its
+  partner face's fan; any other face is fanned from its `fan_vertex`, which the
+  piece on its other side chooses too. The piece is a cone from a corner, over the
+  faces not holding that corner, if some corner is on no boundary face and is the
+  fan vertex of every face it is on (the cone fans those faces from it); otherwise
+  it is a cone from its centroid. */
+  void emit(const Piece & piece) {
     std::vector<size_t> corner_ids;
-    for (const auto & v: P.vertices()) corner_ids.push_back(named(v.point));
-    if (!changed) {
+    for (const auto & p: piece.corners) corner_ids.push_back(named(p));
+    if (!piece.changed) {
       tetrahedra_.push_back({corner_ids[0], corner_ids[1], corner_ids[2], corner_ids[3]});
       return;
     }
-    const size_t c = centroid(corner_ids);
+    std::vector<std::vector<size_t>> face_ids;
+    for (const auto & face: piece.faces) {
+      std::vector<size_t> ids;
+      for (const auto & p: face.points) ids.push_back(named(p));
+      face_ids.push_back(std::move(ids));
+    }
+    std::vector<std::optional<size_t>> fan_from;
+    for (size_t f = 0; f < piece.faces.size(); ++f)
+      fan_from.push_back(piece.faces[f].boundary ? std::nullopt : fan_vertex(piece.faces[f], face_ids[f]));
+    // the apex: the smallest-id corner that qualifies
+    std::optional<size_t> apex;
+    for (size_t c = 0; c < corner_ids.size(); ++c) {
+      bool ok{true};
+      for (size_t f = 0; f < piece.faces.size() && ok; ++f) {
+        if (!piece.incident[c].count(piece.faces[f].plane)) continue;
+        ok = !piece.faces[f].boundary && fan_from[f] && face_ids[f][*fan_from[f]] == corner_ids[c];
+      }
+      if (ok && (!apex || corner_ids[c] < corner_ids[*apex])) apex = c;
+    }
+
+    std::vector<std::array<size_t, 3>> triangles;
+    for (size_t f = 0; f < piece.faces.size(); ++f) {
+      const auto & face = piece.faces[f];
+      if (apex && piece.incident[*apex].count(face.plane)) continue;
+      const auto & ids = face_ids[f];
+      if (face.boundary || !fan_from[f]) { fan(ids, triangles); continue; }
+      vertex_fan(face, ids, *fan_from[f], triangles);
+    }
+    const size_t c = apex ? corner_ids[*apex] : centroid(corner_ids);
     for (const auto & tri: triangles) tetrahedra_.push_back({tri[0], tri[1], tri[2], c});
   }
 
