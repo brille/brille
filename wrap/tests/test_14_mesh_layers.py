@@ -1,9 +1,10 @@
-"""Building a mesh links its coarse and fine tetrahedral layers.
+"""Meshes build for lattices that once failed.
 
-The link test once cut one tetrahedron by the other's faces and compared the
-computed points, which failed on round-off ("Duplicate intersection point") for
-about 2 % of real lattices, mostly centred or near-pseudo-symmetric ones. It now
-decides overlap with exact predicates. Lattice values must be exact: one bit
+The TetGen mesh linked coarse and fine tetrahedral layers by cutting one
+tetrahedron by the other's faces and comparing the computed points, which failed
+on round-off ("Duplicate intersection point") for about 2 % of real lattices,
+mostly centred or near-pseudo-symmetric ones. The structured mesh has no layers;
+these lattices stay as regression tests. Lattice values must be exact: one bit
 different can avoid the error.
 """
 import json

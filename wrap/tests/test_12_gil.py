@@ -25,7 +25,7 @@ def queries(n, seed):
 
 def test_python_threads_run_during_a_long_interpolation():
     grid = filled_grid()
-    q = queries(30_000, 2)
+    q = queries(300_000, 2)
     worker = threading.Thread(target=lambda: grid.ir_interpolate_at(q, threads=1))
     start = time.perf_counter()
     ticks = [start]

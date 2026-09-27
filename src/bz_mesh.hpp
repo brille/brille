@@ -44,28 +44,19 @@ protected:
 public:
   BrillouinZoneMesh3(const base_t& pt, BrillouinZone bz): base_t(pt), bz_(std::move(bz)) {}
   BrillouinZoneMesh3(base_t&& pt, BrillouinZone&& bz): base_t(std::move(pt)), bz_(std::move(bz)) {}
-  /* Construct using a maximum tetrahedron volume -- makes a tetrahedron mesh
-      instead of a orthogonal grid.
-      @param bz The BrillouinZone object
-      @param vol The maximum tetrahedron volume
-      @param isrlu A flag to indicate if vol is in units of rlu (isrlu=1) or inverse angstrom (isrlu=0)
-      @note If vol is in relative lattice units an absolute volume will be
-            determined using the unit cell volume of the underlying lattice.
-  */
-  // BrillouinZoneMesh3(const BrillouinZone& bz, const double max_size_invA=-1., const double min_angle=20.0, const double max_angle=-1.0, const double max_ratio=-1., const int max_points=-1):
-  //   Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face(), max_size_invA, min_angle, max_angle, max_ratio, max_points),
-  //   bz_(bz) {}
-  // BrillouinZoneMesh3(const BrillouinZone& bz) Mesh3<T>(bz.get_ir_vertices().get_xyz(), bz.get_ir_vertices_per_face());
-  /*! \brief Construct a `BrillouinZoneMesh3` from a `BrillouinZone` and variable arguments
+  /*! \brief The structured mesh of a `BrillouinZone`'s irreducible zone
 
-  All arguments beyond the `BrillouinZone` are passed to the `Mesh3` constructor.
-  \param bz the `BrillouinZone` used to define the boundaries of the `Mesh3`
-  \param args the construction arguments for `Mesh3`
+  \param bz the `BrillouinZone`, whose irreducible polyhedron the mesh fills exactly
+  \param max_size the largest grid tetrahedron volume, in Å⁻³, which sets the grid
+         spacing; not positive for the coarsest grid
+  \param num_levels unused; the TetGen mesh it controlled is gone, and points are
+         located in constant time without layers
+  \param max_points if positive, the grid is coarsened until its estimated vertex
+         count is at most this (see `refinement_limited`)
   */
-  template<typename... A>
-  explicit BrillouinZoneMesh3(const BrillouinZone& bz, A... args):
-    base_t(bz.get_ir_vertices().xyz(), bz.get_ir_vertices_per_face(), args...),
-    bz_(bz) {}
+  explicit BrillouinZoneMesh3(const BrillouinZone& bz, const double max_size=-1., [[maybe_unused]] const int num_levels=3,
+                              const int max_points=-1):
+    base_t(LatticeMesh::from_zone(bz, max_size, max_points)), bz_(bz) {}
   //! \brief Return the BrillouinZone object
   [[nodiscard]] BrillouinZone get_brillouinzone() const {return this->bz_;}
   //! Return the mesh vertices in relative lattice units

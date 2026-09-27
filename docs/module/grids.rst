@@ -193,11 +193,10 @@ both detailed below under the headings `Simple`_ and `Hierarchy`_.
 
 Simple
 ^^^^^^
-The :py:class:`~brille._brille.BZMeshQdc` and its type-siblings implement a simple triangulated grid.
-Locating the tetrahedron within the grid which contains a test point could require as many in-tetrahedron
-checks as there are tetrahedra in the grid.
-This class should be fine for use in applications where intra-grid-point interpolation is not required,
-such as Brillouin zone integrations, but should be avoided when interpolation at random points is required.
+The :py:class:`~brille._brille.BZMeshQdc` and its type-siblings implement a structured tetrahedral mesh:
+a lattice grid, with spacing a fraction of the reciprocal lattice, clipped exactly to the irreducible
+Brillouin zone. Its boundary matches itself under the zone's face pairings, so interpolation is continuous
+across equivalent zone faces. Locating the tetrahedron that contains a point takes constant time.
 
 .. autoclass:: brille._brille.BZMeshQdd
 

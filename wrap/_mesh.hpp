@@ -39,16 +39,14 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
       return Class(bz, max_size, num_levels, max_points);
     }();
     if (mesh.refinement_limited()) {
-      const std::string msg = "Mesh refinement stopped at its limit on added points (max_points, or a default"
-        " far above what refinement normally needs). The mesh is valid but coarser or worse shaped in"
-        " places than requested. This happens near zone features much smaller than the zone, e.g., for"
-        " a lattice close to a more symmetric one.";
+      const std::string msg = "max_points made the mesh grid coarser than max_size asked for; its tetrahedra"
+        " are larger than requested.";
       if (PyErr_WarnEx(PyExc_RuntimeWarning, msg.c_str(), 1) < 0) throw py::error_already_set();
     }
     return mesh;
   }), "brillouin_zone"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1);
   cls.def_property_readonly("refinement_limited", [](const Class& cobj){return cobj.refinement_limited();},
-    "Whether mesh refinement stopped at its limit on added points");
+    "Whether max_points made the mesh coarser than max_size asked for");
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
   cls.def_property_readonly("rlu",[](const Class& cobj){
     return brille::a2py(cobj.get_mesh_hkl());

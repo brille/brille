@@ -20,6 +20,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "lattice_grid.hpp"
 #include "lattice_boundary.hpp"
 #include "lattice_tri.hpp"
+#include "lattice_mesh.hpp"
 
 namespace py = pybind11;
 
@@ -81,7 +82,8 @@ void wrap_lattice_grid(py::module & m) {
     Internal: part of the structured mesh under development; for tests only.
     Coordinates are in the primitive reciprocal lattice basis.
   )pbdoc");
-  bnd.def(py::init([](const py::array_t<double> & metric, const std::vector<py::array_t<long long>> & operations) {
+  bnd.def(py::init([](const py::array_t<double> & metric, const std::vector<py::array_t<long long>> & operations,
+                      const std::optional<std::vector<std::array<long long, 3>>> & cone) {
     auto g = metric.unchecked<2>();
     std::array<double, 9> G{};
     for (int i = 0; i < 3; ++i) for (int k = 0; k < 3; ++k) G[3 * i + k] = g(i, k);
@@ -93,8 +95,8 @@ void wrap_lattice_grid(py::module & m) {
       ops.push_back(r);
     }
     py::gil_scoped_release release;
-    return Boundary(G, ops);
-  }), "metric"_a, "operations"_a);
+    return Boundary(G, ops, cone);
+  }), "metric"_a, "operations"_a, "cone"_a = py::none());
   bnd.def_property_readonly("faces", [](const Boundary & b) {
     py::list out;
     for (const auto & f: b.faces()) out.append(coordinates(b.geometry(), f.vertices));
@@ -118,7 +120,8 @@ void wrap_lattice_grid(py::module & m) {
     Internal: under development; for tests only. Vertices are in the primitive
     reciprocal lattice basis; the grid lattice is that lattice divided by `n`.
   )pbdoc");
-  tri.def(py::init([](const py::array_t<double> & metric, const std::vector<py::array_t<long long>> & operations, long long n) {
+  tri.def(py::init([](const py::array_t<double> & metric, const std::vector<py::array_t<long long>> & operations, long long n,
+                      const std::optional<std::vector<std::array<long long, 3>>> & cone) {
     auto g = metric.unchecked<2>();
     std::array<double, 9> G{};
     for (int i = 0; i < 3; ++i) for (int k = 0; k < 3; ++k) G[3 * i + k] = g(i, k);
@@ -130,8 +133,8 @@ void wrap_lattice_grid(py::module & m) {
       ops.push_back(r);
     }
     py::gil_scoped_release release;
-    return LatticeTri(G, ops, n);
-  }), "metric"_a, "operations"_a, "n"_a);
+    return LatticeTri(G, ops, n, cone);
+  }), "metric"_a, "operations"_a, "n"_a, "cone"_a = py::none());
   tri.def_property_readonly("vertices", [](const LatticeTri & t) {
     py::array_t<double> out({static_cast<py::ssize_t>(t.vertices().size()), py::ssize_t(3)});
     auto r = out.mutable_unchecked<2>();
@@ -166,4 +169,25 @@ void wrap_lattice_grid(py::module & m) {
     if (!g.locate(x, t, w)) throw std::runtime_error("point not located");
     return py::make_tuple(tetrahedra_array({t}), w);
   }, "x"_a);
+
+  m.def("_lattice_mesh_inputs", [](const brille::BrillouinZone & bz) {
+    const auto in = brille::LatticeMesh::inputs(bz);
+    py::array_t<double> metric({3, 3}), basis({3, 3});
+    auto g = metric.mutable_unchecked<2>();
+    auto b = basis.mutable_unchecked<2>();
+    for (int i = 0; i < 3; ++i) for (int k = 0; k < 3; ++k) { g(i, k) = in.metric[3 * i + k]; b(i, k) = in.basis[3 * i + k]; }
+    py::list ops;
+    for (const auto & r: in.ops) {
+      py::array_t<long long> o({3, 3});
+      auto a = o.mutable_unchecked<2>();
+      for (int i = 0; i < 3; ++i) for (int k = 0; k < 3; ++k) a(i, k) = r[3 * i + k];
+      ops.append(o);
+    }
+    return py::make_tuple(metric, ops, in.cone, basis);
+  }, "brillouin_zone"_a, R"pbdoc(
+    (metric, operations, cone, basis) for meshing a zone's irreducible part: the
+    primitive reciprocal metric, the point group on primitive reciprocal
+    coordinates, the zone's wedge as integer normals (c·x >= 0 inside), and the
+    primitive reciprocal vectors as columns. Internal; for tests only.
+  )pbdoc");
 }

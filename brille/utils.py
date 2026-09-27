@@ -262,15 +262,14 @@ def create_grid(
     Parameters
     ----------
     max_size : float, optional (default: -1.0)
-        The maximum volume of a tetrahedron in cubic reciprocal
-        Angstrom. If set to a negative value, Tetgen will generate
-        a tetrahedral mesh without a volume constraint.
+        The maximum volume of a grid tetrahedron in cubic reciprocal
+        Angstrom, which sets the grid spacing. If not positive, the
+        grid is the reciprocal lattice itself, clipped to the zone.
     num_levels : int, optional (default: 3)
-        The number of layers of triangulation to use.
+        Unused; kept for compatibility.
     max_points : int, optional (default: -1)
-        The maximum number of additional mesh points to add to
-        improve the mesh quality. Setting this to -1 will allow
-        Tetgen to create an unlimited number of additional points.
+        If positive, the grid is coarsened until its estimated number
+        of vertices is at most this.
 
 
     For ``BZNestQ``, these additional parameters are available:
