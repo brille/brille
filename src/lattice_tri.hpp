@@ -1212,17 +1212,26 @@ private:
     }
     return class_cache_[e] = *best;
   }
+  /*! The first of equally long edges, by equivalence class then vertex indices.
+  Triangles and tetrahedra must break ties alike: with two orders, three equal edges
+  around a vertex can each send propagation on to the next, forever. */
+  [[nodiscard]] edge_t first_of(const std::vector<edge_t> & cands) {
+    if (cands.size() == 1) return cands[0];
+    std::vector<std::pair<key_t, edge_t>> keyed;
+    for (const auto & e: cands) keyed.emplace_back(class_key(e), e);
+    std::sort(keyed.begin(), keyed.end());
+    return keyed[0].second;
+  }
   [[nodiscard]] edge_t chosen_2d(const std::array<size_t, 3> & f) {
     const std::array<edge_t, 3> es{edge(f[0], f[1]), edge(f[0], f[2]), edge(f[1], f[2])};
-    auto cands = longest(es);
+    const auto cands = longest(es);
     if (cands.size() > 1) {
-      std::vector<std::pair<key_t, edge_t>> keyed;
-      for (const auto & e: cands) keyed.emplace_back(class_key(e), e);
-      std::sort(keyed.begin(), keyed.end());
-      if (keyed[0].first == keyed[1].first) ++self_paired_ties_;
-      return keyed[0].second;
+      std::vector<key_t> keys;
+      for (const auto & e: cands) keys.push_back(class_key(e));
+      std::sort(keys.begin(), keys.end());
+      if (keys[0] == keys[1]) ++self_paired_ties_;
     }
-    return cands[0];
+    return first_of(cands);
   }
   [[nodiscard]] edge_t chosen(const tet_t & t) {
     const auto cands = longest(edges(t));
@@ -1234,7 +1243,7 @@ private:
         if (std::count(f.begin(), f.end(), e.first) && std::count(f.begin(), f.end(), e.second)) good &= chosen_2d(f) == e;
       if (good) ok.push_back(e);
     }
-    return ok.empty() ? *std::min_element(cands.begin(), cands.end()) : *std::min_element(ok.begin(), ok.end());
+    return first_of(ok.empty() ? cands : ok);
   }
   void split_edge(const edge_t & e, const int depth = 0, const bool synchronized = false) {
     if (depth > 1000) throw std::runtime_error("refinement propagated too far");

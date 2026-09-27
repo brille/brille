@@ -146,6 +146,20 @@ def test_uniform_refinement_improves_interpolation():
     assert error() < 0.6 * before
 
 
+@pytest.mark.parametrize("name", LATTICES)
+def test_repeated_uniform_refinement(name):
+    """Tetrahedra and boundary triangles break longest-edge ties alike; when they
+    didn't, the hexagonal mesh's third uniform refinement propagated forever"""
+    lattice, bz = zone(name)
+    mesh = BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 200)
+    for _ in range(3):
+        assert len(mesh.refine(None))
+    result = check(bz, mesh, lattice)
+    assert result["volume"] == pytest.approx(1, abs=1e-9)
+    assert result["open_faces"] == 0
+    assert result["boundary_missing"] == 0, f"{result['boundary_missing']} of {result['boundary_checked']} boundary images missing"
+
+
 def test_refinement_survives_saving(tmp_path):
     _, bz = zone("triclinic -P 1")
     mesh = filled(bz)
