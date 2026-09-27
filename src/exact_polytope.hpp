@@ -19,6 +19,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include <algorithm>
 #include <cmath>
 #include <iterator>
+#include <optional>
 #include <set>
 #include <vector>
 #include "exact_geometry.hpp"
@@ -47,15 +48,18 @@ public:
   //! A polytope from its planes and its vertices (with their incident plane indices)
   Polytope(const Geometry & geom, std::vector<Plane> planes, std::vector<Vertex> vertices)
       : geom_(&geom), planes_(std::move(planes)), vertices_(std::move(vertices)) {}
-  //! The tetrahedron bounded by four planes, each oriented with the tetrahedron inside
-  static Polytope tetrahedron(const Geometry & geom, const std::array<Plane, 4> & p) {
+  /*! The tetrahedron bounded by four planes, each oriented with the tetrahedron inside.
+  Corner k, opposite plane k, is named by the other three planes unless `corners`
+  gives it another name. */
+  static Polytope tetrahedron(const Geometry & geom, const std::array<Plane, 4> & p,
+                              const std::optional<std::array<Point, 4>> & corners = std::nullopt) {
     std::vector<Vertex> vs;
     for (int skip = 3; skip >= 0; --skip) {
       std::array<Plane, 3> t;
       std::set<int> inc;
       int j{0};
       for (int k = 0; k < 4; ++k) if (k != skip) { t[j++] = p[k]; inc.insert(k); }
-      vs.push_back({{t}, inc});
+      vs.push_back({corners ? (*corners)[static_cast<size_t>(skip)] : Point{t}, inc});
     }
     return {geom, {p.begin(), p.end()}, vs};
   }

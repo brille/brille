@@ -32,6 +32,7 @@ vertices it averages.
 #include <iterator>
 #include <map>
 #include <optional>
+#include <unordered_map>
 #include "lattice_boundary.hpp"
 #include "lattice_grid.hpp"
 #include "thread_pool.h"
@@ -57,11 +58,24 @@ class LatticeTri {
   double min_edge2_{0};
   double tie_{1e-9};
   size_t self_paired_ties_{0};
-  std::map<std::array<long long, 3>, std::vector<size_t>> buckets_;
   std::map<std::vector<size_t>, size_t> centroids_;
   size_t clipped_{0};
   std::vector<std::array<double, 4>> plane_values_;   // boundary planes n·x <= d as doubles, for a filter
-  std::map<point, size_t> grid_ids_;                  // the vertex at each grid point already used
+  struct PointHash {
+    size_t operator()(const std::array<long long, 3> & p) const {
+      return std::hash<long long>()(p[0]) ^ (std::hash<long long>()(p[1]) * 0x9e3779b97f4a7c15ULL) ^ (std::hash<long long>()(p[2]) * 0xc2b2ae3d27d4eb4fULL);
+    }
+  };
+  struct NameHash {
+    size_t operator()(const std::array<long long, 21> & k) const {
+      size_t h{0xcbf29ce484222325ULL};
+      for (const auto v: k) h ^= static_cast<size_t>(v) + 0x9e3779b97f4a7c15ULL + (h << 6) + (h >> 2);
+      return h;
+    }
+  };
+  std::unordered_map<std::array<long long, 3>, std::vector<size_t>, PointHash> buckets_;
+  std::unordered_map<point, size_t, PointHash> grid_ids_;   // the vertex at each grid point already used
+  std::unordered_map<std::array<long long, 21>, size_t, NameHash> names_;   // the vertex for each point name already used
   std::vector<mat3i> ops_;
   std::array<double, 3> lo_{}, hi_{};                 // bounding box of the vertices
 
@@ -109,21 +123,45 @@ public:
       from[i] = static_cast<long long>(std::floor(zlo[i])) - reach_hi[i] - 1;
       to[i] = static_cast<long long>(std::ceil(zhi[i])) - reach_lo[i] + 1;
     }
-    for (long long a = from[0]; a <= to[0]; ++a)
-      for (long long b = from[1]; b <= to[1]; ++b)
-        for (long long c = from[2]; c <= to[2]; ++c)
-          for (const auto & t: grid.pattern()) {
-            tetrahedron s{};
-            for (int k = 0; k < 4; ++k) s[k] = Grid::shifted(t[k], {a, b, c});
-            process(s, pending);
+    const auto pool = brille::ThreadPool::getInstance();
+    const auto workers = std::max<size_t>(1, pool->size());
+    {
+      // classified in parallel, one slab of cells at a time, then kept in slab order,
+      // so the vertex numbering doesn't depend on the thread count
+      const auto slabs = static_cast<size_t>(to[0] - from[0] + 1);
+      std::vector<std::vector<tetrahedron>> inside(slabs);
+      std::vector<pending_t> queued(slabs);
+      std::atomic<size_t> next{0};
+      for (size_t w = 0; w < workers; ++w)
+        pool->enqueue([&]() {
+          std::vector<size_t> crossing;
+          for (size_t i = next++; i < slabs; i = next++) {
+            const long long a = from[0] + static_cast<long long>(i);
+            for (long long b = from[1]; b <= to[1]; ++b)
+              for (long long c = from[2]; c <= to[2]; ++c)
+                for (const auto & t: grid.pattern()) {
+                  tetrahedron s{};
+                  for (int k = 0; k < 4; ++k) s[k] = Grid::shifted(t[k], {a, b, c});
+                  switch (classify(s, crossing)) {
+                    case Kind::inside: inside[i].push_back(s); break;
+                    case Kind::boundary: queued[i].emplace_back(s, crossing); break;
+                    case Kind::outside: break;
+                  }
+                }
           }
+        });
+      pool->wait();
+      for (size_t i = 0; i < slabs; ++i) {
+        for (const auto & s: inside[i]) keep(s);
+        std::vector<tetrahedron>().swap(inside[i]);
+        for (auto & q: queued[i]) pending.push_back(std::move(q));
+      }
+    }
     // The pieces at the boundary are clipped and prepared in parallel, touching
     // nothing shared, then named and split in order, so the result doesn't depend on
     // the thread count.
     std::vector<std::optional<Piece>> pieces(pending.size());
     {
-      const auto pool = brille::ThreadPool::getInstance();
-      const auto workers = std::max<size_t>(1, pool->size());
       std::atomic<size_t> next{0};
       for (size_t w = 0; w < workers; ++w)
         pool->enqueue([&]() {
@@ -207,7 +245,39 @@ private:
     return Plane::integer_plane({N[0] * denominator_, N[1] * denominator_, N[2] * denominator_}, k);
   }
 
+  //! A point's name up to the order of its planes and their orientations
+  using name_t = std::array<long long, 21>;
+  static name_t name_of(const Point & p) {
+    std::array<std::array<long long, 7>, 3> planes;
+    for (int r = 0; r < 3; ++r) {
+      const auto & q = p.planes[static_cast<size_t>(r)];
+      auto & k = planes[static_cast<size_t>(r)];
+      k = {q.kind == Plane::Kind::metric ? 1 : 0, q.a[0], q.a[1], q.a[2], q.b[0], q.b[1], q.b[2]};
+      if (q.kind == Plane::Kind::integer) {
+        // c·x = k and -c·x = -k are the same plane
+        const auto lead = q.a[0] ? q.a[0] : (q.a[1] ? q.a[1] : q.a[2]);
+        if (lead < 0) for (int i = 1; i <= 4; ++i) k[static_cast<size_t>(i)] = -k[static_cast<size_t>(i)];
+      } else {
+        // x·Gσ = uᵀGσ and x·G(-σ) = uᵀG(-σ) are the same plane
+        const auto lead = q.a[0] ? q.a[0] : (q.a[1] ? q.a[1] : q.a[2]);
+        if (lead < 0) for (int i = 1; i <= 3; ++i) k[static_cast<size_t>(i)] = -k[static_cast<size_t>(i)];
+      }
+    }
+    std::sort(planes.begin(), planes.end());
+    name_t out{};
+    for (size_t r = 0; r < 3; ++r) for (size_t i = 0; i < 7; ++i) out[7 * r + i] = planes[r][i];
+    return out;
+  }
+  /*! The vertex at p. A point named by the same planes as one already found is that
+  vertex, with no arithmetic; otherwise the vertices near p are compared exactly. */
   size_t named(const Point & p) {
+    auto name = name_of(p);
+    if (const auto it = names_.find(name); it != names_.end()) return it->second;
+    const auto id = named_exactly(p);
+    names_.emplace(std::move(name), id);
+    return id;
+  }
+  size_t named_exactly(const Point & p) {
     const auto x = geometry().coordinates(p);
     std::array<long long, 3> key{};
     for (int i = 0; i < 3; ++i) key[i] = std::llround(x[i] * 1e9);
@@ -283,27 +353,46 @@ private:
   };
 
   using pending_t = std::vector<std::pair<tetrahedron, std::vector<size_t>>>;
-  /*! Keep a grid tetrahedron inside the zone, drop one outside it, and queue one
-  crossing or touching the boundary in `pending` */
-  void process(const tetrahedron & t, pending_t & pending) {
+  enum class Kind { outside, inside, boundary };
+  /*! Whether a grid tetrahedron is outside the zone, inside it, or crosses or touches
+  its boundary; then `crossing` holds the boundary planes it crosses */
+  [[nodiscard]] Kind classify(const tetrahedron & t, std::vector<size_t> & crossing) const {
     std::array<Point, 4> corners;
     for (int k = 0; k < 4; ++k) corners[k] = grid_point(t[k]);
     const auto & planes = boundary_.planes();
-    std::vector<size_t> crossing;
+    crossing.clear();
     bool touching{false};
     for (size_t j = 0; j < planes.size(); ++j) {
       int out{0}, on{0};
       for (int k = 0; k < 4; ++k) { const int s = grid_side(t[k], corners[k], j); out += s > 0; on += s == 0; }
-      if (out == 4 || (out + on == 4 && out > 0)) return;        // outside, or touching only from outside
+      if (out == 4 || (out + on == 4 && out > 0)) return Kind::outside;   // outside, or touching only from outside
       if (out > 0) crossing.push_back(j);
       touching |= on > 0;
     }
-    if (crossing.empty() && !touching) {
-      tetrahedra_.push_back({grid_vertex(t[0], corners[0]), grid_vertex(t[1], corners[1]), grid_vertex(t[2], corners[2]),
-                             grid_vertex(t[3], corners[3])});
-      return;
+    return crossing.empty() && !touching ? Kind::inside : Kind::boundary;
+  }
+  /*! Keep a grid tetrahedron inside the zone. These are kept before any other vertex
+  is named, so a grid point not yet seen is a new vertex without comparing it with
+  others, and, strictly inside the zone, it is on no boundary plane. */
+  void keep(const tetrahedron & t) {
+    std::array<size_t, 4> ids{};
+    for (int k = 0; k < 4; ++k) {
+      const auto & y = t[k];
+      if (const auto it = grid_ids_.find(y); it != grid_ids_.end()) { ids[k] = it->second; continue; }
+      const auto p = grid_point(y);
+      const auto x = geometry().coordinates(p);
+      const size_t id = vertices_.size();
+      vertices_.push_back(x);
+      named_.emplace_back(p);
+      on_planes_.emplace_back();
+      std::array<long long, 3> key{};
+      for (int i = 0; i < 3; ++i) key[i] = std::llround(x[i] * 1e9);
+      buckets_[key].push_back(id);
+      names_.emplace(name_of(p), id);
+      grid_ids_.emplace(y, id);
+      ids[k] = id;
     }
-    pending.emplace_back(t, std::move(crossing));
+    tetrahedra_.push_back(ids);
   }
 
   //! The part of grid tetrahedron t inside the zone, cut by the boundary planes `crossing`
@@ -316,7 +405,10 @@ private:
       for (int l = 0; l < 4; ++l) if (l != k) f[j++] = t[l];
       fp[k] = face_plane(f[0], f[1], f[2], t[k]);
     }
-    auto P = Polytope::tetrahedron(geometry(), fp);
+    // corners named as grid points, which is how the vertices of whole tetrahedra are named
+    std::array<Point, 4> corners;
+    for (int k = 0; k < 4; ++k) corners[k] = grid_point(t[k]);
+    auto P = Polytope::tetrahedron(geometry(), fp, corners);
     for (const auto j: crossing) P.cut(planes[j]);
     if (P.flat()) return std::nullopt;
     auto piece = prepare(P);
