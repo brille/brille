@@ -59,6 +59,7 @@ class LatticeTri {
   std::map<std::vector<size_t>, size_t> centroids_;
   size_t clipped_{0};
   std::vector<std::array<double, 4>> plane_values_;   // boundary planes n·x <= d as doubles, for a filter
+  std::map<point, size_t> grid_ids_;                  // the vertex at each grid point already used
   std::vector<mat3i> ops_;
   std::array<double, 3> lo_{}, hi_{};                 // bounding box of the vertices
 
@@ -74,19 +75,45 @@ public:
     std::array<double, 9> rows{};
     for (int i = 0; i < 9; ++i) rows[i] = cholesky_[i] / static_cast<double>(n);
     const Grid grid(rows, ops);
-    double radius{0};
-    for (const auto & f: boundary_.faces())
-      for (const auto & p: f.vertices) {
-        const auto x = cartesian(geometry().coordinates(p));
-        radius = std::max(radius, std::sqrt(x[0] * x[0] + x[1] * x[1] + x[2] * x[2]));
-      }
-    double longest{0};
-    for (int i = 0; i < 3; ++i) longest = std::max(longest, std::sqrt(rows[3 * i] * rows[3 * i] + rows[3 * i + 1] * rows[3 * i + 1] + rows[3 * i + 2] * rows[3 * i + 2]));
     for (const auto & q: boundary_.planes()) {
       const auto c = q.coefficients(geometry().metric());
       plane_values_.push_back({c[0].estimate(), c[1].estimate(), c[2].estimate(), c[3].estimate()});
     }
-    for (const auto & t: grid.patch(radius + 3 * longest)) process(t);
+    // Only grid tetrahedra that can meet the zone: the pattern's cells over the zone's
+    // bounding box, in grid coordinates (n x), widened by the pattern's reach and one cell
+    // for round-off. They are made and processed one at a time.
+    std::array<double, 3> zlo{}, zhi{};
+    bool first{true};
+    for (const auto & f: boundary_.faces())
+      for (const auto & p: f.vertices) {
+        const auto x = geometry().coordinates(p);
+        for (int i = 0; i < 3; ++i) {
+          const double y = x[i] * static_cast<double>(n);
+          zlo[i] = first ? y : std::min(zlo[i], y);
+          zhi[i] = first ? y : std::max(zhi[i], y);
+        }
+        first = false;
+      }
+    int3 reach_lo{0, 0, 0}, reach_hi{0, 0, 0};
+    for (const auto & t: grid.pattern())
+      for (const auto & p: t)
+        for (int i = 0; i < 3; ++i) {
+          reach_lo[i] = std::min(reach_lo[i], floor_div(p[i], scale));
+          reach_hi[i] = std::max(reach_hi[i], -floor_div(-p[i], scale));
+        }
+    std::array<long long, 3> from{}, to{};
+    for (int i = 0; i < 3; ++i) {
+      from[i] = static_cast<long long>(std::floor(zlo[i])) - reach_hi[i] - 1;
+      to[i] = static_cast<long long>(std::ceil(zhi[i])) - reach_lo[i] + 1;
+    }
+    for (long long a = from[0]; a <= to[0]; ++a)
+      for (long long b = from[1]; b <= to[1]; ++b)
+        for (long long c = from[2]; c <= to[2]; ++c)
+          for (const auto & t: grid.pattern()) {
+            tetrahedron s{};
+            for (int k = 0; k < 4; ++k) s[k] = Grid::shifted(t[k], {a, b, c});
+            process(s);
+          }
     ops_ = ops;
     lo_ = hi_ = vertices_.front();
     for (const auto & v: vertices_) for (int i = 0; i < 3; ++i) { lo_[i] = std::min(lo_[i], v[i]); hi_[i] = std::max(hi_[i], v[i]); }
@@ -209,6 +236,14 @@ private:
     return geometry().side(exact, boundary_.planes()[j]);
   }
 
+  //! The vertex at grid point y (named `p`): found by its integer coordinates once it is known
+  size_t grid_vertex(const point & y, const Point & p) {
+    if (const auto it = grid_ids_.find(y); it != grid_ids_.end()) return it->second;
+    const auto id = named(p);
+    grid_ids_.emplace(y, id);
+    return id;
+  }
+
   void process(const tetrahedron & t) {
     std::array<Point, 4> corners;
     for (int k = 0; k < 4; ++k) corners[k] = grid_point(t[k]);
@@ -223,7 +258,8 @@ private:
       touching |= on > 0;
     }
     if (crossing.empty() && !touching) {
-      tetrahedra_.push_back({named(corners[0]), named(corners[1]), named(corners[2]), named(corners[3])});
+      tetrahedra_.push_back({grid_vertex(t[0], corners[0]), grid_vertex(t[1], corners[1]), grid_vertex(t[2], corners[2]),
+                             grid_vertex(t[3], corners[3])});
       return;
     }
     std::array<Plane, 4> fp;
@@ -249,20 +285,23 @@ private:
   [[nodiscard]] std::vector<Point> with_points(const Polytope & P, const Polygon & poly, const Plane & face, const std::vector<Point> & candidates) const {
     std::vector<Point> out;
     const size_t n = poly.vertices.size();
+    // the candidates on the face, found once for all its edges
+    std::vector<std::pair<const Point *, std::array<double, 3>>> on_face;
+    for (const auto & x: candidates) if (geometry().on(x, face)) on_face.emplace_back(&x, geometry().coordinates(x));
     for (size_t k = 0; k < n; ++k) {
       const auto & a = poly.vertices[k];
       const auto & b = poly.vertices[(k + 1) % n];
       out.push_back(a);
       std::vector<std::pair<double, Point>> mids;
       const auto xa = geometry().coordinates(a), xb = geometry().coordinates(b);
-      for (const auto & x: candidates) {
-        if (!geometry().on(x, face) || !geometry().on(x, poly.edges[k])) continue;
+      for (const auto & [candidate, xx]: on_face) {
+        const auto & x = *candidate;
+        if (!geometry().on(x, poly.edges[k])) continue;
         if (geometry().same(x, a) || geometry().same(x, b)) continue;
         // strictly between a and b: inside every other edge of the polygon, and in the piece
         bool inside{true};
         for (size_t l = 0; l < n && inside; ++l) if (l != k) inside = geometry().side(x, poly.edges[l]) <= 0;
         if (!inside || !within(P, x)) continue;
-        const auto xx = geometry().coordinates(x);
         double d{0};
         for (int i = 0; i < 3; ++i) d += (xx[i] - xa[i]) * (xb[i] - xa[i]);
         mids.emplace_back(d, x);

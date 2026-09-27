@@ -138,6 +138,31 @@ public:
   }
 };
 
+// --- a floating-point filter --------------------------------------------------------
+/*! A double together with a bound on the magnitudes of all the terms it was summed
+from. Evaluating a polynomial in doubles errs by at most a small multiple of machine
+epsilon times that bound, whatever cancellation there is, so a value well above the
+bound has the exact value's sign. */
+struct Bounded {
+  double v{0};
+  double m{0};
+  friend Bounded operator+(const Bounded & a, const Bounded & b) { return {a.v + b.v, a.m + b.m}; }
+  friend Bounded operator-(const Bounded & a, const Bounded & b) { return {a.v - b.v, a.m + b.m}; }
+  friend Bounded operator*(const Bounded & a, const Bounded & b) { return {a.v * b.v, a.m * b.m}; }
+  //! the sign of the value, or 0 if round-off could have changed it
+  [[nodiscard]] int certain_sign() const {
+    // about 1e4 times the worst-case round-off of the expressions evaluated here
+    constexpr double relative{1e-12};
+    if (v > relative * m) return 1;
+    if (v < -relative * m) return -1;
+    return 0;
+  }
+};
+inline Bounded det3(const std::array<std::array<Bounded, 3>, 3> & m) {
+  return m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
+       + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+}
+
 // --- planes ---------------------------------------------------------------------
 /*! A named plane n·x = d, with n and d exact. Oriented: the half-space n·x <= d is
 "inside" when a plane bounds a region. */
@@ -152,6 +177,27 @@ struct Plane {
   static Plane integer_plane(const int3 & c, const long long k) { return {Kind::integer, c, {k, 0, 0}, 1}; }
   [[nodiscard]] Plane flipped() const { Plane p = *this; p.orientation = -p.orientation; return p; }
 
+  //! the coefficients (n, d) in doubles, each with a bound on its terms' magnitudes
+  [[nodiscard]] std::array<Bounded, 4> bounded_coefficients(const Metric & G) const {
+    std::array<Bounded, 4> out;
+    const auto s = static_cast<double>(orientation);
+    if (kind == Kind::metric) {
+      for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j) {
+          const double term = G(i, j) * static_cast<double>(a[j]);
+          out[i].v += s * term;
+          out[i].m += std::abs(term);
+        }
+      for (int i = 0; i < 3; ++i) {
+        out[3].v += 0.5 * static_cast<double>(b[i]) * out[i].v;   // s bᵀ (G a) / 2: out[i] is oriented already
+        out[3].m += 0.5 * std::abs(static_cast<double>(b[i])) * out[i].m;
+      }
+    } else {
+      for (int i = 0; i < 3; ++i) out[i] = {static_cast<double>(a[i]) * s, std::abs(static_cast<double>(a[i]))};
+      out[3] = {static_cast<double>(b[0]) * s, std::abs(static_cast<double>(b[0]))};
+    }
+    return out;
+  }
   //! the coefficients (n, d), exactly
   [[nodiscard]] std::array<Expansion, 4> coefficients(const Metric & G) const {
     std::array<Expansion, 4> out;
@@ -222,6 +268,7 @@ public:
   }
   /*! sign of n·x - d for the plane q at the point p: +1 outside, 0 on, -1 inside */
   [[nodiscard]] int side(const Point & p, const Plane & q) const {
+    if (const int s = filtered_side(p, q)) return s;
     std::array<std::array<Expansion, 4>, 3> rows;
     for (int r = 0; r < 3; ++r) rows[r] = p.planes[r].coefficients(G_);
     const auto qc = q.coefficients(G_);
@@ -241,6 +288,25 @@ public:
     return numerator.sign() * ds;
   }
   [[nodiscard]] bool on(const Point & p, const Plane & q) const { return side(p, q) == 0; }
+  /*! side() in doubles: the sign when round-off can't have changed it, else 0 (and
+  side() then decides exactly) */
+  [[nodiscard]] int filtered_side(const Point & p, const Plane & q) const {
+    std::array<std::array<Bounded, 4>, 3> rows;
+    for (int r = 0; r < 3; ++r) rows[r] = p.planes[r].bounded_coefficients(G_);
+    const auto qc = q.bounded_coefficients(G_);
+    std::array<std::array<Bounded, 3>, 3> N;
+    for (int r = 0; r < 3; ++r) for (int k = 0; k < 3; ++k) N[r][k] = rows[r][k];
+    const auto det = det3(N);
+    const int ds = det.certain_sign();
+    if (ds == 0) return 0;
+    Bounded numerator = Bounded{0, 0} - qc[3] * det;
+    for (int k = 0; k < 3; ++k) {
+      auto M = N;
+      for (int r = 0; r < 3; ++r) M[r][k] = rows[r][3];
+      numerator = numerator + qc[k] * det3(M);
+    }
+    return numerator.certain_sign() * ds;
+  }
   //! whether two named points are the same point
   [[nodiscard]] bool same(const Point & p, const Point & q) const {
     return on(p, q.planes[0]) && on(p, q.planes[1]) && on(p, q.planes[2]);
