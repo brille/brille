@@ -16,6 +16,29 @@ TEST_CASE("Expansions are exact", "[exact]") {
   REQUIRE((s * s - a * a - (a * b).scaled(2.0)).sign() == 1);
 }
 
+TEST_CASE("Expansions longer than their inline storage stay exact", "[exact]") {
+  // 18 non-overlapping components, more than are stored in place: 54 bits apart, so
+  // no two fit in one double, and spanning few enough that squares neither overflow
+  // nor underflow
+  Expansion sum;
+  std::vector<double> parts;
+  for (int k = 0; k < 18; ++k) parts.push_back(std::ldexp(1.0, 480 - 54 * k));
+  for (const double x: parts) sum += Expansion(x);
+  REQUIRE(sum.size() == 18u);
+  REQUIRE(sum.sign() == 1);
+  // removing all but the smallest leaves exactly the smallest
+  Expansion rest = sum;
+  for (size_t k = 0; k + 1 < parts.size(); ++k) rest -= Expansion(parts[k]);
+  REQUIRE((rest - Expansion(parts.back())).sign() == 0);
+  REQUIRE(rest.sign() == 1);
+  // and a product of long expansions is exact too: (s)(s) - s² computed termwise
+  const Expansion square = sum * sum;
+  Expansion termwise;
+  for (const double x: parts) termwise += sum.scaled(x);
+  REQUIRE((square - termwise).sign() == 0);
+  REQUIRE(((sum - sum)).sign() == 0);
+}
+
 namespace {
 // a hexagonal reciprocal metric, invariant under the 6-fold rotation below
 Metric hexagonal() {

@@ -49,7 +49,22 @@ namespace brille::exact {
 overlap (Shewchuk's expansions). Sums and products of doubles and expansions are
 exact; the sign is the sign of the largest component. */
 class Expansion {
-  std::vector<double> c_;
+  // components, smallest first; up to `inline_capacity` of them are stored in place,
+  // so short expansions (nearly all of them) never touch the heap
+  static constexpr size_t inline_capacity{16};
+  std::array<double, inline_capacity> small_{};
+  std::vector<double> large_;   // all components, once there are more than fit in place
+  size_t n_{0};
+  [[nodiscard]] double * data() { return large_.empty() ? small_.data() : large_.data(); }
+  [[nodiscard]] const double * data() const { return large_.empty() ? small_.data() : large_.data(); }
+  void push_back(const double x) {
+    if (large_.empty()) {
+      if (n_ < inline_capacity) { small_[n_++] = x; return; }
+      large_.assign(small_.begin(), small_.end());
+    }
+    if (large_.size() > n_) large_[n_] = x; else large_.push_back(x);
+    ++n_;
+  }
   static void two_sum(const double a, const double b, double & x, double & y) {
     x = a + b;
     const double bv = x - a;
@@ -61,37 +76,52 @@ class Expansion {
   }
   //! add the double b (Shewchuk's grow-expansion); keeps the non-overlapping order
   void grow(const double b) {
-    std::vector<double> out;
-    out.reserve(c_.size() + 1);
+    // in place: component k of the result is written at or before position k
+    double * c = data();
+    const size_t n = n_;
+    size_t m{0};
     double q = b;
-    for (const double e: c_) {
+    for (size_t k = 0; k < n; ++k) {
       double s, h;
-      two_sum(q, e, s, h);
-      if (h != 0) out.push_back(h);
+      two_sum(q, c[k], s, h);
+      if (h != 0) c[m++] = h;
       q = s;
     }
-    if (q != 0 || out.empty()) out.push_back(q);
-    c_.swap(out);
+    n_ = m;
+    if (q != 0 || m == 0) push_back(q);
   }
 public:
   Expansion() = default;
-  explicit Expansion(const double x) { if (x != 0) c_.push_back(x); }
+  explicit Expansion(const double x) { if (x != 0) push_back(x); }
+  [[nodiscard]] size_t size() const { return n_; }
   [[nodiscard]] int sign() const {
-    for (auto it = c_.rbegin(); it != c_.rend(); ++it) if (*it != 0) return *it > 0 ? 1 : -1;
+    const double * c = data();
+    for (size_t k = n_; k-- > 0;) if (c[k] != 0) return c[k] > 0 ? 1 : -1;
     return 0;
   }
-  [[nodiscard]] double estimate() const { double s{0}; for (const double x: c_) s += x; return s; }
-  Expansion & operator+=(const Expansion & o) { for (const double x: o.c_) grow(x); return *this; }
-  Expansion & operator-=(const Expansion & o) { for (const double x: o.c_) grow(-x); return *this; }
+  [[nodiscard]] double estimate() const { double s{0}; const double * c = data(); for (size_t k = 0; k < n_; ++k) s += c[k]; return s; }
+  Expansion & operator+=(const Expansion & o) {
+    if (&o == this) { const Expansion copy = o; return *this += copy; }
+    const double * c = o.data();
+    for (size_t k = 0; k < o.n_; ++k) grow(c[k]);
+    return *this;
+  }
+  Expansion & operator-=(const Expansion & o) {
+    if (&o == this) { n_ = 0; large_.clear(); return *this; }
+    const double * c = o.data();
+    for (size_t k = 0; k < o.n_; ++k) grow(-c[k]);
+    return *this;
+  }
   friend Expansion operator+(Expansion a, const Expansion & b) { a += b; return a; }
   friend Expansion operator-(Expansion a, const Expansion & b) { a -= b; return a; }
-  friend Expansion operator-(Expansion a) { for (auto & x: a.c_) x = -x; return a; }
+  friend Expansion operator-(Expansion a) { double * c = a.data(); for (size_t k = 0; k < a.n_; ++k) c[k] = -c[k]; return a; }
   //! multiply by a double exactly
   [[nodiscard]] Expansion scaled(const double b) const {
     Expansion out;
-    for (const double x: c_) {
+    const double * c = data();
+    for (size_t k = 0; k < n_; ++k) {
       double p, e;
-      two_product(x, b, p, e);
+      two_product(c[k], b, p, e);
       out.grow(e);
       out.grow(p);
     }
@@ -99,7 +129,8 @@ public:
   }
   friend Expansion operator*(const Expansion & a, const Expansion & b) {
     Expansion out;
-    for (const double x: b.c_) out += a.scaled(x);
+    const double * c = b.data();
+    for (size_t k = 0; k < b.n_; ++k) out += a.scaled(c[k]);
     return out;
   }
 };
