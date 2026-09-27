@@ -30,6 +30,7 @@ point group operations (acting on those coordinates) are the inputs.
 */
 #include <map>
 #include <numeric>
+#include <optional>
 #include <set>
 #include <tuple>
 #include "exact_polytope.hpp"
@@ -63,10 +64,17 @@ class Boundary {
   std::vector<std::vector<FaceMap>> cell_maps_;
   std::vector<FaceMap> maps_;
   std::vector<Point> special_;
+  std::optional<std::vector<int3>> cone_;
 
 public:
-  Boundary(const std::array<double, 9> & metric, std::vector<mat3i> ops, const int reach = 3)
-      : geom_(Metric(symmetrized(metric, ops))), ops_(std::move(ops)) {
+  /*! \param metric the reciprocal metric
+      \param ops the point group acting on reciprocal coordinates
+      \param cone the wedge, as integer c with c·x >= 0 inside; the Dirichlet cone of
+             `ops` about (7, 3, 1) if not given
+      \param reach the largest lattice translation, per coordinate, searched for face maps */
+  Boundary(const std::array<double, 9> & metric, std::vector<mat3i> ops,
+           std::optional<std::vector<int3>> cone = std::nullopt, const int reach = 3)
+      : geom_(Metric(symmetrized(metric, ops))), ops_(std::move(ops)), cone_(std::move(cone)) {
     for (const auto & g: ops_)
       if (!geom_.metric().invariant_under(g))
         throw std::invalid_argument("the metric is not exactly invariant under the point group");
@@ -83,21 +91,80 @@ public:
   [[nodiscard]] const std::vector<Point> & special_points() const { return special_; }
 
 private:
-  /*! (1/N) Σ gᵀ G g, each entry a fixed integer combination of G's upper triangle
-  summed in a fixed order, so that entries equal by symmetry are identical (as in
-  brille's Lattice). */
+  /*! \brief The metric nearest G that the point group leaves exactly invariant, in doubles
+
+  The invariant metrics are spanned by integer matrices: the group sums of the six
+  elementary symmetric matrices. G is written in an independent set of them, and
+  its coordinates are rounded to a common grid 2⁻⁴⁰ below the largest, so every
+  entry, a sum of small integer multiples of the coordinates, is exact. Rounding
+  each entry of the group average instead leaves relations such as G₂₂ = G₀₂ + G₁₂
+  (body-centred lattices in a primitive basis) true only to round-off.
+  */
   static std::array<double, 9> symmetrized(const std::array<double, 9> & g, const std::vector<mat3i> & ops) {
-    std::array<double, 9> out{};
-    for (int i = 0; i < 3; ++i)
-      for (int j = 0; j < 3; ++j) {
-        std::array<long long, 9> c{};
-        for (const auto & w: ops)
-          for (int k = 0; k < 3; ++k)
-            for (int l = 0; l < 3; ++l) c[3 * std::min(k, l) + std::max(k, l)] += w[3 * k + i] * w[3 * l + j];
-        double sum{0};
-        for (int k = 0; k < 3; ++k) for (int l = k; l < 3; ++l) if (c[3 * k + l]) sum += static_cast<double>(c[3 * k + l]) * g[3 * k + l];
-        out[3 * i + j] = sum / static_cast<double>(ops.size());
+    using six = std::array<double, 6>;
+    constexpr std::array<std::array<int, 2>, 6> entries{{{0, 0}, {0, 1}, {0, 2}, {1, 1}, {1, 2}, {2, 2}}};
+    // the group sum of the elementary symmetric matrix with ones at (k, l) and (l, k)
+    auto group_sum = [&](const int k, const int l) {
+      six out{};
+      for (const auto & w: ops)
+        for (size_t e = 0; e < 6; ++e) {
+          const auto [i, j] = entries[e];
+          // (wᵀ S w)_ij = w_ki w_lj + w_li w_kj, or w_ki w_kj when k == l
+          long long v = w[3 * k + i] * w[3 * l + j];
+          if (k != l) v += w[3 * l + i] * w[3 * k + j];
+          out[e] += static_cast<double>(v);
+        }
+      return out;
+    };
+    // an independent set, by Gram-Schmidt on copies
+    std::vector<six> basis, orthogonal;
+    for (const auto & [k, l]: entries) {
+      const auto b = group_sum(k, l);
+      auto r = b;
+      for (const auto & q: orthogonal) {
+        double d{0}, n{0};
+        for (size_t e = 0; e < 6; ++e) { d += r[e] * q[e]; n += q[e] * q[e]; }
+        for (size_t e = 0; e < 6; ++e) r[e] -= d / n * q[e];
       }
+      double rn{0}, bn{0};
+      for (size_t e = 0; e < 6; ++e) { rn += r[e] * r[e]; bn += b[e] * b[e]; }
+      if (bn > 0 && rn > 1e-18 * bn) { basis.push_back(b); orthogonal.push_back(r); }
+    }
+    // G's coordinates in that basis, by least squares: (EᵀE) t = Eᵀ g
+    const size_t n = basis.size();
+    six gv{};
+    for (size_t e = 0; e < 6; ++e) gv[e] = g[3 * entries[e][0] + entries[e][1]];
+    std::vector<std::vector<double>> A(n, std::vector<double>(n + 1, 0.0));
+    for (size_t r = 0; r < n; ++r) {
+      for (size_t c = 0; c < n; ++c) for (size_t e = 0; e < 6; ++e) A[r][c] += basis[r][e] * basis[c][e];
+      for (size_t e = 0; e < 6; ++e) A[r][n] += basis[r][e] * gv[e];
+    }
+    for (size_t c = 0; c < n; ++c) {
+      size_t pivot = c;
+      for (size_t r = c + 1; r < n; ++r) if (std::abs(A[r][c]) > std::abs(A[pivot][c])) pivot = r;
+      std::swap(A[c], A[pivot]);
+      for (size_t r = 0; r < n; ++r) {
+        if (r == c) continue;
+        const double f = A[r][c] / A[c][c];
+        for (size_t k = c; k <= n; ++k) A[r][k] -= f * A[c][k];
+      }
+    }
+    std::vector<double> t(n);
+    double largest{0}, coefficient{0};
+    for (size_t r = 0; r < n; ++r) { t[r] = A[r][n] / A[r][r]; largest = std::max(largest, std::abs(t[r])); }
+    for (const auto & b: basis) for (const auto x: b) coefficient = std::max(coefficient, std::abs(x));
+    if (largest == 0) throw std::invalid_argument("the metric has no invariant part");
+    // a grid fine enough to move G by ~1e-12, coarse enough that six terms with
+    // integer factors up to `coefficient` sum exactly
+    const double quantum = std::ldexp(1.0, std::ilogb(largest * coefficient) - 40);
+    for (auto & x: t) x = std::round(x / quantum) * quantum;
+    std::array<double, 9> out{};
+    for (size_t e = 0; e < 6; ++e) {
+      double v{0};
+      for (size_t r = 0; r < n; ++r) v += t[r] * basis[r][e];
+      const auto [i, j] = entries[e];
+      out[3 * i + j] = out[3 * j + i] = v;
+    }
     return out;
   }
 
@@ -123,18 +190,20 @@ private:
     });
     for (const auto & t: taus) P.cut(Plane::metric_plane(t, t));
     // the Dirichlet cone of the point group under M = Σ gᵀg: x·M(p - g p) >= 0
-    std::array<long long, 9> M{};
-    for (const auto & g: ops_) for (int i = 0; i < 3; ++i) for (int j = 0; j < 3; ++j) for (int k = 0; k < 3; ++k) M[3 * i + j] += g[3 * k + i] * g[3 * k + j];
-    const int3 p{7, 3, 1};
-    std::vector<int3> normals;
-    for (const auto & g: ops_) {
-      const auto gp = Plane::apply(g, p);
-      if (gp == p) continue;
-      const int3 d{p[0] - gp[0], p[1] - gp[1], p[2] - gp[2]};
-      int3 c{M[0] * d[0] + M[1] * d[1] + M[2] * d[2], M[3] * d[0] + M[4] * d[1] + M[5] * d[2], M[6] * d[0] + M[7] * d[1] + M[8] * d[2]};
-      const long long h = std::gcd(std::gcd(std::llabs(c[0]), std::llabs(c[1])), std::llabs(c[2]));
-      for (auto & x: c) x /= h;
-      if (std::find(normals.begin(), normals.end(), c) == normals.end()) normals.push_back(c);
+    std::vector<int3> normals = cone_ ? *cone_ : std::vector<int3>{};
+    if (!cone_) {
+      std::array<long long, 9> M{};
+      for (const auto & g: ops_) for (int i = 0; i < 3; ++i) for (int j = 0; j < 3; ++j) for (int k = 0; k < 3; ++k) M[3 * i + j] += g[3 * k + i] * g[3 * k + j];
+      const int3 p{7, 3, 1};
+      for (const auto & g: ops_) {
+        const auto gp = Plane::apply(g, p);
+        if (gp == p) continue;
+        const int3 d{p[0] - gp[0], p[1] - gp[1], p[2] - gp[2]};
+        int3 c{M[0] * d[0] + M[1] * d[1] + M[2] * d[2], M[3] * d[0] + M[4] * d[1] + M[5] * d[2], M[6] * d[0] + M[7] * d[1] + M[8] * d[2]};
+        const long long h = std::gcd(std::gcd(std::llabs(c[0]), std::llabs(c[1])), std::llabs(c[2]));
+        for (auto & x: c) x /= h;
+        if (std::find(normals.begin(), normals.end(), c) == normals.end()) normals.push_back(c);
+      }
     }
     for (const auto & c: normals) P.cut(Plane::integer_plane({-c[0], -c[1], -c[2]}, 0));
     for (const auto & v: P.vertices())

@@ -58,15 +58,18 @@ class LatticeTri {
   std::map<std::array<long long, 3>, std::vector<size_t>> buckets_;
   std::map<std::vector<size_t>, size_t> centroids_;
   size_t clipped_{0};
+  std::vector<std::array<double, 4>> plane_values_;   // boundary planes n·x <= d as doubles, for a filter
   std::vector<mat3i> ops_;
   std::array<double, 3> lo_{}, hi_{};                 // bounding box of the vertices
 
 public:
   /*! \param metric the reciprocal metric in the primitive reciprocal basis
       \param ops the point group, acting on those coordinates
-      \param n the grid lattice is Λ* divided by n */
-  LatticeTri(const std::array<double, 9> & metric, const std::vector<mat3i> & ops, const long long n)
-      : boundary_(metric, ops), denominator_(scale * n) {
+      \param n the grid lattice is Λ* divided by n
+      \param cone the wedge (see Boundary) */
+  LatticeTri(const std::array<double, 9> & metric, const std::vector<mat3i> & ops, const long long n,
+             std::optional<std::vector<int3>> cone = std::nullopt)
+      : boundary_(metric, ops, std::move(cone)), denominator_(scale * n) {
     factor();
     std::array<double, 9> rows{};
     for (int i = 0; i < 9; ++i) rows[i] = cholesky_[i] / static_cast<double>(n);
@@ -79,12 +82,14 @@ public:
       }
     double longest{0};
     for (int i = 0; i < 3; ++i) longest = std::max(longest, std::sqrt(rows[3 * i] * rows[3 * i] + rows[3 * i + 1] * rows[3 * i + 1] + rows[3 * i + 2] * rows[3 * i + 2]));
+    for (const auto & q: boundary_.planes()) {
+      const auto c = q.coefficients(geometry().metric());
+      plane_values_.push_back({c[0].estimate(), c[1].estimate(), c[2].estimate(), c[3].estimate()});
+    }
     for (const auto & t: grid.patch(radius + 3 * longest)) process(t);
-    for (size_t i = 0; i < vertices_.size(); ++i) index_position(i);
     ops_ = ops;
     lo_ = hi_ = vertices_.front();
     for (const auto & v: vertices_) for (int i = 0; i < 3; ++i) { lo_[i] = std::min(lo_[i], v[i]); hi_[i] = std::max(hi_[i], v[i]); }
-    for (auto t: tetrahedra_) add(t);
   }
   [[nodiscard]] const Geometry & geometry() const { return boundary_.geometry(); }
   [[nodiscard]] const Boundary & boundary() const { return boundary_; }
@@ -105,6 +110,11 @@ public:
   refinement never makes a tetrahedron smaller than the resolution limit.
   */
   void refine(const std::vector<tet_t> & marked, const double min_edge = 0) {
+    // the refinement indexes, built on first use: a mesh that is never refined doesn't need them
+    if (tets_.empty()) {
+      for (size_t i = 0; i < vertices_.size(); ++i) index_position(i);
+      for (auto t: tetrahedra_) add(t);
+    }
     min_edge2_ = min_edge * min_edge;
     std::vector<tet_t> todo;
     for (auto t: marked) { std::sort(t.begin(), t.end()); if (tets_.count(t) && refinable(t)) todo.push_back(t); }
@@ -184,6 +194,21 @@ private:
     return id;
   }
 
+  /*! The side of grid point y (named `exact`) of boundary plane j: decided in doubles
+  when the value is far from zero compared with its round-off, else exactly */
+  [[nodiscard]] int grid_side(const point & y, const Point & exact, const size_t j) const {
+    const auto & c = plane_values_[j];
+    const auto D = static_cast<double>(denominator_);
+    double value{-c[3]}, size{std::abs(c[3])};
+    for (int i = 0; i < 3; ++i) {
+      const double term = c[i] * (static_cast<double>(y[i]) / D);
+      value += term;
+      size += std::abs(term);
+    }
+    if (std::abs(value) > 1e-12 * size) return value > 0 ? 1 : -1;
+    return geometry().side(exact, boundary_.planes()[j]);
+  }
+
   void process(const tetrahedron & t) {
     std::array<Point, 4> corners;
     for (int k = 0; k < 4; ++k) corners[k] = grid_point(t[k]);
@@ -192,7 +217,7 @@ private:
     bool touching{false};
     for (size_t j = 0; j < planes.size(); ++j) {
       int out{0}, on{0};
-      for (const auto & c: corners) { const int s = geometry().side(c, planes[j]); out += s > 0; on += s == 0; }
+      for (int k = 0; k < 4; ++k) { const int s = grid_side(t[k], corners[k], j); out += s > 0; on += s == 0; }
       if (out == 4 || (out + on == 4 && out > 0)) return;        // outside, or touching only from outside
       if (out > 0) crossing.push_back(j);
       touching |= on > 0;

@@ -92,13 +92,23 @@ public:
           }
       }
     }
+    // Where three or more planes share a line, a new vertex can lie on planes its edge's
+    // ends don't share, and two edges can give the same point: complete each new
+    // vertex's planes, and keep one vertex per point
+    std::vector<Vertex> unique;
+    for (auto & v: created) {
+      for (int p = 0; p < k; ++p) if (!v.incident.count(p) && geom_->on(v.point, planes_[static_cast<size_t>(p)])) v.incident.insert(p);
+      auto same = std::find_if(unique.begin(), unique.end(), [&](const Vertex & u) { return geom_->same(u.point, v.point); });
+      if (same == unique.end()) unique.push_back(v);
+      else same->incident.insert(v.incident.begin(), v.incident.end());
+    }
     std::vector<Vertex> kept;
     for (size_t i = 0; i < vertices_.size(); ++i) {
       if (side[i] > 0) continue;
       if (side[i] == 0) vertices_[i].incident.insert(k);
       kept.push_back(vertices_[i]);
     }
-    for (auto & v: created) kept.push_back(v);
+    for (auto & v: unique) kept.push_back(v);
     vertices_.swap(kept);
     return true;
   }
@@ -122,33 +132,83 @@ public:
     return out;
   }
 
-  //! The face on plane `face`: its vertices in cyclic order, with the plane of each edge
+  /*! \brief The face on plane `face`: its vertices in cyclic order, with the plane of each edge
+
+  The order comes from the planes the vertices lie on, not from their coordinates,
+  so vertices far closer together than round-off in their coordinates still come
+  in the right order. It is counter-clockwise seen from outside, i.e. from the
+  side the face plane's normal points to.
+  */
   [[nodiscard]] Polygon polygon(const int face) const {
     std::vector<size_t> ids;
     for (size_t i = 0; i < vertices_.size(); ++i) if (vertices_[i].incident.count(face)) ids.push_back(i);
-    const auto c = planes_[static_cast<size_t>(face)].coefficients(geom_->metric());
-    const std::array<double, 3> n{c[0].estimate(), c[1].estimate(), c[2].estimate()};
     std::vector<std::array<double, 3>> x;
     for (const auto i: ids) x.push_back(geom_->coordinates(vertices_[i].point));
-    std::array<double, 3> m{0, 0, 0};
-    for (const auto & y: x) for (int i = 0; i < 3; ++i) m[i] += y[i] / static_cast<double>(x.size());
-    const std::array<double, 3> u{x[0][0] - m[0], x[0][1] - m[1], x[0][2] - m[2]};
-    const std::array<double, 3> w{n[1] * u[2] - n[2] * u[1], n[2] * u[0] - n[0] * u[2], n[0] * u[1] - n[1] * u[0]};
-    std::vector<std::pair<double, size_t>> angle;
-    for (size_t i = 0; i < x.size(); ++i) {
-      const std::array<double, 3> d{x[i][0] - m[0], x[i][1] - m[1], x[i][2] - m[2]};
-      angle.emplace_back(std::atan2(d[0] * w[0] + d[1] * w[1] + d[2] * w[2], d[0] * u[0] + d[1] * u[1] + d[2] * u[2]), ids[i]);
+    // the edges: consecutive face vertices along the line where the face meets another plane
+    std::vector<std::vector<std::pair<size_t, int>>> next(ids.size());   // (position in ids, edge plane)
+    auto linked = [&](const size_t a, const size_t b) {
+      return std::any_of(next[a].begin(), next[a].end(), [&](const auto & e) { return e.first == b; });
+    };
+    for (int p = 0; p < static_cast<int>(planes_.size()); ++p) {
+      if (p == face) continue;
+      std::vector<size_t> on;
+      for (size_t k = 0; k < ids.size(); ++k) if (vertices_[ids[k]].incident.count(p)) on.push_back(k);
+      if (on.size() < 2) continue;
+      if (on.size() > 2) {
+        // collinear: order along the line
+        std::array<double, 3> d{};
+        double far{-1};
+        for (const auto k: on) {
+          const std::array<double, 3> e{x[k][0] - x[on[0]][0], x[k][1] - x[on[0]][1], x[k][2] - x[on[0]][2]};
+          const double n = e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
+          if (n > far) { far = n; d = e; }
+        }
+        auto along = [&](const size_t k) { return (x[k][0] - x[on[0]][0]) * d[0] + (x[k][1] - x[on[0]][1]) * d[1] + (x[k][2] - x[on[0]][2]) * d[2]; };
+        std::sort(on.begin(), on.end(), [&](const size_t a, const size_t b) { return along(a) < along(b); });
+      }
+      for (size_t k = 0; k + 1 < on.size(); ++k) {
+        if (linked(on[k], on[k + 1])) continue;
+        next[on[k]].emplace_back(on[k + 1], p);
+        next[on[k + 1]].emplace_back(on[k], p);
+      }
     }
-    std::sort(angle.begin(), angle.end());
-    Polygon out;
-    std::vector<size_t> order;
-    for (const auto & [a, i]: angle) { order.push_back(i); out.vertices.push_back(vertices_[i].point); }
+    // walk the cycle
+    std::vector<size_t> order{0};
+    std::vector<int> edges;
+    std::vector<bool> used(ids.size(), false);
+    used[0] = true;
+    for (size_t step = 0; step < ids.size(); ++step) {
+      const auto here = order.back();
+      auto it = std::find_if(next[here].begin(), next[here].end(), [&](const auto & e) {
+        return !used[e.first] || (e.first == 0 && order.size() == ids.size() && order.size() > 2);
+      });
+      if (it == next[here].end()) throw std::runtime_error("the face's vertices do not form a cycle");
+      edges.push_back(it->second);
+      if (it->first == 0) break;
+      order.push_back(it->first);
+      used[it->first] = true;
+    }
+    if (order.size() != ids.size() || edges.size() != ids.size()) throw std::runtime_error("the face's vertices do not form a cycle");
+    // counter-clockwise about the plane's normal
+    const auto c = planes_[static_cast<size_t>(face)].coefficients(geom_->metric());
+    const std::array<double, 3> n{c[0].estimate(), c[1].estimate(), c[2].estimate()};
+    double turn{0};
     for (size_t k = 0; k < order.size(); ++k) {
-      const auto common = shared(vertices_[order[k]], vertices_[order[(k + 1) % order.size()]]);
-      int edge{-1};
-      for (const int p: common) if (p != face) { edge = p; break; }
-      if (edge < 0) throw std::runtime_error("no plane is shared by consecutive face vertices");
-      out.edges.push_back(planes_[static_cast<size_t>(edge)]);
+      const auto & a = x[order[k]];
+      const auto & b = x[order[(k + 1) % order.size()]];
+      turn += n[0] * (a[1] * b[2] - a[2] * b[1]) + n[1] * (a[2] * b[0] - a[0] * b[2]) + n[2] * (a[0] * b[1] - a[1] * b[0]);
+    }
+    if (turn < 0) {
+      std::reverse(order.begin() + 1, order.end());
+      // edge k joins order[k] and order[k+1]: reversing the walk reverses the edges too
+      std::vector<int> reversed;
+      for (size_t k = 0; k < edges.size(); ++k) reversed.push_back(edges[(edges.size() - 1 - k) % edges.size()]);
+      edges = reversed;
+    }
+    Polygon out;
+    for (size_t k = 0; k < order.size(); ++k) {
+      out.vertices.push_back(vertices_[ids[order[k]]].point);
+      out.edges.push_back(planes_[static_cast<size_t>(edges[k])]);
     }
     return out;
   }
