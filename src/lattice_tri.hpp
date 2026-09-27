@@ -368,6 +368,8 @@ private:
     std::vector<size_t> segment_edge;          //!< the polygon edge holding the segment from point k to k+1
     std::vector<Plane> edge_planes;            //!< the plane of each polygon edge
     std::vector<std::array<Point, 3>> grid_triangles;   //!< if not empty, the face keeps these (the grid's)
+    std::optional<Point> preferred;            //!< fan from this point, if one of `points` and eligible
+    std::optional<Point> centre;               //!< the grid triangles' shared centre: a possible apex
     int plane{-1};                             //!< the piece's plane holding the face
     bool boundary{false};                      //!< whether that plane is a zone boundary plane
   };
@@ -392,6 +394,8 @@ private:
       long long offset{0};
       std::vector<size_t> corners;                  //!< its corners
       std::vector<std::array<size_t, 3>> triangles; //!< the grid's triangles on it
+      std::optional<size_t> preferred;              //!< the lower end of its diagonal (a Kuhn cell's parallelogram)
+      std::optional<size_t> centre;                 //!< the vertex all its grid triangles share (a split face's centre)
     };
     std::vector<Face> faces;
   };
@@ -486,7 +490,7 @@ private:
         }
         const auto key = plane_through(a, b, c, shape.vertices[off]);
         const auto [it, added] = by_plane.emplace(key, shape.faces.size());
-        if (added) shape.faces.push_back({key.first, key.second, {}, {}});
+        if (added) shape.faces.push_back({key.first, key.second, {}, {}, std::nullopt, std::nullopt});
         shape.faces[it->second].triangles.push_back(f);
       }
       // corners: vertices on three or more face planes
@@ -502,6 +506,26 @@ private:
           const auto & y = shape.vertices[i];
           if (face.normal[0] * y[0] + face.normal[1] * y[1] + face.normal[2] * y[2] == face.offset) face.corners.push_back(i);
         }
+      // A Kuhn parallelepiped's six tetrahedra run from its origin to its far corner, and
+      // each face holds one of the two, where its diagonal ends. Its preferred point is the
+      // diagonal's other end from the far corner: the origin of this cell, and the same
+      // point for the cell on the face's other side, which has it at its far-corner end.
+      // A face split into three or more triangles from one vertex: that vertex, its centre.
+      std::optional<size_t> far;
+      if (shape.tets.size() == 6 && std::all_of(shape.tets.begin(), shape.tets.end(), [&](const auto & t) { return t[3] == shape.tets[0][3] && t[0] == shape.tets[0][0]; }))
+        far = shape.tets[0][3];
+      for (auto & face: shape.faces) {
+        if (face.triangles.size() == 2 && far) {
+          std::vector<size_t> shared;
+          const auto & t0 = face.triangles[0], & t1 = face.triangles[1];
+          for (const auto i: t0) if (std::find(t1.begin(), t1.end(), i) != t1.end()) shared.push_back(i);
+          if (shared.size() == 2) face.preferred = shared[0] == *far ? shared[1] : shared[0];
+        } else if (face.triangles.size() >= 3) {
+          for (const auto i: face.triangles[0])
+            if (std::all_of(face.triangles.begin(), face.triangles.end(), [&](const auto & t) { return std::find(t.begin(), t.end(), i) != t.end(); }))
+              face.centre = i;
+        }
+      }
       out.push_back(std::move(shape));
     }
     return out;
@@ -563,6 +587,8 @@ private:
     std::vector<std::array<Point, 4>> tets;                        //!< its grid tetrahedra
     std::vector<std::vector<std::array<Point, 3>>> face_triangles; //!< the grid's triangles on face f (piece plane f)
     std::vector<size_t> face_corners;                              //!< how many corners face f has
+    std::vector<std::optional<Point>> face_preferred;              //!< where to fan face f from, if a polygon point
+    std::vector<std::optional<Point>> face_centre;                 //!< the centre face f's grid triangles share
     size_t corners{0};
   };
   //! Whether a point is named as a grid point (by integer planes D x_i = y_i)
@@ -590,6 +616,8 @@ private:
         triangles.push_back({grid_point(at(shape.vertices[t[0]], cell)), grid_point(at(shape.vertices[t[1]], cell)), grid_point(at(shape.vertices[t[2]], cell))});
       info.face_triangles.push_back(std::move(triangles));
       info.face_corners.push_back(face.corners.size());
+      info.face_preferred.push_back(face.preferred ? std::optional<Point>(grid_point(at(shape.vertices[*face.preferred], cell))) : std::nullopt);
+      info.face_centre.push_back(face.centre ? std::optional<Point>(grid_point(at(shape.vertices[*face.centre], cell))) : std::nullopt);
     }
     for (const auto & t: shape.tets)
       info.tets.push_back({grid_point(at(shape.vertices[t[0]], cell)), grid_point(at(shape.vertices[t[1]], cell)),
@@ -755,9 +783,14 @@ private:
       // A whole face of the cell, uncut and with nothing inserted, keeps the grid's
       // triangles: a neighbouring cell that is kept whole has them too
       const auto f = static_cast<size_t>(part.plane);
-      if (!part.boundary && f < info.face_triangles.size() && face.points.size() == info.face_corners[f]
-          && std::all_of(face.points.begin(), face.points.end(), [&](const Point & p) { return is_grid_point(p); }))
-        face.grid_triangles = info.face_triangles[f];
+      if (!part.boundary && f < info.face_triangles.size()) {
+        if (face.points.size() == info.face_corners[f]
+            && std::all_of(face.points.begin(), face.points.end(), [&](const Point & p) { return is_grid_point(p); })) {
+          face.grid_triangles = info.face_triangles[f];
+          face.centre = info.face_centre[f];
+        }
+        face.preferred = info.face_preferred[f];
+      }
       piece.faces.push_back(std::move(face));
     }
     for (const auto & v: P.vertices()) { piece.corners.push_back(v.point); piece.incident.push_back(v.incident); }
@@ -784,10 +817,17 @@ private:
     };
     return !in_line((m + 1) % n) && !in_line((m + n - 2) % n);
   }
-  /*! The point to fan a face inside the zone from: the smallest-id eligible point.
-  None if no point qualifies; the face is then fanned from its centroid. Both pieces
-  sharing the face choose alike. */
+  /*! The point to fan a face inside the zone from: its preferred point if that is
+  eligible, else the smallest-id eligible point. None if no point qualifies; the face
+  is then fanned from its centroid. Both pieces sharing the face choose alike. */
   [[nodiscard]] std::optional<size_t> fan_vertex(const PieceFace & face, const std::vector<size_t> & ids) const {
+    // A grid face's preferred point, which both cells on it know, comes first: a cell's
+    // lowest corner is then the fan vertex of all its faces, so it can be the apex
+    if (face.preferred) {
+      const auto & q = *face.preferred;
+      for (size_t m = 0; m < face.points.size(); ++m)
+        if (name_of(face.points[m]) == name_of(q) && fan_eligible(face, m)) return m;
+    }
     std::optional<size_t> best;
     for (size_t m = 0; m < ids.size(); ++m)
       if ((!best || ids[m] < ids[*best]) && fan_eligible(face, m)) best = m;
@@ -909,7 +949,24 @@ private:
       if (!fan_from[f]) { fan(ids, triangles); continue; }
       vertex_fan(face, ids, *fan_from[f], triangles);
     }
-    const size_t c = apex ? corner_ids[*apex] : centroid(corner_ids);
+    // Without a corner to cone from, the centre of a face kept whole may do: it is on
+    // that face alone, whose grid triangles are its fan, and is a vertex already
+    std::optional<size_t> centre_face;
+    if (!apex)
+      for (size_t f = 0; f < piece.faces.size() && !centre_face; ++f)
+        if (piece.faces[f].centre) centre_face = f;
+    if (centre_face) {
+      triangles.clear();
+      for (size_t f = 0; f < piece.faces.size(); ++f) {
+        if (f == *centre_face) continue;
+        const auto & face = piece.faces[f];
+        const auto & ids = face_ids[f];
+        if (!grid_triangles[f].empty()) { triangles.insert(triangles.end(), grid_triangles[f].begin(), grid_triangles[f].end()); continue; }
+        if (!fan_from[f]) { fan(ids, triangles); continue; }
+        vertex_fan(face, ids, *fan_from[f], triangles);
+      }
+    }
+    const size_t c = apex ? corner_ids[*apex] : centre_face ? named(*piece.faces[*centre_face].centre) : centroid(corner_ids);
     for (const auto & tri: triangles) tetrahedra_.push_back({tri[0], tri[1], tri[2], c});
   }
 
