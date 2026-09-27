@@ -3,7 +3,7 @@
 See `VisPy <https://vispy.org>`_ for installation and configuration directions
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from brille import Polyhedron
 from vispy.color import Color
 from typing import List
@@ -33,8 +33,8 @@ class VisPolyhedron:
     """
 
     polyhedron: Polyhedron
-    face_color: Color = Color("black")
-    edge_color: Color = Color("black")
+    face_color: Color = field(default_factory=lambda: Color("black"))
+    edge_color: Color = field(default_factory=lambda: Color("black"))
     fill: bool = True
     outline: bool = True
     opacity: float = 0.2
