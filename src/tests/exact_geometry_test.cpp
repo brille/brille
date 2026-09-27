@@ -79,3 +79,26 @@ TEST_CASE("Mapping named points agrees with mapping coordinates", "[exact]") {
   const auto z = geom.coordinates(o2);
   for (int i = 0; i < 3; ++i) REQUIRE(z[i] == static_cast<double>(t[i]));
 }
+
+TEST_CASE("Points are cached per geometry, not shared between metrics", "[exact]") {
+  // the same named point under two metrics has different coordinates and sides
+  const Point p{{Plane::metric_plane({1, 0, 0}, {1, 0, 0}), Plane::metric_plane({0, 1, 0}, {0, 1, 0}), Plane::metric_plane({0, 0, 1}, {0, 0, 1})}};
+  const Geometry cubic(Metric({1, 0, 0, 0, 1, 0, 0, 0, 1}));
+  const Geometry hexagonal_one(hexagonal());
+  const auto x = cubic.coordinates(p);
+  const auto y = hexagonal_one.coordinates(p);
+  REQUIRE_THAT(x[0], Catch::Matchers::WithinAbs(0.5, 1e-15));
+  REQUIRE_THAT(y[0], Catch::Matchers::WithinAbs(1.0 / 3.0, 1e-15));   // x + y/2 = 1/2 and x/2 + y = 1/2
+  // a plane through one point's position but not the other's
+  const Plane half = Plane::integer_plane({2, 0, 0}, 1);   // x = 1/2
+  REQUIRE(cubic.on(p, half));
+  REQUIRE_FALSE(hexagonal_one.on(p, half));
+  // and again, now that both are cached
+  REQUIRE(cubic.on(p, half));
+  REQUIRE(hexagonal_one.side(p, half) < 0);
+  // a new geometry at the same address gets its own entries
+  for (int k = 0; k < 3; ++k) {
+    const Geometry g(k % 2 ? hexagonal() : Metric({1, 0, 0, 0, 1, 0, 0, 0, 1}));
+    REQUIRE(g.on(p, half) == (k % 2 == 0));
+  }
+}

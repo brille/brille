@@ -38,8 +38,14 @@ point expansions (Shewchuk), so there are no tolerances, and no big integers.
 */
 #include <algorithm>
 #include <array>
+#include <atomic>
 #include <cmath>
+#include <cstdint>
+#include <memory>
+#include <mutex>
+#include <thread>
 #include <stdexcept>
+#include <unordered_map>
 #include <vector>
 
 namespace brille::exact {
@@ -287,55 +293,147 @@ struct Point {
 /*! \brief Exact geometry on named planes and points for one metric */
 class Geometry {
   Metric G_;
+  std::uint64_t id_;   // unique to this geometry: never reused
+
+  //! What every test on a point needs, computed once per point
+  struct PointData {
+    std::array<double, 3> x{};           //!< coordinates
+    std::array<Bounded, 4> bounded{};    //!< det N and the Cramer numerators det M_k, in doubles
+    struct Exact { Expansion det; std::array<Expansion, 3> numerators; };
+    std::unique_ptr<Exact> exact;        //!< the same exactly, once a test needs them
+  };
+  using key_t = std::array<long long, 24>;
+  struct KeyHash {
+    size_t operator()(const key_t & k) const {
+      size_t h{0xcbf29ce484222325ULL};
+      for (const auto v: k) { h ^= static_cast<size_t>(v) + 0x9e3779b97f4a7c15ULL + (h << 6) + (h >> 2); }
+      return h;
+    }
+  };
+  [[nodiscard]] key_t key(const Point & p) const {
+    key_t k{};
+    size_t i{0};
+    for (const auto & q: p.planes) {
+      k[i++] = static_cast<long long>(q.kind == Plane::Kind::metric) * 2 + (q.orientation > 0 ? 1 : 0);
+      for (int j = 0; j < 3; ++j) k[i++] = q.a[j];
+      for (int j = 0; j < 3; ++j) k[i++] = q.b[j];
+      ++i;
+    }
+    return k;
+  }
+  using cache_t = std::unordered_map<key_t, PointData, KeyHash>;
+  //! One cache per thread that has used this geometry; freed with it
+  struct Caches {
+    std::mutex mutex;
+    std::unordered_map<std::thread::id, std::unique_ptr<cache_t>> by_thread;
+  };
+  std::unique_ptr<Caches> caches_{std::make_unique<Caches>()};
+  //! This thread's cache for this geometry: found without locking after the first use
+  [[nodiscard]] cache_t & thread_cache() const {
+    // geometry ids are never reused, so a remembered id can't match a newer geometry
+    thread_local std::uint64_t last_id{0};
+    thread_local cache_t * last{nullptr};
+    if (last_id == id_) return *last;
+    std::lock_guard lock(caches_->mutex);
+    auto & c = caches_->by_thread[std::this_thread::get_id()];
+    if (!c) c = std::make_unique<cache_t>();
+    last_id = id_;
+    last = c.get();
+    return *c;
+  }
+  /*! The data for p, from this thread's cache for this geometry, so no locking is
+  needed. Entries are keyed by the point's planes, and the cache is emptied when it
+  grows large. */
+  [[nodiscard]] const PointData & data(const Point & p) const {
+    auto & cache = thread_cache();
+    const auto k = key(p);
+    if (auto it = cache.find(k); it != cache.end()) return it->second;
+    if (cache.size() >= 16384) cache.clear();
+    PointData d;
+    std::array<std::array<Bounded, 4>, 3> rows;
+    std::array<std::array<double, 4>, 3> r;
+    for (int i = 0; i < 3; ++i) {
+      rows[i] = p.planes[i].bounded_coefficients(G_);
+      const auto c = p.planes[i].coefficients(G_);
+      for (int j = 0; j < 4; ++j) r[i][j] = c[j].estimate();
+    }
+    auto d3 = [](double a, double b, double c, double dd, double e, double f, double g, double h, double i) {
+      return a * (e * i - f * h) - b * (dd * i - f * g) + c * (dd * h - e * g);
+    };
+    const double det = d3(r[0][0], r[0][1], r[0][2], r[1][0], r[1][1], r[1][2], r[2][0], r[2][1], r[2][2]);
+    d.x = {d3(r[0][3], r[0][1], r[0][2], r[1][3], r[1][1], r[1][2], r[2][3], r[2][1], r[2][2]) / det,
+           d3(r[0][0], r[0][3], r[0][2], r[1][0], r[1][3], r[1][2], r[2][0], r[2][3], r[2][2]) / det,
+           d3(r[0][0], r[0][1], r[0][3], r[1][0], r[1][1], r[1][3], r[2][0], r[2][1], r[2][3]) / det};
+    std::array<std::array<Bounded, 3>, 3> N;
+    for (int a = 0; a < 3; ++a) for (int b = 0; b < 3; ++b) N[a][b] = rows[a][b];
+    d.bounded[0] = det3(N);
+    for (int k2 = 0; k2 < 3; ++k2) {
+      auto M = N;
+      for (int a = 0; a < 3; ++a) M[a][k2] = rows[a][3];
+      d.bounded[1 + static_cast<size_t>(k2)] = det3(M);
+    }
+    return cache.emplace(k, std::move(d)).first->second;
+  }
+  [[nodiscard]] const PointData::Exact & exact_data(const Point & p) const {
+    const auto & d = data(p);
+    if (!d.exact) {
+      std::array<std::array<Expansion, 4>, 3> rows;
+      for (int r = 0; r < 3; ++r) rows[r] = p.planes[r].coefficients(G_);
+      std::array<std::array<Expansion, 3>, 3> N;
+      for (int r = 0; r < 3; ++r) for (int k = 0; k < 3; ++k) N[r][k] = rows[r][k];
+      auto e = std::make_unique<PointData::Exact>();
+      e->det = det3(N);
+      for (int k = 0; k < 3; ++k) {
+        auto M = N;
+        for (int r = 0; r < 3; ++r) M[r][k] = rows[r][3];
+        e->numerators[static_cast<size_t>(k)] = det3(M);
+      }
+      const_cast<PointData &>(d).exact = std::move(e);   // this thread's own cache entry
+    }
+    return *d.exact;
+  }
+  static std::uint64_t next_id() { static std::atomic<std::uint64_t> n{0}; return ++n; }
+
 public:
-  explicit Geometry(const Metric & G) : G_(G) {}
+  explicit Geometry(const Metric & G) : G_(G), id_(next_id()) {}
+  // a copy is a new geometry, with its own (empty) caches
+  Geometry(const Geometry & o) : G_(o.G_), id_(next_id()) {}
+  Geometry & operator=(const Geometry & o) {
+    if (this != &o) { G_ = o.G_; id_ = next_id(); caches_ = std::make_unique<Caches>(); }
+    return *this;
+  }
+  Geometry(Geometry &&) noexcept = default;
+  Geometry & operator=(Geometry &&) noexcept = default;
+  ~Geometry() = default;
   [[nodiscard]] const Metric & metric() const { return G_; }
 
   //! sign of det of the three planes' normals: zero if they don't meet in a point
   [[nodiscard]] int independent(const Point & p) const {
-    std::array<std::array<Expansion, 3>, 3> n;
-    for (int r = 0; r < 3; ++r) { const auto c = p.planes[r].coefficients(G_); for (int k = 0; k < 3; ++k) n[r][k] = c[k]; }
-    return det3(n).sign();
+    if (const int s = data(p).bounded[0].certain_sign()) return s;
+    return exact_data(p).det.sign();
   }
   /*! sign of n·x - d for the plane q at the point p: +1 outside, 0 on, -1 inside */
   [[nodiscard]] int side(const Point & p, const Plane & q) const {
     if (const int s = filtered_side(p, q)) return s;
-    std::array<std::array<Expansion, 4>, 3> rows;
-    for (int r = 0; r < 3; ++r) rows[r] = p.planes[r].coefficients(G_);
-    const auto qc = q.coefficients(G_);
-    // x = N⁻¹ d; n_q·x - d_q = (n_q · adj(N) d - d_q det N) / det N
-    std::array<std::array<Expansion, 3>, 3> N;
-    for (int r = 0; r < 3; ++r) for (int k = 0; k < 3; ++k) N[r][k] = rows[r][k];
-    const Expansion det = det3(N);
-    const int ds = det.sign();
+    // x = N⁻¹ d, so n_q·x - d_q = (Σ_k n_q,k det M_k - d_q det N) / det N (Cramer)
+    const auto & e = exact_data(p);
+    const int ds = e.det.sign();
     if (ds == 0) throw std::runtime_error("a point's three planes do not meet in a point");
-    // n_q · adj(N) d = det of N with row... use Cramer: x_k det = det(N with column k replaced by d)
-    Expansion numerator = -(qc[3] * det);
-    for (int k = 0; k < 3; ++k) {
-      auto M = N;
-      for (int r = 0; r < 3; ++r) M[r][k] = rows[r][3];
-      numerator += qc[k] * det3(M);
-    }
+    const auto qc = q.coefficients(G_);
+    Expansion numerator = -(qc[3] * e.det);
+    for (int k = 0; k < 3; ++k) numerator += qc[k] * e.numerators[static_cast<size_t>(k)];
     return numerator.sign() * ds;
   }
   [[nodiscard]] bool on(const Point & p, const Plane & q) const { return side(p, q) == 0; }
   /*! side() in doubles: the sign when round-off can't have changed it, else 0 (and
   side() then decides exactly) */
   [[nodiscard]] int filtered_side(const Point & p, const Plane & q) const {
-    std::array<std::array<Bounded, 4>, 3> rows;
-    for (int r = 0; r < 3; ++r) rows[r] = p.planes[r].bounded_coefficients(G_);
-    const auto qc = q.bounded_coefficients(G_);
-    std::array<std::array<Bounded, 3>, 3> N;
-    for (int r = 0; r < 3; ++r) for (int k = 0; k < 3; ++k) N[r][k] = rows[r][k];
-    const auto det = det3(N);
-    const int ds = det.certain_sign();
+    const auto & d = data(p);
+    const int ds = d.bounded[0].certain_sign();
     if (ds == 0) return 0;
-    Bounded numerator = Bounded{0, 0} - qc[3] * det;
-    for (int k = 0; k < 3; ++k) {
-      auto M = N;
-      for (int r = 0; r < 3; ++r) M[r][k] = rows[r][3];
-      numerator = numerator + qc[k] * det3(M);
-    }
+    const auto qc = q.bounded_coefficients(G_);
+    Bounded numerator = Bounded{0, 0} - qc[3] * d.bounded[0];
+    for (int k = 0; k < 3; ++k) numerator = numerator + qc[k] * d.bounded[1 + static_cast<size_t>(k)];
     return numerator.certain_sign() * ds;
   }
   //! whether two named points are the same point
@@ -354,17 +452,7 @@ public:
     return true;
   }
   //! approximate coordinates, for output
-  [[nodiscard]] std::array<double, 3> coordinates(const Point & p) const {
-    std::array<std::array<double, 4>, 3> r;
-    for (int i = 0; i < 3; ++i) { const auto c = p.planes[i].coefficients(G_); for (int k = 0; k < 4; ++k) r[i][k] = c[k].estimate(); }
-    auto d3 = [](double a, double b, double c, double d, double e, double f, double g, double h, double i) {
-      return a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
-    };
-    const double det = d3(r[0][0], r[0][1], r[0][2], r[1][0], r[1][1], r[1][2], r[2][0], r[2][1], r[2][2]);
-    return {d3(r[0][3], r[0][1], r[0][2], r[1][3], r[1][1], r[1][2], r[2][3], r[2][1], r[2][2]) / det,
-            d3(r[0][0], r[0][3], r[0][2], r[1][0], r[1][3], r[1][2], r[2][0], r[2][3], r[2][2]) / det,
-            d3(r[0][0], r[0][1], r[0][3], r[1][0], r[1][1], r[1][3], r[2][0], r[2][1], r[2][3]) / det};
-  }
+  [[nodiscard]] std::array<double, 3> coordinates(const Point & p) const { return data(p).x; }
   [[nodiscard]] Point mapped(const Point & p, const mat3i & g, const int3 & t) const {
     return {{p.planes[0].mapped(g, t), p.planes[1].mapped(g, t), p.planes[2].mapped(g, t)}};
   }
