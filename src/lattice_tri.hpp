@@ -398,6 +398,7 @@ private:
       std::optional<size_t> centre;                 //!< the vertex all its grid triangles share (a split face's centre)
     };
     std::vector<Face> faces;
+    bool symmetric{true};   //!< whether its tetrahedra split its faces symmetrically (not so for without_centres)
   };
   //! The plane N·y = k through grid points a, b, c, with `inside` on the side N·y < k
   static std::pair<int3, long long> plane_through(const point & a, const point & b, const point & c, const point & inside) {
@@ -423,7 +424,7 @@ private:
       for (const auto & members: grid.cells()) {
         std::vector<tetrahedron> tets;
         for (const auto m: members) tets.push_back(grid.pattern()[m]);
-        cells.push_back(std::move(tets));
+        cells.push_back(tets.size() > 1 ? without_centres(tets) : tets);
       }
       return cells;
     }
@@ -456,10 +457,72 @@ private:
     for (const auto & t: grid.pattern()) cells.push_back({t});
     return cells;
   }
+  /*! A degenerate grid's Delaunay cell split without the points the grid adds (its
+  centre, and the centres of faces with more than three corners): each face fanned
+  from its lowest corner (lexicographically, in grid coordinates, so the cell on its
+  other side fans it alike), and the cell coned from its own lowest corner, which is
+  the lowest corner of every face it is on. The cell's interior needn't be symmetric:
+  only the boundary must match across paired faces, and it is clipped from the cell's
+  shape, not its tetrahedra. */
+  static std::vector<tetrahedron> without_centres(const std::vector<tetrahedron> & tets) {
+    std::vector<point> vertices;
+    for (const auto & t: tets) vertices.insert(vertices.end(), t.begin(), t.end());
+    std::sort(vertices.begin(), vertices.end());
+    vertices.erase(std::unique(vertices.begin(), vertices.end()), vertices.end());
+    // the cell's face planes, from its tetrahedra's faces that only one of them has
+    std::map<std::array<point, 3>, int> count;
+    for (const auto & t: tets)
+      for (int skip = 0; skip < 4; ++skip) {
+        std::array<point, 3> f{};
+        int j{0};
+        for (int k = 0; k < 4; ++k) if (k != skip) f[j++] = t[k];
+        std::sort(f.begin(), f.end());
+        ++count[f];
+      }
+    auto on = [](const std::pair<int3, long long> & plane, const point & y) {
+      return plane.first[0] * y[0] + plane.first[1] * y[1] + plane.first[2] * y[2] == plane.second;
+    };
+    std::vector<std::pair<int3, long long>> planes;
+    for (const auto & [f, k]: count) {
+      if (k != 1) continue;
+      const point * off{nullptr};
+      for (const auto & y: vertices) { if (!on(plane_through(f[0], f[1], f[2], y), y)) { off = &y; break; } }
+      const auto plane = plane_through(f[0], f[1], f[2], *off);
+      if (std::find(planes.begin(), planes.end(), plane) == planes.end()) planes.push_back(plane);
+    }
+    // corners: on three or more faces
+    std::vector<point> corners;
+    for (const auto & y: vertices) {
+      size_t n{0};
+      for (const auto & plane: planes) n += on(plane, y);
+      if (n >= 3) corners.push_back(y);
+    }
+    const auto lowest = corners.front();   // corners are sorted
+    std::vector<tetrahedron> out;
+    for (const auto & plane: planes) {
+      if (on(plane, lowest)) continue;
+      std::vector<point> face;
+      for (const auto & y: corners) if (on(plane, y)) face.push_back(y);
+      // cyclic order about the face's lowest corner: sort the others by angle, exactly,
+      // with the cross product's component along the face normal
+      const auto base = face.front();
+      std::vector<point> rest(face.begin() + 1, face.end());
+      const auto & N = plane.first;
+      auto turn = [&](const point & u, const point & v) {
+        const int3 a{u[0] - base[0], u[1] - base[1], u[2] - base[2]}, b{v[0] - base[0], v[1] - base[1], v[2] - base[2]};
+        return N[0] * (a[1] * b[2] - a[2] * b[1]) + N[1] * (a[2] * b[0] - a[0] * b[2]) + N[2] * (a[0] * b[1] - a[1] * b[0]);
+      };
+      // from a convex polygon's vertex, the others are all within 180 degrees: sort by turn
+      std::sort(rest.begin(), rest.end(), [&](const point & u, const point & v) { return turn(u, v) > 0; });
+      for (size_t i = 0; i + 1 < rest.size(); ++i) out.push_back({lowest, base, rest[i], rest[i + 1]});
+    }
+    return out;
+  }
   static std::vector<CellShape> cell_shapes(const Grid & grid) {
     std::vector<CellShape> out;
     for (const auto & cell: cell_tetrahedra(grid)) {
       CellShape shape;
+      shape.symmetric = !(grid.degenerate() && cell.size() > 1);
       std::map<point, size_t> index;
       auto vertex = [&](const point & p) {
         const auto [it, added] = index.emplace(p, shape.vertices.size());
@@ -520,11 +583,16 @@ private:
           const auto & t0 = face.triangles[0], & t1 = face.triangles[1];
           for (const auto i: t0) if (std::find(t1.begin(), t1.end(), i) != t1.end()) shared.push_back(i);
           if (shared.size() == 2) face.preferred = shared[0] == *far ? shared[1] : shared[0];
-        } else if (face.triangles.size() >= 3) {
-          for (const auto i: face.triangles[0])
-            if (std::all_of(face.triangles.begin(), face.triangles.end(), [&](const auto & t) { return std::find(t.begin(), t.end(), i) != t.end(); }))
-              face.centre = i;
+        } else if (!far && face.corners.size() > 3) {
+          // fanned from its lowest corner (see without_centres), which both cells on it know
+          face.preferred = *std::min_element(face.corners.begin(), face.corners.end(),
+                                             [&](const size_t a, const size_t b) { return shape.vertices[a] < shape.vertices[b]; });
         }
+        if (face.triangles.size() >= 3)
+          for (const auto i: face.triangles[0])
+            if (std::find(shape.corners.begin(), shape.corners.end(), i) == shape.corners.end()
+                && std::all_of(face.triangles.begin(), face.triangles.end(), [&](const auto & t) { return std::find(t.begin(), t.end(), i) != t.end(); }))
+              face.centre = i;
       }
       out.push_back(std::move(shape));
     }
@@ -590,6 +658,7 @@ private:
     std::vector<std::optional<Point>> face_preferred;              //!< where to fan face f from, if a polygon point
     std::vector<std::optional<Point>> face_centre;                 //!< the centre face f's grid triangles share
     size_t corners{0};
+    bool symmetric{true};                                          //!< see CellShape::symmetric
   };
   //! Whether a point is named as a grid point (by integer planes D x_i = y_i)
   [[nodiscard]] bool is_grid_point(const Point & p) const {
@@ -607,6 +676,7 @@ private:
     const int3 shift{cell[0] * scale, cell[1] * scale, cell[2] * scale};
     CellInfo info;
     info.corners = shape.corners.size();
+    info.symmetric = shape.symmetric;
     std::vector<Plane> fp;
     for (const auto & face: shape.faces) {
       const long long k = face.offset + face.normal[0] * shift[0] + face.normal[1] * shift[1] + face.normal[2] * shift[2];
@@ -773,6 +843,9 @@ private:
         ++count;
       }
       if (count > 1) changed = true;
+      // the cell's own split of a face on the zone boundary must be symmetric, or the
+      // face is split by the boundary's rules instead
+      if (!info.symmetric) changed = true;
     }
     Piece piece;
     for (const auto & part: parts) {
