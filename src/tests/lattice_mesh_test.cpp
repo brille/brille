@@ -74,3 +74,33 @@ TEST_CASE("The lattice mesh fills a zone's irreducible part", "[lattice_mesh]") 
       REQUIRE_THAT(mesh.get_vertex_positions().val(top.first, k), Catch::Matchers::WithinAbs(corners.val(i, k), 1e-12));
   }
 }
+
+#include "bz_mesh.hpp"
+TEST_CASE("Refining a filled mesh appends the new vertices' data", "[lattice_mesh]") {
+  using namespace brille::lattice;
+  using namespace brille::math;
+  std::array<double, 3> len{3.0, 3.0, 5.0}, ang{half_pi, half_pi, 2 * pi / 3};
+  const BrillouinZone bz(Direct(len, ang, "-P 6"));
+  BrillouinZoneMesh3<double, std::complex<double>, double> mesh(bz, bz.get_ir_polyhedron().volume() / 200);
+  const auto nv = mesh.size();
+  // one scalar per vertex: its index
+  brille::Array<double> values(brille::shape_t{nv, 1u});
+  for (ind_t i = 0; i < nv; ++i) values.val(brille::shape_t{i, 0u}) = static_cast<double>(i);
+  brille::Array<std::complex<double>> vectors(brille::shape_t{nv, 1u}, std::complex<double>(0, 0));
+  brille::Interpolator<double> iv(values, {1, 0, 0}, RotatesLike::vector, LengthUnit::real_lattice);
+  brille::Interpolator<std::complex<double>> ie(vectors, {1, 0, 0}, RotatesLike::vector, LengthUnit::real_lattice);
+  mesh.replace_data(iv, ie);
+  std::vector<ind_t> where;
+  for (ind_t t = 0; t < mesh.get_mesh_tetrehedra().size(0); t += 7) where.push_back(t);
+  const auto planned = mesh.refinement_points(where, 0.0);
+  const auto added = planned.size(0);
+  REQUIRE(added > 0);
+  brille::Array<double> more(brille::shape_t{added, 1u}, -1.0);
+  brille::Array<std::complex<double>> more_vectors(brille::shape_t{added, 1u}, std::complex<double>(0, 0));
+  const auto points = mesh.refine(where, 0.0, more, more_vectors);
+  REQUIRE(points.size(0) == added);
+  REQUIRE(mesh.size() == nv + added);
+  REQUIRE(mesh.data().values().data().size(0) == nv + added);
+  REQUIRE(mesh.data().values().data().val(0u, 0u) == 0.0);
+  REQUIRE(mesh.data().values().data().val(nv, 0u) == -1.0);
+}

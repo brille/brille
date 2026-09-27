@@ -23,6 +23,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "interpolatordual.hpp"
 #include <atomic>
 #include <queue>
+#include <optional>
 #include <utility>
 #include "lattice_mesh.hpp"
 #include "approx_config.hpp"
@@ -199,6 +200,60 @@ public:
     auto d = data_t::from_hdf(group, "data");
     auto a = approx_t::from_hdf(group, "approx");
     return class_t(m, d, a);
+  }
+
+  //! Whether the mesh can be refined (not one read from a file without what built it)
+  [[nodiscard]] bool refinable() const { return mesh.refinable(); }
+  /*! \brief The vertices (Cartesian) that refining the tetrahedra `tets` would add
+
+  Nothing is changed. `refine` with the same arguments adds exactly these, in this
+  order, after the existing vertices.
+  */
+  [[nodiscard]] vert_t refinement_points(const std::vector<ind_t>& tets, const double min_edge) const {
+    return mesh.plan(tets, min_edge).points;
+  }
+  /*! \brief Bisect the tetrahedra `tets`, with closure, adding vertices after the existing ones
+
+  \param tets the tetrahedra to split, by index
+  \param min_edge tetrahedra whose longest edge is at most twice this (Å⁻¹) are not split
+  \param values,vectors data for the new vertices, laid out like the data held;
+         required if the mesh holds data, and then for exactly the vertices added
+  \return the new vertices (Cartesian)
+
+  Existing vertices keep their indices and data. The mode permutations found by
+  `sort` are reset: sort again after refining.
+  */
+  vert_t refine(const std::vector<ind_t>& tets, const double min_edge,
+                const std::optional<brille::Array<DataValues>>& values = std::nullopt,
+                const std::optional<brille::Array<DataVectors>>& vectors = std::nullopt){
+    return apply_refinement(plan_refinement(tets, min_edge), values, vectors);
+  }
+  using refinement_t = typename mesh_t::Refinement;
+  //! The expensive half of `refine`, which changes nothing
+  [[nodiscard]] refinement_t plan_refinement(const std::vector<ind_t>& tets, const double min_edge) const {
+    return mesh.plan(tets, min_edge);
+  }
+  /*! The other half of `refine`. It replaces the held data, which may be the last
+  reference to a Python buffer, so a binding must hold the GIL while calling it. */
+  vert_t apply_refinement(refinement_t && plan,
+                          const std::optional<brille::Array<DataValues>>& values = std::nullopt,
+                          const std::optional<brille::Array<DataVectors>>& vectors = std::nullopt){
+    const ind_t added = plan.points.size(0);
+    const bool filled = data_.size() > 0;
+    if (filled) {
+      if (!values || !vectors)
+        throw std::runtime_error("The mesh holds data: give the values and vectors for the new vertices too");
+      if (values->size(0) != added || vectors->size(0) != added)
+        throw std::runtime_error("Refining adds " + std::to_string(added) + " vertices, but data for "
+                                 + std::to_string(values->size(0)) + " values and " + std::to_string(vectors->size(0)) + " vectors was given");
+    } else if (values || vectors) {
+      throw std::runtime_error("The mesh holds no data yet: fill it before giving data for new vertices");
+    }
+    vert_t points = plan.points;
+    mesh.commit(std::move(plan));
+    if (filled) data_.append(*values, *vectors);
+    data_.initialize_permutation_table(this->size(), mesh.collect_keys());
+    return points;
   }
 
   /*! \brief Whether `max_points` made the mesh coarser than `max_size` asked for

@@ -25,7 +25,9 @@ a bucket grid that finds a point's tetrahedron in constant time.
 */
 #include <algorithm>
 #include <cmath>
+#include <memory>
 #include <numeric>
+#include <optional>
 #include <set>
 #include <string>
 #include <utility>
@@ -73,6 +75,84 @@ public:
     std::vector<latticetri::int3> cone;          //!< the zone's wedge: c·x >= 0 inside
     std::array<double, 9> basis{};               //!< columns: the primitive reciprocal vectors (Å⁻¹)
   };
+
+private:
+  // What refinement needs: the construction's inputs, every refinement so far (the
+  // marked tetrahedra, by their vertices, and the edge limit), and the LatticeTri
+  // they give, rebuilt from them on first use so a mesh that is never refined
+  // doesn't hold it.
+  std::optional<Inputs> inputs_;
+  std::vector<std::vector<std::array<ind_t, 4>>> history_marked_;
+  std::vector<double> history_min_edge_;
+  mutable std::shared_ptr<latticetri::LatticeTri> tri_;
+
+public:
+  //! A refinement worked out on a copy of the triangulation, ready to `commit`
+  struct Refinement {
+    std::shared_ptr<latticetri::LatticeTri> tri;
+    std::vector<std::array<ind_t, 4>> marked;
+    double min_edge{0};
+    bArray<double> points;   //!< the new vertices, Cartesian (Å⁻¹)
+  };
+  [[nodiscard]] bool refinable() const { return inputs_.has_value(); }
+  /*! \brief Work out refining the tetrahedra `tets` (by index), without changing the mesh
+
+  Each marked tetrahedron is bisected once, with closure; boundary edges are split
+  with their equivalents, so paired zone faces keep matching. A tetrahedron whose
+  longest edge is at most twice `min_edge` (Å⁻¹) is not split. The new vertices are
+  those that `commit` would add, in the order it would add them.
+  */
+  [[nodiscard]] Refinement plan(const std::vector<ind_t> & tets, const double min_edge) const {
+    Refinement out;
+    for (const auto t: tets) {
+      if (t >= number_of_tetrahedra()) throw std::out_of_range("tetrahedron index " + std::to_string(t) + " is not in the mesh");
+      out.marked.push_back({tetrahedra_.val(t, 0), tetrahedra_.val(t, 1), tetrahedra_.val(t, 2), tetrahedra_.val(t, 3)});
+    }
+    out.min_edge = min_edge;
+    out.tri = std::make_shared<latticetri::LatticeTri>(triangulation());
+    out.tri->refine(as_tets(out.marked), min_edge);
+    const auto & xp = out.tri->vertices();
+    const auto first = static_cast<size_t>(number_of_vertices());
+    out.points = bArray<double>(static_cast<ind_t>(xp.size() - first), 3u);
+    for (size_t i = first; i < xp.size(); ++i) {
+      const auto x = apply(inputs_->basis, xp[i]);
+      for (int k = 0; k < 3; ++k) out.points.val(static_cast<ind_t>(i - first), k) = x[k];
+    }
+    return out;
+  }
+  //! Apply a refinement from `plan`: the new vertices are appended, so existing vertices keep their indices
+  void commit(Refinement && r) {
+    positions_ = cat(0, positions_, r.points);
+    tri_ = std::move(r.tri);
+    const auto & tets = tri_->tetrahedra();
+    tetrahedra_ = bArray<ind_t>(static_cast<ind_t>(tets.size()), 4u);
+    for (size_t i = 0; i < tets.size(); ++i) for (int k = 0; k < 4; ++k) tetrahedra_.val(static_cast<ind_t>(i), k) = static_cast<ind_t>(tets[i][k]);
+    history_marked_.push_back(std::move(r.marked));
+    history_min_edge_.push_back(r.min_edge);
+    index();
+  }
+
+private:
+  static std::vector<std::array<size_t, 4>> as_tets(const std::vector<std::array<ind_t, 4>> & marked) {
+    std::vector<std::array<size_t, 4>> out;
+    for (const auto & t: marked) out.push_back({t[0], t[1], t[2], t[3]});
+    return out;
+  }
+  //! The triangulation, rebuilt from the inputs and history if not held
+  const latticetri::LatticeTri & triangulation() const {
+    if (!tri_) {
+      if (!inputs_)
+        throw std::runtime_error("This mesh can't be refined: it was read from a file without what built it (e.g. a TetGen mesh)");
+      auto tri = std::make_shared<latticetri::LatticeTri>(inputs_->metric, inputs_->ops, divisions_, inputs_->cone);
+      for (size_t i = 0; i < history_marked_.size(); ++i) tri->refine(as_tets(history_marked_[i]), history_min_edge_[i]);
+      if (tri->vertices().size() != static_cast<size_t>(number_of_vertices()) || tri->tetrahedra().size() != static_cast<size_t>(number_of_tetrahedra()))
+        throw std::runtime_error("Rebuilding the mesh for refinement gave a different mesh");
+      tri_ = std::move(tri);
+    }
+    return *tri_;
+  }
+
+public:
   //! The primitive metric, the point group as integer matrices, and the zone's own wedge
   static Inputs inputs(const BrillouinZone & bz) {
     Inputs in;
@@ -167,6 +247,7 @@ private:
     bArray<ind_t> tetrahedra(tets.size(), 4u);
     for (size_t i = 0; i < tets.size(); ++i) for (int k = 0; k < 4; ++k) tetrahedra.val(i, k) = static_cast<ind_t>(tets[i][k]);
     LatticeMesh mesh(positions, tetrahedra, limited, n);
+    mesh.inputs_ = in;
     // the mesh must fill the zone that ir_moveinto moves points into
     const double volume = mesh.volume(), expected = ir.volume();
     if (std::abs(volume - expected) > 1e-8 * expected)
@@ -252,6 +333,30 @@ public:
     bool ok{true};
     ok &= positions_.to_hdf(group, "positions");
     ok &= tetrahedra_.to_hdf(group, "vertices_per_tetrahedron");
+    if (inputs_) {
+      // what refinement needs: the construction's inputs and the refinements so far
+      auto r = group.createGroup("refinement");
+      r.createDataSet("metric", std::vector<double>(inputs_->metric.begin(), inputs_->metric.end()));
+      r.createDataSet("basis", std::vector<double>(inputs_->basis.begin(), inputs_->basis.end()));
+      std::vector<long long> ops, cone;
+      for (const auto & g: inputs_->ops) ops.insert(ops.end(), g.begin(), g.end());
+      for (const auto & c: inputs_->cone) cone.insert(cone.end(), c.begin(), c.end());
+      r.createAttribute("operations", inputs_->ops.size());
+      r.createAttribute("cone_planes", inputs_->cone.size());
+      if (!ops.empty()) r.createDataSet("operations", ops);
+      if (!cone.empty()) r.createDataSet("cone", cone);
+      std::vector<unsigned long long> marked, counts;
+      for (const auto & step: history_marked_) {
+        counts.push_back(step.size());
+        for (const auto & t: step) marked.insert(marked.end(), t.begin(), t.end());
+      }
+      r.createAttribute("steps", history_marked_.size());
+      if (!history_marked_.empty()) {
+        r.createDataSet("marked_counts", counts);
+        if (!marked.empty()) r.createDataSet("marked_vertices", marked);
+        r.createDataSet("min_edge", history_min_edge_);
+      }
+    }
     return ok;
   }
   /*! Read a mesh written by `to_hdf`, or the finest layer of a TetGen mesh written by
@@ -270,7 +375,40 @@ public:
     long long divisions{0};
     group.getAttribute("refinement_limited").read(limited);
     group.getAttribute("divisions").read(divisions);
-    return {bArray<double>::from_hdf(group, "positions"), bArray<ind_t>::from_hdf(group, "vertices_per_tetrahedron"), limited != 0, divisions};
+    LatticeMesh mesh(bArray<double>::from_hdf(group, "positions"), bArray<ind_t>::from_hdf(group, "vertices_per_tetrahedron"), limited != 0, divisions);
+    if (group.exist("refinement")) {
+      auto r = group.getGroup("refinement");
+      Inputs in;
+      std::vector<double> metric, basis;
+      r.getDataSet("metric").read(metric);
+      r.getDataSet("basis").read(basis);
+      std::copy(metric.begin(), metric.end(), in.metric.begin());
+      std::copy(basis.begin(), basis.end(), in.basis.begin());
+      size_t n_ops{0}, n_cone{0}, steps{0};
+      r.getAttribute("operations").read(n_ops);
+      r.getAttribute("cone_planes").read(n_cone);
+      r.getAttribute("steps").read(steps);
+      std::vector<long long> ops, cone;
+      if (n_ops) r.getDataSet("operations").read(ops);
+      if (n_cone) r.getDataSet("cone").read(cone);
+      for (size_t i = 0; i < n_ops; ++i) { latticetri::mat3i g{}; std::copy(ops.begin() + 9 * i, ops.begin() + 9 * i + 9, g.begin()); in.ops.push_back(g); }
+      for (size_t i = 0; i < n_cone; ++i) in.cone.push_back({cone[3 * i], cone[3 * i + 1], cone[3 * i + 2]});
+      mesh.inputs_ = in;
+      if (steps) {
+        std::vector<unsigned long long> counts, marked;
+        r.getDataSet("marked_counts").read(counts);
+        if (r.exist("marked_vertices")) r.getDataSet("marked_vertices").read(marked);
+        r.getDataSet("min_edge").read(mesh.history_min_edge_);
+        size_t at{0};
+        for (const auto c: counts) {
+          std::vector<std::array<ind_t, 4>> step;
+          for (size_t k = 0; k < c; ++k, at += 4)
+            step.push_back({static_cast<ind_t>(marked[at]), static_cast<ind_t>(marked[at + 1]), static_cast<ind_t>(marked[at + 2]), static_cast<ind_t>(marked[at + 3])});
+          mesh.history_marked_.push_back(std::move(step));
+        }
+      }
+    }
+    return mesh;
   }
 
 private:

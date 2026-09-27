@@ -218,6 +218,19 @@ public:
         and the same number of sub-arrays, so this method produces a suitable
         fake dataset for the second Interpolator.
   */
+  /*! \brief Append data for more points, laid out like the data already held
+
+  \param rows The data for the new points: its first dimension counts them, and the
+              rest must match the held data's shape per point
+  */
+  void append(const brille::Array<T>& rows){
+    const auto sh = rows.shape();
+    if (sh.empty() || shape_.empty() || !std::equal(sh.begin() + 1, sh.end(), shape_.begin() + 1, shape_.end()))
+      throw std::runtime_error("New data must have the same shape per point as the data held");
+    bArray<T> more(rows);
+    data_ = brille::cat(0, data_, more);
+    shape_[0] += sh[0];
+  }
   void setup_fake(const ind_t sz, const ind_t br){
     data_ = bArray<T>(sz, br);
     shape_ = {sz, br};

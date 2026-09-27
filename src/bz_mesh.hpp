@@ -57,6 +57,15 @@ public:
   explicit BrillouinZoneMesh3(const BrillouinZone& bz, const double max_size=-1., [[maybe_unused]] const int num_levels=3,
                               const int max_points=-1):
     base_t(LatticeMesh::from_zone(bz, max_size, max_points)), bz_(bz) {}
+  //! The vertices that refining the tetrahedra `tets` would add, in relative lattice units
+  [[nodiscard]] bv_t<V> refinement_points_hkl(const std::vector<ind_t>& tets, const double min_edge) const {
+    return from_xyz_like(LengthUnit::inverse_angstrom, bz_.get_lattice(), this->refinement_points(tets, min_edge)).hkl();
+  }
+  //! Apply a refinement (see Mesh3::apply_refinement), returning the added vertices in relative lattice units
+  template<class... A>
+  bv_t<V> apply_refinement_hkl(typename base_t::refinement_t && plan, A... args) {
+    return from_xyz_like(LengthUnit::inverse_angstrom, bz_.get_lattice(), this->apply_refinement(std::move(plan), args...)).hkl();
+  }
   //! \brief Return the BrillouinZone object
   [[nodiscard]] BrillouinZone get_brillouinzone() const {return this->bz_;}
   //! Return the mesh vertices in relative lattice units
