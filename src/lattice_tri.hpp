@@ -117,9 +117,10 @@ public:
         }
         first = false;
       }
+    const auto shapes = cell_shapes(grid);
     int3 reach_lo{0, 0, 0}, reach_hi{0, 0, 0};
-    for (const auto & t: grid.pattern())
-      for (const auto & p: t)
+    for (const auto & shape: shapes)
+      for (const auto & p: shape.vertices)
         for (int i = 0; i < 3; ++i) {
           reach_lo[i] = std::min(reach_lo[i], floor_div(p[i], scale));
           reach_hi[i] = std::max(reach_hi[i], -floor_div(-p[i], scale));
@@ -145,15 +146,18 @@ public:
             const long long a = from[0] + static_cast<long long>(i);
             for (long long b = from[1]; b <= to[1]; ++b)
               for (long long c = from[2]; c <= to[2]; ++c)
-                for (const auto & t: grid.pattern()) {
-                  tetrahedron s{};
-                  for (int k = 0; k < 4; ++k) s[k] = Grid::shifted(t[k], {a, b, c});
-                  switch (classify(s, crossing)) {
-                    case Kind::inside: inside[i].push_back(s); break;
-                    case Kind::boundary: queued[i].emplace_back(s, crossing); break;
+                for (size_t k = 0; k < shapes.size(); ++k)
+                  switch (classify(shapes[k], {a, b, c}, crossing)) {
+                    case Kind::inside:
+                      for (const auto & t: shapes[k].tets) {
+                        tetrahedron s{};
+                        for (int v = 0; v < 4; ++v) s[v] = at(shapes[k].vertices[t[v]], {a, b, c});
+                        inside[i].push_back(s);
+                      }
+                      break;
+                    case Kind::boundary: queued[i].emplace_back(CellAt{k, {a, b, c}}, crossing); break;
                     case Kind::outside: break;
                   }
-                }
           }
         });
       pool->wait();
@@ -163,7 +167,7 @@ public:
         for (auto & q: queued[i]) pending.push_back(std::move(q));
       }
     }
-    // The pieces at the boundary are clipped and prepared in parallel, touching
+    // The cells at the boundary are clipped and prepared in parallel, touching
     // nothing shared, then named and split in order, so the result doesn't depend on
     // the thread count.
     std::vector<std::optional<Piece>> pieces(pending.size());
@@ -171,7 +175,8 @@ public:
       std::atomic<size_t> next{0};
       for (size_t w = 0; w < workers; ++w)
         pool->enqueue([&]() {
-          for (size_t i = next++; i < pending.size(); i = next++) pieces[i] = clip_piece(pending[i].first, pending[i].second);
+          for (size_t i = next++; i < pending.size(); i = next++)
+            pieces[i] = clip_cell(shapes[pending[i].first.shape], pending[i].first.cell, pending[i].second);
         });
       pool->wait();
     }
@@ -362,6 +367,7 @@ private:
     std::vector<Point> points;                 //!< in cyclic order
     std::vector<size_t> segment_edge;          //!< the polygon edge holding the segment from point k to k+1
     std::vector<Plane> edge_planes;            //!< the plane of each polygon edge
+    std::vector<std::array<Point, 3>> grid_triangles;   //!< if not empty, the face keeps these (the grid's)
     int plane{-1};                             //!< the piece's plane holding the face
     bool boundary{false};                      //!< whether that plane is a zone boundary plane
   };
@@ -370,24 +376,159 @@ private:
     std::vector<Point> corners;
     std::vector<std::set<int>> incident;       //!< the piece planes each corner lies on
     std::vector<PieceFace> faces;
-    bool changed{false};                       //!< not simply the grid tetrahedron
+    bool changed{false};                       //!< not simply the grid cell
+    std::vector<std::array<Point, 4>> tets;    //!< the grid cell's tetrahedra, if unchanged
     bool clipped{false};
   };
 
-  using pending_t = std::vector<std::pair<tetrahedron, std::vector<size_t>>>;
+  /*! A cell of the grid pattern: a convex polytope split into grid tetrahedra, with
+  its face planes (integer, in grid coordinates) and the grid's triangles on each */
+  struct CellShape {
+    std::vector<point> vertices;                   //!< every grid point of its tetrahedra
+    std::vector<std::array<size_t, 4>> tets;        //!< its tetrahedra, by vertex
+    std::vector<size_t> corners;                    //!< the vertices on three or more faces
+    struct Face {
+      int3 normal{};                                //!< N·y <= offset inside, y in grid coordinates
+      long long offset{0};
+      std::vector<size_t> corners;                  //!< its corners
+      std::vector<std::array<size_t, 3>> triangles; //!< the grid's triangles on it
+    };
+    std::vector<Face> faces;
+  };
+  //! The plane N·y = k through grid points a, b, c, with `inside` on the side N·y < k
+  static std::pair<int3, long long> plane_through(const point & a, const point & b, const point & c, const point & inside) {
+    const int3 u{b[0] - a[0], b[1] - a[1], b[2] - a[2]}, v{c[0] - a[0], c[1] - a[1], c[2] - a[2]};
+    int3 N{u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]};
+    const long long g = std::gcd(std::gcd(std::llabs(N[0]), std::llabs(N[1])), std::llabs(N[2]));
+    for (auto & x: N) x /= g;
+    long long k = N[0] * a[0] + N[1] * a[1] + N[2] * a[2];
+    if (N[0] * inside[0] + N[1] * inside[1] + N[2] * inside[2] > k) { for (auto & x: N) x = -x; k = -k; }
+    return {N, k};
+  }
+  /*! The cells the grid is clipped by: the larger they are, the fewer grid edges cross
+  the zone boundary and the fewer boundary points the mesh has, but they must be as
+  symmetric as the grid, or the boundary would not match across paired faces.
+  - A degenerate grid's cells are its Delaunay cells, which are.
+  - A Kuhn grid's tetrahedra make up the parallelepipeds spanned by three of the four
+    superbase vectors; those without v_k are symmetric if every operation takes v_k to
+    ±v_k (inversion maps each to a lattice translate of itself).
+  - Otherwise (e.g. body- and face-centred cubic grids) each tetrahedron is a cell. */
+  static std::vector<std::vector<tetrahedron>> cell_tetrahedra(const Grid & grid) {
+    std::vector<std::vector<tetrahedron>> cells;
+    if (grid.degenerate()) {
+      for (const auto & members: grid.cells()) {
+        std::vector<tetrahedron> tets;
+        for (const auto m: members) tets.push_back(grid.pattern()[m]);
+        cells.push_back(std::move(tets));
+      }
+      return cells;
+    }
+    const auto & v = grid.superbase();
+    for (size_t k = 0; k < 4; ++k) {
+      const bool fixed = std::all_of(grid.operations().begin(), grid.operations().end(), [&](const mat3i & g) {
+        const auto w = Grid::act(g, v[k]);
+        return w == v[k] || w == point{-v[k][0], -v[k][1], -v[k][2]};
+      });
+      if (!fixed) continue;
+      std::array<size_t, 3> others{};
+      size_t j{0};
+      for (size_t i = 0; i < 4; ++i) if (i != k) others[j++] = i;
+      std::vector<tetrahedron> tets;
+      std::array<size_t, 3> perm{0, 1, 2};
+      do {
+        const auto & a = v[others[perm[0]]];
+        const auto & b = v[others[perm[1]]];
+        const auto & c = v[others[perm[2]]];
+        tetrahedron t{};
+        for (int i = 0; i < 3; ++i) {
+          t[1][i] = scale * a[i];
+          t[2][i] = scale * (a[i] + b[i]);
+          t[3][i] = scale * (a[i] + b[i] + c[i]);
+        }
+        tets.push_back(t);
+      } while (std::next_permutation(perm.begin(), perm.end()));
+      return {tets};
+    }
+    for (const auto & t: grid.pattern()) cells.push_back({t});
+    return cells;
+  }
+  static std::vector<CellShape> cell_shapes(const Grid & grid) {
+    std::vector<CellShape> out;
+    for (const auto & cell: cell_tetrahedra(grid)) {
+      CellShape shape;
+      std::map<point, size_t> index;
+      auto vertex = [&](const point & p) {
+        const auto [it, added] = index.emplace(p, shape.vertices.size());
+        if (added) shape.vertices.push_back(p);
+        return it->second;
+      };
+      for (const auto & t: cell) shape.tets.push_back({vertex(t[0]), vertex(t[1]), vertex(t[2]), vertex(t[3])});
+      // the cell's faces: triangles of its tetrahedra that only one of them has, by plane
+      std::map<std::array<size_t, 3>, int> count;
+      for (const auto & t: shape.tets)
+        for (int skip = 0; skip < 4; ++skip) {
+          std::array<size_t, 3> f{};
+          int j{0};
+          for (int k = 0; k < 4; ++k) if (k != skip) f[j++] = t[k];
+          std::sort(f.begin(), f.end());
+          ++count[f];
+        }
+      std::map<std::pair<int3, long long>, size_t> by_plane;
+      for (const auto & [f, k]: count) {
+        if (k != 1) continue;
+        const auto & a = shape.vertices[f[0]], & b = shape.vertices[f[1]], & c = shape.vertices[f[2]];
+        // any cell vertex off the triangle's plane is inside
+        size_t off{0};
+        for (size_t i = 0; i < shape.vertices.size(); ++i) {
+          const auto [N, kk] = plane_through(a, b, c, shape.vertices[i]);
+          const auto & y = shape.vertices[i];
+          if (N[0] * y[0] + N[1] * y[1] + N[2] * y[2] != kk) { off = i; break; }
+        }
+        const auto key = plane_through(a, b, c, shape.vertices[off]);
+        const auto [it, added] = by_plane.emplace(key, shape.faces.size());
+        if (added) shape.faces.push_back({key.first, key.second, {}, {}});
+        shape.faces[it->second].triangles.push_back(f);
+      }
+      // corners: vertices on three or more face planes
+      for (size_t i = 0; i < shape.vertices.size(); ++i) {
+        const auto & y = shape.vertices[i];
+        size_t on{0};
+        for (auto & face: shape.faces)
+          if (face.normal[0] * y[0] + face.normal[1] * y[1] + face.normal[2] * y[2] == face.offset) ++on;
+        if (on >= 3) shape.corners.push_back(i);
+      }
+      for (auto & face: shape.faces)
+        for (const auto i: shape.corners) {
+          const auto & y = shape.vertices[i];
+          if (face.normal[0] * y[0] + face.normal[1] * y[1] + face.normal[2] * y[2] == face.offset) face.corners.push_back(i);
+        }
+      out.push_back(std::move(shape));
+    }
+    return out;
+  }
+  //! A cell of the pattern, moved to the grid cell at `cell`
+  struct CellAt {
+    size_t shape{0};
+    int3 cell{};
+  };
+  [[nodiscard]] static point at(const point & y, const int3 & cell) { return Grid::shifted(y, cell); }
+
+  using pending_t = std::vector<std::pair<CellAt, std::vector<size_t>>>;
   enum class Kind { outside, inside, boundary };
-  /*! Whether a grid tetrahedron is outside the zone, inside it, or crosses or touches
-  its boundary; then `crossing` holds the boundary planes it crosses */
-  [[nodiscard]] Kind classify(const tetrahedron & t, std::vector<size_t> & crossing) const {
-    std::array<Point, 4> corners;
-    for (int k = 0; k < 4; ++k) corners[k] = grid_point(t[k]);
+  /*! Whether a grid cell is outside the zone, inside it, or crosses or touches its
+  boundary; then `crossing` holds the boundary planes it crosses */
+  [[nodiscard]] Kind classify(const CellShape & shape, const int3 & cell, std::vector<size_t> & crossing) const {
+    std::vector<point> ys;
+    std::vector<Point> corners;
+    for (const auto i: shape.corners) { ys.push_back(at(shape.vertices[i], cell)); corners.push_back(grid_point(ys.back())); }
     const auto & planes = boundary_.planes();
     crossing.clear();
     bool touching{false};
+    const auto count = static_cast<int>(ys.size());
     for (size_t j = 0; j < planes.size(); ++j) {
       int out{0}, on{0};
-      for (int k = 0; k < 4; ++k) { const int s = grid_side(t[k], corners[k], j); out += s > 0; on += s == 0; }
-      if (out == 4 || (out + on == 4 && out > 0)) return Kind::outside;   // outside, or touching only from outside
+      for (int k = 0; k < count; ++k) { const int s = grid_side(ys[static_cast<size_t>(k)], corners[static_cast<size_t>(k)], j); out += s > 0; on += s == 0; }
+      if (out == count || (out + on == count && out > 0)) return Kind::outside;   // outside, or touching only from outside
       if (out > 0) crossing.push_back(j);
       touching |= on > 0;
     }
@@ -417,23 +558,54 @@ private:
     tetrahedra_.push_back(ids);
   }
 
-  //! The part of grid tetrahedron t inside the zone, cut by the boundary planes `crossing`
-  [[nodiscard]] std::optional<Piece> clip_piece(const tetrahedron & t, const std::vector<size_t> & crossing) const {
-    const auto & planes = boundary_.planes();
-    std::array<Plane, 4> fp;
-    for (int k = 0; k < 4; ++k) {
-      std::array<point, 3> f;
-      int j{0};
-      for (int l = 0; l < 4; ++l) if (l != k) f[j++] = t[l];
-      fp[k] = face_plane(f[0], f[1], f[2], t[k]);
+  //! What a cut cell's piece needs of the whole cell
+  struct CellInfo {
+    std::vector<std::array<Point, 4>> tets;                        //!< its grid tetrahedra
+    std::vector<std::vector<std::array<Point, 3>>> face_triangles; //!< the grid's triangles on face f (piece plane f)
+    std::vector<size_t> face_corners;                              //!< how many corners face f has
+    size_t corners{0};
+  };
+  //! Whether a point is named as a grid point (by integer planes D x_i = y_i)
+  [[nodiscard]] bool is_grid_point(const Point & p) const {
+    for (int i = 0; i < 3; ++i) {
+      const auto & q = p.planes[static_cast<size_t>(i)];
+      if (q.kind != Plane::Kind::integer || q.orientation != 1) return false;
+      for (int k = 0; k < 3; ++k) if (q.a[static_cast<size_t>(k)] != (k == i ? denominator_ : 0)) return false;
     }
-    // corners named as grid points, which is how the vertices of whole tetrahedra are named
-    std::array<Point, 4> corners;
-    for (int k = 0; k < 4; ++k) corners[k] = grid_point(t[k]);
-    auto P = Polytope::tetrahedron(geometry(), fp, corners);
+    return true;
+  }
+
+  //! The part of a grid cell inside the zone, cut by the boundary planes `crossing`
+  [[nodiscard]] std::optional<Piece> clip_cell(const CellShape & shape, const int3 & cell, const std::vector<size_t> & crossing) const {
+    const auto & planes = boundary_.planes();
+    const int3 shift{cell[0] * scale, cell[1] * scale, cell[2] * scale};
+    CellInfo info;
+    info.corners = shape.corners.size();
+    std::vector<Plane> fp;
+    for (const auto & face: shape.faces) {
+      const long long k = face.offset + face.normal[0] * shift[0] + face.normal[1] * shift[1] + face.normal[2] * shift[2];
+      fp.push_back(Plane::integer_plane({face.normal[0] * denominator_, face.normal[1] * denominator_, face.normal[2] * denominator_}, k));
+      std::vector<std::array<Point, 3>> triangles;
+      for (const auto & t: face.triangles)
+        triangles.push_back({grid_point(at(shape.vertices[t[0]], cell)), grid_point(at(shape.vertices[t[1]], cell)), grid_point(at(shape.vertices[t[2]], cell))});
+      info.face_triangles.push_back(std::move(triangles));
+      info.face_corners.push_back(face.corners.size());
+    }
+    for (const auto & t: shape.tets)
+      info.tets.push_back({grid_point(at(shape.vertices[t[0]], cell)), grid_point(at(shape.vertices[t[1]], cell)),
+                           grid_point(at(shape.vertices[t[2]], cell)), grid_point(at(shape.vertices[t[3]], cell))});
+    // the cell as a polytope: its corners, named as grid points, on their face planes
+    std::vector<Polytope::Vertex> vertices;
+    for (const auto i: shape.corners) {
+      std::set<int> incident;
+      for (size_t f = 0; f < shape.faces.size(); ++f)
+        if (std::find(shape.faces[f].corners.begin(), shape.faces[f].corners.end(), i) != shape.faces[f].corners.end()) incident.insert(static_cast<int>(f));
+      vertices.push_back({grid_point(at(shape.vertices[i], cell)), incident});
+    }
+    Polytope P(geometry(), fp, vertices);
     for (const auto j: crossing) P.cut(planes[j]);
     if (P.flat()) return std::nullopt;
-    auto piece = prepare(P);
+    auto piece = prepare(P, info);
     piece.clipped = !crossing.empty();
     return piece;
   }
@@ -489,7 +661,7 @@ private:
   }
 
   //! Everything a piece needs before its vertices are named: this changes nothing shared
-  [[nodiscard]] Piece prepare(const Polytope & P) const {
+  [[nodiscard]] Piece prepare(const Polytope & P, const CellInfo & info) const {
     const auto & planes = boundary_.planes();
     const auto & cells = boundary_.cells();
     // candidate points: special points near the piece, cell corners and cell-edge crossings
@@ -554,7 +726,8 @@ private:
     // insert the points on each part's edges and fan it
     struct Part { Plane face; Polygon polygon; size_t original; int plane; bool boundary; };
     std::vector<Part> parts;
-    bool changed = P.vertices().size() != 4;
+    // whether a face is split into boundary cells or has points inserted on its edges
+    bool changed{false};
     for (const auto & [f, bi]: faces) {
       const auto & face = P.planes()[static_cast<size_t>(f)];
       const auto poly = P.polygon(f);
@@ -579,10 +752,25 @@ private:
       if (face.points.size() != part.original) changed = true;
       face.plane = part.plane;
       face.boundary = part.boundary;
+      // A whole face of the cell, uncut and with nothing inserted, keeps the grid's
+      // triangles: a neighbouring cell that is kept whole has them too
+      const auto f = static_cast<size_t>(part.plane);
+      if (!part.boundary && f < info.face_triangles.size() && face.points.size() == info.face_corners[f]
+          && std::all_of(face.points.begin(), face.points.end(), [&](const Point & p) { return is_grid_point(p); }))
+        face.grid_triangles = info.face_triangles[f];
       piece.faces.push_back(std::move(face));
     }
     for (const auto & v: P.vertices()) { piece.corners.push_back(v.point); piece.incident.push_back(v.incident); }
-    piece.changed = changed;
+    // A piece whose faces are neither split nor given more points is a single
+    // tetrahedron, or else the whole cell (its corners, all grid points), which keeps the
+    // grid's tetrahedra; anything else is split from a vertex or centroid (emit)
+    const bool whole_cell = P.vertices().size() == info.corners
+                            && std::all_of(P.vertices().begin(), P.vertices().end(), [&](const auto & v) { return is_grid_point(v.point); });
+    piece.changed = changed || !(whole_cell || P.vertices().size() == 4);
+    if (!piece.changed) {
+      if (whole_cell) piece.tets = info.tets;
+      else piece.tets = {{P.vertices()[0].point, P.vertices()[1].point, P.vertices()[2].point, P.vertices()[3].point}};
+    }
     return piece;
   }
 
@@ -665,30 +853,51 @@ private:
   corner is the fan vertex of every face it is on (the cone fans those faces from
   it); otherwise it is a cone from its centroid. */
   void emit(const Piece & piece) {
-    std::vector<size_t> corner_ids;
-    for (const auto & p: piece.corners) corner_ids.push_back(named(p));
     if (!piece.changed) {
-      tetrahedra_.push_back({corner_ids[0], corner_ids[1], corner_ids[2], corner_ids[3]});
+      for (const auto & t: piece.tets) tetrahedra_.push_back({named(t[0]), named(t[1]), named(t[2]), named(t[3])});
       return;
     }
+    std::vector<size_t> corner_ids;
+    for (const auto & p: piece.corners) corner_ids.push_back(named(p));
     std::vector<std::vector<size_t>> face_ids;
+    std::vector<std::vector<std::array<size_t, 3>>> grid_triangles;   // sorted, for the faces that keep the grid's
     for (const auto & face: piece.faces) {
       std::vector<size_t> ids;
       for (const auto & p: face.points) ids.push_back(named(p));
       face_ids.push_back(std::move(ids));
+      std::vector<std::array<size_t, 3>> tris;
+      for (const auto & t: face.grid_triangles) {
+        std::array<size_t, 3> tri{named(t[0]), named(t[1]), named(t[2])};
+        std::sort(tri.begin(), tri.end());
+        tris.push_back(tri);
+      }
+      std::sort(tris.begin(), tris.end());
+      grid_triangles.push_back(std::move(tris));
     }
     std::vector<std::optional<size_t>> fan_from;
     for (size_t f = 0; f < piece.faces.size(); ++f)
-      fan_from.push_back(piece.faces[f].boundary ? boundary_fan_vertex(piece.faces[f], face_ids[f]) : fan_vertex(piece.faces[f], face_ids[f]));
+      fan_from.push_back(!grid_triangles[f].empty() ? std::nullopt
+                         : piece.faces[f].boundary ? boundary_fan_vertex(piece.faces[f], face_ids[f]) : fan_vertex(piece.faces[f], face_ids[f]));
+    // whether fanning face f from corner id c gives its triangles
+    auto fans_from = [&](const size_t f, const size_t c) {
+      const auto & ids = face_ids[f];
+      if (grid_triangles[f].empty()) return fan_from[f] && ids[*fan_from[f]] == c;
+      const auto m = std::find(ids.begin(), ids.end(), c);
+      if (m == ids.end()) return false;
+      std::vector<std::array<size_t, 3>> tris;
+      vertex_fan(piece.faces[f], ids, static_cast<size_t>(m - ids.begin()), tris);
+      for (auto & t: tris) std::sort(t.begin(), t.end());
+      std::sort(tris.begin(), tris.end());
+      return tris == grid_triangles[f];
+    };
     // the apex: the smallest-id corner that qualifies
     std::optional<size_t> apex;
     for (size_t c = 0; c < corner_ids.size(); ++c) {
+      if (apex && corner_ids[c] >= corner_ids[*apex]) continue;
       bool ok{true};
-      for (size_t f = 0; f < piece.faces.size() && ok; ++f) {
-        if (!piece.incident[c].count(piece.faces[f].plane)) continue;
-        ok = fan_from[f] && face_ids[f][*fan_from[f]] == corner_ids[c];
-      }
-      if (ok && (!apex || corner_ids[c] < corner_ids[*apex])) apex = c;
+      for (size_t f = 0; f < piece.faces.size() && ok; ++f)
+        if (piece.incident[c].count(piece.faces[f].plane)) ok = fans_from(f, corner_ids[c]);
+      if (ok) apex = c;
     }
 
     std::vector<std::array<size_t, 3>> triangles;
@@ -696,6 +905,7 @@ private:
       const auto & face = piece.faces[f];
       if (apex && piece.incident[*apex].count(face.plane)) continue;
       const auto & ids = face_ids[f];
+      if (!grid_triangles[f].empty()) { triangles.insert(triangles.end(), grid_triangles[f].begin(), grid_triangles[f].end()); continue; }
       if (!fan_from[f]) { fan(ids, triangles); continue; }
       vertex_fan(face, ids, *fan_from[f], triangles);
     }

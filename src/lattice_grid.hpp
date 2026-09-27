@@ -63,6 +63,7 @@ class Grid {
   std::array<double, 6> selling_{};    // -v_i·v_j, i < j
   bool degenerate_{false};
   std::vector<tetrahedron> pattern_;   // tetrahedra of the cells anchored in [0,1)^3
+  std::vector<std::vector<size_t>> cells_;   // the pattern tetrahedra of each cell (convex)
   int3 lo_{}, hi_{};                   // extent of the pattern, in whole cells
   double size_{0};
 
@@ -76,6 +77,10 @@ public:
   }
   [[nodiscard]] bool degenerate() const { return degenerate_; }
   [[nodiscard]] const std::vector<tetrahedron> & pattern() const { return pattern_; }
+  //! The obtuse superbase (integer coordinates, summing to zero) the grid is built from
+  [[nodiscard]] const std::array<int3, 4> & superbase() const { return superbase_; }
+  //! The cells of the pattern: each a convex polytope, split into the listed pattern tetrahedra
+  [[nodiscard]] const std::vector<std::vector<size_t>> & cells() const { return cells_; }
   [[nodiscard]] const std::array<double, 6> & selling_parameters() const { return selling_; }
   [[nodiscard]] const std::vector<mat3i> & operations() const { return ops_; }
 
@@ -223,7 +228,10 @@ private:
     } while (std::next_permutation(perm.begin(), perm.end()));
     return out;
   }
-  void kuhn() { pattern_ = kuhn_cell(); }
+  void kuhn() {
+    pattern_ = kuhn_cell();
+    cells_ = {{0, 1, 2, 3, 4, 5}};
+  }
 
   [[nodiscard]] vec3 centroid_cartesian(const tetrahedron & t) const {
     vec3 x{0, 0, 0};
@@ -275,6 +283,7 @@ private:
             cells[{std::llround(x[0] / key), std::llround(x[1] / key), std::llround(x[2] / key)}].push_back(s);
           }
     pattern_.clear();
+    cells_.clear();
     for (const auto & [k, members]: cells) {
       // keep the cells anchored in [0,1)^3, by their exact vertex centroid
       std::set<point> vs;
@@ -285,8 +294,12 @@ private:
       bool anchored{true};
       for (int i = 0; i < 3; ++i) anchored &= floor_div(sum[i], m * scale) == 0;
       if (!anchored) continue;
-      if (members.size() == 1) { pattern_.push_back(members[0]); continue; }
-      split_cell(members);
+      const size_t first = pattern_.size();
+      if (members.size() == 1) pattern_.push_back(members[0]);
+      else split_cell(members);
+      std::vector<size_t> cell(pattern_.size() - first);
+      std::iota(cell.begin(), cell.end(), first);
+      cells_.push_back(std::move(cell));
     }
   }
 
