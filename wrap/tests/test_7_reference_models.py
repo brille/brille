@@ -9,8 +9,8 @@ up as an unexpected pass.
 Crystals sit on real lattices from ``aflow_lattices.json`` and are given to
 brille two ways (see :py:func:`harness.brille_lattice`):
 
-* ``hall``: conventional lengths, angles and Hall symbol, with conventional-cell
-  eigenvectors;
+* ``hall``: conventional lengths, angles and Hall symbol, the model's modes
+  converted to the primitive cell brille's eigenvectors describe;
 * ``explicit``: a primitive cell with explicit symmetry operations, as from a
   phonon code.
 
@@ -66,19 +66,17 @@ def _hang_watchdog():
 
 
 # (route, ITA number) pairs, for SEED, on which brille fails before the test can
-# check anything.
-_DUPLICATE_POINT = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="meshing raises 'Duplicate intersection point' (near-coincident polyhedron points)")
-_NO_IR_ZONE = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="no irreducible Brillouin zone found for this centred lattice")
-_UNREFINED = pytest.mark.xfail(strict=True, raises=RuntimeError, reason="the mesh ignores max_size on the explicit route")
-# A hang cannot be xfailed: the watchdog would kill the worker.
-_PSEUDO_CUBIC = pytest.mark.skip(reason="hangs: this R lattice is within 6 ppm of fcc, and a 4e-6 zone edge stalls TetGen refinement")
-KNOWN_FAILURES = {
-    ("hall", 146): _PSEUDO_CUBIC,
-    ("explicit", 5): _DUPLICATE_POINT,
-    ("explicit", 146): _PSEUDO_CUBIC,
-    **{("explicit", n): _NO_IR_ZONE for n in (22, 197, 199, 203)},
-    **{("explicit", n): _UNREFINED for n in (127, 200, 201, 215, 221)},
-}
+# check anything, marked for example
+#   pytest.mark.xfail(strict=True, raises=RuntimeError, reason="what goes wrong")
+# A hang cannot be xfailed: the watchdog would kill the worker; skip it instead.
+# None at present: the duplicate intersection points, missing irreducible zones,
+# unrefined meshes and near-fcc hang once listed here are fixed.
+KNOWN_FAILURES = {}
+
+# Round-off, in values and norms, larger than 1e-10 for a crystal's lattice. ITA 146's
+# AFLOW lattice (R 3) is within 6 ppm of face-centred cubic, so its zone has faces a
+# millionth of its size; moving points into that zone amplifies round-off to ~4e-10.
+ROUNDING = {146: 1e-9}
 
 
 def _unfolding_params():
@@ -149,22 +147,22 @@ def test_gamma_unfolding(route, number):
     setup = filled(number, route)
     q = unfolding_queries(setup, number)
     values, vectors = interpolate(setup, q)
-    worst = compare_modes(setup.model.modes(q), values, vectors).worst()
-    assert worst["value_error"] < 1e-10
+    worst = compare_modes(setup.reference(q), values, vectors).worst()
+    rounding = ROUNDING.get(number, 1e-10)
+    assert worst["value_error"] < rounding
     assert worst["projector_error"] < 1e-8
-    assert worst["norm_error"] < 1e-10
+    assert worst["norm_error"] < rounding
 
 
-@pytest.mark.xfail(strict=True, reason="brille needs eigenvectors periodic in q (the cell phase convention; see docs/phase_convention.rst)")
+@pytest.mark.xfail(strict=True, reason="brille needs eigenvectors periodic in q (the cell phase convention; see docs/explanation/phase-convention.md)")
 def test_gamma_unfolding_atom_phase_convention():
     number = 14
     setup = filled(number, convention="atom")
     q = unfolding_queries(setup, number)
     values, vectors = interpolate(setup, q)
-    assert compare_modes(setup.model.modes(q), values, vectors).worst()["projector_error"] < 1e-8
+    assert compare_modes(setup.reference(q), values, vectors).worst()["projector_error"] < 1e-8
 
 
-@pytest.mark.xfail(strict=True, raises=RuntimeError, reason="time reversal is added as inversion, which has no atom mapping")
 def test_time_reversal_without_inversion():
     number = 19
     cr = crystal(number)
@@ -177,7 +175,6 @@ def test_time_reversal_without_inversion():
     assert compare_modes(model.modes(q), values, vectors).worst()["projector_error"] < 1e-8
 
 
-@pytest.mark.xfail(strict=True, reason="the mesh does not match itself across equivalent zone faces (see GitHub #114)")
 def test_continuity_across_zone_faces():
     # triclinic: the first AFLOW P1 lattice is metrically cubic, and a cube's zone meshes consistently
     setup = filled(2)
@@ -230,20 +227,14 @@ def test_surface_vertices_do_not_crash():
         assert "not found in tetrahedral mesh" in str(error)
 
 
-@pytest.mark.xfail(strict=True, raises=BrilleRaised, reason="surface points round off outside the mesh and are not snapped back inside")
 def test_surface_vertices_interpolate():
     run_isolated(_SURFACE_SCRIPT)
 
 
 # Meshing every AFLOW lattice, the way test_3 builds them, in a subprocess each.
-# Indices into aflow_lattices.json of lattices that currently fail.
-_DUPLICATE = pytest.mark.xfail(strict=True, raises=BrilleRaised, reason="meshing raises 'Duplicate intersection point' (near-coincident polyhedron points)")
-AFLOW_MESH_FAILURES = {
-    **{i: _DUPLICATE for i in (9, 14, 152, 166, 179, 195, 303, 313, 344, 359, 371, 381)},
-    327: pytest.mark.xfail(strict=True, reason="hangs: this R lattice is within 6 ppm of fcc, and a 4e-6 zone edge stalls TetGen refinement"),
-    # near-degenerate monoclinic (beta = 90.04 deg): ~5000 vertices instead of ~100, ~40 s alone
-    28: pytest.mark.xfail(strict=False, reason="the mesh over-refines near a pseudo-symmetric cell; slow, times out under load"),
-}
+# Indices into aflow_lattices.json of lattices that currently fail, marked as for
+# KNOWN_FAILURES; none at present.
+AFLOW_MESH_FAILURES = {}
 AFLOW_MESH_TIMEOUT = 240  # below the hang watchdog, so a slow mesh fails rather than kills the worker
 
 

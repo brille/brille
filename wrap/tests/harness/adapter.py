@@ -32,6 +32,15 @@ class BrilleSetup:
         """Grid vertices in reciprocal lattice units, (V, 3)."""
         return np.asarray(self.grid.rlu)
 
+    def reference(self, q_rlu):
+        """The model's exact modes at ``q_rlu``, for the atoms a grid describes.
+
+        A grid's eigenvectors describe one primitive cell (``Lattice.primitive_basis``);
+        for a crystal given by its centred conventional cell the model's modes are
+        converted to that cell with ``brille.utils.conventional_to_primitive``.
+        """
+        return primitive_modes(self.lattice, np.atleast_2d(q_rlu), self.model.modes(np.atleast_2d(q_rlu)))
+
 
 def _to_unit(vectors, lattice, unit):
     """Cartesian (crystal frame) displacement vectors to brille's storage unit."""
@@ -46,6 +55,16 @@ def _from_unit(vectors, lattice, unit):
     raise NotImplementedError(f"length unit {unit!r} is not handled by the harness yet")
 
 
+def primitive_modes(lattice, q_rlu, modes: Modes) -> Modes:
+    """``modes`` of the lattice's cell, for the atoms of its primitive cell."""
+    if len(lattice.centring_vectors) == 1:
+        return modes
+    from brille.utils import conventional_to_primitive
+
+    values, vectors = conventional_to_primitive(lattice, q_rlu, modes.values, modes.vectors)
+    return Modes(values.real, vectors, modes.metric)
+
+
 def brille_lattice(crystal, route="hall"):
     """A brille ``Lattice`` for ``crystal``, given the way a user would.
 
@@ -55,9 +74,9 @@ def brille_lattice(crystal, route="hall"):
     route : {"hall", "explicit"}
         * ``"hall"``: conventional lengths and angles plus the Hall symbol, the
           route ``test_2`` and ``test_3`` use. brille builds the zone from the
-          primitive cell internally, but its phonon symmetry table uses the
-          conventional atoms and operations (``Lattice::primitive`` leaves them
-          unchanged), so eigenvectors must describe the conventional cell.
+          primitive cell, and its eigenvectors describe the primitive cell's atoms
+          (``Lattice.primitive_basis``); :py:func:`primitive_modes` converts the
+          model's modes to them.
         * ``"explicit"``: the cell's own vectors plus explicit symmetry
           operations, as for a primitive cell from a phonon code (``test_5``).
     """
@@ -97,8 +116,8 @@ def build(model: ReferenceModel, points_per_ir=30, time_reversal=False, length_u
     lat = brille_lattice(cr, route)
     bz = brille.BrillouinZone(lat, time_reversal_symmetry=time_reversal)
     grid = brille.BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / points_per_ir)
-    modes = model.modes(np.asarray(grid.rlu))
-    n = cr.natoms
+    modes = primitive_modes(lat, np.asarray(grid.rlu), model.modes(np.asarray(grid.rlu)))
+    n = modes.vectors.shape[2]
     grid.fill(
         np.ascontiguousarray(modes.values[:, :, None]),
         # scalars only, but LengthUnit "none" throws at query time for this RotatesLike
