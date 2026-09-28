@@ -48,7 +48,7 @@ vis = ['pyglet>=1.5.27', 'vispy>=0.12.1', ]
 
 [project.urls]
 Homepage = "https://github.com/brille"
-Documentation = "https://brille.github.io"
+Documentation = "https://brille.github.io/brille/"
 Respository = "https://github.com/brille/brille.git"
 Issues = "https://github.com/brille/brille/issues"
 

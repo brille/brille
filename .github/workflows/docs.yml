@@ -1,0 +1,55 @@
+name: Documentation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - uses: actions/configure-pages@v6
+
+      # The API reference is read from the committed type stub, brille/_brille.pyi,
+      # so the site builds without compiling brille. The pages' example scripts run
+      # in the wheel tests (wrap/tests/test_23_docs_examples.py) on every platform.
+      - name: Install the documentation toolchain
+        run: pip install -r docs/requirements.txt
+
+      # --strict turns link and reference warnings into a non-zero exit
+      - name: Build the site
+        run: zensical build --clean --strict
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    # Pull requests build only; the artifact on the run summary is the preview.
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v5
+        id: deployment
