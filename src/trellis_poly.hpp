@@ -1064,8 +1064,13 @@ PolyTrellis<T,R,S,A>::part_two(
   ind_t fatal_tri{0}, hiccups{0}; // guarded by tetgen_mutex
   std::atomic<ind_t> fatal_miss{0}, fatal_match{0};
   std::mutex tetgen_mutex;
+  // The polyhedron nodes are triangulated by one task: a node whose triangulation adds
+  // a vertex appends it to vertices_, which the other nodes read, and TetGen runs one
+  // call at a time anyway. It still runs alongside the cube-node tasks, which do not
+  // touch vertices_.
+  const size_t poly_workers{1};
   auto poly_task = [&](const size_t thread) {
-    auto [f, l] = thread_slice(polys, workers, thread);
+    auto [f, l] = thread_slice(polys, poly_workers, thread);
     return [&,first=f,last=l]() {
       for (size_t s_i=first; s_i<last; ++s_i) {
         auto i = poly_indexes[s_i];
@@ -1147,7 +1152,7 @@ PolyTrellis<T,R,S,A>::part_two(
     };
   };
   for (size_t i=0; i<workers; ++i) pool->enqueue(cube_task(i));
-  for (size_t i=0; i<workers; ++i) pool->enqueue(poly_task(i));
+  for (size_t i=0; i<poly_workers; ++i) pool->enqueue(poly_task(i));
   pool->wait();
   profile_update("Cube node vertices stored");
 
