@@ -1310,10 +1310,6 @@ class BZMeshQdd:
           -------
           clsObj
         """
-    def __buffer__(self, flags):
-        """
-        Return a buffer object that exposes the underlying memory of the object.
-        """
     def __init__(self, brillouin_zone: BrillouinZone, max_size: float = -1.0, num_levels: int = 3, max_points: int = -1) -> None:
         """
         A structured tetrahedral mesh of a Brillouin zone's irreducible part
@@ -1338,10 +1334,6 @@ class BZMeshQdd:
         max_points : int, optional (default: -1)
             If positive, the grid is coarsened until its estimated number of vertices is
             at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
-        """
-    def __release_buffer__(self, buffer):
-        """
-        Release the buffer object that exposes the underlying memory of the object.
         """
     def __repr__(self) -> str:
         ...
@@ -1820,10 +1812,6 @@ class BZMeshQdc:
           -------
           clsObj
         """
-    def __buffer__(self, flags):
-        """
-        Return a buffer object that exposes the underlying memory of the object.
-        """
     def __init__(self, brillouin_zone: BrillouinZone, max_size: float = -1.0, num_levels: int = 3, max_points: int = -1) -> None:
         """
         A structured tetrahedral mesh of a Brillouin zone's irreducible part
@@ -1848,10 +1836,6 @@ class BZMeshQdc:
         max_points : int, optional (default: -1)
             If positive, the grid is coarsened until its estimated number of vertices is
             at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
-        """
-    def __release_buffer__(self, buffer):
-        """
-        Release the buffer object that exposes the underlying memory of the object.
         """
     def __repr__(self) -> str:
         ...
@@ -2330,10 +2314,6 @@ class BZMeshQcc:
           -------
           clsObj
         """
-    def __buffer__(self, flags):
-        """
-        Return a buffer object that exposes the underlying memory of the object.
-        """
     def __init__(self, brillouin_zone: BrillouinZone, max_size: float = -1.0, num_levels: int = 3, max_points: int = -1) -> None:
         """
         A structured tetrahedral mesh of a Brillouin zone's irreducible part
@@ -2358,10 +2338,6 @@ class BZMeshQcc:
         max_points : int, optional (default: -1)
             If positive, the grid is coarsened until its estimated number of vertices is
             at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
-        """
-    def __release_buffer__(self, buffer):
-        """
-        Release the buffer object that exposes the underlying memory of the object.
         """
     def __repr__(self) -> str:
         ...
@@ -2840,10 +2816,6 @@ class BZTrellisQdd:
           -------
           clsObj
         """
-    def __buffer__(self, flags):
-        """
-        Return a buffer object that exposes the underlying memory of the object.
-        """
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, node_volume_fraction: float = 0.1, always_triangulate: bool = False) -> None:
         """
@@ -2864,10 +2836,6 @@ class BZTrellisQdd:
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, node_volume_fraction: float, always_triangulate: bool, approx_config: ApproxConfig) -> None:
         ...
-    def __release_buffer__(self, buffer):
-        """
-        Release the buffer object that exposes the underlying memory of the object.
-        """
     def all_node_types(self) -> list[NodeType]:
         ...
     @typing.overload
@@ -3328,10 +3296,6 @@ class BZTrellisQdc:
           -------
           clsObj
         """
-    def __buffer__(self, flags):
-        """
-        Return a buffer object that exposes the underlying memory of the object.
-        """
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, node_volume_fraction: float = 0.1, always_triangulate: bool = False) -> None:
         """
@@ -3352,10 +3316,6 @@ class BZTrellisQdc:
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, node_volume_fraction: float, always_triangulate: bool, approx_config: ApproxConfig) -> None:
         ...
-    def __release_buffer__(self, buffer):
-        """
-        Release the buffer object that exposes the underlying memory of the object.
-        """
     def all_node_types(self) -> list[NodeType]:
         ...
     @typing.overload
@@ -3816,10 +3776,6 @@ class BZTrellisQcc:
           -------
           clsObj
         """
-    def __buffer__(self, flags):
-        """
-        Return a buffer object that exposes the underlying memory of the object.
-        """
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, node_volume_fraction: float = 0.1, always_triangulate: bool = False) -> None:
         """
@@ -3840,10 +3796,6 @@ class BZTrellisQcc:
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, node_volume_fraction: float, always_triangulate: bool, approx_config: ApproxConfig) -> None:
         ...
-    def __release_buffer__(self, buffer):
-        """
-        Release the buffer object that exposes the underlying memory of the object.
-        """
     def all_node_types(self) -> list[NodeType]:
         ...
     @typing.overload
@@ -4304,20 +4256,12 @@ class BZNestQdd:
           -------
           clsObj
         """
-    def __buffer__(self, flags):
-        """
-        Return a buffer object that exposes the underlying memory of the object.
-        """
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, max_volume: float, max_branchings: int = 5) -> None:
         ...
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, number_density: int, max_branchings: int = 5) -> None:
         ...
-    def __release_buffer__(self, buffer):
-        """
-        Release the buffer object that exposes the underlying memory of the object.
-        """
     @typing.overload
     def fill(self, values_data: numpy.ndarray[numpy.float64], values_elements: numpy.ndarray[numpy.int32], vectors_data: numpy.ndarray[numpy.float64], vectors_elements: numpy.ndarray[numpy.int32], sort: bool = False) -> None:
         """
@@ -4720,20 +4664,12 @@ class BZNestQdc:
           -------
           clsObj
         """
-    def __buffer__(self, flags):
-        """
-        Return a buffer object that exposes the underlying memory of the object.
-        """
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, max_volume: float, max_branchings: int = 5) -> None:
         ...
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, number_density: int, max_branchings: int = 5) -> None:
         ...
-    def __release_buffer__(self, buffer):
-        """
-        Release the buffer object that exposes the underlying memory of the object.
-        """
     @typing.overload
     def fill(self, values_data: numpy.ndarray[numpy.float64], values_elements: numpy.ndarray[numpy.int32], vectors_data: numpy.ndarray[numpy.complex128], vectors_elements: numpy.ndarray[numpy.int32], sort: bool = False) -> None:
         """
@@ -5136,20 +5072,12 @@ class BZNestQcc:
           -------
           clsObj
         """
-    def __buffer__(self, flags):
-        """
-        Return a buffer object that exposes the underlying memory of the object.
-        """
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, max_volume: float, max_branchings: int = 5) -> None:
         ...
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, number_density: int, max_branchings: int = 5) -> None:
         ...
-    def __release_buffer__(self, buffer):
-        """
-        Release the buffer object that exposes the underlying memory of the object.
-        """
     @typing.overload
     def fill(self, values_data: numpy.ndarray[numpy.complex128], values_elements: numpy.ndarray[numpy.int32], vectors_data: numpy.ndarray[numpy.complex128], vectors_elements: numpy.ndarray[numpy.int32], sort: bool = False) -> None:
         """
