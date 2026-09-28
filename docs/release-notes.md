@@ -1,6 +1,6 @@
 # Release notes
 
-## Unreleased
+## 0.9.0 (unreleased)
 
 Changes since v0.8.3. The largest are a new mesh for `BZMeshQ`, which fills the
 irreducible zone exactly and can be refined; eigenvectors of centred crystals
@@ -113,6 +113,22 @@ continuous there; interpolating with it is 2 to 5 times faster than with
 use TetGen. [Switch from BZTrellisQ to BZMeshQ](how-to/trellis-to-mesh.md)
 compares the two.
 
+#### `create_grid` makes a `BZMeshQ` by default
+
+[`create_grid`][brille.utils.create_grid] now makes a `BZMeshQ` unless you ask
+for another grid: with `trellis=True` (new), `nest=True`, or a trellis's own
+arguments (`node_volume_fraction`, `always_triangulate`), so calls that size a
+trellis still get one. Without a size, the mesh has `max_size = 1e-5 / 6`,
+about as many vertices as the trellis's default; `mesh=True` without a size
+used to give the coarsest mesh.
+
+Euphonic makes its own grids, and its `BrilleInterpolator` still defaults to
+`grid_type="trellis"`. The mesh is now the recommended grid: pass
+`grid_type="mesh"`, and size it with
+`grid_kwargs={"max_size": volume / (6 * grid_npts)}`, since for the same
+`grid_npts` Euphonic 2.1 asks the mesh for fewer points than the trellis
+([Switch from BZTrellisQ to BZMeshQ](how-to/trellis-to-mesh.md#through-euphonic)).
+
 #### `BRILLE_NUM_THREADS` replaces `OMP_NUM_THREADS`
 
 brille no longer uses OpenMP; its parallel sections run on a pool of native
@@ -132,6 +148,21 @@ instead, for example when several processes use brille at once
   Hall symbol `R 3 -2`, where `R 3 -2"` was meant) are refused with
   `ValueError` when the lattice is made, instead of failing later with no
   irreducible zone.
+
+#### Hall numbers are gone from the API
+
+Hall numbers only number the rows of spglib's table of settings; symbols name
+space groups. The constructors that took them are removed:
+`Symmetry(hall_number)`, `PointSymmetry(hall_number, time_reversal)` (already
+deprecated), `Spacegroup(hall_number)` and its `hall_number` property, and
+`PrimitiveTransform(hall_number)`. Instead:
+
+- [`Spacegroup`][brille._brille.Spacegroup] takes a Hall symbol, or a
+  Hermann-Mauguin symbol or International Tables name with an optional
+  setting choice, as `Lattice` does, and `Spacegroup.all()` lists every setting;
+- `PointSymmetry(Symmetry(...))` or `Lattice.pointgroup` give point groups;
+- [`PrimitiveTransform`][brille._brille.PrimitiveTransform] takes a
+  [`Bravais`][brille._brille.Bravais] centring type.
 
 #### Other changes
 
@@ -157,6 +188,8 @@ instead, for example when several processes use brille at once
   and editors the compiled module's signatures and docstrings.
 - `Lattice.primitive_basis`, `Lattice.centring_vectors` and
   `brille.utils.conventional_to_primitive` (see above).
+- `Spacegroup(symbol, choice)` and `Spacegroup.all()`, and `create_grid`'s
+  `trellis` flag (see above).
 
 ### Fixed
 
@@ -180,6 +213,16 @@ instead, for example when several processes use brille at once
 - `Lattice(..., symmetry="x,y,z;...")` failed, though documented.
 - `import brille.vis` failed on Python 3.11 and later.
 - `to_file` printed "Provided flags ... is translated to ...".
+- Vector or matrix data in units whose rotation is not implemented (such as
+  Cartesian vectors, or Γ eigenvectors in reciprocal-lattice units) were
+  accepted by `fill` and failed only when interpolating; `fill` now raises
+  `ValueError`, naming the supported combinations. Scalars need no units.
+- Building a `BZTrellisQ` could corrupt it: a worker adding a vertex grew the
+  shared vertex array while others read it. Its polyhedron nodes are now
+  triangulated by one task, which also makes it about twice as fast on many
+  threads.
+- The API reference listed keyword arguments, and a few names, as parameters
+  the functions do not have.
 
 ### Performance
 
