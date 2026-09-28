@@ -54,6 +54,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE. */
 
+#include <algorithm>
 #include <stdlib.h>
 #include <cstring>
 #include "spg_database.hpp"
@@ -620,13 +621,21 @@ int brille::international_number_to_hall_number(const int n, const std::string& 
 }
 
 int brille::international_string_to_hall_number(const std::string& n, const std::string& c){
+  // Spaces and subscript marks in the names are only for reading: 'P 2/m' is 'P2/m', and
+  // 'P21/c' is 'P2_1/c'. No two names in the table differ only in these, so ignoring
+  // them makes no match ambiguous, and changes no match of an exact name.
+  auto squeeze = [](std::string s){
+    s.erase(std::remove_if(s.begin(), s.end(), [](const char x){ return ' ' == x || '_' == x; }), s.end());
+    return s;
+  };
+  const auto name = squeeze(n);
   for (int i=1; i<531; i++) {
 	  Spacegroup spg(ALL_SPACEGROUPS[i]);
 	  // now check for matching international table names
     if( (0==c.size() || 0==c.compare(spg.choice)) &&
-        (  0==n.compare(spg.international)
-        || 0==n.compare(spg.international_full)
-        || 0==n.compare(spg.international_short))
+        (  name == squeeze(spg.international)
+        || name == squeeze(spg.international_full)
+        || name == squeeze(spg.international_short))
       ) return i;
   }
   return 0; // no matching strings

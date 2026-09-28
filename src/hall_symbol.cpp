@@ -15,14 +15,30 @@ See the GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 
+#include <cstring>
 #include "hall_symbol.hpp"
 #include "bravais.hpp" // for bravais_letter
 using namespace brille;
+
+/* Whether every character of s, outside a parenthesised change of basis, belongs to
+   Hall's notation. The parser skips other characters, so without this check a
+   Hermann-Mauguin name such as 'P 2/m' would be read as the Hall symbol 'P 2'. */
+static bool hall_characters(const std::string& s){
+  int depth{0};
+  for (const char c: s) {
+    if ('(' == c) ++depth;
+    else if (')' == c) --depth;
+    else if (0 == depth && !std::strchr("PABCIRF-123456abcnuvwdxyz'\"*^_ ", c)) return false;
+  }
+  return 0 == depth;
+}
 
 bool HallSymbol::from_ascii(const std::string& s){
   char c;
   bool hassubsup;
   this->L = Bravais::_;
+  this->symbols.clear();
+  if (!hall_characters(s)) return false;   // L stays unknown, so validate() is false too
   hassubsup = s.find('^') != std::string::npos;
   hassubsup |= s.find('_') != std::string::npos;
   // bool hasspace = s.find(' ') != std::string::npos;

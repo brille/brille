@@ -3,6 +3,9 @@
 
 #include <assert.h>
 #include <utility>
+#include <algorithm>
+#include <sstream>
+#include <stdexcept>
 // #include <vector>
 #include "enums.hpp"
 #include "primitive.hpp"
@@ -686,11 +689,25 @@ private:
       if (hs.validate()){
         gens = hs.get_generators();
         _bravais = hs.getl();
-      } else {
+      } else if (is_xyz(s)) {
         gens.from_ascii(s);
+      } else {
+        throw std::invalid_argument("'" + s + "'" + (c.empty() ? "" : " with choice '" + c + "'")
+          + " is not a space group's Hall symbol, its Hermann-Mauguin symbol or International Tables name"
+            " (with a valid setting choice), nor CIF xyz operations");
       }
       spacegroup_symmetry(gens);
     }
+  }
+  //! Whether s could be CIF xyz operations: 'x, 1/2-y, z; -x, -y, -z', three parts each
+  static bool is_xyz(const std::string& s){
+    if (s.find_first_not_of("xyzXYZ0123456789+-*/., ;") != std::string::npos) return false;
+    std::istringstream motions(s);
+    for (std::string motion; std::getline(motions, motion, ';'); ) {
+      if (motion.find_first_not_of(' ') == std::string::npos) continue;
+      if (std::count(motion.begin(), motion.end(), ',') != 2) return false;
+    }
+    return s.find_first_of("xyzXYZ") != std::string::npos;
   }
   void set_point_symmetry(){
     _point = PointSymmetry(get_unique_rotations(_space.getallr(), 0));
