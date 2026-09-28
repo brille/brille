@@ -35,10 +35,13 @@ Vertices for `node_volume_fraction = V/N` and `max_size = V/(6N)`, where `V` is 
 
 All other arguments, and [`fill`][brille._brille.BZMeshQdc.fill], [`ir_interpolate_at`][brille._brille.BZMeshQdc.ir_interpolate_at], [`sort`][brille._brille.BZMeshQdc.sort], and saving and loading, work as before.
 
-If you create grids with [`brille.utils.create_grid`][brille.utils.create_grid], pass `mesh=True` and `max_size` in place of `node_volume_fraction`:
+If you create grids with [`brille.utils.create_grid`][brille.utils.create_grid],
+the mesh is its default from brille 0.9: pass `max_size` in place of
+`node_volume_fraction`. Passing `node_volume_fraction`, or `trellis=True`, still
+makes a trellis.
 
-``` python
-grid = create_grid(bz, complex_vectors=True, mesh=True, max_size=volume / (6 * points))
+```python
+grid = create_grid(bz, complex_vectors=True, max_size=volume / (6 * points))
 ```
 
 ## Through Euphonic

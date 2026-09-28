@@ -33,7 +33,7 @@ interpolation.
     return energies, eigenvectors
 
   bz = create_bz([4.1, 4.1, 4.1], [90, 90, 90], spacegroup='F m -3 m')
-  grid = create_grid(bz, node_volume_fraction=1e-6)
+  grid = create_grid(bz, max_size=1e-6)
   energies, eigenvectors = dispersion(grid.rlu)
   n_energies = 1     # Only one mode
   n_eigenvectors = 3 # Three values per q
@@ -214,20 +214,24 @@ def create_bz(
 
 
 def create_grid(
-    bz, complex_values=False, complex_vectors=False, mesh=False, nest=False, **kwargs
+    bz, complex_values=False, complex_vectors=False, mesh=False, nest=False, trellis=False, **kwargs
 ):
     """
     Constructs an interpolation grid for a given BrillouinZone object
 
     Brille provides three different grid implementations:
-        - BZTrellisQ: A hybrid Cartesian and tetrahedral grid, with
-          tetrahedral nodes on the BZ surface and cuboids inside. [Default]
         - BZMeshQ: A structured tetrahedral mesh, clipped exactly to the zone
-          and refinable
+          and refinable. [Default]
+        - BZTrellisQ: A hybrid Cartesian and tetrahedral grid, with
+          tetrahedral nodes on the BZ surface and cuboids inside.
         - BZNestQ: A fully tetrahedral grid with a nested tree data
           structure.
 
-    By default, a BZTrellisQ grid will be used.
+    By default, a BZMeshQ grid is made, unless a ``BZTrellisQ``'s keyword
+    arguments are given (as before brille 0.9, when the trellis was the
+    default). Without a size, the mesh has ``max_size = 1e-5 / 6``, which gives
+    about as many vertices as the trellis's default ``node_volume_fraction =
+    1e-5``.
 
     Parameters
     ----------
@@ -238,9 +242,12 @@ def create_grid(
     complex_vectors : bool, optional (default: False)
         Whether the interpolated vector quantities are complex
     mesh : bool, optional (default: False)
-        Whether to construct a BZMeshQ instead of a BZTrellisQ grid
+        Whether to construct a BZMeshQ; it is the default anyway
     nest : bool, optional (default: False)
-        Whether to construct a BZNestQ instead of a BZTrellisQ grid
+        Whether to construct a BZNestQ
+    trellis : bool, optional (default: False)
+        Whether to construct a BZTrellisQ; it is also made when its keyword
+        arguments are given
 
     Other Parameters
     ----------------
@@ -280,18 +287,29 @@ def create_grid(
 
     Note
     ----
-    Setting both `mesh` and `nest` to True gives an error. Each grid's keyword
-    arguments are refused for the other grids, and a ``BZNestQ`` needs one of
-    **max_volume** or **number_density**.
+    Setting more than one of `mesh`, `nest` and `trellis` gives an error. Each
+    grid's keyword arguments are refused for the other grids, and a ``BZNestQ``
+    needs ``nest=True`` and one of **max_volume** or **number_density**.
     """
     from brille import BrillouinZone, _brille
 
     if not isinstance(bz, BrillouinZone):
         raise ValueError("The `bz` input parameter is not a BrillouinZone object")
-    if nest and mesh:
-        raise ValueError(
-            "Both nest=True and mesh=True is set. Please use one or the other"
-        )
+    if sum(map(bool, (mesh, nest, trellis))) > 1:
+        raise ValueError("Set at most one of mesh=True, nest=True and trellis=True")
+    trellis_args = [v for v in ("node_volume_fraction", "always_triangulate") if v in kwargs]
+    mesh_args = [v for v in ("max_size", "num_levels", "max_points") if v in kwargs]
+    nest_args = [v for v in ("max_volume", "number_density", "max_branchings") if v in kwargs]
+    if not (mesh or nest or trellis):
+        # the mesh, unless a trellis was asked for by its arguments, as before 0.9
+        trellis = bool(trellis_args)
+        mesh = not trellis
+    chosen = "BZNestQ" if nest else "BZTrellisQ" if trellis else "BZMeshQ"
+    for name, given, wanted in (("BZTrellisQ", trellis_args, trellis), ("BZMeshQ", mesh_args, mesh),
+                                ("BZNestQ", nest_args, nest)):
+        if given and not wanted:
+            raise ValueError(f"{', '.join(given)} {'is' if len(given) == 1 else 'are'} for a {name} grid, "
+                             f"not the {chosen} being made" + ("; pass nest=True" if name == "BZNestQ" else ""))
 
     def constructor(grid_type):
         if complex_values and complex_vectors:
@@ -302,14 +320,6 @@ def create_grid(
             return getattr(_brille, grid_type + "dd")
 
     if nest:
-        if any([v in kwargs for v in ["node_volume_fraction", "always_triangulate"]]):
-            raise ValueError(
-                "Parameters given are consistent with a trellis grid but nest=True"
-            )
-        if any([v in kwargs for v in ["max_size", "num_levels", "max_points"]]):
-            raise ValueError(
-                "Parameters given are consistent with a mesh grid but mesh=False"
-            )
         if "max_volume" in kwargs:
             return constructor("BZNestQ")(
                 bz, float(kwargs["max_volume"]), kwargs.pop("max_branchings", 5)
@@ -320,35 +330,20 @@ def create_grid(
             )
         else:
             raise ValueError("Neither `max_volume` nor `number_density` provided")
-    elif mesh:
-        if any([v in kwargs for v in ["node_volume_fraction", "always_triangulate"]]):
-            raise ValueError(
-                "Parameters given are consistent with a trellis grid but mesh=True"
-            )
-        if any([v in kwargs for v in ["max_volume", "max_branchings"]]):
-            raise ValueError(
-                "Parameters given are consistent with a nested grid but nest=False"
-            )
-        return constructor("BZMeshQ")(
-            bz,
-            float(kwargs.pop("max_size", -1.0)),
-            int(kwargs.pop("num_levels", 3)),
-            int(kwargs.pop("max_points", -1)),
-        )
-    else:
-        if any([v in kwargs for v in ["max_volume", "max_branchings"]]):
-            raise ValueError(
-                "Parameters given are consistent with a nested grid but nest=False"
-            )
-        if any([v in kwargs for v in ["max_size", "num_levels", "max_points"]]):
-            raise ValueError(
-                "Parameters given are consistent with a mesh grid but mesh=False"
-            )
+    if trellis:
         return constructor("BZTrellisQ")(
             bz,
             float(kwargs.pop("node_volume_fraction", 1.0e-5)),
             bool(kwargs.pop("always_triangulate", False)),
         )
+    # as many vertices, roughly, as the trellis's default: a mesh cell holds six tetrahedra
+    default_size = 1.0e-5 / 6 if not mesh_args else -1.0
+    return constructor("BZMeshQ")(
+        bz,
+        float(kwargs.pop("max_size", default_size)),
+        int(kwargs.pop("num_levels", 3)),
+        int(kwargs.pop("max_points", -1)),
+    )
 
 
 def conventional_to_primitive(lattice, q, values, vectors, tolerance=1e-8):

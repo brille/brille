@@ -159,10 +159,10 @@ class UtilsTestGrid(unittest.TestCase):
             complex_vectors=True,
             complex_values=True,
         )
-        self.check_type(br_mod.BZMeshQdd, mesh=True)
-        self.check_type(br_mod.BZMeshQdc, mesh=True, complex_vectors=True)
+        self.check_type(br_mod.BZMeshQdd, mesh=True, max_size=0.01)
+        self.check_type(br_mod.BZMeshQdc, mesh=True, max_size=0.01, complex_vectors=True)
         self.check_type(
-            br_mod.BZMeshQcc, mesh=True, complex_vectors=True, complex_values=True
+            br_mod.BZMeshQcc, mesh=True, max_size=0.01, complex_vectors=True, complex_values=True
         )
         self.check_type(br_mod.BZNestQdd, nest=True, max_volume=0.1)
         self.check_type(
@@ -187,6 +187,18 @@ class UtilsTestGrid(unittest.TestCase):
             complex_values=True,
         )
 
+    def test_default_grid(self):
+        # the mesh, unless a trellis's arguments ask for one
+        self.check_type(br_mod.BZMeshQdd, max_size=0.01)
+        self.check_type(br_mod.BZTrellisQdd, trellis=True, node_volume_fraction=0.1)
+        self.check_type(br_mod.BZTrellisQdd, node_volume_fraction=0.1)
+        # without a size, sized like the trellis's default; a large cell keeps both small
+        big = br_py.utils.create_bz(20, 20, 30, 90, 90, 110, "P 2")
+        mesh = br_py.utils.create_grid(big, complex_vectors=True)
+        self.assertTrue(isinstance(mesh, br_mod.BZMeshQdc))
+        trellis = br_py.utils.create_grid(big, trellis=True)
+        self.assertLess(abs(len(mesh.rlu) / len(trellis.rlu) - 1), 1)
+
     def test_bad_input(self):
         # Checks for invalid input
         with self.assertRaises(ValueError):
@@ -198,6 +210,13 @@ class UtilsTestGrid(unittest.TestCase):
         with self.assertRaises(ValueError):
             # Missing arguments `max_volume` or `number_density`
             br_py.utils.create_grid(self.bz, nest=True)
+        with self.assertRaises(ValueError):
+            # another grid's arguments
+            br_py.utils.create_grid(self.bz, mesh=True, node_volume_fraction=0.1)
+        with self.assertRaises(ValueError):
+            br_py.utils.create_grid(self.bz, trellis=True, max_size=0.1)
+        with self.assertRaises(ValueError):
+            br_py.utils.create_grid(self.bz, trellis=True, mesh=True)
 
 
 if __name__ == "__main__":
