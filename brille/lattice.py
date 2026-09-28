@@ -43,21 +43,20 @@ def Lattice(values, spacegroup=None, symmetry=None, basis=None, **kwargs):
     Parameters
     ----------
 
-    values: (lengths, angles), vectors
-        See the note above and the documenation for ``lengths``, ``angles``, and ``vectors`` below.
-    lengths : list, tuple, numpy.ndarray
-        The three basis vector lengths in angstrom for real lattice, or inverse angstrom for reciprocal lattices
-    angles : list, tuple, numpy.ndarray
-        The three angles between the basis vectors in degrees or radians. The angles are interpreted as radians
-        if none are greater than pi and are otherwise assumed to be degrees.
-    vectors: list[list,...], tuple(tuple,...), numpy.ndarray
-        The basis vectors in angstrom for real lattices, or inverse angstrom for reciprocal lattices,
-        expressed in an orthorhombic coordinate system. An optional keyword argument, ``row_vectors``, identifies
-        if the provided basis vectors are row vectors [`row_vectors=True`, default] or column vectors
-        [``row_vectors=False``].
+    values : (lengths, angles) or (vectors,)
+        The lattice, in one of two forms (see the note above):
+
+        * ``(lengths, angles)``: the three basis vector lengths, in angstrom for a
+          real lattice or inverse angstrom for a reciprocal lattice, and the three
+          angles between them, in degrees or radians (radians if none is greater
+          than pi);
+        * ``(vectors,)``, or the vectors themselves: the basis vectors, in the same
+          units, expressed in an orthonormal coordinate system, as rows unless
+          ``row_vectors=False``.
     spacegroup : str, tuple(str, str)
         The International Tables name, Hermann-Mauguin symbol with optional choice, or Hall symbol for the
-        spacegroup of the lattice. The spacegroup may be provided as positional argument(s) or by keyword.
+        spacegroup of the lattice, matched ignoring spaces and underscores, so ``'P 21/c'``, ``'P21/c'``
+        and ``'P2_1/c'`` are the same. The spacegroup may be provided as positional argument(s) or by keyword.
         If present, the ``symmetry`` keyword must not be used.
         Valid syntax for ``(Hermann-Mauguin, choice)`` input depends on the spacegroup but is generally one of:
 
@@ -82,9 +81,12 @@ def Lattice(values, spacegroup=None, symmetry=None, basis=None, **kwargs):
         must be integer and are used only to identify equivalent atoms -- they should probably be contiguous from
         zero to 1-N where N is the number of unique atoms in the atom basis.
         If present, either spacegroup or symmetry information must be provided.
-    kwargs:
-        Keyword arguments are passed to the :py:class:`brille._brille.Lattice` constructor,
-        see its documentation for details.
+
+    Other Parameters
+    ----------------
+    **kwargs
+        Passed to the :py:class:`brille._brille.Lattice` constructor, for example
+        ``real_space``, ``row_vectors`` or ``snap_to_symmetry``; see its documentation.
 
     """
     from ._brille import Lattice as _Lattice, Symmetry as _Symmetry, Basis as _Basis

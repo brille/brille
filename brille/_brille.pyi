@@ -468,18 +468,13 @@ class Symmetry:
     
       This class can be used to hold any number of related symmetry operators, and to generate all spacegroup operators from those stored.
     
-      Parameters
-      ----------
-      W : arraylike, int
-          The generalised rotation (matrix) part of the symmetry operator(s)
-      w : arraylike, float
-          The translation (vector) part of the symmetry operator(s)
-      cifxyz : str
-          The symmetry operator(s) encoded in CIF xyz format
+      The operations are given in one of two forms:
     
-      Note
-      ----
-      The overloaded forms of ``__init__`` take one of (**W**, **w**) *or* **cifxyz**.
+      - ``Symmetry(W, w)``: ``W``, integer, shape (N, 3, 3), the generalised rotation
+        (matrix) parts, and ``w``, float, shape (N, 3), the translation (vector) parts,
+        both in units of the real-space basis vectors;
+      - ``Symmetry(cifxyz)``: a string of operations in CIF xyz form, separated by
+        ``;``, such as ``"x,y,z;-x,1/2+y,-z"``.
       
     """
     __hash__: typing.ClassVar[None] = None
@@ -1055,8 +1050,8 @@ class BrillouinZone:
         
             Parameters
             ----------
-            Q : :py:class:`numpy.ndarray`
-                A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
+            points : :py:class:`numpy.ndarray`
+                A 2 dimensional array of three-vectors (``points.shape[1]==3``) expressed in
                 units of the reciprocal lattice.
         
             Returns

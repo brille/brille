@@ -76,7 +76,7 @@ else:
         *args
             Variable length argument list, used exclusively for determining the
             implied plotting specialisation.
-        **kwargs
+        **kwds
             Arbitrary keyword arguments, passed unmodified to the implied
             specialisation.
 
@@ -421,6 +421,8 @@ else:
             Whether to call `matplotlib.pyplot.show()` after adding the points to
             `axs`; this is mostly useful in non-interactive environments.
 
+        Other Parameters
+        ----------------
         origin : {:py:class:`numpy.ndarray`,tuple,list}, optional
             The origin of the plotting coordinate system, all drawn information is
             relative to this vector. Any 3-element object convertible to a
@@ -480,6 +482,8 @@ else:
             Whether to call `matplotlib.pyplot.show()` after adding the points to
             `axs`; this is mostly useful in non-interactive environments.
 
+        Other Parameters
+        ----------------
         origin : {:py:class:`numpy.ndarray`,tuple,list}, optional
             The origin of the plotting coordinate system, all drawn information is
             relative to this vector. Any 3-element object convertible to a
@@ -536,6 +540,8 @@ else:
             :py:func:`matplotlib.pyplot.gca` is used to get or spawn the current
             axes.
 
+        Other Parameters
+        ----------------
         color : {arraylike, str, iterable}, optional
             The specified `color` will be used to produce a list of :math:`M` colors to
             use in plotting the :math:`M` tetrahedra.
