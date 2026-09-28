@@ -19,6 +19,10 @@ STUBGEN = "pybind11-stubgen==3.0.0"   # pinned: other versions format stubs diff
 STUB = Path(__file__).resolve().parents[1] / "brille" / "_brille.pyi"
 # module attributes whose values depend on the build, not the bindings
 BUILD_INFO = ("__version__", "version", "build_datetime", "build_hostname", "git_branch", "git_revision")
+# Python 3.12 and later give every class declared with py::buffer_protocol() these
+# slot wrappers, and 3.11 does not; dropped so the stub is the same on every Python
+PYTHON_VERSION_METHODS = re.compile(
+    r'^    def __(?:release_)?buffer__\(self, \w+\):\n        """\n.*?\n        """\n', re.M | re.S)
 
 
 def generate(directory):
@@ -29,7 +33,7 @@ def generate(directory):
     stub = Path(directory) / "brille" / "_brille.pyi"
     # declare the build information's type, not the value this build happened to have
     pattern = re.compile(rf"^({'|'.join(map(re.escape, BUILD_INFO))}): (\S+) = .*$", re.M)
-    stub.write_text(pattern.sub(r"\1: \2", stub.read_text()))
+    stub.write_text(PYTHON_VERSION_METHODS.sub("", pattern.sub(r"\1: \2", stub.read_text())))
     return stub
 
 
