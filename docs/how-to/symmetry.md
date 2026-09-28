@@ -13,9 +13,11 @@ Give a Hall symbol or a Hermann-Mauguin symbol as `spacegroup`:
 --8<-- "how-to/symmetry.py:name"
 ```
 
-For a space group with more than one setting, give the full Hermann-Mauguin
-symbol, which names the setting: `P 1 2/m 1` for a monoclinic cell with its
-unique axis along **b**.
+Names are matched ignoring spaces and subscript marks, so `P 2_1/c`,
+`P21/c` and `P 21/c` are the same. For a space group with more than one
+setting, give the choice as well, `spacegroup=("P 2/m", "b")`, or the full
+Hermann-Mauguin symbol that names it, `P 1 2/m 1`: here, the unique axis
+along **b**. A string that is none of these is refused with a `ValueError`.
 
 ## By generators
 
