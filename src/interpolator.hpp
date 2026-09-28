@@ -467,6 +467,8 @@ public:
                        const std::vector<size_t>& r,
                        const std::vector<size_t>& invr,
                        const int nth=0) const {
+    // scalars need no rotation, whatever their units
+    if (0 == _elements[1] && 0 == _elements[2]) return true;
     switch (lenunit_) {
       case LengthUnit::real_lattice: {
         switch (rotlike_) {
@@ -500,6 +502,20 @@ public:
         }
       }
       default: throw std::runtime_error("LengthUnit, RotatesLike combination not implemented");
+    }
+  }
+  /*! \brief Whether vector and matrix data in these units can be rotated
+
+  The combinations `rotate_in_place` implements: real-lattice units with `vector`,
+  `pseudovector` or `Gamma`; reciprocal-lattice units with `vector`; angstrom with
+  `Gamma`. Scalars need no rotation, so any units do for them.
+  */
+  static bool rotation_supported(const LengthUnit lu, const RotatesLike rl){
+    switch (lu) {
+      case LengthUnit::real_lattice: return true;
+      case LengthUnit::reciprocal_lattice: return RotatesLike::vector == rl;
+      case LengthUnit::angstrom: return RotatesLike::Gamma == rl;
+      default: return false;
     }
   }
   //! Return the transform type of the stored data under symmetry operation appliation.

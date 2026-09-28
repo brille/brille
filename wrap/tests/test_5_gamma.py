@@ -228,16 +228,32 @@ class GammaTest(unittest.TestCase):
 
         for combo in combos:
             vec_els = np.array([0, 24, 0, *combo, 0, 0])
-            grid.fill(
-                nacl["grid_values"],
-                nacl["grid_values_elements"],
-                nacl["grid_values_weights"],
-                nacl["grid_vectors"],
-                vec_els,
-                nacl["grid_vectors_weights"],
-            )
-            with self.assertRaises(RuntimeError):
-                grid.ir_interpolate_at(nacl["q_nu"])
+            # refused when filled, not only when interpolating
+            with self.assertRaisesRegex(ValueError, "cannot be rotated"):
+                grid.fill(
+                    nacl["grid_values"],
+                    nacl["grid_values_elements"],
+                    nacl["grid_values_weights"],
+                    nacl["grid_vectors"],
+                    vec_els,
+                    nacl["grid_vectors_weights"],
+                )
+
+    def test_scalars_need_no_length_unit(self):
+        # scalars are not rotated, so LengthUnit none is fine for them
+        nacl = self.nacl
+        grid = self.grid
+        scalars = np.array([1, 0, 0, 0, 0, 0, 0])
+        grid.fill(
+            nacl["grid_values"],
+            scalars,
+            nacl["grid_values_weights"],
+            nacl["grid_values"],
+            scalars,
+            nacl["grid_values_weights"],
+        )
+        values, _ = grid.ir_interpolate_at(nacl["q_nu"])
+        self.assertEqual(np.asarray(values).shape[0], len(nacl["q_nu"]))
 
 
 if __name__ == "__main__":
