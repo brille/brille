@@ -710,7 +710,7 @@ void def_grid_hdf_interface(py::class_<Grid<T,R,S>>& cls, const std::string& def
     if (flags.find('a') != std::string::npos) flag |= File::ReadWrite;
     if (flags.find('c') != std::string::npos) flag |= File::Create;
     if (flags.find('t') != std::string::npos) flag |= File::Truncate;
-    info_update("Provided flags ",flags," is translated to ",flag);
+    debug_update("Provided flags ",flags," is translated to ",flag);
     return cobj.to_hdf(filename, entry, flag);
   }, "filename"_a, "entry"_a=default_entry, "flags"_a=default_flag.c_str(),
   R"pbdoc(
