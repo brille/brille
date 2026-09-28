@@ -45,7 +45,17 @@ for name, lattice in (("Hall symbol", by_hall), ("Hermann-Mauguin", by_hermann_m
           f"irreducible zone {zone.ir_polyhedron.volume:.6f} Å⁻³")
 # --8<-- [end:check]
 
+# --8<-- [start:basis]
+# NaCl's conventional cell: Na at the face-centring points, Cl half a cell along
+centring = np.array([[0, 0, 0], [0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]])
+positions = np.vstack([centring, (centring + 0.5) % 1])
+nacl = Lattice(([a, a, a], [90, 90, 90]), spacegroup="Fm-3m", basis=(positions, [0] * 4 + [1] * 4))
+print(f"{len(nacl.basis.positions)} atoms in the cell given, "
+      f"{len(nacl.primitive_basis.positions)} in the primitive cell a grid's eigenvectors describe")
+# --8<-- [end:basis]
+
 volumes = [BrillouinZone(x).ir_polyhedron.volume for x in (by_hall, by_hermann_mauguin, by_generators, by_operations)]
 assert np.allclose(volumes, volumes[0])
 assert mirror == same
 assert BrillouinZone(orthorhombic).ir_polyhedron.volume > 0
+assert len(nacl.primitive_basis.positions) == 2

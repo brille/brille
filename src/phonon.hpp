@@ -20,6 +20,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \author Greg Tucker
     \brief Classes for the effect of symmetry on phonon eigenvectors
 */
+#include "primitive.hpp"
 #include "array_.hpp" // defines bArray
 #include "array_l_.hpp"
 //#include "lattice_dual.hpp"
@@ -36,6 +37,32 @@ worthwhile. To simplify the calling structure of the implemented rotations it
 will be useful to have a dummy empty table.
 */
 class RotateTable{};
+
+/*! \brief One atom of each centring orbit of a conventional basis
+
+Atoms that differ by a centring vector (and a conventional lattice vector) are copies of
+one atom of the primitive cell; the first given of each is kept, at its given position.
+*/
+inline Basis primitive_basis(const Basis & full, const std::vector<std::array<double, 3>> & centring,
+                             const double e_tol = 0., const int n_tol = 1){
+  std::vector<std::array<double, 3>> positions;
+  std::vector<ind_t> types;
+  const auto all_types = full.types();
+  for (size_t k = 0; k < full.size(); ++k) {
+    const auto p = full.position(k);
+    bool copy{false};
+    if (!positions.empty()) {
+      const Basis kept(positions, types);
+      for (const auto & t: centring) {
+        auto shifted = p;
+        for (int i = 0; i < 3; ++i) shifted[i] -= t[i];
+        if (std::get<0>(kept.equivalent_to(all_types[k], shifted, e_tol, n_tol))) { copy = true; break; }
+      }
+    }
+    if (!copy) { positions.push_back(p); types.push_back(all_types[k]); }
+  }
+  return {positions, types};
+}
 
 /*! \brief A convenient store for
            \f$\left(F_0(k,R), \mathbf{r}_k - R \mathbf{r}_l\right)\f$ pairs
@@ -124,7 +151,11 @@ public:
     // and phases, and the transformed eigenvector is complex conjugated.
     auto ps = time_reversal ? crystal.add_space_inversion() : crystal;
     auto spgsym = dlat.spacegroup_symmetry();
-    Basis bs = dlat.basis();
+    // The eigenvectors describe the primitive cell: one atom of each centring orbit of
+    // the conventional basis, the first given. Operations map an atom onto an atom of
+    // the primitive basis plus a lattice translation, which may be a centring vector.
+    const auto centring = centring_vectors(dlat.bravais());
+    Basis bs = primitive_basis(dlat.basis(), centring, e_tol, n_tol);
     // resize all vectors/arrays
     n_atoms = static_cast<ind_t>(bs.size());
     n_sym_ops = static_cast<ind_t>(ps.size());
@@ -158,10 +189,16 @@ public:
     ind_t count{1u}; // for (0,0,0)
     // fill in the mappings
     for (ind_t k=0; k<bs.size(); ++k) for (ind_t r=0; r<ps.size(); ++r){
-      bool found;
-      ind_t l;
+      bool found{false};
+      ind_t l{0};
       auto motion = spgsym.getm(point2space_[r]);
-      std::tie(found,l) = bs.equivalent_after_operation(k, motion, e_tol, n_tol);
+      const auto moved = motion.move_point(bs.position(k));
+      for (const auto & t: centring) {
+        auto shifted = moved;
+        for (int i=0; i<3; ++i) shifted[i] -= t[i];
+        std::tie(found,l) = bs.equivalent_to(bs.types()[k], shifted, e_tol, n_tol);
+        if (found) break;
+      }
       if (!found){
         info_update(bs.to_string(),"\ndoes not have an equivalent atom to ",k," for symmetry operation\n",motion.getr(),"+",motion.gett());
         throw std::runtime_error("All atoms in the basis *must* be mapped to an equivalent atom for *all* symmetry operations");
@@ -207,6 +244,8 @@ public:
     return lattice::LVec<double>(LengthUnit::angstrom, lattice_, this->vector(k,r));
   }
   [[nodiscard]] const lattice_t& lattice() const {return lattice_;}
+  //! The number of atoms in the primitive cell whose eigenvectors the table rotates
+  [[nodiscard]] ind_t atom_count() const {return n_atoms;}
 private:
   template<class Ik, class Ir> [[nodiscard]] ind_t calc_key(Ik k, Ir r) const {
     if (k<n_atoms && r<n_sym_ops)

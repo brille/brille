@@ -25,6 +25,7 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "_array.hpp"
 #include "_c_to_python.hpp"
 #include "lattice_dual.hpp"
+#include "phonon.hpp"   // primitive_basis
 #include "utilities.hpp"
 
 namespace py = pybind11;
@@ -163,6 +164,23 @@ void wrap_lattice(py::module &m){
 
   cls.def_property_readonly("bravais",[](const Lattice<double>& l){return l.bravais();});
   cls.def_property_readonly("basis",[](const Lattice<double>& l){return l.basis();});
+  cls.def_property_readonly("centring_vectors",[](const Lattice<double>& l){return centring_vectors(l.bravais());},
+R"pbdoc(
+The centring vectors of the cell, in its fractional coordinates: the zero vector, and one
+more for each extra lattice point in a centred cell (1 for P, 2 for A, B, C and I, 3 for
+R, 4 for F).
+)pbdoc");
+  cls.def_property_readonly("primitive_basis",[](const Lattice<double>& l){
+    return primitive_basis(l.basis(), centring_vectors(l.bravais()));
+  },
+R"pbdoc(
+The atoms of one primitive cell: the first given atom of each centring orbit of
+:py:attr:`basis`, at its given position.
+
+Eigenvectors given to a grid describe these atoms, in this order. For a primitive cell
+this is :py:attr:`basis` itself; for a centred conventional cell it is a half, a third
+or a quarter of it (see :py:func:`brille.utils.conventional_to_primitive`).
+)pbdoc");
   cls.def_property("spacegroup",
     [](const Lattice<double>& l){
     return l.spacegroup_symmetry();
