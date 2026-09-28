@@ -29,6 +29,12 @@ You can use :py:mod:`brille` to:
   tutorial
 
 .. toctree::
+  :maxdepth: 1
+  :caption: How-to guides
+
+  howto/trellis_to_mesh
+
+.. toctree::
   :maxdepth: 2
   :caption: API documents
 
