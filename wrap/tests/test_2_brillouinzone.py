@@ -269,8 +269,7 @@ class BrillouinZone(unittest.TestCase):
         errored_lat = []
         errored_arg = []
         print()
-        for i in range(1, 531):
-            spacegroup = br_py.Spacegroup(i)
+        for spacegroup in br_py.Spacegroup.all():
             pointgroup = br_py.Pointgroup(spacegroup.pointgroup_number)
             a, b, c, al, be, ga = 5, 5, 5, np.pi / 2, np.pi / 2, np.pi / 2
             # nothing to do for cubic spacegroups
@@ -329,13 +328,12 @@ class BrillouinZone(unittest.TestCase):
                 vol_bz = bz.polyhedron.volume
                 vol_ir = bz.ir_polyhedron.volume
                 tested += 1
-                if not np.isclose(vol_ir, vol_bz / br_py.PointSymmetry(br_py.Symmetry(i)).size):
-                    # print(dlat,": ",vol_ir," != ",vol_bz/br_py.PointSymmetry(br_py.Symmetry(i)).size)
+                if not np.isclose(vol_ir, vol_bz / lat.pointgroup.size):
                     failed += 1
                     failed_spg.append(spacegroup)
                     failed_ptg.append(pointgroup)
                     failed_lat.append(lat)
-                    failed_ratio.append(vol_ir / vol_bz * br_py.PointSymmetry(br_py.Symmetry(i)).size)
+                    failed_ratio.append(vol_ir / vol_bz * lat.pointgroup.size)
             except Exception as err:
                 errored += 1
                 errored_spg.append(spacegroup)

@@ -52,3 +52,29 @@ def test_unknown_names_are_refused(name):
 
 def test_cif_xyz_operations_still_work():
     assert len(Lattice(ORTHORHOMBIC, symmetry=Symmetry("x,y,z;-x,-y,-z")).spacegroup.W) == 2
+
+
+def test_spacegroup_by_symbol():
+    from brille import Spacegroup
+    assert Spacegroup("P 21/c").international_table_number == 14
+    assert Spacegroup("P 2/m", "c").hall_symbol == Spacegroup("P 1 1 2/m").hall_symbol
+    assert Spacegroup("-F 4 2 3").international_table_short == "Fm-3m"
+    with pytest.raises(ValueError, match="not a space group"):
+        Spacegroup("P 2/q")
+
+
+def test_every_spacegroup_setting():
+    from brille import Spacegroup
+    settings = Spacegroup.all()
+    assert len(settings) == 530
+    assert {s.international_table_number for s in settings} == set(range(1, 231))
+
+
+def test_hall_numbers_are_gone():
+    import numpy as np
+    from brille import Bravais, PointSymmetry, PrimitiveTransform, Spacegroup, Symmetry
+    assert not hasattr(Spacegroup("P 1"), "hall_number")
+    for make in (Symmetry, PointSymmetry, PrimitiveTransform):
+        with pytest.raises(TypeError):
+            make(1)
+    assert np.allclose(np.asarray(PrimitiveTransform(Bravais.F).P), [[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]])

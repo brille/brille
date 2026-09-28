@@ -24,7 +24,9 @@ void wrap_primitivetransform(pybind11::module & m){
   using namespace brille;
   pybind11::class_<PrimitiveTransform> cls(m,"PrimitiveTransform");
 
-  cls.def(pybind11::init<int>(),"Hall number"_a);
+  cls.def(pybind11::init<Bravais>(),"bravais"_a, R"pbdoc(
+    The transformation between a conventional cell with this centring and its primitive cell.
+  )pbdoc");
 
   cls.def_property_readonly("P",[](const PrimitiveTransform &p){
     std::vector<ssize_t> sz{3u,3u};

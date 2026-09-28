@@ -314,9 +314,10 @@ class Bravais:
     def value(self) -> int:
         ...
 class PrimitiveTransform:
-    @staticmethod
-    def __init__(*args, **kwargs) -> None:
-        ...
+    def __init__(self, bravais: Bravais) -> None:
+        """
+            The transformation between a conventional cell with this centring and its primitive cell.
+        """
     def __repr__(self) -> str:
         ...
     @property
@@ -345,15 +346,20 @@ class Spacegroup:
       `spg_database.h <https://github.com/spglib/spglib/blob/develop/src/spg_database.h>`_
     """
     @staticmethod
-    def __init__(*args, **kwargs) -> None:
-        ...
+    def all() -> list[Spacegroup]:
+        """
+            Every space group setting brille knows, in the order of its table.
+        """
+    def __init__(self, symbol: str, choice: str = '') -> None:
+        """
+            The space group setting named by a Hall symbol, or by a Hermann-Mauguin symbol or
+            International Tables name with an optional setting choice, as
+            :py:func:`brille.Lattice` accepts them.
+        """
     def __repr__(self) -> str:
         ...
     @property
     def choice(self) -> str:
-        ...
-    @property
-    def hall_number(self) -> int:
         ...
     @property
     def hall_symbol(self) -> str:
@@ -464,8 +470,6 @@ class Symmetry:
     
       Parameters
       ----------
-      hall : int
-          The integer Hall number for the desired space group operations [[deprecated]].
       W : arraylike, int
           The generalised rotation (matrix) part of the symmetry operator(s)
       w : arraylike, float
@@ -475,14 +479,10 @@ class Symmetry:
     
       Note
       ----
-      The overloaded forms of ``__init__`` take one of **hall**, (**W**, **w**), *or* **cifxyz**.
+      The overloaded forms of ``__init__`` take one of (**W**, **w**) *or* **cifxyz**.
       
     """
     __hash__: typing.ClassVar[None] = None
-    @staticmethod
-    @typing.overload
-    def __init__(*args, **kwargs) -> None:
-        ...
     @staticmethod
     @typing.overload
     def __init__(*args, **kwargs) -> None:
@@ -520,12 +520,6 @@ class PointSymmetry:
       with none of its translations.
       
     """
-    @typing.overload
-    def __init__(self, Hall_number: int, time_reversal: int = 0) -> None:
-        """
-            Deprecated: use ``PointSymmetry(Symmetry(...))`` or :py:attr:`Lattice.pointgroup`.
-        """
-    @typing.overload
     def __init__(self, Symmetry: Symmetry) -> None:
         ...
     def nfolds(self, arg0: int) -> PointSymmetry:

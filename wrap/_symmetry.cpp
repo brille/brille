@@ -52,8 +52,6 @@ void wrap_symmetry(pybind11::module & m){
 
   Parameters
   ----------
-  hall : int
-      The integer Hall number for the desired space group operations [[deprecated]].
   W : arraylike, int
       The generalised rotation (matrix) part of the symmetry operator(s)
   w : arraylike, float
@@ -63,11 +61,9 @@ void wrap_symmetry(pybind11::module & m){
 
   Note
   ----
-  The overloaded forms of ``__init__`` take one of **hall**, (**W**, **w**), *or* **cifxyz**.
+  The overloaded forms of ``__init__`` take one of (**W**, **w**) *or* **cifxyz**.
   )pbdoc");
 
-
-  cls.def(pybind11::init([](int hall){return Spacegroup(hall).get_spacegroup_symmetry();}),"Hall number"_a);
 
   cls.def(pybind11::init([](py::array_t<int> pyW, py::array_t<double> pyw){
     std::vector<std::array<int,9>> Ws = np2sva<int,9>(pyW);

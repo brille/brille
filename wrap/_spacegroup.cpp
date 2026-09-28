@@ -14,7 +14,11 @@ See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with brille. If not, see <https://www.gnu.org/licenses/>.            */
+#include <stdexcept>
+#include <string>
+#include <vector>
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "spg_database.hpp"
 
 void wrap_spacegroup(pybind11::module & m){
@@ -27,9 +31,26 @@ void wrap_spacegroup(pybind11::module & m){
   `spg_database.h <https://github.com/spglib/spglib/blob/develop/src/spg_database.h>`_
 )pbdoc");
 
-  cls.def(pybind11::init<int>(),"Hall number"_a);
+  cls.def(pybind11::init([](const std::string& symbol, const std::string& choice){
+    const auto n = string_to_hall_number(symbol, choice);
+    if (n <= 0 || n >= 531)
+      throw std::invalid_argument("'" + symbol + "'" + (choice.empty() ? "" : " with choice '" + choice + "'")
+        + " is not a space group's Hall symbol, or its Hermann-Mauguin symbol or International Tables name"
+          " (with a valid setting choice)");
+    return Spacegroup(n);
+  }), "symbol"_a, "choice"_a="", R"pbdoc(
+    The space group setting named by a Hall symbol, or by a Hermann-Mauguin symbol or
+    International Tables name with an optional setting choice, as
+    :py:func:`brille.Lattice` accepts them.
+  )pbdoc");
 
-  cls.def_property_readonly("hall_number", &Spacegroup::get_hall_number);
+  cls.def_static("all", [](){
+    std::vector<Spacegroup> out;
+    for (int n = 1; n < 531; ++n) out.emplace_back(n);
+    return out;
+  }, R"pbdoc(
+    Every space group setting brille knows, in the order of its table.
+  )pbdoc");
 
   cls.def_property_readonly("international_table_number", &Spacegroup::get_international_table_number);
 
