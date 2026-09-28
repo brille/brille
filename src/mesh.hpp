@@ -23,57 +23,36 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
 #include "interpolatordual.hpp"
 #include <atomic>
 #include <queue>
+#include <optional>
 #include <utility>
-#include "triangulation_layers.hpp"
-#include "polyhedron_flex.hpp"
+#include "lattice_mesh.hpp"
 #include "approx_config.hpp"
 namespace brille {
 
 /*!
-\brief A triangulated tetrahedral mesh with eigenvalue and eigenvector data
+\brief A tetrahedral mesh with eigenvalue and eigenvector data
 
-One way of dividing three dimensional space is to fill it with a tiling of
-tetrehedra. Each tetrahedra has four vertices and four triangular faces.
-As each face can be shared with one other tetrahedra, each tetrahedron has up
-to four neighbours (tetrahedra on the surface of a space will have one fewer
-neighbour per surface). There is no limit to how many tetrahedra any vertex
-can contribute to.
-
-If one or more values are defined for every vertex in the tetrahedral mesh then
-it can be used to perform linear interpolation for any arbitrary point within
-the bound space.
-
-With no guaranteed ordering of the tethrahedra finding which tetrahedra contains
-the interpolation point can require testing all tetrahedra for inclusion.
-As such a simple tetrahedral mesh is not well suited for *fast* interpolation.
-In order to overcome this limitation, this class uses a hierarchy of overlapping
-tetrahedra arranged in layers to limit the number of inclusion tests required
-during interpolation.
-If a point is within a tetrahedron at a given layer then a list of tetrahedra
-that it might be in at the next lower layer is available. These next-lower
-tetrahedra all have the property that they have an non-null intersection with
-the connected higher-level tetrahedra.
+The mesh is the structured mesh of the irreducible Brillouin zone
+(`LatticeMesh`): a lattice grid clipped exactly to the zone, whose boundary
+matches itself under the zone's face pairings. If one or more values are defined
+for every vertex then it can be used to perform linear interpolation for any
+point within the zone. A bucket grid finds the tetrahedron holding a point in
+constant time.
 */
 template<class DataValues, class DataVectors, class VertexComponents, template<class> class VertexType>
 class Mesh3{
   using class_t = Mesh3<DataValues, DataVectors, VertexComponents, VertexType>;
-  using mesh_t = TetTri;
+  using mesh_t = LatticeMesh;
   using data_t = DualInterpolator<DataValues, DataVectors>;
   using vert_t = VertexType<VertexComponents>;
   using approx_t = approx_float::Config;
-  using poly_t = polyhedron::Poly<VertexComponents, VertexType>;
 protected:
   mesh_t mesh;
   data_t data_;
   approx_t approx_;
 public:
-  template<class... Args>
-  Mesh3(const vert_t& vertices, Args... args){
-    this->construct(vertices, args...);
-  }
-  template<class... Args>
-  Mesh3(const poly_t& poly, Args... args){
-    this->construct(poly.vertices(), poly.facets().facets(), args...);
+  explicit Mesh3(mesh_t m, approx_t a = approx_float::config): mesh(std::move(m)), approx_(a) {
+    data_.initialize_permutation_table(this->size(), this->mesh.collect_keys());
   }
   Mesh3(const class_t& other){
     this->mesh = other.mesh;
@@ -197,7 +176,7 @@ public:
   // template<typename R> std::vector<ind_t> which_neighbours(const std::vector<R>& t, const R value, const ind_t idx) const;
   [[nodiscard]] std::string to_string() const {
     std::string str= data_.to_string();
-    str += " for the points of a TetTri[" + mesh.to_string() + "]";
+    str += " for the points of a " + mesh.to_string();
     return str;
   }
   void sort() {data_.sort();}
@@ -223,54 +202,69 @@ public:
     return class_t(m, d, a);
   }
 
-  /*! \brief Whether mesh refinement stopped at its limit on added points
+  //! Whether the mesh can be refined (not one read from a file without what built it)
+  [[nodiscard]] bool refinable() const { return mesh.refinable(); }
+  //! Whether the triangulation refinement works on is held; see `release_triangulation`
+  [[nodiscard]] bool holds_triangulation() const { return mesh.holds_triangulation(); }
+  //! Free the triangulation refinement works on; it is rebuilt when next needed
+  void release_triangulation() { mesh.release_triangulation(); }
+  /*! \brief The vertices (Cartesian) that refining the tetrahedra `tets` would add
 
-  The mesh is valid, but some tetrahedra may be larger or worse shaped than
-  requested; see `triangulate`.
+  Nothing is changed. `refine` with the same arguments adds exactly these, in this
+  order, after the existing vertices.
+  */
+  [[nodiscard]] vert_t refinement_points(const std::vector<ind_t>& tets, const double min_edge) const {
+    return mesh.plan(tets, min_edge).points;
+  }
+  /*! \brief Bisect the tetrahedra `tets`, with closure, adding vertices after the existing ones
+
+  \param tets the tetrahedra to split, by index
+  \param min_edge tetrahedra whose longest edge is at most twice this (Å⁻¹) are not split
+  \param values,vectors data for the new vertices, laid out like the data held;
+         required if the mesh holds data, and then for exactly the vertices added
+  \return the new vertices (Cartesian)
+
+  Existing vertices keep their indices and data. The mode permutations found by
+  `sort` are reset: sort again after refining.
+  */
+  vert_t refine(const std::vector<ind_t>& tets, const double min_edge,
+                const std::optional<brille::Array<DataValues>>& values = std::nullopt,
+                const std::optional<brille::Array<DataVectors>>& vectors = std::nullopt){
+    return apply_refinement(plan_refinement(tets, min_edge), values, vectors);
+  }
+  using refinement_t = typename mesh_t::Refinement;
+  //! The expensive half of `refine`, which changes nothing
+  [[nodiscard]] refinement_t plan_refinement(const std::vector<ind_t>& tets, const double min_edge) const {
+    return mesh.plan(tets, min_edge);
+  }
+  /*! The other half of `refine`. It replaces the held data, which may be the last
+  reference to a Python buffer, so a binding must hold the GIL while calling it. */
+  vert_t apply_refinement(refinement_t && plan,
+                          const std::optional<brille::Array<DataValues>>& values = std::nullopt,
+                          const std::optional<brille::Array<DataVectors>>& vectors = std::nullopt){
+    const ind_t added = plan.points.size(0);
+    const bool filled = data_.size() > 0;
+    if (filled) {
+      if (!values || !vectors)
+        throw std::runtime_error("The mesh holds data: give the values and vectors for the new vertices too");
+      if (values->size(0) != added || vectors->size(0) != added)
+        throw std::runtime_error("Refining adds " + std::to_string(added) + " vertices, but data for "
+                                 + std::to_string(values->size(0)) + " values and " + std::to_string(vectors->size(0)) + " vectors was given");
+    } else if (values || vectors) {
+      throw std::runtime_error("The mesh holds no data yet: fill it before giving data for new vertices");
+    }
+    vert_t points = plan.points;
+    mesh.commit(std::move(plan));
+    if (filled) data_.append(*values, *vectors);
+    data_.initialize_permutation_table(this->size(), mesh.collect_keys());
+    return points;
+  }
+
+  /*! \brief Whether `max_points` made the mesh coarser than `max_size` asked for
+
+  The mesh is valid, but its tetrahedra are larger than requested.
   */
   [[nodiscard]] bool refinement_limited() const {return mesh.refinement_limited();}
-private:
-  template<class I>
-  void construct(const vert_t& vertices,
-                 const std::vector<std::vector<I>>& facets,
-                 const double max_volume,
-                 const int num_levels,
-                 const int max_points,
-                 approx_t a){
-    this->mesh = triangulate(vertices, facets, max_volume, num_levels, max_points);
-    data_.initialize_permutation_table(this->size(), this->mesh.collect_keys());
-    approx_ = a;
-  }
-  template<class I>
-  void construct(const vert_t& vertices,
-                 const std::vector<std::vector<I>>& facets,
-                 const double max_volume,
-                 const int num_levels,
-                 const int max_points
-                 ){
-    this->construct(vertices, facets, max_volume, num_levels, max_points, approx_float::config);
-  }
-  template<class I>
-  void construct(const vert_t& vertices,
-                 const std::vector<std::vector<I>>& facets,
-                 const double max_volume,
-                 const int num_levels
-  ){
-    this->construct(vertices, facets, max_volume, num_levels, -1);
-  }
-  template<class I>
-  void construct(const vert_t& vertices,
-                 const std::vector<std::vector<I>>& facets,
-                 const double max_volume
-  ){
-    this->construct(vertices, facets, max_volume, 5);
-  }
-  template<class I>
-  void construct(const vert_t& vertices,
-                 const std::vector<std::vector<I>>& facets
-  ){
-    this->construct(vertices, facets, -1.);
-  }
 };
 
 } // namespace brille

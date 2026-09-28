@@ -208,6 +208,13 @@ public:
     this->validate_values();
     this->update_permutation_table();
   }
+  //! Append the data for new points, laid out like the data already held
+  void append(const brille::Array<T>& values, const brille::Array<R>& vectors){
+    if (values.size(0) != vectors.size(0))
+      throw std::runtime_error("The values and vectors for new points must be for the same number of points");
+    values_.append(values);
+    vectors_.append(vectors);
+  }
   /*! \brief Initialize the held PermutationTable
 
   \param nverts The maximum number of vertices for the PermutationTable

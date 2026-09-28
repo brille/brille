@@ -55,19 +55,22 @@ def test_no_warning_away_from_higher_symmetry(lattice, symmetry, count):
     assert bz.lattice_symmetry_counts() == (count, count)
 
 
-def test_refinement_stops_near_higher_symmetry():
-    """Quality refinement of this zone never ended; now it stops at a default limit"""
+def test_mesh_builds_near_higher_symmetry():
+    """TetGen's quality refinement of this zone, whose features are far smaller
+    than itself, never ended without a limit; the structured mesh needs none"""
     bz = BrillouinZone(near_fcc(), warn_near_symmetry=False)
-    with pytest.warns(RuntimeWarning, match="refinement stopped"):
-        mesh = BZMeshQdc(bz, num_levels=1)
-    assert mesh.refinement_limited
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        mesh = BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 100)
+    assert not mesh.refinement_limited and mesh.rlu.shape[0] > 4
 
 
-def test_refinement_limit_is_reported():
+def test_point_limit_is_reported():
     bz = BrillouinZone(near_fcc(), warn_near_symmetry=False)
-    with pytest.warns(RuntimeWarning, match="refinement stopped"):
-        mesh = BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 100, max_points=300)
-    assert mesh.refinement_limited and mesh.rlu.shape[0] < 400
+    fine = BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 10000)
+    with pytest.warns(RuntimeWarning, match="max_points made the mesh grid coarser"):
+        mesh = BZMeshQdc(bz, max_size=bz.ir_polyhedron.volume / 10000, max_points=300)
+    assert mesh.refinement_limited and mesh.rlu.shape[0] < fine.rlu.shape[0] / 4
 
 
 def test_ordinary_mesh_is_not_limited():

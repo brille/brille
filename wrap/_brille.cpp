@@ -37,6 +37,7 @@ void wrap_trellis(pybind11::module &);
 void wrap_enums(pybind11::module &);
 void wrap_basis(pybind11::module &);
 void wrap_approx(pybind11::module &);
+void wrap_lattice_grid(pybind11::module &);
 
 void wrap_version(pybind11::module & m){
   using namespace brille::version;
@@ -100,4 +101,5 @@ PYBIND11_MODULE(_brille, m){
   wrap_debug(m);
   wrap_enums(m);
   wrap_approx(m);
+  wrap_lattice_grid(m);
 }

@@ -193,11 +193,23 @@ both detailed below under the headings `Simple`_ and `Hierarchy`_.
 
 Simple
 ^^^^^^
-The :py:class:`~brille._brille.BZMeshQdc` and its type-siblings implement a simple triangulated grid.
-Locating the tetrahedron within the grid which contains a test point could require as many in-tetrahedron
-checks as there are tetrahedra in the grid.
-This class should be fine for use in applications where intra-grid-point interpolation is not required,
-such as Brillouin zone integrations, but should be avoided when interpolation at random points is required.
+The :py:class:`~brille._brille.BZMeshQdc` and its type-siblings implement a structured tetrahedral mesh:
+a lattice grid, with spacing a fraction of the reciprocal lattice, clipped exactly to the irreducible
+Brillouin zone. Its boundary matches itself under the zone's face pairings, so interpolation is continuous
+across equivalent zone faces. Locating the tetrahedron that contains a point takes constant time.
+
+The mesh can be refined in place, where the interpolation needs more points:
+:py:meth:`~brille._brille.BZMeshQdc.refinement_points` returns the points a refinement would add,
+without changing the mesh, so that a model can be evaluated there (and compared with the interpolated
+values to judge whether refining is worthwhile); :py:meth:`~brille._brille.BZMeshQdc.refine` then adds them,
+with the model's values. Existing vertices keep their indices and data. A resolution limit stops refinement
+from splitting edges finer than an instrument can resolve.
+
+.. code-block:: python
+
+    points = mesh.refinement_points(where, resolution=0.02)       # (N, 3), rlu
+    values, vectors = model(points)                                 # laid out as for fill
+    mesh.refine(where, values, vectors, resolution=0.02)
 
 .. autoclass:: brille._brille.BZMeshQdd
 

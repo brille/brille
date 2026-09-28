@@ -9,6 +9,7 @@ set(BRILLE_PYTHON_MODULE_SOURCES
   _hall_symbol.cpp
   _interpolator.cpp
   _lattice.cpp
+  _lattice_grid.cpp
   _mesh.cpp
   _nest.cpp
   _pointgroup.cpp
