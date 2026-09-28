@@ -1,4 +1,7 @@
 def _t(args):
+    # a string, such as CIF xyz symmetry operations, is one argument, not its characters
+    if isinstance(args, str):
+        return (args,)
     return args if isinstance(args, tuple) else tuple(args)
 
 
