@@ -24,6 +24,10 @@ along with brille. If not, see <https://www.gnu.org/licenses/>.            */
     \brief Defines a class to hold transformation matrices between conventional
            and primitive lattices for seven centring types.
 */
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <vector>
 #include "spg_database.hpp"
 #include "linear_algebra.hpp"
 namespace brille {
@@ -213,5 +217,39 @@ struct PrimitiveTraits{
   using sixP = int;
   using invP = int;
 };
+/*! \brief The centring vectors of a conventional cell
+
+The translations, in fractional coordinates of the conventional cell and within it,
+that map the lattice of a centred cell onto itself: the zero vector and one vector per
+extra lattice point in the cell. Their number is the number of primitive cells in the
+conventional cell: 1 for P, 2 for A, B, C and I, 3 for R (hexagonal axes), 4 for F.
+
+They are the fractional parts of the integer combinations of the primitive vectors,
+the columns of P.
+*/
+inline std::vector<std::array<double, 3>> centring_vectors(const Bravais b){
+  std::vector<std::array<double, 3>> out{{0., 0., 0.}};
+  if (Bravais::P == b || Bravais::_ == b) return out;
+  const PrimitiveTransform transform(b);
+  const auto six_p = transform.get_6P();
+  auto same = [](const std::array<double, 3> & u, const std::array<double, 3> & v){
+    for (int i = 0; i < 3; ++i) {
+      double d = u[i] - v[i];
+      d -= std::round(d);
+      if (std::abs(d) > 1e-9) return false;
+    }
+    return true;
+  };
+  for (int n0 = -1; n0 < 3; ++n0) for (int n1 = -1; n1 < 3; ++n1) for (int n2 = -1; n2 < 3; ++n2) {
+    std::array<double, 3> v{};
+    for (int i = 0; i < 3; ++i) {
+      v[i] = (six_p[3 * i] * n0 + six_p[3 * i + 1] * n1 + six_p[3 * i + 2] * n2) / 6.0;
+      v[i] -= std::floor(v[i]);
+      if (v[i] > 1 - 1e-9) v[i] = 0.;
+    }
+    if (std::none_of(out.begin(), out.end(), [&](const auto & w){ return same(v, w); })) out.push_back(v);
+  }
+  return out;
+}
 } // end namespace brille
 #endif

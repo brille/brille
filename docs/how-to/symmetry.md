@@ -69,15 +69,36 @@ operations        48 point operations, irreducible zone 0.112207 Å⁻³
 
 ## Eigenvectors and centred cells
 
-If you will fill a grid with eigenvectors, the cell you describe must be the
-cell your eigenvectors describe:
+A grid's eigenvectors describe the atoms of one primitive cell,
+[`primitive_basis`][brille._brille.Lattice.primitive_basis]. For a lattice given
+by a centred conventional cell (A, B, C, F, I or R), that is the first atom of
+each group of centring copies in the basis you give, a half, a third or a
+quarter of it:
 
-- **Conventional cell, by name:** for a centred lattice (A, B, C, F, I or R),
-  brille builds the zone from the primitive cell but keeps the conventional
-  cell's operations and atoms. Eigenvectors must then cover every atom of the
-  conventional cell, two to four times as many as the primitive cell has.
-- **Primitive cell, by explicit operations:** phonon codes give eigenvectors
-  for the primitive cell. Give brille the primitive lattice vectors and their
-  operations, from spglib for example.
+```python
+--8<-- "how-to/symmetry.py:basis"
+```
 
-Eigenvalues alone (energies, for instance) work either way.
+```text
+8 atoms in the cell given, 2 in the primitive cell a grid's eigenvectors describe
+```
+
+Give the lattice the conventional cell's full basis, and the grid the
+eigenvectors of the primitive cell, for those atoms in that order, in the
+cell phase convention (see [the phase convention](../explanation/phase-convention.md)).
+
+If your code computed the conventional cell instead, it returns all of that
+cell's modes at each q: the primitive cell's modes at q folded together with
+those at the wavevectors the larger cell cannot tell from q.
+[`conventional_to_primitive`][brille.utils.conventional_to_primitive] picks out
+the modes at q and the primitive cell's atoms:
+
+```python
+from brille.utils import conventional_to_primitive
+
+values, vectors = conventional_to_primitive(lattice, grid.rlu, values, vectors)
+grid.fill(values, value_elements, vectors, vector_elements)
+```
+
+Filling a grid with the conventional cell's eigenvectors is refused when
+interpolating, with an error that says so.

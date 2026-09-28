@@ -88,6 +88,14 @@ class GammaTest(unittest.TestCase):
         always_triangulate = bool(nacl["grid_always_triangulate"])
         grid = BZTrellisQdc(bz, max_volume, always_triangulate)
 
+        # The data describe NaCl's 8-atom conventional cell, a grid its 2-atom primitive
+        # cell: keep the modes at each q, and the atoms of the primitive basis
+        from brille.utils import conventional_to_primitive
+        cls.grid_values, cls.grid_vectors = conventional_to_primitive(
+            lat, nacl["grid_rlu"], nacl["grid_values"], nacl["grid_vectors"])
+        cls.euphonic_values, cls.euphonic_vectors = conventional_to_primitive(
+            lat, nacl["q_nu"], nacl["euphonic_values"], nacl["euphonic_vectors"])
+
         cls.nacl = nacl
         cls.lat = lat
         cls.grid = grid
@@ -116,12 +124,12 @@ class GammaTest(unittest.TestCase):
         # LengthUnit::real_lattice = 3, and the RotatesLike enumeration has
         # changed, so RotatesLike::Gamma = 2 now. Replace here rather than
         # regenerate file.
-        vec_els = np.array([0, 24, 0, 2, 3, 0, 0])
+        vec_els = np.array([0, 6, 0, 2, 3, 0, 0])
         grid.fill(
-            nacl["grid_values"][perm],
+            self.grid_values[perm],
             nacl["grid_values_elements"],
             nacl["grid_values_weights"],
-            nacl["grid_vectors"][perm],
+            self.grid_vectors[perm],
             vec_els,
             nacl["grid_vectors_weights"],
             bool(nacl["grid_sort"]),
@@ -157,13 +165,13 @@ class GammaTest(unittest.TestCase):
         # and that the 'interpolated' eigenvalues are identical for all q_nu
         self.assertTrue(np.allclose(np.diff(br_val, axis=0), 0.0))
         # plus that the interpolated eigenvalues match the store Euphonic eigenvalues
-        self.assertTrue(np.allclose(br_val, nacl["euphonic_values"]))
+        self.assertTrue(np.allclose(br_val, self.euphonic_values))
 
         # convert the eigenvectors into the same cartesian coordinate system
         # used by Euphonic
         br_vec = np.einsum("ba,ijkb->ijka", nacl["basis_vectors"], br_vec)
         # load the Euphonic calculated eigenvectors
-        eu_vec = nacl["euphonic_vectors"]
+        eu_vec = self.euphonic_vectors
         # The 'interpolated' eigenvectors and the Euphonic eigenvectors should
         # only be equivalent up to an overall phase factor, so find it:
         antiphase = np.exp(
@@ -192,12 +200,12 @@ class GammaTest(unittest.TestCase):
 
         # Convert input grid vectors from basis to Cartesian
         grid_vecs_cart = np.einsum(
-            "ba,ijkb->ijka", nacl["basis_vectors"], nacl["grid_vectors"]
+            "ba,ijkb->ijka", nacl["basis_vectors"], self.grid_vectors
         )
         # Use RotatesLike::Gamma = 2 and LengthUnit::angstrom = 1
-        vec_els = np.array([0, 24, 0, 2, 1, 0, 0])
+        vec_els = np.array([0, 6, 0, 2, 1, 0, 0])
         grid.fill(
-            nacl["grid_values"][perm],
+            self.grid_values[perm],
             nacl["grid_values_elements"],
             nacl["grid_values_weights"],
             grid_vecs_cart[perm],
@@ -209,7 +217,7 @@ class GammaTest(unittest.TestCase):
         br_val, br_vec = grid.ir_interpolate_at(nacl["q_nu"])
 
         # load the Euphonic calculated eigenvectors
-        eu_vec = nacl["euphonic_vectors"]
+        eu_vec = self.euphonic_vectors
         # The 'interpolated' eigenvectors and the Euphonic eigenvectors should
         # only be equivalent up to an overall phase factor, so find it:
         antiphase = np.exp(
@@ -227,17 +235,38 @@ class GammaTest(unittest.TestCase):
         combos = [(0, 1), (1, 0), (2, 2), (2, 4)]
 
         for combo in combos:
-            vec_els = np.array([0, 24, 0, *combo, 0, 0])
+            vec_els = np.array([0, 6, 0, *combo, 0, 0])
             grid.fill(
-                nacl["grid_values"],
+                self.grid_values,
                 nacl["grid_values_elements"],
                 nacl["grid_values_weights"],
-                nacl["grid_vectors"],
+                self.grid_vectors,
                 vec_els,
                 nacl["grid_vectors_weights"],
             )
             with self.assertRaises(RuntimeError):
                 grid.ir_interpolate_at(nacl["q_nu"])
+
+    def test_conventional_cell_eigenvectors_are_refused(self):
+        # a grid holds the primitive cell's eigenvectors; the conventional cell's are
+        # refused with a pointer to the conversion
+        nacl = self.nacl
+        grid = self.grid
+        grid.fill(
+            nacl["grid_values"],
+            nacl["grid_values_elements"],
+            nacl["grid_values_weights"],
+            nacl["grid_vectors"],
+            np.array([0, 24, 0, 2, 3, 0, 0]),
+            nacl["grid_vectors_weights"],
+        )
+        with self.assertRaisesRegex(RuntimeError, "conventional_to_primitive"):
+            grid.ir_interpolate_at(nacl["q_nu"])
+
+    def test_primitive_basis(self):
+        # F-centred NaCl: four centring vectors, and two of the eight atoms
+        self.assertEqual(len(self.lat.centring_vectors), 4)
+        self.assertEqual(len(self.lat.primitive_basis.positions), 2)
 
 
 if __name__ == "__main__":

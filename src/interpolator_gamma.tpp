@@ -159,6 +159,13 @@ bool Interpolator<T>::rip_gamma_complex(
   auto no = this->count_scalars_vectors_matrices();
   if (!std::any_of(no.begin()+1, no.end(), [](ind_t n){return n>0;}))
     return false;
+  // The table describes the primitive cell; eigenvectors of a centred conventional cell
+  // have more atoms, and must be converted first.
+  const auto atoms = pgt.atom_count();
+  if (no[1] && no[1] != atoms)   // no[1] counts 3-vectors, one per atom
+    throw std::runtime_error("The eigenvectors have " + std::to_string(no[1]) + " atoms per mode, but the primitive cell"
+      " has " + std::to_string(atoms) + ". Give eigenvectors of the primitive cell; for those of a centred conventional"
+      " cell, convert them with brille.utils.conventional_to_primitive.");
   // for Γ transformations of tensors, there *must* be N×N in total:
   ind_t Nmat = static_cast<ind_t>(std::sqrt(no[2]))/3;
   if (no[2] != 9*Nmat*Nmat){

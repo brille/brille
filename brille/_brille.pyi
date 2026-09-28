@@ -732,6 +732,13 @@ class Lattice:
     def c_star(*args, **kwargs):
         ...
     @property
+    def centring_vectors(*args, **kwargs):
+        """
+        The centring vectors of the cell, in its fractional coordinates: the zero vector, and one
+        more for each extra lattice point in a centred cell (1 for P, 2 for A, B, C and I, 3 for
+        R, 4 for F).
+        """
+    @property
     def gamma(*args, **kwargs):
         ...
     @property
@@ -740,6 +747,16 @@ class Lattice:
     @property
     def pointgroup(*args, **kwargs):
         ...
+    @property
+    def primitive_basis(*args, **kwargs):
+        """
+        The atoms of one primitive cell: the first given atom of each centring orbit of
+        :py:attr:`basis`, at its given position.
+        
+        Eigenvectors given to a grid describe these atoms, in this order. For a primitive cell
+        this is :py:attr:`basis` itself; for a centred conventional cell it is a half, a third
+        or a quarter of it (see :py:func:`brille.utils.conventional_to_primitive`).
+        """
     @property
     def real_vectors(*args, **kwargs):
         ...
