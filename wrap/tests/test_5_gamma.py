@@ -235,17 +235,33 @@ class GammaTest(unittest.TestCase):
         combos = [(0, 1), (1, 0), (2, 2), (2, 4)]
 
         for combo in combos:
-            vec_els = np.array([0, 6, 0, *combo, 0, 0])
-            grid.fill(
-                self.grid_values,
-                nacl["grid_values_elements"],
-                nacl["grid_values_weights"],
-                self.grid_vectors,
-                vec_els,
-                nacl["grid_vectors_weights"],
-            )
-            with self.assertRaises(RuntimeError):
-                grid.ir_interpolate_at(nacl["q_nu"])
+            vec_els = np.array([0, 24, 0, *combo, 0, 0])
+            # refused when filled, not only when interpolating
+            with self.assertRaisesRegex(ValueError, "cannot be rotated"):
+                grid.fill(
+                    nacl["grid_values"],
+                    nacl["grid_values_elements"],
+                    nacl["grid_values_weights"],
+                    nacl["grid_vectors"],
+                    vec_els,
+                    nacl["grid_vectors_weights"],
+                )
+
+    def test_scalars_need_no_length_unit(self):
+        # scalars are not rotated, so LengthUnit none is fine for them
+        nacl = self.nacl
+        grid = self.grid
+        scalars = np.array([1, 0, 0, 0, 0, 0, 0])
+        grid.fill(
+            nacl["grid_values"],
+            scalars,
+            nacl["grid_values_weights"],
+            nacl["grid_values"],
+            scalars,
+            nacl["grid_values_weights"],
+        )
+        values, _ = grid.ir_interpolate_at(nacl["q_nu"])
+        self.assertEqual(np.asarray(values).shape[0], len(nacl["q_nu"]))
 
     def test_conventional_cell_eigenvectors_are_refused(self):
         # a grid holds the primitive cell's eigenvectors; the conventional cell's are

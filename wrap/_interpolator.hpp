@@ -1,4 +1,5 @@
 
+#include <stdexcept>
 #include <pybind11/pybind11.h>
 #include "interpolatordual.hpp"
 #include "phonon.hpp"
@@ -9,6 +10,34 @@
 #define WRAP_BRILLE_INTERPOLATOR_HPP_
 namespace py = pybind11;
 namespace br = brille;
+
+//! Refuse vector or matrix data in units whose rotation is not implemented, when filled
+inline void check_rotation(const std::array<brille::ind_t,3>& el, const brille::RotatesLike rl, const brille::LengthUnit lu){
+  using namespace brille;
+  if ((el[1] || el[2]) && !Interpolator<double>::rotation_supported(lu, rl)) {
+    auto unit = [](const LengthUnit u){
+      switch (u) {
+        case LengthUnit::none: return "none";
+        case LengthUnit::angstrom: return "angstrom";
+        case LengthUnit::inverse_angstrom: return "inverse_angstrom";
+        case LengthUnit::real_lattice: return "real_lattice";
+        case LengthUnit::reciprocal_lattice: return "reciprocal_lattice";
+        default: return "unknown";
+      }
+    };
+    auto rotates = [](const RotatesLike r){
+      switch (r) {
+        case RotatesLike::vector: return "vector";
+        case RotatesLike::pseudovector: return "pseudovector";
+        case RotatesLike::Gamma: return "Gamma";
+        default: return "unknown";
+      }
+    };
+    throw std::invalid_argument(std::string("Vector or matrix data in LengthUnit ") + unit(lu) + " that RotatesLike "
+      + rotates(rl) + " cannot be rotated by symmetry operations. Supported: real_lattice with vector, pseudovector"
+      " or Gamma; reciprocal_lattice with vector; angstrom with Gamma.");
+  }
+}
 
 template<class T>
 br::Interpolator<T>
@@ -45,6 +74,7 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, const size_t count){
     case 0: lu = LengthUnit::none; break;
     default: throw std::runtime_error("Unknown LengthUnit value "+std::to_string(intel[4]));
   }
+  check_rotation(el, rl, lu);
   // tie everything up
   // return std::make_tuple(data, el, rl);
   return Interpolator(data, el, rl, lu);
@@ -103,6 +133,7 @@ fill_check(py::array_t<T> pyarray, py::array_t<int> pyel, py::array_t<double> py
   if (bi.ndim != 1) throw std::runtime_error("weights must be a 1-D array");
   auto *dblwght = (double*) bi.ptr;
   for (pybind11::ssize_t i=0; i<bi.shape[0] && i<3; ++i) wght[i] = dblwght[i];
+  check_rotation(el, rl, lu);
   // tie everything up
   // return std::make_tuple(data, el, rl, csf, cvf, wght);
   return Interpolator(data, el, rl, lu, csf, cvf, wght);
