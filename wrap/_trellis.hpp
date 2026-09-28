@@ -41,14 +41,14 @@ A trellis of cubic nodes over a Brillouin zone's irreducible part
 Parameters
 ----------
 brillouin_zone : BrillouinZone
-  The zone whose irreducible part the trellis fills.
+    The zone whose irreducible part the trellis fills.
 node_volume_fraction : float, optional (default: 0.1)
-  Despite its name, a volume in cubic reciprocal Angstrom, not a fraction:
-  the volume of one cubic node, which sets the trellis spacing. To size the
-  trellis by its number of points use ``brillouin_zone.ir_polyhedron.volume /
-  points``, which gives roughly 1.3 to 2 times ``points`` vertices.
+    Despite its name, a volume in cubic reciprocal Angstrom, not a fraction:
+    the volume of one cubic node, which sets the trellis spacing. To size the
+    trellis by its number of points use ``brillouin_zone.ir_polyhedron.volume /
+    points``, which gives roughly 1.3 to 2 times ``points`` vertices.
 always_triangulate : bool, optional (default: False)
-  Divide every node into tetrahedra, not only those the zone boundary cuts.
+    Divide every node into tetrahedra, not only those the zone boundary cuts.
 )pbdoc");
   cls.def(py::init<BrillouinZone,double,bool,approx_float::Config>(), py::call_guard<py::gil_scoped_release>(), "brillouin_zone"_a, "node_volume_fraction"_a, "always_triangulate"_a, "approx_config"_a);
 

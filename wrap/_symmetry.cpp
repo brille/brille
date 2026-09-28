@@ -53,13 +53,13 @@ void wrap_symmetry(pybind11::module & m){
   Parameters
   ----------
   hall : int
-    The integer Hall number for the desired space group operations [[deprecated]].
+      The integer Hall number for the desired space group operations [[deprecated]].
   W : arraylike, int
-    The generalised rotation (matrix) part of the symmetry operator(s)
+      The generalised rotation (matrix) part of the symmetry operator(s)
   w : arraylike, float
-    The translation (vector) part of the symmetry operator(s)
+      The translation (vector) part of the symmetry operator(s)
   cifxyz : str
-    The symmetry operator(s) encoded in CIF xyz format
+      The symmetry operator(s) encoded in CIF xyz format
 
   Note
   ----

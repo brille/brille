@@ -60,20 +60,20 @@ clipped exactly to the irreducible zone.
 Parameters
 ----------
 brillouin_zone : BrillouinZone
-  The zone whose irreducible part the mesh fills.
+    The zone whose irreducible part the mesh fills.
 max_size : float, optional (default: -1)
-  The largest tetrahedron volume, in cubic reciprocal Angstrom, which sets the
-  grid spacing; if not positive, the grid is the reciprocal lattice itself.
-  Each grid cell holds six tetrahedra, so ``max_size = node_volume_fraction /
-  6`` gives about as many vertices as a :py:class:`BZTrellisQdc` with that
-  ``node_volume_fraction``, and ``brillouin_zone.ir_polyhedron.volume / (6 *
-  points)`` gives roughly 1.5 to 3 times ``points`` vertices, the most for
-  small meshes.
+    The largest tetrahedron volume, in cubic reciprocal Angstrom, which sets the
+    grid spacing; if not positive, the grid is the reciprocal lattice itself.
+    Each grid cell holds six tetrahedra, so ``max_size = node_volume_fraction /
+    6`` gives about as many vertices as a :py:class:`BZTrellisQdc` with that
+    ``node_volume_fraction``, and ``brillouin_zone.ir_polyhedron.volume / (6 *
+    points)`` gives roughly 1.5 to 3 times ``points`` vertices, the most for
+    small meshes.
 num_levels : int, optional
-  Unused; kept for compatibility.
+    Unused; kept for compatibility.
 max_points : int, optional (default: -1)
-  If positive, the grid is coarsened until its estimated number of vertices is
-  at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
+    If positive, the grid is coarsened until its estimated number of vertices is
+    at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
 )pbdoc");
   cls.def_property_readonly("refinement_limited", [](const Class& cobj){return cobj.refinement_limited();},
     "Whether max_points made the mesh coarser than max_size asked for");
@@ -158,23 +158,23 @@ pass the model's values to :py:meth:`refine` with the same arguments.
 Parameters
 ----------
 where : None, bool array or int array
-  The tetrahedra to split: all of them (None), those where a boolean mask with
-  one entry per tetrahedron is true, or those with the given indices.
-  Neighbouring tetrahedra are split as needed to keep the mesh conforming, and
-  split edges on the zone boundary are split with their symmetry equivalents, so
-  that equivalent zone faces keep matching.
+    The tetrahedra to split: all of them (None), those where a boolean mask with
+    one entry per tetrahedron is true, or those with the given indices.
+    Neighbouring tetrahedra are split as needed to keep the mesh conforming, and
+    split edges on the zone boundary are split with their symmetry equivalents, so
+    that equivalent zone faces keep matching.
 resolution : float, optional
-  The resolution limit, in inverse Angstrom. No edge is split to below
-  ``resolution / points_per_resolution``: a tetrahedron whose longest edge is at
-  most twice that is left whole.
+    The resolution limit, in inverse Angstrom. No edge is split to below
+    ``resolution / points_per_resolution``: a tetrahedron whose longest edge is at
+    most twice that is left whole.
 points_per_resolution : float, optional (default: 2)
-  How finely to resolve ``resolution``.
+    How finely to resolve ``resolution``.
 
 Returns
 -------
 numpy.ndarray
-  The new vertices, shape (N, 3), in relative lattice units like :py:attr:`rlu`.
-  :py:meth:`refine` appends them to the vertices in this order.
+    The new vertices, shape (N, 3), in relative lattice units like :py:attr:`rlu`.
+    :py:meth:`refine` appends them to the vertices in this order.
 )pbdoc");
   cls.def("refine", [tetrahedra_of, edge_limit](Class& cobj, const py::object& where,
                                                 const py::object& values, const py::object& vectors,
@@ -199,18 +199,18 @@ Refine the mesh by bisecting tetrahedra; existing vertices keep their indices an
 Parameters
 ----------
 where, resolution, points_per_resolution
-  As for :py:meth:`refinement_points`, which gives the points this adds.
+    As for :py:meth:`refinement_points`, which gives the points this adds.
 values, vectors : numpy.ndarray, optional
-  If the mesh holds data (after :py:meth:`fill`), the data for the new vertices,
-  laid out per point as the filled data and for exactly the points
-  :py:meth:`refinement_points` returns, in that order. Not allowed before the
-  mesh is filled.
+    If the mesh holds data (after :py:meth:`fill`), the data for the new vertices,
+    laid out per point as the filled data and for exactly the points
+    :py:meth:`refinement_points` returns, in that order. Not allowed before the
+    mesh is filled.
 
 Returns
 -------
 numpy.ndarray
-  The new vertices, shape (N, 3), in relative lattice units, appended to
-  :py:attr:`rlu` in this order.
+    The new vertices, shape (N, 3), in relative lattice units, appended to
+    :py:attr:`rlu` in this order.
 
 Note
 ----

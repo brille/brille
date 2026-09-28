@@ -244,26 +244,15 @@ class Bravais:
       Hermann-Mauguin symbol of a space group.
       A subset of the 10 possible Bravais letters is used herein:
     
-      +----------------+-----------------------------------------+-----------------------------------------------------------+
-      | Bravais letter | Centring                                | Centring vectors                                          |
-      +================+=========================================+===========================================================+
-      |       P        | primitive                               | :math:`\\mathbf{0}`                                        |
-      +----------------+-----------------------------------------+-----------------------------------------------------------+
-      |       A        | A-face centred                          | :math:`\\frac{\\mathbf{b}_s+\\mathbf{c}_s}{2}`               |
-      +----------------+-----------------------------------------+-----------------------------------------------------------+
-      |       B        | B-face centred                          | :math:`\\frac{\\mathbf{c}_s+\\mathbf{a}_s}{2}`               |
-      +----------------+-----------------------------------------+-----------------------------------------------------------+
-      |       C        | C-face centred                          | :math:`\\frac{\\mathbf{a}_s+\\mathbf{b}_s}{2}`               |
-      +----------------+-----------------------------------------+-----------------------------------------------------------+
-      |       I        | body centred (*Innenzentriert*)         | :math:`\\frac{\\mathbf{a}_s+\\mathbf{b}_s+\\mathbf{c}_s}{2}`  |
-      +----------------+-----------------------------------------+-----------------------------------------------------------+
-      |       F        | all-face centred                        | :math:`\\frac{\\mathbf{b}_s+\\mathbf{c}_s}{2}`,              |
-      |                |                                         | :math:`\\frac{\\mathbf{c}_s+\\mathbf{a}_s}{2}`,              |
-      |                |                                         | :math:`\\frac{\\mathbf{a}_s+\\mathbf{b}_s}{2}`               |
-      +----------------+-----------------------------------------+-----------------------------------------------------------+
-      |       R        | rhombohedrally centred (hexagonal axes) | :math:`\\frac{2\\mathbf{a}_s+\\mathbf{b}_s+\\mathbf{c}_s}{3}` |
-      |                |                                         | :math:`\\frac{\\mathbf{a}_s+2\\mathbf{b}_s+2\\mathbf{c}_s}{3}`|
-      +----------------+-----------------------------------------+-----------------------------------------------------------+
+      | Bravais letter | Centring | Centring vectors |
+      |---|---|---|
+      | P | primitive | :math:`\\mathbf{0}` |
+      | A | A-face centred | :math:`\\frac{\\mathbf{b}_s+\\mathbf{c}_s}{2}` |
+      | B | B-face centred | :math:`\\frac{\\mathbf{c}_s+\\mathbf{a}_s}{2}` |
+      | C | C-face centred | :math:`\\frac{\\mathbf{a}_s+\\mathbf{b}_s}{2}` |
+      | I | body centred (*Innenzentriert*) | :math:`\\frac{\\mathbf{a}_s+\\mathbf{b}_s+\\mathbf{c}_s}{2}` |
+      | F | all-face centred | :math:`\\frac{\\mathbf{b}_s+\\mathbf{c}_s}{2}`, :math:`\\frac{\\mathbf{c}_s+\\mathbf{a}_s}{2}`, :math:`\\frac{\\mathbf{a}_s+\\mathbf{b}_s}{2}` |
+      | R | rhombohedrally centred (hexagonal axes) | :math:`\\frac{2\\mathbf{a}_s+\\mathbf{b}_s+\\mathbf{c}_s}{3}` :math:`\\frac{\\mathbf{a}_s+2\\mathbf{b}_s+2\\mathbf{c}_s}{3}` |
     
       For further details, see the `IUCr Online Dictionary of Crystallography`__.
     
@@ -476,13 +465,13 @@ class Symmetry:
       Parameters
       ----------
       hall : int
-        The integer Hall number for the desired space group operations [[deprecated]].
+          The integer Hall number for the desired space group operations [[deprecated]].
       W : arraylike, int
-        The generalised rotation (matrix) part of the symmetry operator(s)
+          The generalised rotation (matrix) part of the symmetry operator(s)
       w : arraylike, float
-        The translation (vector) part of the symmetry operator(s)
+          The translation (vector) part of the symmetry operator(s)
       cifxyz : str
-        The symmetry operator(s) encoded in CIF xyz format
+          The symmetry operator(s) encoded in CIF xyz format
     
       Note
       ----
@@ -968,15 +957,15 @@ class BrillouinZone:
     @staticmethod
     def from_file(filename: str, entry: str = 'BrillouinZone') -> BrillouinZone:
         """
-          Save the object to an HDF5 file
+          Load an object from an HDF5 file
         
           Parameters
           ----------
           filename : str
-            The full path specification for the file to read from
+              The full path specification for the file to read from
           entry: str
-            The group path, e.g., "my/cool/bz", where to read from inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/bz", where to read from inside the file,
+              with a default equal to the object Class name
         
           Returns
           -------
@@ -1000,26 +989,26 @@ class BrillouinZone:
             Parameters
             ----------
             Q : :py:class:`numpy.ndarray`
-              A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
-              units of the reciprocal lattice.
+                A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
+                units of the reciprocal lattice.
             threads : integer, optional
-              The number of parallel threads that should be used. If this value is less
-              than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
-              or one thread per logical core is used if it is not set.
+                The number of parallel threads that should be used. If this value is less
+                than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
+                or one thread per logical core is used if it is not set.
         
             Returns
             -------
             Qir : :py:class:`numpy.ndarray`
-              The array of equivalent irreducible :math:`\\mathbf{q}_\\text{ir}` points
-              for all :math:`\\mathbf{Q}`;
+                The array of equivalent irreducible :math:`\\mathbf{q}_\\text{ir}` points
+                for all :math:`\\mathbf{Q}`;
             tau : :py:class:`numpy.ndarray`
-              the closest reciprocal lattice vector, :math:`\\boldsymbol{\\tau}`,
-              to each :math:`\\mathbf{Q}`;
+                the closest reciprocal lattice vector, :math:`\\boldsymbol{\\tau}`,
+                to each :math:`\\mathbf{Q}`;
             R : :py:class:`numpy.ndarray`
-              the pointgroup symmetry operation :math:`R`
+                the pointgroup symmetry operation :math:`R`
             Rinv : :py:class:`numpy.ndarray`
-              the inverse point group symmetry operation which obey
-              :math:`\\mathbf{Q} = R^{-1} \\mathbf{q}_\\text{ir} + \\boldsymbol{\\tau}`.
+                the inverse point group symmetry operation which obey
+                :math:`\\mathbf{Q} = R^{-1} \\mathbf{q}_\\text{ir} + \\boldsymbol{\\tau}`.
         """
     def ir_moveinto_wedge(self, Q: numpy.ndarray[numpy.float64], threads: int = 0) -> tuple:
         """
@@ -1034,19 +1023,19 @@ class BrillouinZone:
             Parameters
             ----------
             Q : :py:class:`numpy.ndarray`
-              A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
-              units of the reciprocal lattice.
+                A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
+                units of the reciprocal lattice.
             threads : integer, optional (default 0)
-              The number of parallel threads that should be used. If this value is less
-              than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
-              or one thread per logical core is used if it is not set.
+                The number of parallel threads that should be used. If this value is less
+                than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
+                or one thread per logical core is used if it is not set.
         
             Returns
             -------
             :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`
-              The array of equivalent in-wedge :math:`\\mathbf{Q}_\\text{ir}` points
-              for all :math:`\\mathbf{Q}`, and the pointgroup operation fulfilling
-              :math:`\\mathbf{Q}_\\text{ir} = R \\mathbf{Q}`.
+                The array of equivalent in-wedge :math:`\\mathbf{Q}_\\text{ir}` points
+                for all :math:`\\mathbf{Q}`, and the pointgroup operation fulfilling
+                :math:`\\mathbf{Q}_\\text{ir} = R \\mathbf{Q}`.
         """
     def isinside(self, points: numpy.ndarray[numpy.float64]) -> list[bool]:
         """
@@ -1056,13 +1045,13 @@ class BrillouinZone:
             Parameters
             ----------
             Q : :py:class:`numpy.ndarray`
-              A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
-              units of the reciprocal lattice.
+                A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
+                units of the reciprocal lattice.
         
             Returns
             -------
             :py:class:`numpy.ndarray`
-              One dimensional logical array with ``True`` indicating 'inside'
+                One dimensional logical array with ``True`` indicating 'inside'
         """
     def lattice_symmetry_counts(self, exact: float = 1e-10, near: float = 0.0001) -> tuple[int, int]:
         """
@@ -1084,19 +1073,19 @@ class BrillouinZone:
             Parameters
             ----------
             Q : :py:class:`numpy.ndarray`
-              A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
-              units of the reciprocal lattice.
+                A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
+                units of the reciprocal lattice.
             threads : integer, optional
-              The number of parallel threads that should be used. If this value is less
-              than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
-              or one thread per logical core is used if it is not set.
+                The number of parallel threads that should be used. If this value is less
+                than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
+                or one thread per logical core is used if it is not set.
         
             Returns
             -------
             :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`
-              The floating point array of equivalent reduced :math:`\\mathbf{q}`
-              points for all :math:`\\mathbf{Q}`, and an integer array filled with
-              :math:`\\boldsymbol{\\tau} = \\mathbf{Q}-\\mathbf{q}`.
+                The floating point array of equivalent reduced :math:`\\mathbf{q}`
+                points for all :math:`\\mathbf{Q}`, and an integer array filled with
+                :math:`\\boldsymbol{\\tau} = \\mathbf{Q}-\\mathbf{q}`.
         """
     def to_file(self, filename: str, entry: str = 'BrillouinZone', flags: str = 'ac') -> bool:
         """
@@ -1105,37 +1094,31 @@ class BrillouinZone:
           Parameters
           ----------
           filename : str
-            The full path specification for the file to write into
+              The full path specification for the file to write into
           entry: str
-            The group path, e.g., "my/cool/bz", where to write inside the file,
-            with a default equal to BrillouinZone name
+              The group path, e.g., "my/cool/bz", where to write inside the file,
+              with a default equal to BrillouinZone name
           flags: str
-            The HDF5 permissions to use when opening the file. Default 'a' writes to an
-            existing file -- if `entry` exists in the file it is overwritten.
+              The HDF5 permissions to use when opening the file. Default 'a' writes to an
+              existing file -- if `entry` exists in the file it is overwritten.
         
           Note
           ----
           Possible `flags` are:
         
-          +---------+-------------------------+----------------+
-          | `flags` | meaning                 | HDF equivalent |
-          +=========+=========================+================+
-          | 'r'     | read                    | H5F_ACC_RDONLY |
-          +---------+-------------------------+----------------+
-          | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
-          +---------+-------------------------+----------------+
-          | 'a'     | write, append to file   | H5F_ACC_RDWR   |
-          +---------+-------------------------+----------------+
-          | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
-          +---------+-------------------------+----------------+
-          | 't'     | write, replace existing | H5F_ACC_TRUNC  |
-          +---------+-------------------------+----------------+
+          | `flags` | meaning | HDF equivalent |
+          |---|---|---|
+          | 'r' | read | H5F_ACC_RDONLY |
+          | 'x' | write, error if exists | H5F_ACC_EXCL |
+          | 'a' | write, append to file | H5F_ACC_RDWR |
+          | 'c' | write, error if exists | H5F_ACC_CREAT |
+          | 't' | write, replace existing | H5F_ACC_TRUNC |
         
         
           Returns
           -------
           bool
-            Indication of writing success.
+              Indication of writing success.
         """
     @property
     def faces_per_vertex(self) -> list[list[int]]:
@@ -1195,8 +1178,8 @@ class BrillouinZone:
           Returns
           -------
           :py:class:`brille._brille.Polyhedron`
-            If no irreducible Brillouin zone was requested at construction, the returned
-            polyhedron is that of the first Brillouin zone instead.
+              If no irreducible Brillouin zone was requested at construction, the returned
+              polyhedron is that of the first Brillouin zone instead.
         """
     @property
     def ir_polyhedron_generated(self) -> LPolyhedron:
@@ -1307,15 +1290,15 @@ class BZMeshQdd:
     @staticmethod
     def from_file(filename: str, entry: str = 'BZMeshQdd') -> BZMeshQdd:
         """
-          Save the object to an HDF5 file
+          Load an object from an HDF5 file
         
           Parameters
           ----------
           filename : str
-            The full path specification for the file to read from
+              The full path specification for the file to read from
           entry: str
-            The group path, e.g., "my/cool/grid", where to read from inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to read from inside the file,
+              with a default equal to the object Class name
         
           Returns
           -------
@@ -1335,20 +1318,20 @@ class BZMeshQdd:
         Parameters
         ----------
         brillouin_zone : BrillouinZone
-          The zone whose irreducible part the mesh fills.
+            The zone whose irreducible part the mesh fills.
         max_size : float, optional (default: -1)
-          The largest tetrahedron volume, in cubic reciprocal Angstrom, which sets the
-          grid spacing; if not positive, the grid is the reciprocal lattice itself.
-          Each grid cell holds six tetrahedra, so ``max_size = node_volume_fraction /
-          6`` gives about as many vertices as a :py:class:`BZTrellisQdc` with that
-          ``node_volume_fraction``, and ``brillouin_zone.ir_polyhedron.volume / (6 *
-          points)`` gives roughly 1.5 to 3 times ``points`` vertices, the most for
-          small meshes.
+            The largest tetrahedron volume, in cubic reciprocal Angstrom, which sets the
+            grid spacing; if not positive, the grid is the reciprocal lattice itself.
+            Each grid cell holds six tetrahedra, so ``max_size = node_volume_fraction /
+            6`` gives about as many vertices as a :py:class:`BZTrellisQdc` with that
+            ``node_volume_fraction``, and ``brillouin_zone.ir_polyhedron.volume / (6 *
+            points)`` gives roughly 1.5 to 3 times ``points`` vertices, the most for
+            small meshes.
         num_levels : int, optional
-          Unused; kept for compatibility.
+            Unused; kept for compatibility.
         max_points : int, optional (default: -1)
-          If positive, the grid is coarsened until its estimated number of vertices is
-          at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
+            If positive, the grid is coarsened until its estimated number of vertices is
+            at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
         """
     def __release_buffer__(self, buffer):
         """
@@ -1369,68 +1352,58 @@ class BZMeshQdd:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below).
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below).
         
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          ``values_data``
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            ``values_data``
         vectors_elements:
-          Like ``values_elements`` but for the eigenvectors
+            Like ``values_elements`` but for the eigenvectors
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -1447,75 +1420,65 @@ class BZMeshQdd:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below),
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below)
-          * which scalar cost function should be used (see below),
-          * which vector cost function should be used (see below).
+            * which scalar cost function should be used (see below),
+            * which vector cost function should be used (see below).
         
-          See the note below for the meaning of the last three values.
+            See the note below for the meaning of the last three values.
         values_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvalue elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvalue elements stored in the grid
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          **values_data**
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            **values_data**
         vectors_elements:
-          Like **values_elements** but for the eigenvectors
+            Like **values_elements** but for the eigenvectors
         vectors_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvector elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvector elements stored in the grid
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -1526,27 +1489,19 @@ class BZMeshQdd:
         
           Mapping of integers to scalar cost function:
         
-          +-------+------------------------------------+
-          | value | function(x,y)                      |
-          +=======+====================================+
-          |   0   | magnitude(x-y)                     |
-          +-------+------------------------------------+
+          | value | function(x,y) |
+          |---|---|
+          | 0 | magnitude(x-y) |
         
           Mapping of integers to vector cost function:
         
-          +-------+------------------------------------+
-          | value | function(vec_x, vec_y)             |
-          +=======+====================================+
-          |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-          +-------+------------------------------------+
-          |   1   | vector_distance(vec_x, vec_y)      |
-          +-------+------------------------------------+
-          |   2   | 1 - vector_product(vec_x, vec_y)   |
-          +-------+------------------------------------+
-          |   3   | vector_angle(vec_x, vec_y)         |
-          +-------+------------------------------------+
-          |   4   | hermitian_angle(vec_x, vec_y)      |
-          +-------+------------------------------------+
+          | value | function(vec_x, vec_y) |
+          |---|---|
+          | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+          | 1 | vector_distance(vec_x, vec_y) |
+          | 2 | 1 - vector_product(vec_x, vec_y) |
+          | 3 | vector_angle(vec_x, vec_y) |
+          | 4 | hermitian_angle(vec_x, vec_y) |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -1563,20 +1518,20 @@ class BZMeshQdd:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -1599,18 +1554,18 @@ class BZMeshQdd:
         Parameters
         ----------
         where, resolution, points_per_resolution
-          As for :py:meth:`refinement_points`, which gives the points this adds.
+            As for :py:meth:`refinement_points`, which gives the points this adds.
         values, vectors : numpy.ndarray, optional
-          If the mesh holds data (after :py:meth:`fill`), the data for the new vertices,
-          laid out per point as the filled data and for exactly the points
-          :py:meth:`refinement_points` returns, in that order. Not allowed before the
-          mesh is filled.
+            If the mesh holds data (after :py:meth:`fill`), the data for the new vertices,
+            laid out per point as the filled data and for exactly the points
+            :py:meth:`refinement_points` returns, in that order. Not allowed before the
+            mesh is filled.
         
         Returns
         -------
         numpy.ndarray
-          The new vertices, shape (N, 3), in relative lattice units, appended to
-          :py:attr:`rlu` in this order.
+            The new vertices, shape (N, 3), in relative lattice units, appended to
+            :py:attr:`rlu` in this order.
         
         Note
         ----
@@ -1628,23 +1583,23 @@ class BZMeshQdd:
         Parameters
         ----------
         where : None, bool array or int array
-          The tetrahedra to split: all of them (None), those where a boolean mask with
-          one entry per tetrahedron is true, or those with the given indices.
-          Neighbouring tetrahedra are split as needed to keep the mesh conforming, and
-          split edges on the zone boundary are split with their symmetry equivalents, so
-          that equivalent zone faces keep matching.
+            The tetrahedra to split: all of them (None), those where a boolean mask with
+            one entry per tetrahedron is true, or those with the given indices.
+            Neighbouring tetrahedra are split as needed to keep the mesh conforming, and
+            split edges on the zone boundary are split with their symmetry equivalents, so
+            that equivalent zone faces keep matching.
         resolution : float, optional
-          The resolution limit, in inverse Angstrom. No edge is split to below
-          ``resolution / points_per_resolution``: a tetrahedron whose longest edge is at
-          most twice that is left whole.
+            The resolution limit, in inverse Angstrom. No edge is split to below
+            ``resolution / points_per_resolution``: a tetrahedron whose longest edge is at
+            most twice that is left whole.
         points_per_resolution : float, optional (default: 2)
-          How finely to resolve ``resolution``.
+            How finely to resolve ``resolution``.
         
         Returns
         -------
         numpy.ndarray
-          The new vertices, shape (N, 3), in relative lattice units like :py:attr:`rlu`.
-          :py:meth:`refine` appends them to the vertices in this order.
+            The new vertices, shape (N, 3), in relative lattice units like :py:attr:`rlu`.
+            :py:meth:`refine` appends them to the vertices in this order.
         """
     def release_triangulation(self) -> None:
         """
@@ -1658,86 +1613,68 @@ class BZMeshQdd:
         """
     def set_flags_weights(self, values_flags: numpy.ndarray[numpy.int32], values_weights: numpy.ndarray[numpy.float64], vectors_flags: numpy.ndarray[numpy.int32], vectors_weights: numpy.ndarray[numpy.float64], sort: bool = False) -> None:
         """
-          Set :py:class:`~brille._brille.RotatesLike`, `~brille._brille.LengthUnit`
+          Set :py:class:`~brille._brille.RotatesLike`, :py:class:`~brille._brille.LengthUnit`
           and cost functions plus relative cost weights for the values and vectors
           stored in the object
         
           Parameters
           ----------
           values_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvalues at
-            neighbouring grid points for scalar- and vector-like eigenvalues.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvalues at
+              neighbouring grid points for scalar- and vector-like eigenvalues.
           values_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvalue elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvalue elements stored in the grid
           vectors_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvectors at
-            neighbouring grid points for scalar- and vector-like eigenvectors.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvectors at
+              neighbouring grid points for scalar- and vector-like eigenvectors.
           vectors_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvector elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvector elements stored in the grid
           sort : bool, optional
-            Whether the equivalent-mode permutations should be (re)determined following
-            the update to the flags and weights.
+              Whether the equivalent-mode permutations should be (re)determined following
+              the update to the flags and weights.
         
         
           Note
           ----
             Mapping of integers to :py:class:`~brille._brille.RotatesLike` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`RotatesLike`            |
-            +=======+====================================+
-            |   0   |               `vector`             |
-            +-------+------------------------------------+
-            |   1   |            `pseudovector`          |
-            +-------+------------------------------------+
-            |   2   |               `Gamma`              |
-            +-------+------------------------------------+
+            | value | :py:class:`RotatesLike` |
+            |---|---|
+            | 0 | `vector` |
+            | 1 | `pseudovector` |
+            | 2 | `Gamma` |
           
             Mapping of integers to :py:class:`LengthUnit` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`LengthUnit`             |
-            +=======+====================================+
-            |   0   |               `none`               |
-            +-------+------------------------------------+
-            |   1   |             `angstrom`             |
-            +-------+------------------------------------+
-            |   2   |         `inverse_angstrom`         |
-            +-------+------------------------------------+
-            |   3   |           `real_lattice`           |
-            +-------+------------------------------------+
-            |   4   |        `reciprocal_lattice`        |
-            +-------+------------------------------------+
+            | value | :py:class:`LengthUnit` |
+            |---|---|
+            | 0 | `none` |
+            | 1 | `angstrom` |
+            | 2 | `inverse_angstrom` |
+            | 3 | `real_lattice` |
+            | 4 | `reciprocal_lattice` |
         
             Mapping of integers to scalar cost function:
           
-            +-------+------------------------------------+
-            | value | function(x,y)                      |
-            +=======+====================================+
-            |   0   | magnitude(x-y)                     |
-            +-------+------------------------------------+
+            | value | function(x,y) |
+            |---|---|
+            | 0 | magnitude(x-y) |
           
             Mapping of integers to vector cost function:
           
-            +-------+------------------------------------+
-            | value | function(vec_x, vec_y)             |
-            +=======+====================================+
-            |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-            +-------+------------------------------------+
-            |   1   | vector_distance(vec_x, vec_y)      |
-            +-------+------------------------------------+
-            |   2   | 1 - vector_product(vec_x, vec_y)   |
-            +-------+------------------------------------+
-            |   3   | vector_angle(vec_x, vec_y)         |
-            +-------+------------------------------------+
-            |   4   | hermitian_angle(vec_x, vec_y)      |
-            +-------+------------------------------------+
+            | value | function(vec_x, vec_y) |
+            |---|---|
+            | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+            | 1 | vector_distance(vec_x, vec_y) |
+            | 2 | 1 - vector_product(vec_x, vec_y) |
+            | 3 | vector_angle(vec_x, vec_y) |
+            | 4 | hermitian_angle(vec_x, vec_y) |
         
             Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -1758,14 +1695,14 @@ class BZMeshQdd:
             Parameters
             ----------
             normalize : bool or None, optional
-              ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
-              lattice units; ``False`` never does; ``None`` restores the automatic default.
+                ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
+                lattice units; ``False`` never does; ``None`` restores the automatic default.
             metric : float, vector-like, optional
-              A diagonal metric :math:`M`, one weight per element of a branch (for
-              phonons, :math:`3N`). The default is the identity, the ordinary norm.
-              For Bogoliubov (spin-wave) vectors use
-              :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
-              :math:`\\langle v|\\eta|v\\rangle` is kept.
+                A diagonal metric :math:`M`, one weight per element of a branch (for
+                phonons, :math:`3N`). The default is the identity, the ordinary norm.
+                For Bogoliubov (spin-wave) vectors use
+                :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
+                :math:`\\langle v|\\eta|v\\rangle` is kept.
         """
     def sort(self) -> None:
         ...
@@ -1776,37 +1713,31 @@ class BZMeshQdd:
           Parameters
           ----------
           filename : str
-            The full path specification for the file to write into
+              The full path specification for the file to write into
           entry: str
-            The group path, e.g., "my/cool/grid", where to write inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to write inside the file,
+              with a default equal to the object Class name
           flags: str
-            The HDF5 permissions to use when opening the file. Default 'a' writes to an
-            existing file -- if `entry` exists in the file it is overwritten.
+              The HDF5 permissions to use when opening the file. Default 'a' writes to an
+              existing file -- if `entry` exists in the file it is overwritten.
         
           Note
           ----
           Possible `flags` are:
         
-          +---------+-------------------------+----------------+
-          | `flags` | meaning                 | HDF equivalent |
-          +=========+=========================+================+
-          | 'r'     | read                    | H5F_ACC_RDONLY |
-          +---------+-------------------------+----------------+
-          | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
-          +---------+-------------------------+----------------+
-          | 'a'     | write, append to file   | H5F_ACC_RDWR   |
-          +---------+-------------------------+----------------+
-          | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
-          +---------+-------------------------+----------------+
-          | 't'     | write, replace existing | H5F_ACC_TRUNC  |
-          +---------+-------------------------+----------------+
+          | `flags` | meaning | HDF equivalent |
+          |---|---|---|
+          | 'r' | read | H5F_ACC_RDONLY |
+          | 'x' | write, error if exists | H5F_ACC_EXCL |
+          | 'a' | write, append to file | H5F_ACC_RDWR |
+          | 'c' | write, error if exists | H5F_ACC_CREAT |
+          | 't' | write, replace existing | H5F_ACC_TRUNC |
         
         
           Returns
           -------
           bool
-            Indication of writing success.
+              Indication of writing success.
         """
     @property
     def BrillouinZone(self) -> BrillouinZone:
@@ -1869,15 +1800,15 @@ class BZMeshQdc:
     @staticmethod
     def from_file(filename: str, entry: str = 'BZMeshQdc') -> BZMeshQdc:
         """
-          Save the object to an HDF5 file
+          Load an object from an HDF5 file
         
           Parameters
           ----------
           filename : str
-            The full path specification for the file to read from
+              The full path specification for the file to read from
           entry: str
-            The group path, e.g., "my/cool/grid", where to read from inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to read from inside the file,
+              with a default equal to the object Class name
         
           Returns
           -------
@@ -1897,20 +1828,20 @@ class BZMeshQdc:
         Parameters
         ----------
         brillouin_zone : BrillouinZone
-          The zone whose irreducible part the mesh fills.
+            The zone whose irreducible part the mesh fills.
         max_size : float, optional (default: -1)
-          The largest tetrahedron volume, in cubic reciprocal Angstrom, which sets the
-          grid spacing; if not positive, the grid is the reciprocal lattice itself.
-          Each grid cell holds six tetrahedra, so ``max_size = node_volume_fraction /
-          6`` gives about as many vertices as a :py:class:`BZTrellisQdc` with that
-          ``node_volume_fraction``, and ``brillouin_zone.ir_polyhedron.volume / (6 *
-          points)`` gives roughly 1.5 to 3 times ``points`` vertices, the most for
-          small meshes.
+            The largest tetrahedron volume, in cubic reciprocal Angstrom, which sets the
+            grid spacing; if not positive, the grid is the reciprocal lattice itself.
+            Each grid cell holds six tetrahedra, so ``max_size = node_volume_fraction /
+            6`` gives about as many vertices as a :py:class:`BZTrellisQdc` with that
+            ``node_volume_fraction``, and ``brillouin_zone.ir_polyhedron.volume / (6 *
+            points)`` gives roughly 1.5 to 3 times ``points`` vertices, the most for
+            small meshes.
         num_levels : int, optional
-          Unused; kept for compatibility.
+            Unused; kept for compatibility.
         max_points : int, optional (default: -1)
-          If positive, the grid is coarsened until its estimated number of vertices is
-          at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
+            If positive, the grid is coarsened until its estimated number of vertices is
+            at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
         """
     def __release_buffer__(self, buffer):
         """
@@ -1931,68 +1862,58 @@ class BZMeshQdc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below).
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below).
         
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          ``values_data``
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            ``values_data``
         vectors_elements:
-          Like ``values_elements`` but for the eigenvectors
+            Like ``values_elements`` but for the eigenvectors
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -2009,75 +1930,65 @@ class BZMeshQdc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below),
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below)
-          * which scalar cost function should be used (see below),
-          * which vector cost function should be used (see below).
+            * which scalar cost function should be used (see below),
+            * which vector cost function should be used (see below).
         
-          See the note below for the meaning of the last three values.
+            See the note below for the meaning of the last three values.
         values_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvalue elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvalue elements stored in the grid
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          **values_data**
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            **values_data**
         vectors_elements:
-          Like **values_elements** but for the eigenvectors
+            Like **values_elements** but for the eigenvectors
         vectors_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvector elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvector elements stored in the grid
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -2088,27 +1999,19 @@ class BZMeshQdc:
         
           Mapping of integers to scalar cost function:
         
-          +-------+------------------------------------+
-          | value | function(x,y)                      |
-          +=======+====================================+
-          |   0   | magnitude(x-y)                     |
-          +-------+------------------------------------+
+          | value | function(x,y) |
+          |---|---|
+          | 0 | magnitude(x-y) |
         
           Mapping of integers to vector cost function:
         
-          +-------+------------------------------------+
-          | value | function(vec_x, vec_y)             |
-          +=======+====================================+
-          |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-          +-------+------------------------------------+
-          |   1   | vector_distance(vec_x, vec_y)      |
-          +-------+------------------------------------+
-          |   2   | 1 - vector_product(vec_x, vec_y)   |
-          +-------+------------------------------------+
-          |   3   | vector_angle(vec_x, vec_y)         |
-          +-------+------------------------------------+
-          |   4   | hermitian_angle(vec_x, vec_y)      |
-          +-------+------------------------------------+
+          | value | function(vec_x, vec_y) |
+          |---|---|
+          | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+          | 1 | vector_distance(vec_x, vec_y) |
+          | 2 | 1 - vector_product(vec_x, vec_y) |
+          | 3 | vector_angle(vec_x, vec_y) |
+          | 4 | hermitian_angle(vec_x, vec_y) |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -2125,20 +2028,20 @@ class BZMeshQdc:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -2161,18 +2064,18 @@ class BZMeshQdc:
         Parameters
         ----------
         where, resolution, points_per_resolution
-          As for :py:meth:`refinement_points`, which gives the points this adds.
+            As for :py:meth:`refinement_points`, which gives the points this adds.
         values, vectors : numpy.ndarray, optional
-          If the mesh holds data (after :py:meth:`fill`), the data for the new vertices,
-          laid out per point as the filled data and for exactly the points
-          :py:meth:`refinement_points` returns, in that order. Not allowed before the
-          mesh is filled.
+            If the mesh holds data (after :py:meth:`fill`), the data for the new vertices,
+            laid out per point as the filled data and for exactly the points
+            :py:meth:`refinement_points` returns, in that order. Not allowed before the
+            mesh is filled.
         
         Returns
         -------
         numpy.ndarray
-          The new vertices, shape (N, 3), in relative lattice units, appended to
-          :py:attr:`rlu` in this order.
+            The new vertices, shape (N, 3), in relative lattice units, appended to
+            :py:attr:`rlu` in this order.
         
         Note
         ----
@@ -2190,23 +2093,23 @@ class BZMeshQdc:
         Parameters
         ----------
         where : None, bool array or int array
-          The tetrahedra to split: all of them (None), those where a boolean mask with
-          one entry per tetrahedron is true, or those with the given indices.
-          Neighbouring tetrahedra are split as needed to keep the mesh conforming, and
-          split edges on the zone boundary are split with their symmetry equivalents, so
-          that equivalent zone faces keep matching.
+            The tetrahedra to split: all of them (None), those where a boolean mask with
+            one entry per tetrahedron is true, or those with the given indices.
+            Neighbouring tetrahedra are split as needed to keep the mesh conforming, and
+            split edges on the zone boundary are split with their symmetry equivalents, so
+            that equivalent zone faces keep matching.
         resolution : float, optional
-          The resolution limit, in inverse Angstrom. No edge is split to below
-          ``resolution / points_per_resolution``: a tetrahedron whose longest edge is at
-          most twice that is left whole.
+            The resolution limit, in inverse Angstrom. No edge is split to below
+            ``resolution / points_per_resolution``: a tetrahedron whose longest edge is at
+            most twice that is left whole.
         points_per_resolution : float, optional (default: 2)
-          How finely to resolve ``resolution``.
+            How finely to resolve ``resolution``.
         
         Returns
         -------
         numpy.ndarray
-          The new vertices, shape (N, 3), in relative lattice units like :py:attr:`rlu`.
-          :py:meth:`refine` appends them to the vertices in this order.
+            The new vertices, shape (N, 3), in relative lattice units like :py:attr:`rlu`.
+            :py:meth:`refine` appends them to the vertices in this order.
         """
     def release_triangulation(self) -> None:
         """
@@ -2220,86 +2123,68 @@ class BZMeshQdc:
         """
     def set_flags_weights(self, values_flags: numpy.ndarray[numpy.int32], values_weights: numpy.ndarray[numpy.float64], vectors_flags: numpy.ndarray[numpy.int32], vectors_weights: numpy.ndarray[numpy.float64], sort: bool = False) -> None:
         """
-          Set :py:class:`~brille._brille.RotatesLike`, `~brille._brille.LengthUnit`
+          Set :py:class:`~brille._brille.RotatesLike`, :py:class:`~brille._brille.LengthUnit`
           and cost functions plus relative cost weights for the values and vectors
           stored in the object
         
           Parameters
           ----------
           values_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvalues at
-            neighbouring grid points for scalar- and vector-like eigenvalues.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvalues at
+              neighbouring grid points for scalar- and vector-like eigenvalues.
           values_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvalue elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvalue elements stored in the grid
           vectors_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvectors at
-            neighbouring grid points for scalar- and vector-like eigenvectors.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvectors at
+              neighbouring grid points for scalar- and vector-like eigenvectors.
           vectors_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvector elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvector elements stored in the grid
           sort : bool, optional
-            Whether the equivalent-mode permutations should be (re)determined following
-            the update to the flags and weights.
+              Whether the equivalent-mode permutations should be (re)determined following
+              the update to the flags and weights.
         
         
           Note
           ----
             Mapping of integers to :py:class:`~brille._brille.RotatesLike` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`RotatesLike`            |
-            +=======+====================================+
-            |   0   |               `vector`             |
-            +-------+------------------------------------+
-            |   1   |            `pseudovector`          |
-            +-------+------------------------------------+
-            |   2   |               `Gamma`              |
-            +-------+------------------------------------+
+            | value | :py:class:`RotatesLike` |
+            |---|---|
+            | 0 | `vector` |
+            | 1 | `pseudovector` |
+            | 2 | `Gamma` |
           
             Mapping of integers to :py:class:`LengthUnit` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`LengthUnit`             |
-            +=======+====================================+
-            |   0   |               `none`               |
-            +-------+------------------------------------+
-            |   1   |             `angstrom`             |
-            +-------+------------------------------------+
-            |   2   |         `inverse_angstrom`         |
-            +-------+------------------------------------+
-            |   3   |           `real_lattice`           |
-            +-------+------------------------------------+
-            |   4   |        `reciprocal_lattice`        |
-            +-------+------------------------------------+
+            | value | :py:class:`LengthUnit` |
+            |---|---|
+            | 0 | `none` |
+            | 1 | `angstrom` |
+            | 2 | `inverse_angstrom` |
+            | 3 | `real_lattice` |
+            | 4 | `reciprocal_lattice` |
         
             Mapping of integers to scalar cost function:
           
-            +-------+------------------------------------+
-            | value | function(x,y)                      |
-            +=======+====================================+
-            |   0   | magnitude(x-y)                     |
-            +-------+------------------------------------+
+            | value | function(x,y) |
+            |---|---|
+            | 0 | magnitude(x-y) |
           
             Mapping of integers to vector cost function:
           
-            +-------+------------------------------------+
-            | value | function(vec_x, vec_y)             |
-            +=======+====================================+
-            |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-            +-------+------------------------------------+
-            |   1   | vector_distance(vec_x, vec_y)      |
-            +-------+------------------------------------+
-            |   2   | 1 - vector_product(vec_x, vec_y)   |
-            +-------+------------------------------------+
-            |   3   | vector_angle(vec_x, vec_y)         |
-            +-------+------------------------------------+
-            |   4   | hermitian_angle(vec_x, vec_y)      |
-            +-------+------------------------------------+
+            | value | function(vec_x, vec_y) |
+            |---|---|
+            | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+            | 1 | vector_distance(vec_x, vec_y) |
+            | 2 | 1 - vector_product(vec_x, vec_y) |
+            | 3 | vector_angle(vec_x, vec_y) |
+            | 4 | hermitian_angle(vec_x, vec_y) |
         
             Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -2320,14 +2205,14 @@ class BZMeshQdc:
             Parameters
             ----------
             normalize : bool or None, optional
-              ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
-              lattice units; ``False`` never does; ``None`` restores the automatic default.
+                ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
+                lattice units; ``False`` never does; ``None`` restores the automatic default.
             metric : float, vector-like, optional
-              A diagonal metric :math:`M`, one weight per element of a branch (for
-              phonons, :math:`3N`). The default is the identity, the ordinary norm.
-              For Bogoliubov (spin-wave) vectors use
-              :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
-              :math:`\\langle v|\\eta|v\\rangle` is kept.
+                A diagonal metric :math:`M`, one weight per element of a branch (for
+                phonons, :math:`3N`). The default is the identity, the ordinary norm.
+                For Bogoliubov (spin-wave) vectors use
+                :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
+                :math:`\\langle v|\\eta|v\\rangle` is kept.
         """
     def sort(self) -> None:
         ...
@@ -2338,37 +2223,31 @@ class BZMeshQdc:
           Parameters
           ----------
           filename : str
-            The full path specification for the file to write into
+              The full path specification for the file to write into
           entry: str
-            The group path, e.g., "my/cool/grid", where to write inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to write inside the file,
+              with a default equal to the object Class name
           flags: str
-            The HDF5 permissions to use when opening the file. Default 'a' writes to an
-            existing file -- if `entry` exists in the file it is overwritten.
+              The HDF5 permissions to use when opening the file. Default 'a' writes to an
+              existing file -- if `entry` exists in the file it is overwritten.
         
           Note
           ----
           Possible `flags` are:
         
-          +---------+-------------------------+----------------+
-          | `flags` | meaning                 | HDF equivalent |
-          +=========+=========================+================+
-          | 'r'     | read                    | H5F_ACC_RDONLY |
-          +---------+-------------------------+----------------+
-          | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
-          +---------+-------------------------+----------------+
-          | 'a'     | write, append to file   | H5F_ACC_RDWR   |
-          +---------+-------------------------+----------------+
-          | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
-          +---------+-------------------------+----------------+
-          | 't'     | write, replace existing | H5F_ACC_TRUNC  |
-          +---------+-------------------------+----------------+
+          | `flags` | meaning | HDF equivalent |
+          |---|---|---|
+          | 'r' | read | H5F_ACC_RDONLY |
+          | 'x' | write, error if exists | H5F_ACC_EXCL |
+          | 'a' | write, append to file | H5F_ACC_RDWR |
+          | 'c' | write, error if exists | H5F_ACC_CREAT |
+          | 't' | write, replace existing | H5F_ACC_TRUNC |
         
         
           Returns
           -------
           bool
-            Indication of writing success.
+              Indication of writing success.
         """
     @property
     def BrillouinZone(self) -> BrillouinZone:
@@ -2431,15 +2310,15 @@ class BZMeshQcc:
     @staticmethod
     def from_file(filename: str, entry: str = 'BZMeshQcc') -> BZMeshQcc:
         """
-          Save the object to an HDF5 file
+          Load an object from an HDF5 file
         
           Parameters
           ----------
           filename : str
-            The full path specification for the file to read from
+              The full path specification for the file to read from
           entry: str
-            The group path, e.g., "my/cool/grid", where to read from inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to read from inside the file,
+              with a default equal to the object Class name
         
           Returns
           -------
@@ -2459,20 +2338,20 @@ class BZMeshQcc:
         Parameters
         ----------
         brillouin_zone : BrillouinZone
-          The zone whose irreducible part the mesh fills.
+            The zone whose irreducible part the mesh fills.
         max_size : float, optional (default: -1)
-          The largest tetrahedron volume, in cubic reciprocal Angstrom, which sets the
-          grid spacing; if not positive, the grid is the reciprocal lattice itself.
-          Each grid cell holds six tetrahedra, so ``max_size = node_volume_fraction /
-          6`` gives about as many vertices as a :py:class:`BZTrellisQdc` with that
-          ``node_volume_fraction``, and ``brillouin_zone.ir_polyhedron.volume / (6 *
-          points)`` gives roughly 1.5 to 3 times ``points`` vertices, the most for
-          small meshes.
+            The largest tetrahedron volume, in cubic reciprocal Angstrom, which sets the
+            grid spacing; if not positive, the grid is the reciprocal lattice itself.
+            Each grid cell holds six tetrahedra, so ``max_size = node_volume_fraction /
+            6`` gives about as many vertices as a :py:class:`BZTrellisQdc` with that
+            ``node_volume_fraction``, and ``brillouin_zone.ir_polyhedron.volume / (6 *
+            points)`` gives roughly 1.5 to 3 times ``points`` vertices, the most for
+            small meshes.
         num_levels : int, optional
-          Unused; kept for compatibility.
+            Unused; kept for compatibility.
         max_points : int, optional (default: -1)
-          If positive, the grid is coarsened until its estimated number of vertices is
-          at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
+            If positive, the grid is coarsened until its estimated number of vertices is
+            at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
         """
     def __release_buffer__(self, buffer):
         """
@@ -2493,68 +2372,58 @@ class BZMeshQcc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below).
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below).
         
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          ``values_data``
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            ``values_data``
         vectors_elements:
-          Like ``values_elements`` but for the eigenvectors
+            Like ``values_elements`` but for the eigenvectors
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -2571,75 +2440,65 @@ class BZMeshQcc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below),
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below)
-          * which scalar cost function should be used (see below),
-          * which vector cost function should be used (see below).
+            * which scalar cost function should be used (see below),
+            * which vector cost function should be used (see below).
         
-          See the note below for the meaning of the last three values.
+            See the note below for the meaning of the last three values.
         values_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvalue elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvalue elements stored in the grid
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          **values_data**
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            **values_data**
         vectors_elements:
-          Like **values_elements** but for the eigenvectors
+            Like **values_elements** but for the eigenvectors
         vectors_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvector elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvector elements stored in the grid
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -2650,27 +2509,19 @@ class BZMeshQcc:
         
           Mapping of integers to scalar cost function:
         
-          +-------+------------------------------------+
-          | value | function(x,y)                      |
-          +=======+====================================+
-          |   0   | magnitude(x-y)                     |
-          +-------+------------------------------------+
+          | value | function(x,y) |
+          |---|---|
+          | 0 | magnitude(x-y) |
         
           Mapping of integers to vector cost function:
         
-          +-------+------------------------------------+
-          | value | function(vec_x, vec_y)             |
-          +=======+====================================+
-          |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-          +-------+------------------------------------+
-          |   1   | vector_distance(vec_x, vec_y)      |
-          +-------+------------------------------------+
-          |   2   | 1 - vector_product(vec_x, vec_y)   |
-          +-------+------------------------------------+
-          |   3   | vector_angle(vec_x, vec_y)         |
-          +-------+------------------------------------+
-          |   4   | hermitian_angle(vec_x, vec_y)      |
-          +-------+------------------------------------+
+          | value | function(vec_x, vec_y) |
+          |---|---|
+          | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+          | 1 | vector_distance(vec_x, vec_y) |
+          | 2 | 1 - vector_product(vec_x, vec_y) |
+          | 3 | vector_angle(vec_x, vec_y) |
+          | 4 | hermitian_angle(vec_x, vec_y) |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -2687,20 +2538,20 @@ class BZMeshQcc:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -2723,18 +2574,18 @@ class BZMeshQcc:
         Parameters
         ----------
         where, resolution, points_per_resolution
-          As for :py:meth:`refinement_points`, which gives the points this adds.
+            As for :py:meth:`refinement_points`, which gives the points this adds.
         values, vectors : numpy.ndarray, optional
-          If the mesh holds data (after :py:meth:`fill`), the data for the new vertices,
-          laid out per point as the filled data and for exactly the points
-          :py:meth:`refinement_points` returns, in that order. Not allowed before the
-          mesh is filled.
+            If the mesh holds data (after :py:meth:`fill`), the data for the new vertices,
+            laid out per point as the filled data and for exactly the points
+            :py:meth:`refinement_points` returns, in that order. Not allowed before the
+            mesh is filled.
         
         Returns
         -------
         numpy.ndarray
-          The new vertices, shape (N, 3), in relative lattice units, appended to
-          :py:attr:`rlu` in this order.
+            The new vertices, shape (N, 3), in relative lattice units, appended to
+            :py:attr:`rlu` in this order.
         
         Note
         ----
@@ -2752,23 +2603,23 @@ class BZMeshQcc:
         Parameters
         ----------
         where : None, bool array or int array
-          The tetrahedra to split: all of them (None), those where a boolean mask with
-          one entry per tetrahedron is true, or those with the given indices.
-          Neighbouring tetrahedra are split as needed to keep the mesh conforming, and
-          split edges on the zone boundary are split with their symmetry equivalents, so
-          that equivalent zone faces keep matching.
+            The tetrahedra to split: all of them (None), those where a boolean mask with
+            one entry per tetrahedron is true, or those with the given indices.
+            Neighbouring tetrahedra are split as needed to keep the mesh conforming, and
+            split edges on the zone boundary are split with their symmetry equivalents, so
+            that equivalent zone faces keep matching.
         resolution : float, optional
-          The resolution limit, in inverse Angstrom. No edge is split to below
-          ``resolution / points_per_resolution``: a tetrahedron whose longest edge is at
-          most twice that is left whole.
+            The resolution limit, in inverse Angstrom. No edge is split to below
+            ``resolution / points_per_resolution``: a tetrahedron whose longest edge is at
+            most twice that is left whole.
         points_per_resolution : float, optional (default: 2)
-          How finely to resolve ``resolution``.
+            How finely to resolve ``resolution``.
         
         Returns
         -------
         numpy.ndarray
-          The new vertices, shape (N, 3), in relative lattice units like :py:attr:`rlu`.
-          :py:meth:`refine` appends them to the vertices in this order.
+            The new vertices, shape (N, 3), in relative lattice units like :py:attr:`rlu`.
+            :py:meth:`refine` appends them to the vertices in this order.
         """
     def release_triangulation(self) -> None:
         """
@@ -2782,86 +2633,68 @@ class BZMeshQcc:
         """
     def set_flags_weights(self, values_flags: numpy.ndarray[numpy.int32], values_weights: numpy.ndarray[numpy.float64], vectors_flags: numpy.ndarray[numpy.int32], vectors_weights: numpy.ndarray[numpy.float64], sort: bool = False) -> None:
         """
-          Set :py:class:`~brille._brille.RotatesLike`, `~brille._brille.LengthUnit`
+          Set :py:class:`~brille._brille.RotatesLike`, :py:class:`~brille._brille.LengthUnit`
           and cost functions plus relative cost weights for the values and vectors
           stored in the object
         
           Parameters
           ----------
           values_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvalues at
-            neighbouring grid points for scalar- and vector-like eigenvalues.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvalues at
+              neighbouring grid points for scalar- and vector-like eigenvalues.
           values_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvalue elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvalue elements stored in the grid
           vectors_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvectors at
-            neighbouring grid points for scalar- and vector-like eigenvectors.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvectors at
+              neighbouring grid points for scalar- and vector-like eigenvectors.
           vectors_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvector elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvector elements stored in the grid
           sort : bool, optional
-            Whether the equivalent-mode permutations should be (re)determined following
-            the update to the flags and weights.
+              Whether the equivalent-mode permutations should be (re)determined following
+              the update to the flags and weights.
         
         
           Note
           ----
             Mapping of integers to :py:class:`~brille._brille.RotatesLike` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`RotatesLike`            |
-            +=======+====================================+
-            |   0   |               `vector`             |
-            +-------+------------------------------------+
-            |   1   |            `pseudovector`          |
-            +-------+------------------------------------+
-            |   2   |               `Gamma`              |
-            +-------+------------------------------------+
+            | value | :py:class:`RotatesLike` |
+            |---|---|
+            | 0 | `vector` |
+            | 1 | `pseudovector` |
+            | 2 | `Gamma` |
           
             Mapping of integers to :py:class:`LengthUnit` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`LengthUnit`             |
-            +=======+====================================+
-            |   0   |               `none`               |
-            +-------+------------------------------------+
-            |   1   |             `angstrom`             |
-            +-------+------------------------------------+
-            |   2   |         `inverse_angstrom`         |
-            +-------+------------------------------------+
-            |   3   |           `real_lattice`           |
-            +-------+------------------------------------+
-            |   4   |        `reciprocal_lattice`        |
-            +-------+------------------------------------+
+            | value | :py:class:`LengthUnit` |
+            |---|---|
+            | 0 | `none` |
+            | 1 | `angstrom` |
+            | 2 | `inverse_angstrom` |
+            | 3 | `real_lattice` |
+            | 4 | `reciprocal_lattice` |
         
             Mapping of integers to scalar cost function:
           
-            +-------+------------------------------------+
-            | value | function(x,y)                      |
-            +=======+====================================+
-            |   0   | magnitude(x-y)                     |
-            +-------+------------------------------------+
+            | value | function(x,y) |
+            |---|---|
+            | 0 | magnitude(x-y) |
           
             Mapping of integers to vector cost function:
           
-            +-------+------------------------------------+
-            | value | function(vec_x, vec_y)             |
-            +=======+====================================+
-            |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-            +-------+------------------------------------+
-            |   1   | vector_distance(vec_x, vec_y)      |
-            +-------+------------------------------------+
-            |   2   | 1 - vector_product(vec_x, vec_y)   |
-            +-------+------------------------------------+
-            |   3   | vector_angle(vec_x, vec_y)         |
-            +-------+------------------------------------+
-            |   4   | hermitian_angle(vec_x, vec_y)      |
-            +-------+------------------------------------+
+            | value | function(vec_x, vec_y) |
+            |---|---|
+            | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+            | 1 | vector_distance(vec_x, vec_y) |
+            | 2 | 1 - vector_product(vec_x, vec_y) |
+            | 3 | vector_angle(vec_x, vec_y) |
+            | 4 | hermitian_angle(vec_x, vec_y) |
         
             Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -2882,14 +2715,14 @@ class BZMeshQcc:
             Parameters
             ----------
             normalize : bool or None, optional
-              ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
-              lattice units; ``False`` never does; ``None`` restores the automatic default.
+                ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
+                lattice units; ``False`` never does; ``None`` restores the automatic default.
             metric : float, vector-like, optional
-              A diagonal metric :math:`M`, one weight per element of a branch (for
-              phonons, :math:`3N`). The default is the identity, the ordinary norm.
-              For Bogoliubov (spin-wave) vectors use
-              :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
-              :math:`\\langle v|\\eta|v\\rangle` is kept.
+                A diagonal metric :math:`M`, one weight per element of a branch (for
+                phonons, :math:`3N`). The default is the identity, the ordinary norm.
+                For Bogoliubov (spin-wave) vectors use
+                :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
+                :math:`\\langle v|\\eta|v\\rangle` is kept.
         """
     def sort(self) -> None:
         ...
@@ -2900,37 +2733,31 @@ class BZMeshQcc:
           Parameters
           ----------
           filename : str
-            The full path specification for the file to write into
+              The full path specification for the file to write into
           entry: str
-            The group path, e.g., "my/cool/grid", where to write inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to write inside the file,
+              with a default equal to the object Class name
           flags: str
-            The HDF5 permissions to use when opening the file. Default 'a' writes to an
-            existing file -- if `entry` exists in the file it is overwritten.
+              The HDF5 permissions to use when opening the file. Default 'a' writes to an
+              existing file -- if `entry` exists in the file it is overwritten.
         
           Note
           ----
           Possible `flags` are:
         
-          +---------+-------------------------+----------------+
-          | `flags` | meaning                 | HDF equivalent |
-          +=========+=========================+================+
-          | 'r'     | read                    | H5F_ACC_RDONLY |
-          +---------+-------------------------+----------------+
-          | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
-          +---------+-------------------------+----------------+
-          | 'a'     | write, append to file   | H5F_ACC_RDWR   |
-          +---------+-------------------------+----------------+
-          | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
-          +---------+-------------------------+----------------+
-          | 't'     | write, replace existing | H5F_ACC_TRUNC  |
-          +---------+-------------------------+----------------+
+          | `flags` | meaning | HDF equivalent |
+          |---|---|---|
+          | 'r' | read | H5F_ACC_RDONLY |
+          | 'x' | write, error if exists | H5F_ACC_EXCL |
+          | 'a' | write, append to file | H5F_ACC_RDWR |
+          | 'c' | write, error if exists | H5F_ACC_CREAT |
+          | 't' | write, replace existing | H5F_ACC_TRUNC |
         
         
           Returns
           -------
           bool
-            Indication of writing success.
+              Indication of writing success.
         """
     @property
     def BrillouinZone(self) -> BrillouinZone:
@@ -2993,15 +2820,15 @@ class BZTrellisQdd:
     @staticmethod
     def from_file(filename: str, entry: str = 'BZTrellisQdd') -> BZTrellisQdd:
         """
-          Save the object to an HDF5 file
+          Load an object from an HDF5 file
         
           Parameters
           ----------
           filename : str
-            The full path specification for the file to read from
+              The full path specification for the file to read from
           entry: str
-            The group path, e.g., "my/cool/grid", where to read from inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to read from inside the file,
+              with a default equal to the object Class name
         
           Returns
           -------
@@ -3019,14 +2846,14 @@ class BZTrellisQdd:
         Parameters
         ----------
         brillouin_zone : BrillouinZone
-          The zone whose irreducible part the trellis fills.
+            The zone whose irreducible part the trellis fills.
         node_volume_fraction : float, optional (default: 0.1)
-          Despite its name, a volume in cubic reciprocal Angstrom, not a fraction:
-          the volume of one cubic node, which sets the trellis spacing. To size the
-          trellis by its number of points use ``brillouin_zone.ir_polyhedron.volume /
-          points``, which gives roughly 1.3 to 2 times ``points`` vertices.
+            Despite its name, a volume in cubic reciprocal Angstrom, not a fraction:
+            the volume of one cubic node, which sets the trellis spacing. To size the
+            trellis by its number of points use ``brillouin_zone.ir_polyhedron.volume /
+            points``, which gives roughly 1.3 to 2 times ``points`` vertices.
         always_triangulate : bool, optional (default: False)
-          Divide every node into tetrahedra, not only those the zone boundary cuts.
+            Divide every node into tetrahedra, not only those the zone boundary cuts.
         """
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, node_volume_fraction: float, always_triangulate: bool, approx_config: ApproxConfig) -> None:
@@ -3050,68 +2877,58 @@ class BZTrellisQdd:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below).
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below).
         
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          ``values_data``
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            ``values_data``
         vectors_elements:
-          Like ``values_elements`` but for the eigenvectors
+            Like ``values_elements`` but for the eigenvectors
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -3128,75 +2945,65 @@ class BZTrellisQdd:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below),
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below)
-          * which scalar cost function should be used (see below),
-          * which vector cost function should be used (see below).
+            * which scalar cost function should be used (see below),
+            * which vector cost function should be used (see below).
         
-          See the note below for the meaning of the last three values.
+            See the note below for the meaning of the last three values.
         values_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvalue elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvalue elements stored in the grid
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          **values_data**
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            **values_data**
         vectors_elements:
-          Like **values_elements** but for the eigenvectors
+            Like **values_elements** but for the eigenvectors
         vectors_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvector elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvector elements stored in the grid
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -3207,27 +3014,19 @@ class BZTrellisQdd:
         
           Mapping of integers to scalar cost function:
         
-          +-------+------------------------------------+
-          | value | function(x,y)                      |
-          +=======+====================================+
-          |   0   | magnitude(x-y)                     |
-          +-------+------------------------------------+
+          | value | function(x,y) |
+          |---|---|
+          | 0 | magnitude(x-y) |
         
           Mapping of integers to vector cost function:
         
-          +-------+------------------------------------+
-          | value | function(vec_x, vec_y)             |
-          +=======+====================================+
-          |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-          +-------+------------------------------------+
-          |   1   | vector_distance(vec_x, vec_y)      |
-          +-------+------------------------------------+
-          |   2   | 1 - vector_product(vec_x, vec_y)   |
-          +-------+------------------------------------+
-          |   3   | vector_angle(vec_x, vec_y)         |
-          +-------+------------------------------------+
-          |   4   | hermitian_angle(vec_x, vec_y)      |
-          +-------+------------------------------------+
+          | value | function(vec_x, vec_y) |
+          |---|---|
+          | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+          | 1 | vector_distance(vec_x, vec_y) |
+          | 2 | 1 - vector_product(vec_x, vec_y) |
+          | 3 | vector_angle(vec_x, vec_y) |
+          | 4 | hermitian_angle(vec_x, vec_y) |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -3244,20 +3043,20 @@ class BZTrellisQdd:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -3286,20 +3085,20 @@ class BZTrellisQdd:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -3325,86 +3124,68 @@ class BZTrellisQdd:
         ...
     def set_flags_weights(self, values_flags: numpy.ndarray[numpy.int32], values_weights: numpy.ndarray[numpy.float64], vectors_flags: numpy.ndarray[numpy.int32], vectors_weights: numpy.ndarray[numpy.float64], sort: bool = False) -> None:
         """
-          Set :py:class:`~brille._brille.RotatesLike`, `~brille._brille.LengthUnit`
+          Set :py:class:`~brille._brille.RotatesLike`, :py:class:`~brille._brille.LengthUnit`
           and cost functions plus relative cost weights for the values and vectors
           stored in the object
         
           Parameters
           ----------
           values_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvalues at
-            neighbouring grid points for scalar- and vector-like eigenvalues.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvalues at
+              neighbouring grid points for scalar- and vector-like eigenvalues.
           values_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvalue elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvalue elements stored in the grid
           vectors_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvectors at
-            neighbouring grid points for scalar- and vector-like eigenvectors.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvectors at
+              neighbouring grid points for scalar- and vector-like eigenvectors.
           vectors_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvector elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvector elements stored in the grid
           sort : bool, optional
-            Whether the equivalent-mode permutations should be (re)determined following
-            the update to the flags and weights.
+              Whether the equivalent-mode permutations should be (re)determined following
+              the update to the flags and weights.
         
         
           Note
           ----
             Mapping of integers to :py:class:`~brille._brille.RotatesLike` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`RotatesLike`            |
-            +=======+====================================+
-            |   0   |               `vector`             |
-            +-------+------------------------------------+
-            |   1   |            `pseudovector`          |
-            +-------+------------------------------------+
-            |   2   |               `Gamma`              |
-            +-------+------------------------------------+
+            | value | :py:class:`RotatesLike` |
+            |---|---|
+            | 0 | `vector` |
+            | 1 | `pseudovector` |
+            | 2 | `Gamma` |
           
             Mapping of integers to :py:class:`LengthUnit` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`LengthUnit`             |
-            +=======+====================================+
-            |   0   |               `none`               |
-            +-------+------------------------------------+
-            |   1   |             `angstrom`             |
-            +-------+------------------------------------+
-            |   2   |         `inverse_angstrom`         |
-            +-------+------------------------------------+
-            |   3   |           `real_lattice`           |
-            +-------+------------------------------------+
-            |   4   |        `reciprocal_lattice`        |
-            +-------+------------------------------------+
+            | value | :py:class:`LengthUnit` |
+            |---|---|
+            | 0 | `none` |
+            | 1 | `angstrom` |
+            | 2 | `inverse_angstrom` |
+            | 3 | `real_lattice` |
+            | 4 | `reciprocal_lattice` |
         
             Mapping of integers to scalar cost function:
           
-            +-------+------------------------------------+
-            | value | function(x,y)                      |
-            +=======+====================================+
-            |   0   | magnitude(x-y)                     |
-            +-------+------------------------------------+
+            | value | function(x,y) |
+            |---|---|
+            | 0 | magnitude(x-y) |
           
             Mapping of integers to vector cost function:
           
-            +-------+------------------------------------+
-            | value | function(vec_x, vec_y)             |
-            +=======+====================================+
-            |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-            +-------+------------------------------------+
-            |   1   | vector_distance(vec_x, vec_y)      |
-            +-------+------------------------------------+
-            |   2   | 1 - vector_product(vec_x, vec_y)   |
-            +-------+------------------------------------+
-            |   3   | vector_angle(vec_x, vec_y)         |
-            +-------+------------------------------------+
-            |   4   | hermitian_angle(vec_x, vec_y)      |
-            +-------+------------------------------------+
+            | value | function(vec_x, vec_y) |
+            |---|---|
+            | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+            | 1 | vector_distance(vec_x, vec_y) |
+            | 2 | 1 - vector_product(vec_x, vec_y) |
+            | 3 | vector_angle(vec_x, vec_y) |
+            | 4 | hermitian_angle(vec_x, vec_y) |
         
             Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -3425,14 +3206,14 @@ class BZTrellisQdd:
             Parameters
             ----------
             normalize : bool or None, optional
-              ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
-              lattice units; ``False`` never does; ``None`` restores the automatic default.
+                ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
+                lattice units; ``False`` never does; ``None`` restores the automatic default.
             metric : float, vector-like, optional
-              A diagonal metric :math:`M`, one weight per element of a branch (for
-              phonons, :math:`3N`). The default is the identity, the ordinary norm.
-              For Bogoliubov (spin-wave) vectors use
-              :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
-              :math:`\\langle v|\\eta|v\\rangle` is kept.
+                A diagonal metric :math:`M`, one weight per element of a branch (for
+                phonons, :math:`3N`). The default is the identity, the ordinary norm.
+                For Bogoliubov (spin-wave) vectors use
+                :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
+                :math:`\\langle v|\\eta|v\\rangle` is kept.
         """
     def sort(self) -> None:
         ...
@@ -3443,37 +3224,31 @@ class BZTrellisQdd:
           Parameters
           ----------
           filename : str
-            The full path specification for the file to write into
+              The full path specification for the file to write into
           entry: str
-            The group path, e.g., "my/cool/grid", where to write inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to write inside the file,
+              with a default equal to the object Class name
           flags: str
-            The HDF5 permissions to use when opening the file. Default 'a' writes to an
-            existing file -- if `entry` exists in the file it is overwritten.
+              The HDF5 permissions to use when opening the file. Default 'a' writes to an
+              existing file -- if `entry` exists in the file it is overwritten.
         
           Note
           ----
           Possible `flags` are:
         
-          +---------+-------------------------+----------------+
-          | `flags` | meaning                 | HDF equivalent |
-          +=========+=========================+================+
-          | 'r'     | read                    | H5F_ACC_RDONLY |
-          +---------+-------------------------+----------------+
-          | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
-          +---------+-------------------------+----------------+
-          | 'a'     | write, append to file   | H5F_ACC_RDWR   |
-          +---------+-------------------------+----------------+
-          | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
-          +---------+-------------------------+----------------+
-          | 't'     | write, replace existing | H5F_ACC_TRUNC  |
-          +---------+-------------------------+----------------+
+          | `flags` | meaning | HDF equivalent |
+          |---|---|---|
+          | 'r' | read | H5F_ACC_RDONLY |
+          | 'x' | write, error if exists | H5F_ACC_EXCL |
+          | 'a' | write, append to file | H5F_ACC_RDWR |
+          | 'c' | write, error if exists | H5F_ACC_CREAT |
+          | 't' | write, replace existing | H5F_ACC_TRUNC |
         
         
           Returns
           -------
           bool
-            Indication of writing success.
+              Indication of writing success.
         """
     @property
     def BrillouinZone(self) -> BrillouinZone:
@@ -3533,15 +3308,15 @@ class BZTrellisQdc:
     @staticmethod
     def from_file(filename: str, entry: str = 'BZTrellisQdc') -> BZTrellisQdc:
         """
-          Save the object to an HDF5 file
+          Load an object from an HDF5 file
         
           Parameters
           ----------
           filename : str
-            The full path specification for the file to read from
+              The full path specification for the file to read from
           entry: str
-            The group path, e.g., "my/cool/grid", where to read from inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to read from inside the file,
+              with a default equal to the object Class name
         
           Returns
           -------
@@ -3559,14 +3334,14 @@ class BZTrellisQdc:
         Parameters
         ----------
         brillouin_zone : BrillouinZone
-          The zone whose irreducible part the trellis fills.
+            The zone whose irreducible part the trellis fills.
         node_volume_fraction : float, optional (default: 0.1)
-          Despite its name, a volume in cubic reciprocal Angstrom, not a fraction:
-          the volume of one cubic node, which sets the trellis spacing. To size the
-          trellis by its number of points use ``brillouin_zone.ir_polyhedron.volume /
-          points``, which gives roughly 1.3 to 2 times ``points`` vertices.
+            Despite its name, a volume in cubic reciprocal Angstrom, not a fraction:
+            the volume of one cubic node, which sets the trellis spacing. To size the
+            trellis by its number of points use ``brillouin_zone.ir_polyhedron.volume /
+            points``, which gives roughly 1.3 to 2 times ``points`` vertices.
         always_triangulate : bool, optional (default: False)
-          Divide every node into tetrahedra, not only those the zone boundary cuts.
+            Divide every node into tetrahedra, not only those the zone boundary cuts.
         """
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, node_volume_fraction: float, always_triangulate: bool, approx_config: ApproxConfig) -> None:
@@ -3590,68 +3365,58 @@ class BZTrellisQdc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below).
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below).
         
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          ``values_data``
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            ``values_data``
         vectors_elements:
-          Like ``values_elements`` but for the eigenvectors
+            Like ``values_elements`` but for the eigenvectors
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -3668,75 +3433,65 @@ class BZTrellisQdc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below),
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below)
-          * which scalar cost function should be used (see below),
-          * which vector cost function should be used (see below).
+            * which scalar cost function should be used (see below),
+            * which vector cost function should be used (see below).
         
-          See the note below for the meaning of the last three values.
+            See the note below for the meaning of the last three values.
         values_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvalue elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvalue elements stored in the grid
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          **values_data**
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            **values_data**
         vectors_elements:
-          Like **values_elements** but for the eigenvectors
+            Like **values_elements** but for the eigenvectors
         vectors_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvector elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvector elements stored in the grid
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -3747,27 +3502,19 @@ class BZTrellisQdc:
         
           Mapping of integers to scalar cost function:
         
-          +-------+------------------------------------+
-          | value | function(x,y)                      |
-          +=======+====================================+
-          |   0   | magnitude(x-y)                     |
-          +-------+------------------------------------+
+          | value | function(x,y) |
+          |---|---|
+          | 0 | magnitude(x-y) |
         
           Mapping of integers to vector cost function:
         
-          +-------+------------------------------------+
-          | value | function(vec_x, vec_y)             |
-          +=======+====================================+
-          |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-          +-------+------------------------------------+
-          |   1   | vector_distance(vec_x, vec_y)      |
-          +-------+------------------------------------+
-          |   2   | 1 - vector_product(vec_x, vec_y)   |
-          +-------+------------------------------------+
-          |   3   | vector_angle(vec_x, vec_y)         |
-          +-------+------------------------------------+
-          |   4   | hermitian_angle(vec_x, vec_y)      |
-          +-------+------------------------------------+
+          | value | function(vec_x, vec_y) |
+          |---|---|
+          | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+          | 1 | vector_distance(vec_x, vec_y) |
+          | 2 | 1 - vector_product(vec_x, vec_y) |
+          | 3 | vector_angle(vec_x, vec_y) |
+          | 4 | hermitian_angle(vec_x, vec_y) |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -3784,20 +3531,20 @@ class BZTrellisQdc:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -3826,20 +3573,20 @@ class BZTrellisQdc:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -3865,86 +3612,68 @@ class BZTrellisQdc:
         ...
     def set_flags_weights(self, values_flags: numpy.ndarray[numpy.int32], values_weights: numpy.ndarray[numpy.float64], vectors_flags: numpy.ndarray[numpy.int32], vectors_weights: numpy.ndarray[numpy.float64], sort: bool = False) -> None:
         """
-          Set :py:class:`~brille._brille.RotatesLike`, `~brille._brille.LengthUnit`
+          Set :py:class:`~brille._brille.RotatesLike`, :py:class:`~brille._brille.LengthUnit`
           and cost functions plus relative cost weights for the values and vectors
           stored in the object
         
           Parameters
           ----------
           values_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvalues at
-            neighbouring grid points for scalar- and vector-like eigenvalues.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvalues at
+              neighbouring grid points for scalar- and vector-like eigenvalues.
           values_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvalue elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvalue elements stored in the grid
           vectors_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvectors at
-            neighbouring grid points for scalar- and vector-like eigenvectors.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvectors at
+              neighbouring grid points for scalar- and vector-like eigenvectors.
           vectors_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvector elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvector elements stored in the grid
           sort : bool, optional
-            Whether the equivalent-mode permutations should be (re)determined following
-            the update to the flags and weights.
+              Whether the equivalent-mode permutations should be (re)determined following
+              the update to the flags and weights.
         
         
           Note
           ----
             Mapping of integers to :py:class:`~brille._brille.RotatesLike` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`RotatesLike`            |
-            +=======+====================================+
-            |   0   |               `vector`             |
-            +-------+------------------------------------+
-            |   1   |            `pseudovector`          |
-            +-------+------------------------------------+
-            |   2   |               `Gamma`              |
-            +-------+------------------------------------+
+            | value | :py:class:`RotatesLike` |
+            |---|---|
+            | 0 | `vector` |
+            | 1 | `pseudovector` |
+            | 2 | `Gamma` |
           
             Mapping of integers to :py:class:`LengthUnit` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`LengthUnit`             |
-            +=======+====================================+
-            |   0   |               `none`               |
-            +-------+------------------------------------+
-            |   1   |             `angstrom`             |
-            +-------+------------------------------------+
-            |   2   |         `inverse_angstrom`         |
-            +-------+------------------------------------+
-            |   3   |           `real_lattice`           |
-            +-------+------------------------------------+
-            |   4   |        `reciprocal_lattice`        |
-            +-------+------------------------------------+
+            | value | :py:class:`LengthUnit` |
+            |---|---|
+            | 0 | `none` |
+            | 1 | `angstrom` |
+            | 2 | `inverse_angstrom` |
+            | 3 | `real_lattice` |
+            | 4 | `reciprocal_lattice` |
         
             Mapping of integers to scalar cost function:
           
-            +-------+------------------------------------+
-            | value | function(x,y)                      |
-            +=======+====================================+
-            |   0   | magnitude(x-y)                     |
-            +-------+------------------------------------+
+            | value | function(x,y) |
+            |---|---|
+            | 0 | magnitude(x-y) |
           
             Mapping of integers to vector cost function:
           
-            +-------+------------------------------------+
-            | value | function(vec_x, vec_y)             |
-            +=======+====================================+
-            |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-            +-------+------------------------------------+
-            |   1   | vector_distance(vec_x, vec_y)      |
-            +-------+------------------------------------+
-            |   2   | 1 - vector_product(vec_x, vec_y)   |
-            +-------+------------------------------------+
-            |   3   | vector_angle(vec_x, vec_y)         |
-            +-------+------------------------------------+
-            |   4   | hermitian_angle(vec_x, vec_y)      |
-            +-------+------------------------------------+
+            | value | function(vec_x, vec_y) |
+            |---|---|
+            | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+            | 1 | vector_distance(vec_x, vec_y) |
+            | 2 | 1 - vector_product(vec_x, vec_y) |
+            | 3 | vector_angle(vec_x, vec_y) |
+            | 4 | hermitian_angle(vec_x, vec_y) |
         
             Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -3965,14 +3694,14 @@ class BZTrellisQdc:
             Parameters
             ----------
             normalize : bool or None, optional
-              ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
-              lattice units; ``False`` never does; ``None`` restores the automatic default.
+                ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
+                lattice units; ``False`` never does; ``None`` restores the automatic default.
             metric : float, vector-like, optional
-              A diagonal metric :math:`M`, one weight per element of a branch (for
-              phonons, :math:`3N`). The default is the identity, the ordinary norm.
-              For Bogoliubov (spin-wave) vectors use
-              :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
-              :math:`\\langle v|\\eta|v\\rangle` is kept.
+                A diagonal metric :math:`M`, one weight per element of a branch (for
+                phonons, :math:`3N`). The default is the identity, the ordinary norm.
+                For Bogoliubov (spin-wave) vectors use
+                :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
+                :math:`\\langle v|\\eta|v\\rangle` is kept.
         """
     def sort(self) -> None:
         ...
@@ -3983,37 +3712,31 @@ class BZTrellisQdc:
           Parameters
           ----------
           filename : str
-            The full path specification for the file to write into
+              The full path specification for the file to write into
           entry: str
-            The group path, e.g., "my/cool/grid", where to write inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to write inside the file,
+              with a default equal to the object Class name
           flags: str
-            The HDF5 permissions to use when opening the file. Default 'a' writes to an
-            existing file -- if `entry` exists in the file it is overwritten.
+              The HDF5 permissions to use when opening the file. Default 'a' writes to an
+              existing file -- if `entry` exists in the file it is overwritten.
         
           Note
           ----
           Possible `flags` are:
         
-          +---------+-------------------------+----------------+
-          | `flags` | meaning                 | HDF equivalent |
-          +=========+=========================+================+
-          | 'r'     | read                    | H5F_ACC_RDONLY |
-          +---------+-------------------------+----------------+
-          | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
-          +---------+-------------------------+----------------+
-          | 'a'     | write, append to file   | H5F_ACC_RDWR   |
-          +---------+-------------------------+----------------+
-          | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
-          +---------+-------------------------+----------------+
-          | 't'     | write, replace existing | H5F_ACC_TRUNC  |
-          +---------+-------------------------+----------------+
+          | `flags` | meaning | HDF equivalent |
+          |---|---|---|
+          | 'r' | read | H5F_ACC_RDONLY |
+          | 'x' | write, error if exists | H5F_ACC_EXCL |
+          | 'a' | write, append to file | H5F_ACC_RDWR |
+          | 'c' | write, error if exists | H5F_ACC_CREAT |
+          | 't' | write, replace existing | H5F_ACC_TRUNC |
         
         
           Returns
           -------
           bool
-            Indication of writing success.
+              Indication of writing success.
         """
     @property
     def BrillouinZone(self) -> BrillouinZone:
@@ -4073,15 +3796,15 @@ class BZTrellisQcc:
     @staticmethod
     def from_file(filename: str, entry: str = 'BZTrellisQcc') -> BZTrellisQcc:
         """
-          Save the object to an HDF5 file
+          Load an object from an HDF5 file
         
           Parameters
           ----------
           filename : str
-            The full path specification for the file to read from
+              The full path specification for the file to read from
           entry: str
-            The group path, e.g., "my/cool/grid", where to read from inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to read from inside the file,
+              with a default equal to the object Class name
         
           Returns
           -------
@@ -4099,14 +3822,14 @@ class BZTrellisQcc:
         Parameters
         ----------
         brillouin_zone : BrillouinZone
-          The zone whose irreducible part the trellis fills.
+            The zone whose irreducible part the trellis fills.
         node_volume_fraction : float, optional (default: 0.1)
-          Despite its name, a volume in cubic reciprocal Angstrom, not a fraction:
-          the volume of one cubic node, which sets the trellis spacing. To size the
-          trellis by its number of points use ``brillouin_zone.ir_polyhedron.volume /
-          points``, which gives roughly 1.3 to 2 times ``points`` vertices.
+            Despite its name, a volume in cubic reciprocal Angstrom, not a fraction:
+            the volume of one cubic node, which sets the trellis spacing. To size the
+            trellis by its number of points use ``brillouin_zone.ir_polyhedron.volume /
+            points``, which gives roughly 1.3 to 2 times ``points`` vertices.
         always_triangulate : bool, optional (default: False)
-          Divide every node into tetrahedra, not only those the zone boundary cuts.
+            Divide every node into tetrahedra, not only those the zone boundary cuts.
         """
     @typing.overload
     def __init__(self, brillouin_zone: BrillouinZone, node_volume_fraction: float, always_triangulate: bool, approx_config: ApproxConfig) -> None:
@@ -4130,68 +3853,58 @@ class BZTrellisQcc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below).
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below).
         
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          ``values_data``
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            ``values_data``
         vectors_elements:
-          Like ``values_elements`` but for the eigenvectors
+            Like ``values_elements`` but for the eigenvectors
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -4208,75 +3921,65 @@ class BZTrellisQcc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below),
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below)
-          * which scalar cost function should be used (see below),
-          * which vector cost function should be used (see below).
+            * which scalar cost function should be used (see below),
+            * which vector cost function should be used (see below).
         
-          See the note below for the meaning of the last three values.
+            See the note below for the meaning of the last three values.
         values_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvalue elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvalue elements stored in the grid
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          **values_data**
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            **values_data**
         vectors_elements:
-          Like **values_elements** but for the eigenvectors
+            Like **values_elements** but for the eigenvectors
         vectors_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvector elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvector elements stored in the grid
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -4287,27 +3990,19 @@ class BZTrellisQcc:
         
           Mapping of integers to scalar cost function:
         
-          +-------+------------------------------------+
-          | value | function(x,y)                      |
-          +=======+====================================+
-          |   0   | magnitude(x-y)                     |
-          +-------+------------------------------------+
+          | value | function(x,y) |
+          |---|---|
+          | 0 | magnitude(x-y) |
         
           Mapping of integers to vector cost function:
         
-          +-------+------------------------------------+
-          | value | function(vec_x, vec_y)             |
-          +=======+====================================+
-          |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-          +-------+------------------------------------+
-          |   1   | vector_distance(vec_x, vec_y)      |
-          +-------+------------------------------------+
-          |   2   | 1 - vector_product(vec_x, vec_y)   |
-          +-------+------------------------------------+
-          |   3   | vector_angle(vec_x, vec_y)         |
-          +-------+------------------------------------+
-          |   4   | hermitian_angle(vec_x, vec_y)      |
-          +-------+------------------------------------+
+          | value | function(vec_x, vec_y) |
+          |---|---|
+          | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+          | 1 | vector_distance(vec_x, vec_y) |
+          | 2 | 1 - vector_product(vec_x, vec_y) |
+          | 3 | vector_angle(vec_x, vec_y) |
+          | 4 | hermitian_angle(vec_x, vec_y) |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -4324,20 +4019,20 @@ class BZTrellisQcc:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -4366,20 +4061,20 @@ class BZTrellisQcc:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -4405,86 +4100,68 @@ class BZTrellisQcc:
         ...
     def set_flags_weights(self, values_flags: numpy.ndarray[numpy.int32], values_weights: numpy.ndarray[numpy.float64], vectors_flags: numpy.ndarray[numpy.int32], vectors_weights: numpy.ndarray[numpy.float64], sort: bool = False) -> None:
         """
-          Set :py:class:`~brille._brille.RotatesLike`, `~brille._brille.LengthUnit`
+          Set :py:class:`~brille._brille.RotatesLike`, :py:class:`~brille._brille.LengthUnit`
           and cost functions plus relative cost weights for the values and vectors
           stored in the object
         
           Parameters
           ----------
           values_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvalues at
-            neighbouring grid points for scalar- and vector-like eigenvalues.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvalues at
+              neighbouring grid points for scalar- and vector-like eigenvalues.
           values_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvalue elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvalue elements stored in the grid
           vectors_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvectors at
-            neighbouring grid points for scalar- and vector-like eigenvectors.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvectors at
+              neighbouring grid points for scalar- and vector-like eigenvectors.
           vectors_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvector elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvector elements stored in the grid
           sort : bool, optional
-            Whether the equivalent-mode permutations should be (re)determined following
-            the update to the flags and weights.
+              Whether the equivalent-mode permutations should be (re)determined following
+              the update to the flags and weights.
         
         
           Note
           ----
             Mapping of integers to :py:class:`~brille._brille.RotatesLike` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`RotatesLike`            |
-            +=======+====================================+
-            |   0   |               `vector`             |
-            +-------+------------------------------------+
-            |   1   |            `pseudovector`          |
-            +-------+------------------------------------+
-            |   2   |               `Gamma`              |
-            +-------+------------------------------------+
+            | value | :py:class:`RotatesLike` |
+            |---|---|
+            | 0 | `vector` |
+            | 1 | `pseudovector` |
+            | 2 | `Gamma` |
           
             Mapping of integers to :py:class:`LengthUnit` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`LengthUnit`             |
-            +=======+====================================+
-            |   0   |               `none`               |
-            +-------+------------------------------------+
-            |   1   |             `angstrom`             |
-            +-------+------------------------------------+
-            |   2   |         `inverse_angstrom`         |
-            +-------+------------------------------------+
-            |   3   |           `real_lattice`           |
-            +-------+------------------------------------+
-            |   4   |        `reciprocal_lattice`        |
-            +-------+------------------------------------+
+            | value | :py:class:`LengthUnit` |
+            |---|---|
+            | 0 | `none` |
+            | 1 | `angstrom` |
+            | 2 | `inverse_angstrom` |
+            | 3 | `real_lattice` |
+            | 4 | `reciprocal_lattice` |
         
             Mapping of integers to scalar cost function:
           
-            +-------+------------------------------------+
-            | value | function(x,y)                      |
-            +=======+====================================+
-            |   0   | magnitude(x-y)                     |
-            +-------+------------------------------------+
+            | value | function(x,y) |
+            |---|---|
+            | 0 | magnitude(x-y) |
           
             Mapping of integers to vector cost function:
           
-            +-------+------------------------------------+
-            | value | function(vec_x, vec_y)             |
-            +=======+====================================+
-            |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-            +-------+------------------------------------+
-            |   1   | vector_distance(vec_x, vec_y)      |
-            +-------+------------------------------------+
-            |   2   | 1 - vector_product(vec_x, vec_y)   |
-            +-------+------------------------------------+
-            |   3   | vector_angle(vec_x, vec_y)         |
-            +-------+------------------------------------+
-            |   4   | hermitian_angle(vec_x, vec_y)      |
-            +-------+------------------------------------+
+            | value | function(vec_x, vec_y) |
+            |---|---|
+            | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+            | 1 | vector_distance(vec_x, vec_y) |
+            | 2 | 1 - vector_product(vec_x, vec_y) |
+            | 3 | vector_angle(vec_x, vec_y) |
+            | 4 | hermitian_angle(vec_x, vec_y) |
         
             Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -4505,14 +4182,14 @@ class BZTrellisQcc:
             Parameters
             ----------
             normalize : bool or None, optional
-              ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
-              lattice units; ``False`` never does; ``None`` restores the automatic default.
+                ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
+                lattice units; ``False`` never does; ``None`` restores the automatic default.
             metric : float, vector-like, optional
-              A diagonal metric :math:`M`, one weight per element of a branch (for
-              phonons, :math:`3N`). The default is the identity, the ordinary norm.
-              For Bogoliubov (spin-wave) vectors use
-              :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
-              :math:`\\langle v|\\eta|v\\rangle` is kept.
+                A diagonal metric :math:`M`, one weight per element of a branch (for
+                phonons, :math:`3N`). The default is the identity, the ordinary norm.
+                For Bogoliubov (spin-wave) vectors use
+                :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
+                :math:`\\langle v|\\eta|v\\rangle` is kept.
         """
     def sort(self) -> None:
         ...
@@ -4523,37 +4200,31 @@ class BZTrellisQcc:
           Parameters
           ----------
           filename : str
-            The full path specification for the file to write into
+              The full path specification for the file to write into
           entry: str
-            The group path, e.g., "my/cool/grid", where to write inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to write inside the file,
+              with a default equal to the object Class name
           flags: str
-            The HDF5 permissions to use when opening the file. Default 'a' writes to an
-            existing file -- if `entry` exists in the file it is overwritten.
+              The HDF5 permissions to use when opening the file. Default 'a' writes to an
+              existing file -- if `entry` exists in the file it is overwritten.
         
           Note
           ----
           Possible `flags` are:
         
-          +---------+-------------------------+----------------+
-          | `flags` | meaning                 | HDF equivalent |
-          +=========+=========================+================+
-          | 'r'     | read                    | H5F_ACC_RDONLY |
-          +---------+-------------------------+----------------+
-          | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
-          +---------+-------------------------+----------------+
-          | 'a'     | write, append to file   | H5F_ACC_RDWR   |
-          +---------+-------------------------+----------------+
-          | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
-          +---------+-------------------------+----------------+
-          | 't'     | write, replace existing | H5F_ACC_TRUNC  |
-          +---------+-------------------------+----------------+
+          | `flags` | meaning | HDF equivalent |
+          |---|---|---|
+          | 'r' | read | H5F_ACC_RDONLY |
+          | 'x' | write, error if exists | H5F_ACC_EXCL |
+          | 'a' | write, append to file | H5F_ACC_RDWR |
+          | 'c' | write, error if exists | H5F_ACC_CREAT |
+          | 't' | write, replace existing | H5F_ACC_TRUNC |
         
         
           Returns
           -------
           bool
-            Indication of writing success.
+              Indication of writing success.
         """
     @property
     def BrillouinZone(self) -> BrillouinZone:
@@ -4613,15 +4284,15 @@ class BZNestQdd:
     @staticmethod
     def from_file(filename: str, entry: str = 'BZNestQdd') -> BZNestQdd:
         """
-          Save the object to an HDF5 file
+          Load an object from an HDF5 file
         
           Parameters
           ----------
           filename : str
-            The full path specification for the file to read from
+              The full path specification for the file to read from
           entry: str
-            The group path, e.g., "my/cool/grid", where to read from inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to read from inside the file,
+              with a default equal to the object Class name
         
           Returns
           -------
@@ -4654,68 +4325,58 @@ class BZNestQdd:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below).
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below).
         
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          ``values_data``
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            ``values_data``
         vectors_elements:
-          Like ``values_elements`` but for the eigenvectors
+            Like ``values_elements`` but for the eigenvectors
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -4732,75 +4393,65 @@ class BZNestQdd:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below),
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below)
-          * which scalar cost function should be used (see below),
-          * which vector cost function should be used (see below).
+            * which scalar cost function should be used (see below),
+            * which vector cost function should be used (see below).
         
-          See the note below for the meaning of the last three values.
+            See the note below for the meaning of the last three values.
         values_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvalue elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvalue elements stored in the grid
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          **values_data**
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            **values_data**
         vectors_elements:
-          Like **values_elements** but for the eigenvectors
+            Like **values_elements** but for the eigenvectors
         vectors_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvector elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvector elements stored in the grid
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -4811,27 +4462,19 @@ class BZNestQdd:
         
           Mapping of integers to scalar cost function:
         
-          +-------+------------------------------------+
-          | value | function(x,y)                      |
-          +=======+====================================+
-          |   0   | magnitude(x-y)                     |
-          +-------+------------------------------------+
+          | value | function(x,y) |
+          |---|---|
+          | 0 | magnitude(x-y) |
         
           Mapping of integers to vector cost function:
         
-          +-------+------------------------------------+
-          | value | function(vec_x, vec_y)             |
-          +=======+====================================+
-          |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-          +-------+------------------------------------+
-          |   1   | vector_distance(vec_x, vec_y)      |
-          +-------+------------------------------------+
-          |   2   | 1 - vector_product(vec_x, vec_y)   |
-          +-------+------------------------------------+
-          |   3   | vector_angle(vec_x, vec_y)         |
-          +-------+------------------------------------+
-          |   4   | hermitian_angle(vec_x, vec_y)      |
-          +-------+------------------------------------+
+          | value | function(vec_x, vec_y) |
+          |---|---|
+          | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+          | 1 | vector_distance(vec_x, vec_y) |
+          | 2 | 1 - vector_product(vec_x, vec_y) |
+          | 3 | vector_angle(vec_x, vec_y) |
+          | 4 | hermitian_angle(vec_x, vec_y) |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -4848,20 +4491,20 @@ class BZNestQdd:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -4879,86 +4522,68 @@ class BZNestQdd:
         """
     def set_flags_weights(self, values_flags: numpy.ndarray[numpy.int32], values_weights: numpy.ndarray[numpy.float64], vectors_flags: numpy.ndarray[numpy.int32], vectors_weights: numpy.ndarray[numpy.float64], sort: bool = False) -> None:
         """
-          Set :py:class:`~brille._brille.RotatesLike`, `~brille._brille.LengthUnit`
+          Set :py:class:`~brille._brille.RotatesLike`, :py:class:`~brille._brille.LengthUnit`
           and cost functions plus relative cost weights for the values and vectors
           stored in the object
         
           Parameters
           ----------
           values_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvalues at
-            neighbouring grid points for scalar- and vector-like eigenvalues.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvalues at
+              neighbouring grid points for scalar- and vector-like eigenvalues.
           values_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvalue elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvalue elements stored in the grid
           vectors_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvectors at
-            neighbouring grid points for scalar- and vector-like eigenvectors.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvectors at
+              neighbouring grid points for scalar- and vector-like eigenvectors.
           vectors_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvector elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvector elements stored in the grid
           sort : bool, optional
-            Whether the equivalent-mode permutations should be (re)determined following
-            the update to the flags and weights.
+              Whether the equivalent-mode permutations should be (re)determined following
+              the update to the flags and weights.
         
         
           Note
           ----
             Mapping of integers to :py:class:`~brille._brille.RotatesLike` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`RotatesLike`            |
-            +=======+====================================+
-            |   0   |               `vector`             |
-            +-------+------------------------------------+
-            |   1   |            `pseudovector`          |
-            +-------+------------------------------------+
-            |   2   |               `Gamma`              |
-            +-------+------------------------------------+
+            | value | :py:class:`RotatesLike` |
+            |---|---|
+            | 0 | `vector` |
+            | 1 | `pseudovector` |
+            | 2 | `Gamma` |
           
             Mapping of integers to :py:class:`LengthUnit` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`LengthUnit`             |
-            +=======+====================================+
-            |   0   |               `none`               |
-            +-------+------------------------------------+
-            |   1   |             `angstrom`             |
-            +-------+------------------------------------+
-            |   2   |         `inverse_angstrom`         |
-            +-------+------------------------------------+
-            |   3   |           `real_lattice`           |
-            +-------+------------------------------------+
-            |   4   |        `reciprocal_lattice`        |
-            +-------+------------------------------------+
+            | value | :py:class:`LengthUnit` |
+            |---|---|
+            | 0 | `none` |
+            | 1 | `angstrom` |
+            | 2 | `inverse_angstrom` |
+            | 3 | `real_lattice` |
+            | 4 | `reciprocal_lattice` |
         
             Mapping of integers to scalar cost function:
           
-            +-------+------------------------------------+
-            | value | function(x,y)                      |
-            +=======+====================================+
-            |   0   | magnitude(x-y)                     |
-            +-------+------------------------------------+
+            | value | function(x,y) |
+            |---|---|
+            | 0 | magnitude(x-y) |
           
             Mapping of integers to vector cost function:
           
-            +-------+------------------------------------+
-            | value | function(vec_x, vec_y)             |
-            +=======+====================================+
-            |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-            +-------+------------------------------------+
-            |   1   | vector_distance(vec_x, vec_y)      |
-            +-------+------------------------------------+
-            |   2   | 1 - vector_product(vec_x, vec_y)   |
-            +-------+------------------------------------+
-            |   3   | vector_angle(vec_x, vec_y)         |
-            +-------+------------------------------------+
-            |   4   | hermitian_angle(vec_x, vec_y)      |
-            +-------+------------------------------------+
+            | value | function(vec_x, vec_y) |
+            |---|---|
+            | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+            | 1 | vector_distance(vec_x, vec_y) |
+            | 2 | 1 - vector_product(vec_x, vec_y) |
+            | 3 | vector_angle(vec_x, vec_y) |
+            | 4 | hermitian_angle(vec_x, vec_y) |
         
             Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -4979,14 +4604,14 @@ class BZNestQdd:
             Parameters
             ----------
             normalize : bool or None, optional
-              ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
-              lattice units; ``False`` never does; ``None`` restores the automatic default.
+                ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
+                lattice units; ``False`` never does; ``None`` restores the automatic default.
             metric : float, vector-like, optional
-              A diagonal metric :math:`M`, one weight per element of a branch (for
-              phonons, :math:`3N`). The default is the identity, the ordinary norm.
-              For Bogoliubov (spin-wave) vectors use
-              :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
-              :math:`\\langle v|\\eta|v\\rangle` is kept.
+                A diagonal metric :math:`M`, one weight per element of a branch (for
+                phonons, :math:`3N`). The default is the identity, the ordinary norm.
+                For Bogoliubov (spin-wave) vectors use
+                :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
+                :math:`\\langle v|\\eta|v\\rangle` is kept.
         """
     def sort(self) -> None:
         ...
@@ -4997,37 +4622,31 @@ class BZNestQdd:
           Parameters
           ----------
           filename : str
-            The full path specification for the file to write into
+              The full path specification for the file to write into
           entry: str
-            The group path, e.g., "my/cool/grid", where to write inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to write inside the file,
+              with a default equal to the object Class name
           flags: str
-            The HDF5 permissions to use when opening the file. Default 'a' writes to an
-            existing file -- if `entry` exists in the file it is overwritten.
+              The HDF5 permissions to use when opening the file. Default 'a' writes to an
+              existing file -- if `entry` exists in the file it is overwritten.
         
           Note
           ----
           Possible `flags` are:
         
-          +---------+-------------------------+----------------+
-          | `flags` | meaning                 | HDF equivalent |
-          +=========+=========================+================+
-          | 'r'     | read                    | H5F_ACC_RDONLY |
-          +---------+-------------------------+----------------+
-          | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
-          +---------+-------------------------+----------------+
-          | 'a'     | write, append to file   | H5F_ACC_RDWR   |
-          +---------+-------------------------+----------------+
-          | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
-          +---------+-------------------------+----------------+
-          | 't'     | write, replace existing | H5F_ACC_TRUNC  |
-          +---------+-------------------------+----------------+
+          | `flags` | meaning | HDF equivalent |
+          |---|---|---|
+          | 'r' | read | H5F_ACC_RDONLY |
+          | 'x' | write, error if exists | H5F_ACC_EXCL |
+          | 'a' | write, append to file | H5F_ACC_RDWR |
+          | 'c' | write, error if exists | H5F_ACC_CREAT |
+          | 't' | write, replace existing | H5F_ACC_TRUNC |
         
         
           Returns
           -------
           bool
-            Indication of writing success.
+              Indication of writing success.
         """
     @property
     def BrillouinZone(self) -> BrillouinZone:
@@ -5081,15 +4700,15 @@ class BZNestQdc:
     @staticmethod
     def from_file(filename: str, entry: str = 'BZNestQdc') -> BZNestQdc:
         """
-          Save the object to an HDF5 file
+          Load an object from an HDF5 file
         
           Parameters
           ----------
           filename : str
-            The full path specification for the file to read from
+              The full path specification for the file to read from
           entry: str
-            The group path, e.g., "my/cool/grid", where to read from inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to read from inside the file,
+              with a default equal to the object Class name
         
           Returns
           -------
@@ -5122,68 +4741,58 @@ class BZNestQdc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below).
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below).
         
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          ``values_data``
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            ``values_data``
         vectors_elements:
-          Like ``values_elements`` but for the eigenvectors
+            Like ``values_elements`` but for the eigenvectors
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -5200,75 +4809,65 @@ class BZNestQdc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below),
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below)
-          * which scalar cost function should be used (see below),
-          * which vector cost function should be used (see below).
+            * which scalar cost function should be used (see below),
+            * which vector cost function should be used (see below).
         
-          See the note below for the meaning of the last three values.
+            See the note below for the meaning of the last three values.
         values_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvalue elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvalue elements stored in the grid
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          **values_data**
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            **values_data**
         vectors_elements:
-          Like **values_elements** but for the eigenvectors
+            Like **values_elements** but for the eigenvectors
         vectors_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvector elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvector elements stored in the grid
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -5279,27 +4878,19 @@ class BZNestQdc:
         
           Mapping of integers to scalar cost function:
         
-          +-------+------------------------------------+
-          | value | function(x,y)                      |
-          +=======+====================================+
-          |   0   | magnitude(x-y)                     |
-          +-------+------------------------------------+
+          | value | function(x,y) |
+          |---|---|
+          | 0 | magnitude(x-y) |
         
           Mapping of integers to vector cost function:
         
-          +-------+------------------------------------+
-          | value | function(vec_x, vec_y)             |
-          +=======+====================================+
-          |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-          +-------+------------------------------------+
-          |   1   | vector_distance(vec_x, vec_y)      |
-          +-------+------------------------------------+
-          |   2   | 1 - vector_product(vec_x, vec_y)   |
-          +-------+------------------------------------+
-          |   3   | vector_angle(vec_x, vec_y)         |
-          +-------+------------------------------------+
-          |   4   | hermitian_angle(vec_x, vec_y)      |
-          +-------+------------------------------------+
+          | value | function(vec_x, vec_y) |
+          |---|---|
+          | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+          | 1 | vector_distance(vec_x, vec_y) |
+          | 2 | 1 - vector_product(vec_x, vec_y) |
+          | 3 | vector_angle(vec_x, vec_y) |
+          | 4 | hermitian_angle(vec_x, vec_y) |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -5316,20 +4907,20 @@ class BZNestQdc:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -5347,86 +4938,68 @@ class BZNestQdc:
         """
     def set_flags_weights(self, values_flags: numpy.ndarray[numpy.int32], values_weights: numpy.ndarray[numpy.float64], vectors_flags: numpy.ndarray[numpy.int32], vectors_weights: numpy.ndarray[numpy.float64], sort: bool = False) -> None:
         """
-          Set :py:class:`~brille._brille.RotatesLike`, `~brille._brille.LengthUnit`
+          Set :py:class:`~brille._brille.RotatesLike`, :py:class:`~brille._brille.LengthUnit`
           and cost functions plus relative cost weights for the values and vectors
           stored in the object
         
           Parameters
           ----------
           values_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvalues at
-            neighbouring grid points for scalar- and vector-like eigenvalues.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvalues at
+              neighbouring grid points for scalar- and vector-like eigenvalues.
           values_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvalue elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvalue elements stored in the grid
           vectors_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvectors at
-            neighbouring grid points for scalar- and vector-like eigenvectors.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvectors at
+              neighbouring grid points for scalar- and vector-like eigenvectors.
           vectors_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvector elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvector elements stored in the grid
           sort : bool, optional
-            Whether the equivalent-mode permutations should be (re)determined following
-            the update to the flags and weights.
+              Whether the equivalent-mode permutations should be (re)determined following
+              the update to the flags and weights.
         
         
           Note
           ----
             Mapping of integers to :py:class:`~brille._brille.RotatesLike` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`RotatesLike`            |
-            +=======+====================================+
-            |   0   |               `vector`             |
-            +-------+------------------------------------+
-            |   1   |            `pseudovector`          |
-            +-------+------------------------------------+
-            |   2   |               `Gamma`              |
-            +-------+------------------------------------+
+            | value | :py:class:`RotatesLike` |
+            |---|---|
+            | 0 | `vector` |
+            | 1 | `pseudovector` |
+            | 2 | `Gamma` |
           
             Mapping of integers to :py:class:`LengthUnit` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`LengthUnit`             |
-            +=======+====================================+
-            |   0   |               `none`               |
-            +-------+------------------------------------+
-            |   1   |             `angstrom`             |
-            +-------+------------------------------------+
-            |   2   |         `inverse_angstrom`         |
-            +-------+------------------------------------+
-            |   3   |           `real_lattice`           |
-            +-------+------------------------------------+
-            |   4   |        `reciprocal_lattice`        |
-            +-------+------------------------------------+
+            | value | :py:class:`LengthUnit` |
+            |---|---|
+            | 0 | `none` |
+            | 1 | `angstrom` |
+            | 2 | `inverse_angstrom` |
+            | 3 | `real_lattice` |
+            | 4 | `reciprocal_lattice` |
         
             Mapping of integers to scalar cost function:
           
-            +-------+------------------------------------+
-            | value | function(x,y)                      |
-            +=======+====================================+
-            |   0   | magnitude(x-y)                     |
-            +-------+------------------------------------+
+            | value | function(x,y) |
+            |---|---|
+            | 0 | magnitude(x-y) |
           
             Mapping of integers to vector cost function:
           
-            +-------+------------------------------------+
-            | value | function(vec_x, vec_y)             |
-            +=======+====================================+
-            |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-            +-------+------------------------------------+
-            |   1   | vector_distance(vec_x, vec_y)      |
-            +-------+------------------------------------+
-            |   2   | 1 - vector_product(vec_x, vec_y)   |
-            +-------+------------------------------------+
-            |   3   | vector_angle(vec_x, vec_y)         |
-            +-------+------------------------------------+
-            |   4   | hermitian_angle(vec_x, vec_y)      |
-            +-------+------------------------------------+
+            | value | function(vec_x, vec_y) |
+            |---|---|
+            | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+            | 1 | vector_distance(vec_x, vec_y) |
+            | 2 | 1 - vector_product(vec_x, vec_y) |
+            | 3 | vector_angle(vec_x, vec_y) |
+            | 4 | hermitian_angle(vec_x, vec_y) |
         
             Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -5447,14 +5020,14 @@ class BZNestQdc:
             Parameters
             ----------
             normalize : bool or None, optional
-              ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
-              lattice units; ``False`` never does; ``None`` restores the automatic default.
+                ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
+                lattice units; ``False`` never does; ``None`` restores the automatic default.
             metric : float, vector-like, optional
-              A diagonal metric :math:`M`, one weight per element of a branch (for
-              phonons, :math:`3N`). The default is the identity, the ordinary norm.
-              For Bogoliubov (spin-wave) vectors use
-              :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
-              :math:`\\langle v|\\eta|v\\rangle` is kept.
+                A diagonal metric :math:`M`, one weight per element of a branch (for
+                phonons, :math:`3N`). The default is the identity, the ordinary norm.
+                For Bogoliubov (spin-wave) vectors use
+                :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
+                :math:`\\langle v|\\eta|v\\rangle` is kept.
         """
     def sort(self) -> None:
         ...
@@ -5465,37 +5038,31 @@ class BZNestQdc:
           Parameters
           ----------
           filename : str
-            The full path specification for the file to write into
+              The full path specification for the file to write into
           entry: str
-            The group path, e.g., "my/cool/grid", where to write inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to write inside the file,
+              with a default equal to the object Class name
           flags: str
-            The HDF5 permissions to use when opening the file. Default 'a' writes to an
-            existing file -- if `entry` exists in the file it is overwritten.
+              The HDF5 permissions to use when opening the file. Default 'a' writes to an
+              existing file -- if `entry` exists in the file it is overwritten.
         
           Note
           ----
           Possible `flags` are:
         
-          +---------+-------------------------+----------------+
-          | `flags` | meaning                 | HDF equivalent |
-          +=========+=========================+================+
-          | 'r'     | read                    | H5F_ACC_RDONLY |
-          +---------+-------------------------+----------------+
-          | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
-          +---------+-------------------------+----------------+
-          | 'a'     | write, append to file   | H5F_ACC_RDWR   |
-          +---------+-------------------------+----------------+
-          | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
-          +---------+-------------------------+----------------+
-          | 't'     | write, replace existing | H5F_ACC_TRUNC  |
-          +---------+-------------------------+----------------+
+          | `flags` | meaning | HDF equivalent |
+          |---|---|---|
+          | 'r' | read | H5F_ACC_RDONLY |
+          | 'x' | write, error if exists | H5F_ACC_EXCL |
+          | 'a' | write, append to file | H5F_ACC_RDWR |
+          | 'c' | write, error if exists | H5F_ACC_CREAT |
+          | 't' | write, replace existing | H5F_ACC_TRUNC |
         
         
           Returns
           -------
           bool
-            Indication of writing success.
+              Indication of writing success.
         """
     @property
     def BrillouinZone(self) -> BrillouinZone:
@@ -5549,15 +5116,15 @@ class BZNestQcc:
     @staticmethod
     def from_file(filename: str, entry: str = 'BZNestQcc') -> BZNestQcc:
         """
-          Save the object to an HDF5 file
+          Load an object from an HDF5 file
         
           Parameters
           ----------
           filename : str
-            The full path specification for the file to read from
+              The full path specification for the file to read from
           entry: str
-            The group path, e.g., "my/cool/grid", where to read from inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to read from inside the file,
+              with a default equal to the object Class name
         
           Returns
           -------
@@ -5590,68 +5157,58 @@ class BZNestQcc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below).
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below).
         
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          ``values_data``
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            ``values_data``
         vectors_elements:
-          Like ``values_elements`` but for the eigenvectors
+            Like ``values_elements`` but for the eigenvectors
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -5668,75 +5225,65 @@ class BZNestQcc:
         Parameters
         ----------
         values_data : :py:class:`numpy.ndarray`
-          The eigenvalue data to be stored in the grid. The first dimension must be
-          equal in size to the number of grid-vertices. If two dimensional the second
-          dimension is interpreted as all information for a single mode flattened
-          and concatenated into (scalars, vectors, matrices) -- in that order.
-          If more than two dimensional, the second dimension indexes modes and
-          higher dimensions will be flattened *as if row ordered* and must flatten into
-          a concatenated list of (scalars, vectors, matrices).
-          If the provided array can be interpreted as a contiguous row-ordered two
-          dimensional array it will be used in place, otherwise a copy will be made.
+            The eigenvalue data to be stored in the grid. The first dimension must be
+            equal in size to the number of grid-vertices. If two dimensional the second
+            dimension is interpreted as all information for a single mode flattened
+            and concatenated into (scalars, vectors, matrices) -- in that order.
+            If more than two dimensional, the second dimension indexes modes and
+            higher dimensions will be flattened *as if row ordered* and must flatten into
+            a concatenated list of (scalars, vectors, matrices).
+            If the provided array can be interpreted as a contiguous row-ordered two
+            dimensional array it will be used in place, otherwise a copy will be made.
         values_elements: integer vector-like
-          A multi-purpose vector containing, in order:
+            A multi-purpose vector containing, in order:
         
-          * the number of scalar-like eigenvalue elements,
-          * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
-          * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
-          * an integer :py:class:`RotatesLike` value denoting
+            * the number of scalar-like eigenvalue elements,
+            * the number of vector-like eigenvalue *elements* (must be :math:`3\\times N`),
+            * the number of matrix-like eigenvalue *elements* (must be :math:`9\\times N`),
+            * an integer :py:class:`RotatesLike` value denoting
             *how* the vector-like and matrix-like parts transform under application
             of a symmetry operation (see note below),
-          * an integer :py:class:`LengthUnit` value denoting what units
+            * an integer :py:class:`LengthUnit` value denoting what units
             the vector-like and matrix-like parts are in (see note below)
-          * which scalar cost function should be used (see below),
-          * which vector cost function should be used (see below).
+            * which scalar cost function should be used (see below),
+            * which vector cost function should be used (see below).
         
-          See the note below for the meaning of the last three values.
+            See the note below for the meaning of the last three values.
         values_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvalue elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvalue elements stored in the grid
         vectors_data : :py:class:`numpy.ndarray`
-          The eigenvector data to be stored in the grid. Same shape restrictions as
-          **values_data**
+            The eigenvector data to be stored in the grid. Same shape restrictions as
+            **values_data**
         vectors_elements:
-          Like **values_elements** but for the eigenvectors
+            Like **values_elements** but for the eigenvectors
         vectors_weights : float, vector-like
-          The relative cost weights between scalar-, vector-, and matrix- like
-          eigenvector elements stored in the grid
+            The relative cost weights between scalar-, vector-, and matrix- like
+            eigenvector elements stored in the grid
         sort : logical (default ``False``)
-          Whether the equivalent-mode permutations should be (re)determined following
-          the update to the flags and weights.
+            Whether the equivalent-mode permutations should be (re)determined following
+            the update to the flags and weights.
         
         
         Note
         ----
           Mapping of integers to :py:class:`RotatesLike` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`RotatesLike`            |
-          +=======+====================================+
-          |   0   |               `vector`             |
-          +-------+------------------------------------+
-          |   1   |            `pseudovector`          |
-          +-------+------------------------------------+
-          |   2   |               `Gamma`              |
-          +-------+------------------------------------+
+          | value | :py:class:`RotatesLike` |
+          |---|---|
+          | 0 | `vector` |
+          | 1 | `pseudovector` |
+          | 2 | `Gamma` |
         
           Mapping of integers to :py:class:`LengthUnit` values:
         
-          +-------+------------------------------------+
-          | value | :py:class:`LengthUnit`             |
-          +=======+====================================+
-          |   0   |               `none`               |
-          +-------+------------------------------------+
-          |   1   |             `angstrom`             |
-          +-------+------------------------------------+
-          |   2   |         `inverse_angstrom`         |
-          +-------+------------------------------------+
-          |   3   |           `real_lattice`           |
-          +-------+------------------------------------+
-          |   4   |        `reciprocal_lattice`        |
-          +-------+------------------------------------+
+          | value | :py:class:`LengthUnit` |
+          |---|---|
+          | 0 | `none` |
+          | 1 | `angstrom` |
+          | 2 | `inverse_angstrom` |
+          | 3 | `real_lattice` |
+          | 4 | `reciprocal_lattice` |
         
           Integer values outside of the mapped range (or missing) are replaced by 3.
         
@@ -5747,27 +5294,19 @@ class BZNestQcc:
         
           Mapping of integers to scalar cost function:
         
-          +-------+------------------------------------+
-          | value | function(x,y)                      |
-          +=======+====================================+
-          |   0   | magnitude(x-y)                     |
-          +-------+------------------------------------+
+          | value | function(x,y) |
+          |---|---|
+          | 0 | magnitude(x-y) |
         
           Mapping of integers to vector cost function:
         
-          +-------+------------------------------------+
-          | value | function(vec_x, vec_y)             |
-          +=======+====================================+
-          |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-          +-------+------------------------------------+
-          |   1   | vector_distance(vec_x, vec_y)      |
-          +-------+------------------------------------+
-          |   2   | 1 - vector_product(vec_x, vec_y)   |
-          +-------+------------------------------------+
-          |   3   | vector_angle(vec_x, vec_y)         |
-          +-------+------------------------------------+
-          |   4   | hermitian_angle(vec_x, vec_y)      |
-          +-------+------------------------------------+
+          | value | function(vec_x, vec_y) |
+          |---|---|
+          | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+          | 1 | vector_distance(vec_x, vec_y) |
+          | 2 | 1 - vector_product(vec_x, vec_y) |
+          | 3 | vector_angle(vec_x, vec_y) |
+          | 4 | hermitian_angle(vec_x, vec_y) |
         
           Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -5784,20 +5323,20 @@ class BZNestQcc:
           Parameters
           ----------
           Q : :py:class:`numpy.ndarray`
-            A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
-            which an interpolated result is required, expressed in units of the
-            reciprocal lattice.
+              A two dimensional array with ``Q.shape[1] == 3`` containing the positions at
+              which an interpolated result is required, expressed in units of the
+              reciprocal lattice.
           useparallel : bool, optional
-            Whether a serial or parallel code should be utilised
+              Whether a serial or parallel code should be utilised
           threads : int, optional
-            How many parallel threads should be utilised; if this value is less than one,
-            the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
-            thread per logical core is used if it is not set.
+              How many parallel threads should be utilised; if this value is less than one,
+              the ``BRILLE_NUM_THREADS`` environment variable sets the number, or one
+              thread per logical core is used if it is not set.
           do_not_move_points: bool, optional
-            If ``True`` the provided **Q** points must already lie within the first Brillouin
-            zone. No check is made to verify this requirement and if any **Q** lie outside
-            of the gridded volume out-of-bounds errors may result in bad data or runtime
-            errors.
+              If ``True`` the provided **Q** points must already lie within the first Brillouin
+              zone. No check is made to verify this requirement and if any **Q** lie outside
+              of the gridded volume out-of-bounds errors may result in bad data or runtime
+              errors.
         
           Returns
           -------
@@ -5815,86 +5354,68 @@ class BZNestQcc:
         """
     def set_flags_weights(self, values_flags: numpy.ndarray[numpy.int32], values_weights: numpy.ndarray[numpy.float64], vectors_flags: numpy.ndarray[numpy.int32], vectors_weights: numpy.ndarray[numpy.float64], sort: bool = False) -> None:
         """
-          Set :py:class:`~brille._brille.RotatesLike`, `~brille._brille.LengthUnit`
+          Set :py:class:`~brille._brille.RotatesLike`, :py:class:`~brille._brille.LengthUnit`
           and cost functions plus relative cost weights for the values and vectors
           stored in the object
         
           Parameters
           ----------
           values_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvalues at
-            neighbouring grid points for scalar- and vector-like eigenvalues.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvalues at
+              neighbouring grid points for scalar- and vector-like eigenvalues.
           values_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvalue elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvalue elements stored in the grid
           vectors_flags : integer, vector-like
-            One or more values indicating the :py:class:`~brille._brille.RotatesLike`
-            value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
-            value, plus which cost function to use when comparing stored eigenvectors at
-            neighbouring grid points for scalar- and vector-like eigenvectors.
+              One or more values indicating the :py:class:`~brille._brille.RotatesLike`
+              value for the eigenvalues stored in the object, the `~brille._brille.LengthUnit`
+              value, plus which cost function to use when comparing stored eigenvectors at
+              neighbouring grid points for scalar- and vector-like eigenvectors.
           vectors_weights : float, vector-like
-            The relative cost weights between scalar-, vector-, and matrix- like
-            eigenvector elements stored in the grid
+              The relative cost weights between scalar-, vector-, and matrix- like
+              eigenvector elements stored in the grid
           sort : bool, optional
-            Whether the equivalent-mode permutations should be (re)determined following
-            the update to the flags and weights.
+              Whether the equivalent-mode permutations should be (re)determined following
+              the update to the flags and weights.
         
         
           Note
           ----
             Mapping of integers to :py:class:`~brille._brille.RotatesLike` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`RotatesLike`            |
-            +=======+====================================+
-            |   0   |               `vector`             |
-            +-------+------------------------------------+
-            |   1   |            `pseudovector`          |
-            +-------+------------------------------------+
-            |   2   |               `Gamma`              |
-            +-------+------------------------------------+
+            | value | :py:class:`RotatesLike` |
+            |---|---|
+            | 0 | `vector` |
+            | 1 | `pseudovector` |
+            | 2 | `Gamma` |
           
             Mapping of integers to :py:class:`LengthUnit` values:
         
-            +-------+------------------------------------+
-            | value | :py:class:`LengthUnit`             |
-            +=======+====================================+
-            |   0   |               `none`               |
-            +-------+------------------------------------+
-            |   1   |             `angstrom`             |
-            +-------+------------------------------------+
-            |   2   |         `inverse_angstrom`         |
-            +-------+------------------------------------+
-            |   3   |           `real_lattice`           |
-            +-------+------------------------------------+
-            |   4   |        `reciprocal_lattice`        |
-            +-------+------------------------------------+
+            | value | :py:class:`LengthUnit` |
+            |---|---|
+            | 0 | `none` |
+            | 1 | `angstrom` |
+            | 2 | `inverse_angstrom` |
+            | 3 | `real_lattice` |
+            | 4 | `reciprocal_lattice` |
         
             Mapping of integers to scalar cost function:
           
-            +-------+------------------------------------+
-            | value | function(x,y)                      |
-            +=======+====================================+
-            |   0   | magnitude(x-y)                     |
-            +-------+------------------------------------+
+            | value | function(x,y) |
+            |---|---|
+            | 0 | magnitude(x-y) |
           
             Mapping of integers to vector cost function:
           
-            +-------+------------------------------------+
-            | value | function(vec_x, vec_y)             |
-            +=======+====================================+
-            |   0   | sin(hermitian_angle(vec_x, vec_y)) |
-            +-------+------------------------------------+
-            |   1   | vector_distance(vec_x, vec_y)      |
-            +-------+------------------------------------+
-            |   2   | 1 - vector_product(vec_x, vec_y)   |
-            +-------+------------------------------------+
-            |   3   | vector_angle(vec_x, vec_y)         |
-            +-------+------------------------------------+
-            |   4   | hermitian_angle(vec_x, vec_y)      |
-            +-------+------------------------------------+
+            | value | function(vec_x, vec_y) |
+            |---|---|
+            | 0 | sin(hermitian_angle(vec_x, vec_y)) |
+            | 1 | vector_distance(vec_x, vec_y) |
+            | 2 | 1 - vector_product(vec_x, vec_y) |
+            | 3 | vector_angle(vec_x, vec_y) |
+            | 4 | hermitian_angle(vec_x, vec_y) |
         
             Integer values outside of the mapped range (or missing) are replaced by 0.
         """
@@ -5915,14 +5436,14 @@ class BZNestQcc:
             Parameters
             ----------
             normalize : bool or None, optional
-              ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
-              lattice units; ``False`` never does; ``None`` restores the automatic default.
+                ``True`` always normalizes, and raises a RuntimeError for eigenvectors in
+                lattice units; ``False`` never does; ``None`` restores the automatic default.
             metric : float, vector-like, optional
-              A diagonal metric :math:`M`, one weight per element of a branch (for
-              phonons, :math:`3N`). The default is the identity, the ordinary norm.
-              For Bogoliubov (spin-wave) vectors use
-              :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
-              :math:`\\langle v|\\eta|v\\rangle` is kept.
+                A diagonal metric :math:`M`, one weight per element of a branch (for
+                phonons, :math:`3N`). The default is the identity, the ordinary norm.
+                For Bogoliubov (spin-wave) vectors use
+                :math:`\\eta=\\mathrm{diag}(1,\\ldots,1,-1,\\ldots,-1)`; the sign of
+                :math:`\\langle v|\\eta|v\\rangle` is kept.
         """
     def sort(self) -> None:
         ...
@@ -5933,37 +5454,31 @@ class BZNestQcc:
           Parameters
           ----------
           filename : str
-            The full path specification for the file to write into
+              The full path specification for the file to write into
           entry: str
-            The group path, e.g., "my/cool/grid", where to write inside the file,
-            with a default equal to the object Class name
+              The group path, e.g., "my/cool/grid", where to write inside the file,
+              with a default equal to the object Class name
           flags: str
-            The HDF5 permissions to use when opening the file. Default 'a' writes to an
-            existing file -- if `entry` exists in the file it is overwritten.
+              The HDF5 permissions to use when opening the file. Default 'a' writes to an
+              existing file -- if `entry` exists in the file it is overwritten.
         
           Note
           ----
           Possible `flags` are:
         
-          +---------+-------------------------+----------------+
-          | `flags` | meaning                 | HDF equivalent |
-          +=========+=========================+================+
-          | 'r'     | read                    | H5F_ACC_RDONLY |
-          +---------+-------------------------+----------------+
-          | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
-          +---------+-------------------------+----------------+
-          | 'a'     | write, append to file   | H5F_ACC_RDWR   |
-          +---------+-------------------------+----------------+
-          | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
-          +---------+-------------------------+----------------+
-          | 't'     | write, replace existing | H5F_ACC_TRUNC  |
-          +---------+-------------------------+----------------+
+          | `flags` | meaning | HDF equivalent |
+          |---|---|---|
+          | 'r' | read | H5F_ACC_RDONLY |
+          | 'x' | write, error if exists | H5F_ACC_EXCL |
+          | 'a' | write, append to file | H5F_ACC_RDWR |
+          | 'c' | write, error if exists | H5F_ACC_CREAT |
+          | 't' | write, replace existing | H5F_ACC_TRUNC |
         
         
           Returns
           -------
           bool
-            Indication of writing success.
+              Indication of writing success.
         """
     @property
     def BrillouinZone(self) -> BrillouinZone:
@@ -6213,5 +5728,5 @@ __version__: str = ''
 build_datetime: str = ''
 build_hostname: str = ''
 git_branch: str = ''
-git_revision: str = '9574f19'
+git_revision: str = 'd0b9324'
 version: str = '0.8.4'
