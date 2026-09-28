@@ -1,0 +1,54 @@
+[project]
+site_name = "brille"
+site_description = "Symmetry operations, Brillouin zones and linear interpolation over them"
+site_author = "Gregory Tucker"
+site_url = "https://brille.github.io/brille/"
+repo_url = "https://github.com/brille/brille"
+repo_name = "brille/brille"
+edit_uri = "edit/main/docs/"
+copyright = "Copyright &copy; 2020–2026 Gregory Tucker"
+
+nav = [
+  { "Home" = "index.md" },
+  { "Reference" = [
+    { "Grids" = "reference/grids.md" },
+  ] },
+]
+
+[project.theme]
+language = "en"
+features = ["content.code.copy", "navigation.sections", "navigation.tabs", "search.highlight", "toc.follow"]
+
+[project.markdown_extensions]
+admonition = {}
+attr_list = {}
+tables = {}
+toc.permalink = true
+pymdownx.arithmatex.generic = true
+pymdownx.highlight = {}
+pymdownx.superfences = {}
+pymdownx.snippets.base_path = ["docs", "."]
+pymdownx.snippets.check_paths = true
+pymdownx.snippets.dedent_subsections = true
+
+[project.plugins.mkdocstrings.handlers.python]
+paths = ["."]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+extensions = ["docs/griffe_brille.py"]
+show_overloads = true
+show_source = false
+docstring_style = "numpy"
+docstring_section_style = "list"
+filters = ["!^_"]
+show_if_no_docstring = true
+heading_level = 2
+members_order = "source"
+merge_init_into_class = true
+separate_signature = true
+show_root_heading = true
+show_root_full_path = false
+show_signature_annotations = true
+show_symbol_type_heading = true
+show_symbol_type_toc = true
+summary = true
