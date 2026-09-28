@@ -144,6 +144,12 @@ class Lattice(unittest.TestCase):
             br_mod.Basis(*bt),
         )
 
+        # CIF xyz symmetry operations may be given as a string, as the docstring says
+        xyz = "x,y,z;-x,-y,-z;x,1/2-y,1/2+z"
+        from_string = br_py.Lattice(([4.0, 5.0, 6.0], [90, 90, 90]), symmetry=xyz)
+        from_symmetry = br_py.Lattice(([4.0, 5.0, 6.0], [90, 90, 90]), symmetry=br_mod.Symmetry(xyz))
+        self.assertTrue(from_string.spacegroup == from_symmetry.spacegroup)
+
         # Until we can stop using Python 3.6 and 3.7 the first argument *can not* be position-only
         # # The single required argument can not be provided as a keyword
         # self.assertRaises(TypeError, br_py.Lattice, values=self.cmo_vectors)

@@ -34,7 +34,7 @@ from brille import Symmetry
 mirror = Symmetry("x, 1/2-y, 1/2+z")
 same = Symmetry([[[1, 0, 0], [0, -1, 0], [0, 0, 1]]], [[0, 1 / 2, 1 / 2]])
 print(f"xyz and matrix forms are the same: {mirror == same}")
-orthorhombic = Lattice(([4.0, 5.0, 6.0], [90, 90, 90]), symmetry=Symmetry("x,y,z;-x,-y,-z;x,1/2-y,1/2+z"))
+orthorhombic = Lattice(([4.0, 5.0, 6.0], [90, 90, 90]), symmetry="x,y,z;-x,-y,-z;x,1/2-y,1/2+z")
 # --8<-- [end:cif]
 
 # --8<-- [start:check]

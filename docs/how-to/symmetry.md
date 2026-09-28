@@ -43,18 +43,12 @@ route for a primitive cell from a phonon calculation:
 
 ## From a CIF file
 
-A [`Symmetry`][brille._brille.Symmetry] reads operations written as CIF
-`x, y, z` strings, separated by `;`; generators are enough. Wrap the string
-in a `Symmetry` before giving it to the lattice:
+A lattice, or a [`Symmetry`][brille._brille.Symmetry], reads operations written
+as CIF `x, y, z` strings, separated by `;`; generators are enough:
 
 ```python
 --8<-- "how-to/symmetry.py:cif"
 ```
-
-!!! warning
-    [`brille.Lattice`][brille.lattice.Lattice]'s documentation says `symmetry`
-    may be the string itself, but a plain string fails with
-    `incompatible constructor arguments`. Pass `Symmetry(string)`.
 
 ## Check the result
 
