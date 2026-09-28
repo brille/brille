@@ -36,6 +36,7 @@ nav = [
     { "Utilities" = "reference/utils.md" },
     { "Plotting" = "reference/plotting.md" },
   ] },
+  { "Release notes" = "release-notes.md" },
 ]
 
 extra_javascript = [
