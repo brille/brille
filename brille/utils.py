@@ -75,22 +75,10 @@ def create_bz(
 
     Parameters
     ----------
-    a, b, c : float
-        Lattice parameters as separate floating point values
-    lens : (3,) :py:class:`numpy.ndarray` or list
-        Lattice parameters as a 3-element array or list
-    alpha, beta, gamma : float
-        Lattice angles in degrees or radians as separate floating point values
-        Brille tries to determine if the input is in degrees or radians
-        by looking at its magnitude. If the values are all less than PI it
-        assumes the angles are in radians otherwise it assumes degrees
-    angs : (3,) :py:class:`numpy.ndarray` or list
-        Lattice angles in degrees or radians as a 3-element array or list
-    lattice_vectors : (3, 3) :py:class:`numpy.ndarray` or list of list
-        The lattice vectors as a 3x3 matrix, array or list of list
-    spacegroup: str or int
-        The spacegroup in either International Tables (Hermann-Mauguin)
-        notation or a Hall symbol or an integer Hall number.
+    *args
+        The lattice and its space group, in one of three forms (see the note
+        below): ``a, b, c, alpha, beta, gamma, spacegroup``;
+        ``lens, angs, spacegroup``; or ``lattice_vectors, spacegroup``.
     is_reciprocal : bool, keyword-only optional (default: False)
         Whether the lattice parameters or lattice vectors refers to a
         reciprocal rather than direct lattice. If True, a/b/c/lens should
@@ -111,9 +99,29 @@ def create_bz(
         Enforces that provided lattice parameters / basis vectors / atom-basis
         positions conform to the provided symmetry operations, if present.
 
+    Other Parameters
+    ----------------
+    a, b, c : float
+        Lattice parameters as separate floating point values
+    lens : (3,) :py:class:`numpy.ndarray` or list
+        Lattice parameters as a 3-element array or list
+    alpha, beta, gamma : float
+        Lattice angles in degrees or radians as separate floating point values.
+        Brille tries to determine if the input is in degrees or radians
+        by looking at its magnitude. If the values are all less than PI it
+        assumes the angles are in radians otherwise it assumes degrees
+    angs : (3,) :py:class:`numpy.ndarray` or list
+        Lattice angles in degrees or radians as a 3-element array or list
+    lattice_vectors : (3, 3) :py:class:`numpy.ndarray` or list of list
+        The lattice vectors as a 3x3 matrix, array or list of list
+    spacegroup : str
+        The spacegroup in either International Tables (Hermann-Mauguin)
+        notation or a Hall symbol.
+
     Note
     ----
-    Note that the required lattice parameters must be specified as:
+    The lattice may be given by keyword instead, with the names above; it
+    must be given in one of these forms:
         - EITHER ``create_bz(a, b, c, alpha, beta, gamma, spacegroup, ...)``
         - OR     ``create_bz(lens, angs, spacegroup, ...)``
         - OR     ``create_bz(lattice_vectors, spacegroup, ...)``
@@ -214,7 +222,8 @@ def create_grid(
     Brille provides three different grid implementations:
         - BZTrellisQ: A hybrid Cartesian and tetrahedral grid, with
           tetrahedral nodes on the BZ surface and cuboids inside. [Default]
-        - BZMeshQ: A fully tetrahedral grid with a flat data structure
+        - BZMeshQ: A structured tetrahedral mesh, clipped exactly to the zone
+          and refinable
         - BZNestQ: A fully tetrahedral grid with a nested tree data
           structure.
 
@@ -228,76 +237,52 @@ def create_grid(
         Whether the interpolated scalar quantities are complex
     complex_vectors : bool, optional (default: False)
         Whether the interpolated vector quantities are complex
-    mesh: bool, optional (default: False)
+    mesh : bool, optional (default: False)
         Whether to construct a BZMeshQ instead of a BZTrellisQ grid
-    nest: bool, optional (default: False)
+    nest : bool, optional (default: False)
         Whether to construct a BZNestQ instead of a BZTrellisQ grid
 
-    Note
-    ----
-    Note that setting both `mesh` and `nest` to True gives an error.
-
-
-    Additional keyword parameters will be passed to the relevant
-    grid constructors.
-
-    For ``BZTrellisQ``, these are:
-
-    Parameters
-    ----------
+    Other Parameters
+    ----------------
     node_volume_fraction : float, optional (default: 1e-5)
-        Despite its name, a volume in cubic reciprocal Angstrom, not a
-        fraction: the volume of one cubic node of the trellis, which
-        sets its spacing. For a given value, a zone twice the size
-        (in each direction) gets eight times the nodes. Smaller numbers
-        will result in better interpolation accuracy at the cost of
-        greater computation time. To size the grid by its number of
-        points, use ``bz.ir_polyhedron.volume / points``, which gives
-        roughly 1.3 to 2 times ``points`` vertices.
+        For ``BZTrellisQ``. Despite its name, a volume in cubic reciprocal
+        Angstrom, not a fraction: the volume of one cubic node of the trellis,
+        which sets its spacing. For a given value, a zone twice the size (in
+        each direction) gets eight times the nodes. Smaller numbers give better
+        interpolation accuracy at the cost of greater computation time. To size
+        the grid by its number of points, use ``bz.ir_polyhedron.volume /
+        points``, which gives roughly 1.3 to 2 times ``points`` vertices.
     always_triangulate : bool, optional (default: False)
-        If set to True, we calculate a bounding polyhedron
-        for each point in the grid, and triangulate this into
-        tetrahedrons. If False, we set internal points to be
-        cuboid and compute tetrahedrons only for points near
-        the surface of the Brillouin Zone.
-
-
-    For ``BZMeshQ``, these additional parameters are available:
-
-    Parameters
-    ----------
+        For ``BZTrellisQ``. If True, every node is divided into tetrahedra;
+        otherwise only the nodes the zone boundary cuts are, and the others stay
+        cubes.
     max_size : float, optional (default: -1.0)
-        The maximum volume of a grid tetrahedron in cubic reciprocal
-        Angstrom, which sets the grid spacing. If not positive, the
-        grid is the reciprocal lattice itself, clipped to the zone.
-        Each cell of the grid holds six tetrahedra, so a mesh with
-        ``max_size = node_volume_fraction / 6`` has about as many
-        vertices as a trellis with ``node_volume_fraction`` (up to 1.5
-        times as many for small grids); and
-        ``bz.ir_polyhedron.volume / (6 * points)`` gives roughly 1.5 to 3
-        times ``points`` vertices, the most for small grids.
+        For ``BZMeshQ``. The maximum volume of a grid tetrahedron in cubic
+        reciprocal Angstrom, which sets the grid spacing. If not positive, the
+        grid is the reciprocal lattice itself, clipped to the zone. Each cell of
+        the grid holds six tetrahedra, so a mesh with ``max_size =
+        node_volume_fraction / 6`` has about as many vertices as a trellis with
+        ``node_volume_fraction`` (up to 1.5 times as many for small grids); and
+        ``bz.ir_polyhedron.volume / (6 * points)`` gives roughly 1.5 to 3 times
+        ``points`` vertices, the most for small grids.
     num_levels : int, optional (default: 3)
-        Unused; kept for compatibility.
+        For ``BZMeshQ``. Unused; kept for compatibility.
     max_points : int, optional (default: -1)
-        If positive, the grid is coarsened until its estimated number
-        of vertices is at most this.
-
-
-    For ``BZNestQ``, these additional parameters are available:
-
-    Parameters
-    ----------
-    max_volume: float
-        Maximum volume of a tetrahedron in cubic reciprocal Angstrom.
-    number_density: float
-        Number density of points in reciprocal space.
-    max_branchings: int, optional (default: 5)
-        Maximum number of branchings in the tree structure
+        For ``BZMeshQ``. If positive, the grid is coarsened until its estimated
+        number of vertices is at most this.
+    max_volume : float
+        For ``BZNestQ``. Maximum volume of a tetrahedron in cubic reciprocal
+        Angstrom.
+    number_density : float
+        For ``BZNestQ``. Number density of points in reciprocal space.
+    max_branchings : int, optional (default: 5)
+        For ``BZNestQ``. Maximum number of branchings in the tree structure.
 
     Note
     ----
-    Note that one of either the **max_volume** or **number_density**
-    parameters must be provided to construct a ``BZNestQ``.
+    Setting both `mesh` and `nest` to True gives an error. Each grid's keyword
+    arguments are refused for the other grids, and a ``BZNestQ`` needs one of
+    **max_volume** or **number_density**.
     """
     from brille import BrillouinZone, _brille
 

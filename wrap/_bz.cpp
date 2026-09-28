@@ -443,8 +443,8 @@ void wrap_brillouinzone(py::module & m){
 
     Parameters
     ----------
-    Q : :py:class:`numpy.ndarray`
-        A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
+    points : :py:class:`numpy.ndarray`
+        A 2 dimensional array of three-vectors (``points.shape[1]==3``) expressed in
         units of the reciprocal lattice.
 
     Returns
