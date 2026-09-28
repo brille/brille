@@ -48,7 +48,7 @@ vis = ['pyglet>=1.5.27', 'vispy>=0.12.1', ]
 
 [project.urls]
 Homepage = "https://github.com/brille"
-Documentation = "https://brille.github.io"
+Documentation = "https://brille.github.io/brille/"
 Respository = "https://github.com/brille/brille.git"
 Issues = "https://github.com/brille/brille/issues"
 
@@ -66,7 +66,7 @@ profile = "conan/wheel.profile"  # see conan/cmake4.profile
 
 [tool.cibuildwheel]
 archs = ["auto64"]
-test-requires = ["numpy", "pytest"]
+test-requires = ["numpy", "pytest", "pybind11-stubgen==3.0.0"]
 test-command = "pytest {package}/wrap/tests"
 build-verbosity = 1
 skip = ["cp38-*", "cp39-*", "cp310-*", "cp314t-*"]  # below requires-python; free-threaded builds re-enable the GIL (no free-threading support declared)

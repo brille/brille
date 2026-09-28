@@ -1,0 +1,112 @@
+[project]
+site_name = "brille"
+site_description = "Symmetry operations, Brillouin zones and linear interpolation over them"
+site_author = "Gregory Tucker"
+site_url = "https://brille.github.io/brille/"
+repo_url = "https://github.com/brille/brille"
+repo_name = "brille/brille"
+edit_uri = "edit/main/docs/"
+copyright = "Copyright &copy; 2020–2026 Gregory Tucker"
+
+nav = [
+  { "Home" = "index.md" },
+  { "Tutorials" = [
+    { "Interpolating with brille" = "tutorials/interpolation.md" },
+    { "Building and refining a mesh" = "tutorials/mesh.md" },
+  ] },
+  { "How-to guides" = [
+    { "Install brille" = "how-to/install.md" },
+    { "Give a lattice its symmetry" = "how-to/symmetry.md" },
+    { "Switch from BZTrellisQ to BZMeshQ" = "how-to/trellis-to-mesh.md" },
+    { "Control the number of threads" = "how-to/threads.md" },
+  ] },
+  { "Explanation" = [
+    { "Lattices and Brillouin zones" = "explanation/background.md" },
+    { "Interpolation grids" = "explanation/grids.md" },
+    { "Eigenvector phase convention" = "explanation/phase-convention.md" },
+    { "Memory use" = "explanation/memory-use.md" },
+  ] },
+  { "Reference" = [
+    { "Lattices" = "reference/lattice.md" },
+    { "Symmetry" = "reference/symmetry.md" },
+    { "Brillouin zones and polyhedra" = "reference/brillouin-zone.md" },
+    { "Grids" = "reference/grids.md" },
+    { "Units and tolerances" = "reference/units-and-tolerances.md" },
+    { "Logging" = "reference/logging.md" },
+    { "Utilities" = "reference/utils.md" },
+    { "Plotting" = "reference/plotting.md" },
+  ] },
+]
+
+extra_javascript = [
+  "javascripts/mathjax.js",
+  "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js",
+]
+extra_css = ["stylesheets/extra.css"]
+
+
+[project.theme]
+language = "en"
+features = ["content.action.edit", "content.code.copy", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest", "toc.follow"]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "material/brightness-auto"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "indigo"
+accent = "indigo"
+toggle.icon = "material/brightness-7"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "indigo"
+accent = "indigo"
+toggle.icon = "material/brightness-4"
+toggle.name = "Switch to system preference"
+
+[project.markdown_extensions]
+admonition = {}
+md_in_html = {}
+pymdownx.details = {}
+attr_list = {}
+tables = {}
+toc.permalink = true
+pymdownx.arithmatex.generic = true
+pymdownx.highlight = {}
+pymdownx.superfences = {}
+pymdownx.snippets.base_path = ["docs", "."]
+pymdownx.snippets.check_paths = true
+pymdownx.snippets.dedent_subsections = true
+
+[project.plugins.mkdocstrings.handlers.python]
+paths = ["."]
+inventories = [
+  "https://docs.python.org/3/objects.inv",
+  "https://numpy.org/doc/stable/objects.inv",
+  "https://matplotlib.org/stable/objects.inv",
+]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+extensions = ["docs/griffe_brille.py"]
+show_overloads = true
+show_source = false
+docstring_style = "numpy"
+docstring_section_style = "list"
+filters = ["!^_"]
+show_if_no_docstring = true
+heading_level = 2
+members_order = "source"
+merge_init_into_class = true
+separate_signature = true
+show_root_heading = true
+show_root_full_path = false
+show_signature_annotations = true
+show_symbol_type_heading = true
+show_symbol_type_toc = true
+summary = true

@@ -1,0 +1,17 @@
+/* The figures converted from TikZ are black lines on a transparent ground,
+   which vanish on the dark palette; give them a light ground there. */
+[data-md-color-scheme="slate"] .md-typeset img[src$=".svg"] {
+  background-color: #fff;
+  border-radius: 0.2rem;
+  padding: 0.4rem;
+}
+
+/* The TikZ figures keep their small printed size as SVG; scale them up. */
+.md-typeset img[src*="images/grid-"] {
+  width: 100%;
+  max-width: 18rem;
+}
+.md-typeset img[src*="images/zone-"] {
+  width: 100%;
+  max-width: 36rem;
+}

@@ -59,3 +59,7 @@ devtools/wheelhouse
 
 # Python virtual environment
 venv/
+# Zensical build output and cache
+/site/
+/.cache/
+__pycache__/

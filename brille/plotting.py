@@ -119,7 +119,7 @@ else:
             A :math:`N \\times 3` two dimensional array of :math:`N` points to plot.
         axs : :py:class:`matplotlib.axes.Axes`, optional
             The axes in which to add the plotted points. If ``None`` then
-            :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+            :py:func:`matplotlib.pyplot.gca` is used to get or spawn the current
             axes.
         title : str, optional
             An optional title for the plotting axes `axs`
@@ -146,7 +146,7 @@ else:
             line segments to plot.
         axs : :py:class:`matplotlib.axes.Axes`, optional
             The axes in which to add the plotted points. If ``None`` then
-            :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+            :py:func:`matplotlib.pyplot.gca` is used to get or spawn the current
             axes.
         title : str, optional
             An optional title for the plotting axes `axs`
@@ -196,7 +196,7 @@ else:
 
         axs : :py:class:`matplotlib.axes.Axes`, optional
             The axes in which to add the plotted points. If ``None`` then
-            :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+            :py:func:`matplotlib.pyplot.gca` is used to get or spawn the current
             axes.
 
         origin : {:py:class:`numpy.ndarray`,tuple,list}, optional
@@ -215,15 +215,11 @@ else:
         units : str, optional
             The units in which to plot the first/irreducible Brillouin zone.
 
-            +-----------------+---------------------------------------------------+
-            | valid units     | corresponding to                                  |
-            +=================+===================================================+
-            | ``'invA'``      | inverse ångstrom                                  |
-            +-----------------+---------------------------------------------------+
-            | ``'rlu'``       | reciprocal lattice units of the conventional cell |
-            +-----------------+---------------------------------------------------+
-            | ``'primitive'`` | reciprocal lattice units of the primitive cell    |
-            +-----------------+---------------------------------------------------+
+            | valid units | corresponding to |
+            |---|---|
+            | ``'invA'`` | inverse ångstrom |
+            | ``'rlu'`` | reciprocal lattice units of the conventional cell |
+            | ``'primitive'`` | reciprocal lattice units of the primitive cell |
 
         irreducible : bool, optional
             Whether to plot the irreducible Brillouin zone polyhedron when it is
@@ -414,7 +410,7 @@ else:
 
         axs : :py:class:`matplotlib.axes.Axes`, optional
             The 3D axes in which to add the polyhedron facets. If ``None`` then
-            :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+            :py:func:`matplotlib.pyplot.gca` is used to get or spawn the current
             axes.
 
         setlims : bool, optional
@@ -477,7 +473,7 @@ else:
 
         axs : :py:class:`matplotlib.axes.Axes`, optional
             The 3D axes in which to add the polyhedron facets. If ``None`` then
-            :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+            :py:func:`matplotlib.pyplot.gca` is used to get or spawn the current
             axes.
 
         show : bool, optional
@@ -537,7 +533,7 @@ else:
 
         axs : :py:class:`matplotlib.axes.Axes`, optional
             The 3D axes in which to add the polyhedron facets. If ``None`` then
-            :py:func:`matplotlib.axes.gca()` is used to get or spawn the current
+            :py:func:`matplotlib.pyplot.gca` is used to get or spawn the current
             axes.
 
         color : {arraylike, str, iterable}, optional

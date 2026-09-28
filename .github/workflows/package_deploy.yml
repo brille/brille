@@ -49,9 +49,8 @@ jobs:
 
       - uses: pypa/cibuildwheel@v3.4.1
         env:
-          # Pull requests build one CPython per platform: 3.12, whose musllinux
-          # wheel the sphinx job installs (the docs image is Alpine 3.20, Python
-          # 3.12). Releases and manual runs build every supported version.
+          # Pull requests build one CPython per platform, 3.12; releases and
+          # manual runs build every supported version.
           CIBW_BUILD: ${{ github.event_name == 'pull_request' && format('cp312-{0}*', matrix.variant.platform) || format('*-{0}*', matrix.variant.platform) }}
           MACOSX_DEPLOYMENT_TARGET: "14"  # CIBW complains if lower
 
@@ -83,45 +82,27 @@ jobs:
       run: |
         mkdir dist
         find ${{ steps.download.outputs.download-path }} -type f -regex ".*\.\(tar\.gz\|whl\)" -exec mv {} dist/. \;
+    # The release's documentation, as a snapshot of the site; the published site
+    # follows main (see docs.yml). Kept out of dist/, which goes to PyPI.
+    - uses: actions/checkout@v7
+      with:
+        path: repository
+    - uses: actions/setup-python@v7
+      with:
+        python-version: "3.13"
+    - name: Build the documentation archive
+      working-directory: repository
+      run: |
+        pip install -r docs/requirements.txt
+        zensical build --clean --strict
+        mkdir ../docs-archive
+        tar -czf "../docs-archive/brille-docs-${{ github.event.release.tag_name }}.tar.gz" -C site .
     - name: Attach artifacts to GitHub tagged draft release
       uses: ncipollo/release-action@v1
       with:
         allowUpdates: true
         draft: ${{ github.event.action != 'published' }}
-        artifacts: "dist/*.whl,dist/*.tar.gz"
+        artifacts: "dist/*.whl,dist/*.tar.gz,docs-archive/*.tar.gz"
     - name: Publish artifacts to PyPI
       if: ${{ github.event.action == 'published' }}
       uses: pypa/gh-action-pypi-publish@release/v1
-
-  sphinx:
-    runs-on: ubuntu-latest
-    needs: [cibuildwheel]
-    steps:
-    - name: Checkout brille repository
-      uses: actions/checkout@v7
-      with:
-        path: repository
-    - name: Checkout brille.github.io repository
-      uses: actions/checkout@v7
-      with:
-        fetch-depth: 0
-        repository: brille/brille.github.io
-        token: ${{ secrets.BRILLE_GITHUB_IO_TOKEN }}
-        path: io
-    - name: Download musl libc musllinux wheels
-      uses: actions/download-artifact@v8
-      id: path
-      with:
-        name: cibw-wheels-musllinux-ubuntu-24.04
-        path: wheelhouse
-
-    - name: Sphinx Docker build
-      uses: g5t/sphinxer@v3.0.1
-      with:
-        source_dir: repository
-        pages_dir: io
-        is_release: ${{ contains(github.event_name, 'release') }}
-        create_readme: true
-        wheelhouse: wheelhouse
-        package: brille
-        html_dir: ${{ github.head_ref }}

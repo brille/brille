@@ -222,7 +222,7 @@ def create_grid(
 
     Parameters
     ----------
-    bz : :py:class: `BrillouinZone`
+    bz : :py:class:`BrillouinZone`
         A BrillouinZone object (required)
     complex_values : bool, optional (default: False)
         Whether the interpolated scalar quantities are complex

@@ -1,3 +1,2 @@
-exhale
-sphinxcontrib-katex
-sphinxcontrib-tikz
+zensical==0.0.59
+mkdocstrings-python>=2.0.6

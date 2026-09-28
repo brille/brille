@@ -275,8 +275,8 @@ void wrap_brillouinzone(py::module & m){
   Returns
   -------
   :py:class:`brille._brille.Polyhedron`
-    If no irreducible Brillouin zone was requested at construction, the returned
-    polyhedron is that of the first Brillouin zone instead.
+      If no irreducible Brillouin zone was requested at construction, the returned
+      polyhedron is that of the first Brillouin zone instead.
   )pbdoc");
   cls.def_property_readonly("ir_polyhedron_generated",[](const CLS &b){return b.get_ir_polyhedron(false);},
   R"pbdoc(
@@ -444,13 +444,13 @@ void wrap_brillouinzone(py::module & m){
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
-      units of the reciprocal lattice.
+        A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
+        units of the reciprocal lattice.
 
     Returns
     -------
     :py:class:`numpy.ndarray`
-      One dimensional logical array with ``True`` indicating 'inside'
+        One dimensional logical array with ``True`` indicating 'inside'
   )pbdoc");
 
   cls.def("moveinto",[](CLS &b, py::array_t<double> Q, int threads){
@@ -474,19 +474,19 @@ void wrap_brillouinzone(py::module & m){
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
-      units of the reciprocal lattice.
+        A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
+        units of the reciprocal lattice.
     threads : integer, optional
-      The number of parallel threads that should be used. If this value is less
-      than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
-      or one thread per logical core is used if it is not set.
+        The number of parallel threads that should be used. If this value is less
+        than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
+        or one thread per logical core is used if it is not set.
 
     Returns
     -------
     :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`
-      The floating point array of equivalent reduced :math:`\mathbf{q}`
-      points for all :math:`\mathbf{Q}`, and an integer array filled with
-      :math:`\boldsymbol{\tau} = \mathbf{Q}-\mathbf{q}`.
+        The floating point array of equivalent reduced :math:`\mathbf{q}`
+        points for all :math:`\mathbf{Q}`, and an integer array filled with
+        :math:`\boldsymbol{\tau} = \mathbf{Q}-\mathbf{q}`.
   )pbdoc");
 
   cls.def("ir_moveinto",[](CLS &b, py::array_t<double> Q, int threads){
@@ -535,26 +535,26 @@ void wrap_brillouinzone(py::module & m){
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
-      units of the reciprocal lattice.
+        A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
+        units of the reciprocal lattice.
     threads : integer, optional
-      The number of parallel threads that should be used. If this value is less
-      than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
-      or one thread per logical core is used if it is not set.
+        The number of parallel threads that should be used. If this value is less
+        than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
+        or one thread per logical core is used if it is not set.
 
     Returns
     -------
     Qir : :py:class:`numpy.ndarray`
-      The array of equivalent irreducible :math:`\mathbf{q}_\text{ir}` points
-      for all :math:`\mathbf{Q}`;
+        The array of equivalent irreducible :math:`\mathbf{q}_\text{ir}` points
+        for all :math:`\mathbf{Q}`;
     tau : :py:class:`numpy.ndarray`
-      the closest reciprocal lattice vector, :math:`\boldsymbol{\tau}`,
-      to each :math:`\mathbf{Q}`;
+        the closest reciprocal lattice vector, :math:`\boldsymbol{\tau}`,
+        to each :math:`\mathbf{Q}`;
     R : :py:class:`numpy.ndarray`
-      the pointgroup symmetry operation :math:`R`
+        the pointgroup symmetry operation :math:`R`
     Rinv : :py:class:`numpy.ndarray`
-      the inverse point group symmetry operation which obey
-      :math:`\mathbf{Q} = R^{-1} \mathbf{q}_\text{ir} + \boldsymbol{\tau}`.
+        the inverse point group symmetry operation which obey
+        :math:`\mathbf{Q} = R^{-1} \mathbf{q}_\text{ir} + \boldsymbol{\tau}`.
   )pbdoc");
 
   cls.def("ir_moveinto_wedge",[](CLS &b, py::array_t<double> Q, int threads){
@@ -599,19 +599,19 @@ void wrap_brillouinzone(py::module & m){
     Parameters
     ----------
     Q : :py:class:`numpy.ndarray`
-      A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
-      units of the reciprocal lattice.
+        A 2 dimensional array of three-vectors (``Q.shape[1]==3``) expressed in
+        units of the reciprocal lattice.
     threads : integer, optional (default 0)
-      The number of parallel threads that should be used. If this value is less
-      than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
-      or one thread per logical core is used if it is not set.
+        The number of parallel threads that should be used. If this value is less
+        than one, the ``BRILLE_NUM_THREADS`` environment variable sets the number,
+        or one thread per logical core is used if it is not set.
 
     Returns
     -------
     :py:class:`numpy.ndarray`, :py:class:`numpy.ndarray`
-      The array of equivalent in-wedge :math:`\mathbf{Q}_\text{ir}` points
-      for all :math:`\mathbf{Q}`, and the pointgroup operation fulfilling
-      :math:`\mathbf{Q}_\text{ir} = R \mathbf{Q}`.
+        The array of equivalent in-wedge :math:`\mathbf{Q}_\text{ir}` points
+        for all :math:`\mathbf{Q}`, and the pointgroup operation fulfilling
+        :math:`\mathbf{Q}_\text{ir} = R \mathbf{Q}`.
   )pbdoc");
 
   const std::string default_entry("BrillouinZone");
@@ -633,37 +633,31 @@ void wrap_brillouinzone(py::module & m){
   Parameters
   ----------
   filename : str
-    The full path specification for the file to write into
+      The full path specification for the file to write into
   entry: str
-    The group path, e.g., "my/cool/bz", where to write inside the file,
-    with a default equal to BrillouinZone name
+      The group path, e.g., "my/cool/bz", where to write inside the file,
+      with a default equal to BrillouinZone name
   flags: str
-    The HDF5 permissions to use when opening the file. Default 'a' writes to an
-    existing file -- if `entry` exists in the file it is overwritten.
+      The HDF5 permissions to use when opening the file. Default 'a' writes to an
+      existing file -- if `entry` exists in the file it is overwritten.
 
   Note
   ----
   Possible `flags` are:
 
-  +---------+-------------------------+----------------+
-  | `flags` | meaning                 | HDF equivalent |
-  +=========+=========================+================+
-  | 'r'     | read                    | H5F_ACC_RDONLY |
-  +---------+-------------------------+----------------+
-  | 'x'     | write, error if exists  | H5F_ACC_EXCL   |
-  +---------+-------------------------+----------------+
-  | 'a'     | write, append to file   | H5F_ACC_RDWR   |
-  +---------+-------------------------+----------------+
-  | 'c'     | write, error if exists  | H5F_ACC_CREAT  |
-  +---------+-------------------------+----------------+
-  | 't'     | write, replace existing | H5F_ACC_TRUNC  |
-  +---------+-------------------------+----------------+
+  | `flags` | meaning | HDF equivalent |
+  |---|---|---|
+  | 'r' | read | H5F_ACC_RDONLY |
+  | 'x' | write, error if exists | H5F_ACC_EXCL |
+  | 'a' | write, append to file | H5F_ACC_RDWR |
+  | 'c' | write, error if exists | H5F_ACC_CREAT |
+  | 't' | write, replace existing | H5F_ACC_TRUNC |
 
 
   Returns
   -------
   bool
-    Indication of writing success.
+      Indication of writing success.
 
   )pbdoc");
 
@@ -672,15 +666,15 @@ void wrap_brillouinzone(py::module & m){
         return CLS::from_hdf(filename, entry);
       }, "filename"_a, "entry"_a=default_entry,
       R"pbdoc(
-  Save the object to an HDF5 file
+  Load an object from an HDF5 file
 
   Parameters
   ----------
   filename : str
-    The full path specification for the file to read from
+      The full path specification for the file to read from
   entry: str
-    The group path, e.g., "my/cool/bz", where to read from inside the file,
-    with a default equal to the object Class name
+      The group path, e.g., "my/cool/bz", where to read from inside the file,
+      with a default equal to the object Class name
 
   Returns
   -------

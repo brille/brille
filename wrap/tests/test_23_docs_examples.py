@@ -19,7 +19,7 @@ def run(relative):
 
 
 def test_mesh_tutorial():
-    tutorial = run("tutorials/tutorial_03.py")
+    tutorial = run("tutorials/mesh.py")
     mesh, uniform, test_points = tutorial["mesh"], tutorial["uniform"], tutorial["test_points"]
     initial_rlu = tutorial["initial"][0]
     # refinement kept the initial vertices, and made the interpolation better
@@ -31,7 +31,7 @@ def test_mesh_tutorial():
 
 
 def test_trellis_to_mesh(capsys):
-    howto = run("howto/trellis_to_mesh.py")
+    howto = run("how-to/trellis_to_mesh.py")
     howto["compare"]((500,))
     rows = [line.split() for line in capsys.readouterr().out.splitlines()[1:]]
     assert [row[0] for row in rows] == ["trellis", "mesh"]
@@ -40,3 +40,14 @@ def test_trellis_to_mesh(capsys):
     assert 0.5 < mesh / trellis < 2
     trellis, mesh = (float(row[4]) for row in rows)
     assert mesh < 2 * trellis
+
+
+def test_interpolation_tutorial():
+    tutorial = run("tutorials/interpolation.py")
+    # the script asserts its own claims; check the iron grid covers the whole path
+    assert len(tutorial["along"]) == len(tutorial["path"])
+
+
+def test_symmetry_how_to():
+    howto = run("how-to/symmetry.py")
+    assert howto["mirror"] == howto["same"]

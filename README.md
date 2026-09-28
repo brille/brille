@@ -58,4 +58,4 @@ with [Conan](https://conan.io), which fetches and builds HDF5, HighFive,
 pybind11 and Catch2; the first build takes several minutes while HDF5 compiles.
 Alternatively, the Python module, C++ library, and [Catch2](https://github.com/catchorg/Catch2)
 based tests can be built directly with CMake 3.26 or later; see the
-[installation guide](https://brille.github.io/stable/install_guide.html).
+[installation guide](https://brille.github.io/brille/how-to/install/).

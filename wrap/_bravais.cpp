@@ -41,26 +41,15 @@ void wrap_bravais(py::module &m){
   Hermann-Mauguin symbol of a space group.
   A subset of the 10 possible Bravais letters is used herein:
 
-  +----------------+-----------------------------------------+-----------------------------------------------------------+
-  | Bravais letter | Centring                                | Centring vectors                                          |
-  +================+=========================================+===========================================================+
-  |       P        | primitive                               | :math:`\mathbf{0}`                                        |
-  +----------------+-----------------------------------------+-----------------------------------------------------------+
-  |       A        | A-face centred                          | :math:`\frac{\mathbf{b}_s+\mathbf{c}_s}{2}`               |
-  +----------------+-----------------------------------------+-----------------------------------------------------------+
-  |       B        | B-face centred                          | :math:`\frac{\mathbf{c}_s+\mathbf{a}_s}{2}`               |
-  +----------------+-----------------------------------------+-----------------------------------------------------------+
-  |       C        | C-face centred                          | :math:`\frac{\mathbf{a}_s+\mathbf{b}_s}{2}`               |
-  +----------------+-----------------------------------------+-----------------------------------------------------------+
-  |       I        | body centred (*Innenzentriert*)         | :math:`\frac{\mathbf{a}_s+\mathbf{b}_s+\mathbf{c}_s}{2}`  |
-  +----------------+-----------------------------------------+-----------------------------------------------------------+
-  |       F        | all-face centred                        | :math:`\frac{\mathbf{b}_s+\mathbf{c}_s}{2}`,              |
-  |                |                                         | :math:`\frac{\mathbf{c}_s+\mathbf{a}_s}{2}`,              |
-  |                |                                         | :math:`\frac{\mathbf{a}_s+\mathbf{b}_s}{2}`               |
-  +----------------+-----------------------------------------+-----------------------------------------------------------+
-  |       R        | rhombohedrally centred (hexagonal axes) | :math:`\frac{2\mathbf{a}_s+\mathbf{b}_s+\mathbf{c}_s}{3}` |
-  |                |                                         | :math:`\frac{\mathbf{a}_s+2\mathbf{b}_s+2\mathbf{c}_s}{3}`|
-  +----------------+-----------------------------------------+-----------------------------------------------------------+
+  | Bravais letter | Centring | Centring vectors |
+  |---|---|---|
+  | P | primitive | :math:`\mathbf{0}` |
+  | A | A-face centred | :math:`\frac{\mathbf{b}_s+\mathbf{c}_s}{2}` |
+  | B | B-face centred | :math:`\frac{\mathbf{c}_s+\mathbf{a}_s}{2}` |
+  | C | C-face centred | :math:`\frac{\mathbf{a}_s+\mathbf{b}_s}{2}` |
+  | I | body centred (*Innenzentriert*) | :math:`\frac{\mathbf{a}_s+\mathbf{b}_s+\mathbf{c}_s}{2}` |
+  | F | all-face centred | :math:`\frac{\mathbf{b}_s+\mathbf{c}_s}{2}`, :math:`\frac{\mathbf{c}_s+\mathbf{a}_s}{2}`, :math:`\frac{\mathbf{a}_s+\mathbf{b}_s}{2}` |
+  | R | rhombohedrally centred (hexagonal axes) | :math:`\frac{2\mathbf{a}_s+\mathbf{b}_s+\mathbf{c}_s}{3}` :math:`\frac{\mathbf{a}_s+2\mathbf{b}_s+2\mathbf{c}_s}{3}` |
 
   For further details, see the `IUCr Online Dictionary of Crystallography`__.
 
