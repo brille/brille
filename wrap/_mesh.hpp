@@ -50,7 +50,31 @@ void declare_bzmeshq(py::module &m, const std::string &typestr){
       if (PyErr_WarnEx(PyExc_RuntimeWarning, msg.c_str(), 1) < 0) throw py::error_already_set();
     }
     return mesh;
-  }), "brillouin_zone"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1);
+  }), "brillouin_zone"_a, "max_size"_a=-1., "num_levels"_a=3, "max_points"_a=-1,
+R"pbdoc(
+A structured tetrahedral mesh of a Brillouin zone's irreducible part
+
+A grid of the reciprocal lattice, divided finely enough for ``max_size``, is
+clipped exactly to the irreducible zone.
+
+Parameters
+----------
+brillouin_zone : BrillouinZone
+  The zone whose irreducible part the mesh fills.
+max_size : float, optional (default: -1)
+  The largest tetrahedron volume, in cubic reciprocal Angstrom, which sets the
+  grid spacing; if not positive, the grid is the reciprocal lattice itself.
+  Each grid cell holds six tetrahedra, so ``max_size = node_volume_fraction /
+  6`` gives about as many vertices as a :py:class:`BZTrellisQdc` with that
+  ``node_volume_fraction``, and ``brillouin_zone.ir_polyhedron.volume / (6 *
+  points)`` gives roughly 1.5 to 3 times ``points`` vertices, the most for
+  small meshes.
+num_levels : int, optional
+  Unused; kept for compatibility.
+max_points : int, optional (default: -1)
+  If positive, the grid is coarsened until its estimated number of vertices is
+  at most this, with a RuntimeWarning (see :py:attr:`refinement_limited`).
+)pbdoc");
   cls.def_property_readonly("refinement_limited", [](const Class& cobj){return cobj.refinement_limited();},
     "Whether max_points made the mesh coarser than max_size asked for");
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});

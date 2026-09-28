@@ -33,8 +33,23 @@ void declare_bztrellisq(py::module &m, const std::string &typestr){
   using Class = BrillouinZoneTrellis3<T,R,S>;
   std::string pyclass_name = std::string("BZTrellisQ")+typestr;
   py::class_<Class> cls(m, pyclass_name.c_str(), py::buffer_protocol(), py::dynamic_attr());
-  // Initializer (BrillouinZone, maximum node volume fraction, always_triangulate)
-  cls.def(py::init<BrillouinZone,double,bool>(), py::call_guard<py::gil_scoped_release>(), "brillouin_zone"_a, "node_volume_fraction"_a=0.1, "always_triangulate"_a=false);
+  // Initializer (BrillouinZone, node volume, always_triangulate)
+  cls.def(py::init<BrillouinZone,double,bool>(), py::call_guard<py::gil_scoped_release>(), "brillouin_zone"_a, "node_volume_fraction"_a=0.1, "always_triangulate"_a=false,
+R"pbdoc(
+A trellis of cubic nodes over a Brillouin zone's irreducible part
+
+Parameters
+----------
+brillouin_zone : BrillouinZone
+  The zone whose irreducible part the trellis fills.
+node_volume_fraction : float, optional (default: 0.1)
+  Despite its name, a volume in cubic reciprocal Angstrom, not a fraction:
+  the volume of one cubic node, which sets the trellis spacing. To size the
+  trellis by its number of points use ``brillouin_zone.ir_polyhedron.volume /
+  points``, which gives roughly 1.3 to 2 times ``points`` vertices.
+always_triangulate : bool, optional (default: False)
+  Divide every node into tetrahedra, not only those the zone boundary cuts.
+)pbdoc");
   cls.def(py::init<BrillouinZone,double,bool,approx_float::Config>(), py::call_guard<py::gil_scoped_release>(), "brillouin_zone"_a, "node_volume_fraction"_a, "always_triangulate"_a, "approx_config"_a);
 
   cls.def_property_readonly("BrillouinZone",[](const Class& cobj){return cobj.get_brillouinzone();});
