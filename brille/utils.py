@@ -364,3 +364,120 @@ def create_grid(
             float(kwargs.pop("node_volume_fraction", 1.0e-5)),
             bool(kwargs.pop("always_triangulate", False)),
         )
+
+
+def conventional_to_primitive(lattice, q, values, vectors, tolerance=1e-8):
+    """Convert eigen-solutions of a centred conventional cell to its primitive cell
+
+    A grid's eigenvectors describe the atoms of one primitive cell,
+    :py:attr:`~brille._brille.Lattice.primitive_basis`. A code given a centred
+    conventional cell instead returns, at each q, all of its modes: the primitive
+    cell's modes at q folded together with those at the other wavevectors the
+    larger cell cannot tell from q. This picks out the modes at q, and keeps the
+    atoms of the primitive basis.
+
+    Parameters
+    ----------
+    lattice : :py:class:`~brille._brille.Lattice`
+        The conventional lattice, with its full :py:attr:`~brille._brille.Lattice.basis`
+        in the order the eigenvectors use.
+    q : (Q, 3) array
+        The points the eigen-solutions are for, in the conventional cell's
+        reciprocal lattice units, as :py:attr:`~brille._brille.BZMeshQdc.rlu`.
+    values : (Q, B, ...) array
+        The mode values, such as energies, for B = 3 × the conventional cell's atoms
+        modes; modes with equal values (in their first element) are degenerate.
+    vectors : (Q, B, n, 3) or (Q, B, 3n) array
+        The eigenvectors, one 3-vector for each of the conventional cell's n atoms,
+        in the cell phase convention: periodic in the conventional cell's reciprocal
+        lattice. Their units do not matter.
+    tolerance : float, optional
+        Relative tolerance for degenerate values.
+
+    Returns
+    -------
+    values, vectors
+        The primitive cell's B / m modes at each q, where m is the number of
+        primitive cells in the conventional cell, in the input's order of values,
+        with vectors for the atoms of the primitive basis only, in the input's
+        layout.
+
+    Note
+    ----
+    A mode folded from a wavevector p changes by exp(2πi p·d) between an atom and
+    its copy d away; the modes at q are those for which p = q, and their primitive
+    eigenvector for atom k is the sum over its copies of exp(-2πi q·d) times the
+    copy's component, over √m. Degenerate modes can mix the folds, so each
+    degenerate group is projected onto the modes at q as a whole.
+    """
+    import numpy as np
+
+    positions = np.asarray(lattice.basis.positions, dtype=float)
+    types = np.asarray(lattice.basis.types)
+    primitive = lattice.primitive_basis
+    kept_positions = np.asarray(primitive.positions, dtype=float)
+    kept_types = np.asarray(primitive.types)
+    centring = np.asarray(lattice.centring_vectors, dtype=float)
+    m, n_primitive, n_conventional = len(centring), len(kept_positions), len(positions)
+    if n_conventional != m * n_primitive:
+        raise ValueError(f"the basis has {n_conventional} atoms, not {m} copies of the {n_primitive}-atom primitive cell")
+    # each atom's primitive atom, and the actual vector to it from that atom
+    owner = np.empty(n_conventional, dtype=int)
+    offset = np.empty((n_conventional, 3))
+    for j, (p, t) in enumerate(zip(positions, types)):
+        for k in np.flatnonzero(kept_types == t):
+            d = p - kept_positions[k]
+            r = d[None, :] - centring
+            if np.any(np.all(np.abs(r - np.round(r)) < 1e-8, axis=1)):
+                owner[j], offset[j] = k, d
+                break
+        else:
+            raise ValueError(f"atom {j} is not a centring copy of an atom of the primitive basis")
+
+    q = np.atleast_2d(np.asarray(q, dtype=float))
+    values = np.asarray(values)
+    vectors = np.asarray(vectors)
+    shape = vectors.shape
+    vectors = vectors.reshape(shape[0], shape[1], n_conventional, 3)
+    n_q, n_modes = vectors.shape[:2]
+    if n_modes % m:
+        raise ValueError(f"{n_modes} modes are not {m} folds of the primitive cell's")
+    phase = np.exp(-2j * np.pi * q @ offset.T)                    # (Q, n)
+    fold = np.zeros((n_primitive, n_conventional))
+    fold[owner, np.arange(n_conventional)] = 1.0
+    out_values = np.empty((n_q, n_modes // m) + values.shape[2:], dtype=values.dtype)
+    out_vectors = np.empty((n_q, n_modes // m, n_primitive, 3), dtype=complex)
+    for i in range(n_q):
+        key = values[i].reshape(n_modes, -1)[:, 0].real
+        order = np.argsort(key, kind="stable")
+        kept = 0
+        start = 0
+        while start < n_modes:
+            stop = start + 1
+            while stop < n_modes and abs(key[order[stop]] - key[order[start]]) <= tolerance * max(1.0, abs(key[order[start]])):
+                stop += 1
+            group = order[start:stop]
+            modes = vectors[i, group]                                   # (g, n, 3)
+            # project onto the modes at q: (P e)_j = exp(2πi q.d_j) mean over the copies of
+            # the atom of exp(-2πi q.d) e. P maps a degenerate group into itself, and in the
+            # group's own coordinates it is a Hermitian projector, whatever the units.
+            summed = np.einsum("kj,j,gjd->gkd", fold, phase[i], modes) / m             # (g, N, 3)
+            projected = np.einsum("j,gjd->gjd", np.conj(phase[i]), summed[:, owner])   # (g, n, 3)
+            flat = modes.reshape(len(group), -1).T
+            c = np.linalg.lstsq(flat, projected.reshape(len(group), -1).T, rcond=None)[0]
+            w, c = np.linalg.eigh((c + c.conj().T) / 2)
+            at_q = c[:, w > 0.5]
+            if kept + at_q.shape[1] > n_modes // m:
+                break
+            for r in range(at_q.shape[1]):
+                mode = np.einsum("g,gjd->jd", at_q[:, r], modes)      # a mode at q, in the input's units
+                out_values[i, kept] = values[i, group[0]]
+                out_vectors[i, kept] = np.einsum("kj,j,jd->kd", fold, phase[i], mode) / np.sqrt(m)
+                kept += 1
+            start = stop
+        if kept != n_modes // m:
+            raise ValueError(f"found {kept} of the primitive cell's {n_modes // m} modes at q = {q[i]}: are the "
+                             "eigenvectors in the cell phase convention, for the atoms of lattice.basis in order?")
+    if len(shape) == 3:
+        out_vectors = out_vectors.reshape(n_q, n_modes // m, 3 * n_primitive)
+    return out_values, out_vectors
