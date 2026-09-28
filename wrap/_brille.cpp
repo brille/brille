@@ -82,24 +82,26 @@ PYBIND11_MODULE(_brille, m){
     "brille._brille.NearSymmetryWarning",
     "The lattice is close to one with more symmetry, so its Brillouin zone has features much smaller than itself.",
     PyExc_UserWarning, nullptr));
-  wrap_basis(m);
-  wrap_lattice(m);
-  wrap_brillouinzone(m);
-  wrap_mesh(m);
-  wrap_trellis(m);
-  wrap_nest(m);
+  // types used in other classes' signatures come first, so that pybind11 names them
+  // there as Python types rather than as C++ ones
+  wrap_enums(m);
+  wrap_approx(m);
+  wrap_bravais(m);
   wrap_primitivetransform(m);
   wrap_spacegroup(m);
   wrap_pointgroup(m);
   wrap_sortingstatus(m);
   wrap_symmetry(m);
   wrap_pointsymmetry(m);
-  wrap_polyhedron(m);
   wrap_hallsymbol(m);
-  wrap_bravais(m);
+  wrap_basis(m);
+  wrap_lattice(m);
+  wrap_polyhedron(m);
+  wrap_brillouinzone(m);
+  wrap_mesh(m);
+  wrap_trellis(m);
+  wrap_nest(m);
   wrap_interpolator(m);
   wrap_debug(m);
-  wrap_enums(m);
-  wrap_approx(m);
   wrap_lattice_grid(m);
 }
