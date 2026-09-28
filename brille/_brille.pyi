@@ -5724,9 +5724,9 @@ def reciprocal_space_tolerance(tolerance: float) -> None:
     """
     Set the module-global reciprocal space floating point tolerance in angstrom
     """
-__version__: str = ''
-build_datetime: str = ''
-build_hostname: str = ''
-git_branch: str = ''
-git_revision: str = 'd0b9324'
-version: str = '0.8.4'
+__version__: str
+build_datetime: str
+build_hostname: str
+git_branch: str
+git_revision: str
+version: str
