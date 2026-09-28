@@ -73,11 +73,6 @@ private:
 public:
   //! Construct from the centring type of the conventional lattice
   explicit PrimitiveTransform(const Bravais c): bravais{c} {}
-  [[deprecated("Call with an enum Bravais instead")]] explicit PrimitiveTransform(const Spacegroup& s): bravais{s.bravais} {}
-  [[deprecated("Call with an enum Bravais instead")]] explicit PrimitiveTransform(const int hall){
-    Spacegroup s(hall);
-    this->bravais = s.bravais;
-  }
 //  /*! \brief Return the transformation matrix P
 //
 //  P converts the conventional basis vectors into those of an equivalent
