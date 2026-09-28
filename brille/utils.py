@@ -246,9 +246,14 @@ def create_grid(
     Parameters
     ----------
     node_volume_fraction : float, optional (default: 1e-5)
-        The fractional volume of a tetrahedron in the mesh.
-        Smaller numbers will result in better interpolation
-        accuracy at the cost of greater computation time.
+        Despite its name, a volume in cubic reciprocal Angstrom, not a
+        fraction: the volume of one cubic node of the trellis, which
+        sets its spacing. For a given value, a zone twice the size
+        (in each direction) gets eight times the nodes. Smaller numbers
+        will result in better interpolation accuracy at the cost of
+        greater computation time. To size the grid by its number of
+        points, use ``bz.ir_polyhedron.volume / points``, which gives
+        roughly 1.3 to 2 times ``points`` vertices.
     always_triangulate : bool, optional (default: False)
         If set to True, we calculate a bounding polyhedron
         for each point in the grid, and triangulate this into
@@ -265,6 +270,12 @@ def create_grid(
         The maximum volume of a grid tetrahedron in cubic reciprocal
         Angstrom, which sets the grid spacing. If not positive, the
         grid is the reciprocal lattice itself, clipped to the zone.
+        Each cell of the grid holds six tetrahedra, so a mesh with
+        ``max_size = node_volume_fraction / 6`` has about as many
+        vertices as a trellis with ``node_volume_fraction`` (up to 1.5
+        times as many for small grids); and
+        ``bz.ir_polyhedron.volume / (6 * points)`` gives roughly 1.5 to 3
+        times ``points`` vertices, the most for small grids.
     num_levels : int, optional (default: 3)
         Unused; kept for compatibility.
     max_points : int, optional (default: -1)
