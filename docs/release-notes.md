@@ -15,6 +15,19 @@ NaCl's 8-atom cubic cell. A grid now takes eigenvectors for either the atoms of
 atom of the conventional cell's basis, and interpolates the modes of the cell
 they describe. Other atom counts are still refused.
 
+#### Compact irreducible zones for point groups without mirrors
+
+0.9.0 found the irreducible wedge as the Dirichlet cone about one fixed point.
+For a point group without mirrors (such as 32, 422, 222, -3 or 432) its planes
+tilt with that point, so the irreducible zone had more vertices than needed:
+13 for quartz (P3₂21), not the 6 of the Γ–K–K′ prism found by 0.8.3. Meshes
+of such zones had more vertices and were less accurate for their size. The
+wedge now comes from whichever of several points gives the zone with the
+fewest vertices, which on the AFLOW lattices is never more than in 0.9.0 or
+0.8.3. Point groups with mirrors keep their 0.9.0 wedge. Grids of the other
+point groups have different vertices, so interpolated values change by about
+the interpolation error.
+
 ## 0.9.0
 
 Changes since v0.8.3. The largest are a new mesh for `BZMeshQ`, which fills the
