@@ -1,6 +1,10 @@
 # Release notes
 
-## 0.9.1 (unreleased)
+## 0.9.1
+
+Fixes for two regressions in 0.9.0, both found by Euphonic's tests:
+eigenvectors of a centred conventional cell are accepted again, and point
+groups without mirrors get compact irreducible zones again.
 
 ### Fixes
 
@@ -38,6 +42,11 @@ or to find their irreducible zone, now working.
 ### Changes that can affect existing code
 
 #### Eigenvectors of centred crystals describe the primitive cell
+
+!!! note
+    0.9.1 accepts the conventional cell's eigenvectors again, as well as the
+    primitive cell's; see
+    [Eigenvectors of a centred conventional cell are accepted again](#eigenvectors-of-a-centred-conventional-cell-are-accepted-again).
 
 !!! warning "Breaking change"
     If you give brille a centred crystal (A, B, C, F, I or R lattice) by its
