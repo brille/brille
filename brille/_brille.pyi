@@ -742,7 +742,8 @@ class Lattice:
         The atoms of one primitive cell: the first given atom of each centring orbit of
         :py:attr:`basis`, at its given position.
         
-        Eigenvectors given to a grid describe these atoms, in this order. For a primitive cell
+        Eigenvectors given to a grid describe these atoms, in this order, or every atom of
+        :py:attr:`basis`. For a primitive cell
         this is :py:attr:`basis` itself; for a centred conventional cell it is a half, a third
         or a quarter of it (see :py:func:`brille.utils.conventional_to_primitive`).
         """

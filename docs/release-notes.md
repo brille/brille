@@ -1,6 +1,21 @@
 # Release notes
 
-## 0.9.0 (unreleased)
+## 0.9.1 (unreleased)
+
+### Fixes
+
+#### Eigenvectors of a centred conventional cell are accepted again
+
+0.9.0 refused eigenvectors of a centred crystal's conventional cell with
+`RuntimeError: The eigenvectors have 8 atoms per mode, but the primitive cell
+has 2`, though brille up to 0.8.3 rotated them correctly. This broke Euphonic's
+`BrilleInterpolator` for force constants of a conventional cell, such as
+NaCl's 8-atom cubic cell. A grid now takes eigenvectors for either the atoms of
+[`Lattice.primitive_basis`][brille._brille.Lattice.primitive_basis] or every
+atom of the conventional cell's basis, and interpolates the modes of the cell
+they describe. Other atom counts are still refused.
+
+## 0.9.0
 
 Changes since v0.8.3. The largest are a new mesh for `BZMeshQ`, which fills the
 irreducible zone exactly and can be refined; eigenvectors of centred crystals

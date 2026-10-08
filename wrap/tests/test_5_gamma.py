@@ -228,6 +228,51 @@ class GammaTest(unittest.TestCase):
         # now all eigenvectors must match
         self.assertTrue(np.allclose(br_vec, eu_vec))
 
+    def test_conventional_cell_eigenvectors(self):
+        # Eigenvectors of NaCl's 8-atom conventional cell, unconverted, as Euphonic
+        # gives them: rotated with the full basis's table
+        nacl = self.nacl
+        grid = self.grid
+        perm = np.hstack(
+            [
+                np.argwhere(np.all(np.isclose(nacl["grid_rlu"], x), axis=1))
+                for x in grid.rlu
+            ]
+        ).flatten()
+        grid_vecs_cart = np.einsum(
+            "ba,ijkb->ijka", nacl["basis_vectors"], nacl["grid_vectors"]
+        )
+        # 24 = 3 x 8 atoms; RotatesLike::Gamma = 2 and LengthUnit::angstrom = 1
+        vec_els = np.array([0, 24, 0, 2, 1, 0, 0])
+        grid.fill(
+            nacl["grid_values"][perm],
+            nacl["grid_values_elements"],
+            nacl["grid_values_weights"],
+            grid_vecs_cart[perm],
+            vec_els,
+            nacl["grid_vectors_weights"],
+        )
+        br_val, br_vec = grid.ir_interpolate_at(nacl["q_nu"])
+        self.assertTrue(np.allclose(np.squeeze(br_val), nacl["euphonic_values"]))
+        eu_vec = nacl["euphonic_vectors"]
+        antiphase = np.exp(
+            -1j * np.angle(np.einsum("qmij,qmij->qm", np.conj(eu_vec), br_vec))
+        )
+        br_vec = np.einsum("ab,abij->abij", antiphase, br_vec)
+        self.assertTrue(np.allclose(br_vec, eu_vec))
+
+        # eigenvectors for neither the primitive (2) nor conventional (8) cell's atoms
+        grid.fill(
+            nacl["grid_values"][perm],
+            nacl["grid_values_elements"],
+            nacl["grid_values_weights"],
+            grid_vecs_cart[perm][..., :3, :],
+            np.array([0, 9, 0, 2, 1, 0, 0]),
+            nacl["grid_vectors_weights"],
+        )
+        with self.assertRaisesRegex(RuntimeError, "primitive cell has 2 and the conventional cell 8"):
+            grid.ir_interpolate_at(nacl["q_nu"])
+
     def test_unsupported_rotateslike_lengthunit_combinations_error(self):
         nacl = self.nacl
         grid = self.grid
@@ -262,22 +307,6 @@ class GammaTest(unittest.TestCase):
         )
         values, _ = grid.ir_interpolate_at(nacl["q_nu"])
         self.assertEqual(np.asarray(values).shape[0], len(nacl["q_nu"]))
-
-    def test_conventional_cell_eigenvectors_are_refused(self):
-        # a grid holds the primitive cell's eigenvectors; the conventional cell's are
-        # refused with a pointer to the conversion
-        nacl = self.nacl
-        grid = self.grid
-        grid.fill(
-            nacl["grid_values"],
-            nacl["grid_values_elements"],
-            nacl["grid_values_weights"],
-            nacl["grid_vectors"],
-            np.array([0, 24, 0, 2, 3, 0, 0]),
-            nacl["grid_vectors_weights"],
-        )
-        with self.assertRaisesRegex(RuntimeError, "conventional_to_primitive"):
-            grid.ir_interpolate_at(nacl["q_nu"])
 
     def test_primitive_basis(self):
         # F-centred NaCl: four centring vectors, and two of the eight atoms

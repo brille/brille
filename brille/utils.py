@@ -350,7 +350,9 @@ def conventional_to_primitive(lattice, q, values, vectors, tolerance=1e-8):
     """Convert eigen-solutions of a centred conventional cell to its primitive cell
 
     A grid's eigenvectors describe the atoms of one primitive cell,
-    :py:attr:`~brille._brille.Lattice.primitive_basis`. A code given a centred
+    :py:attr:`~brille._brille.Lattice.primitive_basis`, or every atom of the
+    conventional cell; convert them to interpolate the primitive cell's modes
+    only. A code given a centred
     conventional cell instead returns, at each q, all of its modes: the primitive
     cell's modes at q folded together with those at the other wavevectors the
     larger cell cannot tell from q. This picks out the modes at q, and keeps the
