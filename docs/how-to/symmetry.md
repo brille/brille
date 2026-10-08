@@ -87,9 +87,11 @@ Give the lattice the conventional cell's full basis, and the grid the
 eigenvectors of the primitive cell, for those atoms in that order, in the
 cell phase convention (see [the phase convention](../explanation/phase-convention.md)).
 
-If your code computed the conventional cell instead, it returns all of that
-cell's modes at each q: the primitive cell's modes at q folded together with
-those at the wavevectors the larger cell cannot tell from q.
+If your code computed the conventional cell instead, the grid also takes its
+eigenvectors as they are, for every atom of the basis, and interpolates all of
+that cell's modes. These are the primitive cell's modes at q folded together
+with those at the wavevectors the larger cell cannot tell from q. To keep only
+the primitive cell's modes, convert them first: the primitive cell's modes at q folded together with
 [`conventional_to_primitive`][brille.utils.conventional_to_primitive] picks out
 the modes at q and the primitive cell's atoms:
 

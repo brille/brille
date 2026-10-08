@@ -131,6 +131,9 @@ private:
   std::vector<ind_t> v_mapping; //! maps (κ,r) to v
   lattice_t lattice_;
   bArray<double> vectors_; //! element v is (Rᵣ⁻¹ ⃗rₖ - ⃗rₗ)
+  int time_reversal_{0};
+  double e_tol_{0.};
+  int n_tol_{1};
 public:
   GammaTable(bool init, const lattice_t& dlat, const int time_reversal=0, double e_tol=0., int n_tol=1): lattice_(dlat) {
     if (init){
@@ -140,8 +143,11 @@ public:
       v_mapping.resize(0);
     }
   }
-  bool construct(const lattice_t& dlat, const int time_reversal=0, double e_tol=0., int n_tol=1){
+  bool construct(const lattice_t& dlat, const int time_reversal=0, double e_tol=0., int n_tol=1, const bool full_basis=false){
     lattice_ = dlat;
+    time_reversal_ = time_reversal;
+    e_tol_ = e_tol;
+    n_tol_ = n_tol;
     const auto crystal = dlat.pointgroup_symmetry();
     // With time reversal, the operations that map q are those of the crystal
     // plus -R for each of them. Time reversal is anti-unitary: in a crystal
@@ -154,8 +160,10 @@ public:
     // The eigenvectors describe the primitive cell: one atom of each centring orbit of
     // the conventional basis, the first given. Operations map an atom onto an atom of
     // the primitive basis plus a lattice translation, which may be a centring vector.
-    const auto centring = centring_vectors(dlat.bravais());
-    Basis bs = primitive_basis(dlat.basis(), centring, e_tol, n_tol);
+    // With full_basis they describe every atom of the conventional cell instead, and
+    // operations map atoms onto atoms plus a conventional lattice translation only.
+    const auto centring = full_basis ? std::vector<std::array<double, 3>>{{0., 0., 0.}} : centring_vectors(dlat.bravais());
+    Basis bs = full_basis ? dlat.basis() : primitive_basis(dlat.basis(), centring, e_tol, n_tol);
     // resize all vectors/arrays
     n_atoms = static_cast<ind_t>(bs.size());
     n_sym_ops = static_cast<ind_t>(ps.size());
@@ -246,6 +254,12 @@ public:
   [[nodiscard]] const lattice_t& lattice() const {return lattice_;}
   //! The number of atoms in the primitive cell whose eigenvectors the table rotates
   [[nodiscard]] ind_t atom_count() const {return n_atoms;}
+  //! The table for eigenvectors of every atom of the (conventional) cell's basis
+  [[nodiscard]] GammaTable full_basis() const {
+    GammaTable out(false, lattice_);
+    out.construct(lattice_, time_reversal_, e_tol_, n_tol_, true);
+    return out;
+  }
 private:
   template<class Ik, class Ir> [[nodiscard]] ind_t calc_key(Ik k, Ir r) const {
     if (k<n_atoms && r<n_sym_ops)
